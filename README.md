@@ -1,6 +1,6 @@
 # Littzite — arquitectura fundacional
 
-**Estado:** documentación fundacional v0.5; PR-01/02 integrados y prototipos visuales PR-03 en revisión. **Fecha:** 2026-09-28/29.
+**Estado:** documentación fundacional v0.5; PR-01/02 integrados; estructura visual compartida PR-03 lista para integrar. **Fecha:** 2026-09-28/29.
 **Producto:** plataforma de creación de sitios comerciales modulares; primeros casos: estética integral y estudio de tatuajes en San Juan, Argentina.  
 **Propósito:** captación orgánica local, diferenciación visual, contacto y reservas/solicitudes mediante proveedores externos.
 
