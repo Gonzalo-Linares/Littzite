@@ -16,6 +16,9 @@ Este documento vincula requisitos y pruebas previstas; no significa que haya có
 | R-10 | Documentación sincronizada con cambios importantes | `docs/12-contributing.md` | Checklist PR y actualización ADR/diagramas |
 | R-11 | Una misma ficha puede exponer dos acciones sin condicionales por cliente | `docs/03-domain-model.md`, ADR-003 | Test de `ServiceAction[]`, tipos Zod, orden y labels de CTA |
 | R-12 | Ni señas ni presupuestos con archivos se implementan sin aprobación | `docs/09-open-decisions.md`, `docs/10-security-threat-model.md` | Revisión de flags, terceros, formularios y datos recogidos |
+| R-13 | D-04: presupuesto de tatuajes grandes por WhatsApp y solo texto, sin formulario ni almacenamiento propio | `docs/13-booking-specification.md`, `docs/03-domain-model.md`, ADR-003 | Test de número E.164 aprobado, texto de apertura con datos públicos, enlace `wa.me` codificado, aviso de tercero y ninguna dependencia de backend |
+| R-14 | D-08B: repositorio público sin licencia de reutilización del código original; terceros conservan sus propios derechos | `docs/15-ip-license-policy.md`, ADR-006, ADR-005 | README explicita la política; sin `LICENSE` libre por defecto; revisar procedencia y avisos obligatorios antes de copiar código o assets; consentimiento del cliente para portfolio |
+| R-15 | D-09: ambos sitios solo en español de Argentina (`es-AR`) para v1 | `docs/03-domain-model.md`, `docs/06-quality-operations.md`, ADR-007 | Validar locale en Zod; `<html lang="es-AR">` y metadatos coherentes; rutas sin prefijos idiomáticos ni `hreflang` engañoso; formato regional centralizado |
 
 ## Gates del PR documental
 

@@ -1,4 +1,4 @@
-# Arquitectura lógica y despliegue — v0.3
+# Arquitectura lógica y despliegue — v0.5
 
 ## Monorepo propuesto
 
@@ -30,7 +30,7 @@ flowchart LR
   L[Littzite: sitios públicos independientes]
   S[Buscadores y mapas]
   R[Proveedor externo de reservas]
-  W[WhatsApp / canal de presupuestos externo]
+  W[WhatsApp externo: presupuesto por texto]
   U -->|Encuentra negocios| S
   S -->|Visita orgánica| L
   U -->|Consulta y navega| L
@@ -72,7 +72,7 @@ flowchart TB
     DEP2 -. Métricas, con consentimiento cuando proceda .-> SEARCH
 ```
 
-Los proveedores pueden coincidir o ser distintos; **no se seleccionó ninguno**. El flujo de presupuesto del tatuador sale a un canal externo igualmente pendiente.
+Los proveedores pueden coincidir o ser distintos; **no se seleccionó ninguno**. El flujo de presupuesto del tatuador sale a **WhatsApp** mediante enlace construido desde `ContactConfig` y `QuoteTarget`: solo texto en v1. Número comercial y mensaje inicial, pendientes de validar antes de publicar.
 
 ## Límites de responsabilidad
 
@@ -83,7 +83,7 @@ Los proveedores pueden coincidir o ser distintos; **no se seleccionó ninguno**.
 | `sections` | Composición de bloques reutilizables con props tipadas | Consultar contenido global de una app |
 | `seo` | Metadatos, URL canonical, schema, sitemap helpers | Inventar reseñas o localidades no verificadas |
 | `booking` | Resolver acciones `direct-booking`, targets y adaptadores soportados | Crear agenda local, decidir política de señas o fingir una API de reserva universal |
-| `content-schema` + resolver de acciones | Validar `ServiceAction[]` y relaciones con destinos de reserva/presupuesto | Hardcodear flujos por identidad de app |
+| `content-schema` + resolver de acciones | Validar `ServiceAction[]` y relaciones con destinos de reserva/presupuesto; WhatsApp obtiene el único número de `ContactConfig` | Hardcodear flujos por identidad de app ni duplicar números comerciales |
 | `apps/*` | Identidad, contenido, orden de páginas, proveedores y deploy | Reimplementar lógica compartida |
 
 ## Ciclo de contenido
@@ -100,6 +100,7 @@ flowchart LR
 ## Independencia operativa
 
 - Cada aplicación define dominio/canonical, sitemap, iconos, imágenes sociales, cuenta de reservas y analítica independientes.
+- D-09: ambas apps publican contenido en `es-AR`, sin prefijo idiomático; el contrato `SiteConfig.defaultLocale` es la fuente de verdad para el idioma del documento, metadatos y formatos. Los paquetes compartidos no implementan un router de idiomas ni catálogos de traducción en v1.
 - Comparten librerías, no sesiones ni secretos. Los deployments se disparan por ruta afectada; un cambio en un paquete común exige compilar/probar ambas apps.
 - No se almacena un registro local de reservas en v1; la fuente de verdad es el proveedor elegido.
 - Cada integración externa incluye fallback a enlace externo y una política ante indisponibilidad.
@@ -117,7 +118,7 @@ flowchart TB
   CDN2 --> DB[Dominio, Search Console y analítica B]
   CDN1 -. widget / enlace .-> BA[Proveedor de agenda A por definir]
   CDN2 -. reserva directa .-> BB[Proveedor de agenda B por definir]
-  CDN2 -. presupuesto .-> QC[Canal de presupuesto por definir]
+  CDN2 -. presupuesto .-> QC[WhatsApp: consulta de texto]
 ```
 
 El proveedor de hosting está **propuesto**, no confirmado. Para el contenido público se privilegia salida estática. Aislar variables de entorno y cuentas por proyecto. En previews, impedir indexación por controles de acceso cuando estén disponibles; `noindex` no reemplaza un control de acceso.

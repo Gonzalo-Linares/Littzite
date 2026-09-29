@@ -1,8 +1,9 @@
-# Calidad, SEO, seguridad y operaciones — v0.3
+# Calidad, SEO, seguridad y operaciones — v0.5
 
 ## SEO local por construcción
 
 - `canonicalOrigin` específico por sitio, canonical absoluta por página; sitemap solo con URLs indexables válidas; `robots.txt` independiente.
+- D-09: usar `SiteConfig.defaultLocale = 'es-AR'` como única fuente de verdad para `<html lang>`, idioma de metadatos y formatos regionales por `Intl` cuando corresponda. Una sola versión de URL sin prefijo `/es/`; no emitir `hreflang` ficticio ni páginas traducidas. Slugs legibles en español y metadatos únicos por servicio.
 - Título y descripción únicos y útiles, URL legible y HTML indexable por cada tratamiento/estilo genuinamente distinto. Evitar páginas casi duplicadas por barrio o palabra clave.
 - Datos estructurados `LocalBusiness` con el subtipo correcto y la información **visible y verificable**; páginas de servicio con datos semánticos cuando correspondan.
 - Perfil de Empresa en Google separado por negocio, contacto/NAP consistente, reseñas legítimas y fotografías originales autorizadas.
@@ -15,7 +16,7 @@
 | --- | --- | --- |
 | `pnpm lint` / format | convenciones y código no usado | PR |
 | `pnpm typecheck` | TypeScript estricto, Astro y contratos | PR |
-| Validación de contenido | Zod, referencias, URLs, slugs y campos SEO | PR/build |
+| Validación de contenido | Zod, referencias, URLs, slugs, locale `es-AR` y campos SEO | PR/build |
 | Vitest | uniones discriminadas de `ServiceAction`, referencias a `BookingTarget`/`QuoteTarget`, fallback, URLs, SEO y secciones lógicas | PR |
 | Build ambas apps | ausencia de imports cruzados, errores de SSR/build y assets | PR común |
 | Playwright | menú móvil, reserva directa de estética, doble CTA tatuador, fallback, contacto, rutas y sitemap | PR/release |
@@ -33,7 +34,7 @@ Testear adaptadores con stubs; E2E de widget externo solo como smoke test no det
 - Scripts de terceros mínimos, CSP compatible con los proveedores elegidos, sin perder seguridad por la facilidad de incrustación.
 - Política de privacidad, cookies, condiciones/cancelación y derechos de imágenes adaptadas a cada negocio y revisadas antes del lanzamiento.
 - Captar solo datos imprescindibles. Evitar recibir datos sensibles de salud en formularios públicos; si surge una necesidad real, diseñar un flujo específico y revisar requisitos legales.
-- Presupuestos de tatuajes: no recibir imágenes, información privada ni documentos en la web propia sin canal, finalidad, política y controles previamente definidos.
+- Presupuestos de tatuajes: D-04 define WhatsApp directo, inicialmente solo texto. Littzite no implementa formulario, subida de archivos ni almacenamiento de mensajes; el número comercial real se valida antes de lanzar el CTA. Informar que se abandona el sitio para contactar a un tercero. No recopilar ni registrar el contenido del mensaje.
 - Sin prometer métricas exactas de reserva por simples clics. Separar `cta_clicked`, `booking_widget_event` y `provider_confirmed_booking` cuando este último dato exista.
 
 ## Despliegue

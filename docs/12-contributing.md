@@ -6,6 +6,7 @@
 - Plantilla inicial de PR: objetivo, alcance/no alcance, decisiones afectadas, pruebas realizadas con resultados reales, impactos SEO/UX/seguridad, documentación actualizada y riesgos conocidos.
 - Commits descriptivos; preferir squash en PR pequeños una vez definida la preferencia del equipo. No imponer una estrategia compleja de release en dos aplicaciones estáticas.
 - Cambiar un contrato común obliga a comprobar ambas apps; los scripts y la CI deben expresarlo explícitamente.
+- **El repositorio público no tiene licencia de reutilización del código original.** No fusionar contribuciones externas de código, textos o diseños sin verificar su titularidad y contar con una autorización escrita suficiente para el uso previsto. Los forks permitidos por GitHub no constituyen una cesión de derechos para explotar comercialmente aportes externos.
 
 ## Gobernanza de arquitectura
 
@@ -22,3 +23,4 @@
 3. Inspección de SEO local y configuración específica de cada app.
 4. Confirmación de no incorporar dependencias, imágenes ni scripts de terceros innecesarios.
 5. Revisión de cambios en diagramas y ADR cuando cambie la arquitectura real.
+6. Si hay código, dependencias, fuentes, fotografías u otros materiales de terceros: verificar licencia de la revisión concreta, compatibilidad con la distribución prevista y conservar avisos/atribuciones requeridos; documentar procedencia en `THIRD_PARTY_NOTICES.md` cuando corresponda. No reproducir activos o testimonios de clientes en el portfolio sin autorización.

@@ -1,10 +1,10 @@
 # Littzite — arquitectura fundacional
 
-**Estado:** v0.3, arquitectura documental en revisión. **Fecha:** 2026-09-28/29.  
+**Estado:** v0.5, arquitectura documental en revisión. **Fecha:** 2026-09-28/29.  
 **Producto:** plataforma de creación de sitios comerciales modulares; primeros casos: estética integral y estudio de tatuajes en San Juan, Argentina.  
 **Propósito:** captación orgánica local, diferenciación visual, contacto y reservas/solicitudes mediante proveedores externos.
 
-> Este paquete contiene diseño y decisiones documentadas, **no** código implementado ni aprobación automática de todos los puntos. El repositorio GitHub ya permite acceso a la integración; la documentación local debe sincronizarse con el remoto mediante un commit/PR revisado.
+> Este paquete contiene diseño y decisiones documentadas, **no** código implementado ni aprobación automática de todos los puntos. Las actualizaciones documentales se revisan en PR antes de integrarse en `main`.
 
 ## Acuerdos de alcance
 
@@ -12,8 +12,10 @@
 - Modificar una capacidad común una sola vez, consumirla desde ambos sitios y validarla en ambas apps; evitar hardcodear identidad comercial dentro de los paquetes.
 - Cada app tiene identidad y páginas propias. No crear una megatemplate con condicionales por cliente, ni un SaaS multi-tenant en v1.
 - Contenido inicial gestionado como archivos versionados en Git; sin CMS, backend ni base de datos propios para la primera versión, salvo un requisito aprobado que lo justifique.
-- Reservas desacopladas detrás de acciones tipadas por servicio: **estética con una profesional y tratamientos de duración fija**; **tatuajes pequeños con reserva directa y grandes mediante solicitud de presupuesto**. El proveedor por negocio, el canal de presupuesto y las señas siguen pendientes. No desarrollar agenda propia.
+- Reservas desacopladas detrás de acciones tipadas por servicio: **estética con una profesional y tratamientos de duración fija**; **tatuajes pequeños con reserva directa y grandes mediante solicitud de presupuesto**. El proveedor de agenda por negocio y las señas siguen pendientes; **D-04 aprobada**: presupuestos de tatuajes grandes por WhatsApp, inicialmente solo texto, sin formulario ni subida de imágenes propios. No desarrollar agenda propia.
 - Reutilización selectiva de AstroWind solo luego de auditar código, versión y licencias independientes de sus recursos.
+- **D-08B acordada:** repositorio público, **sin licencia de reutilización para el código original de Littzite**. Cada dependencia, fragmento de plantilla o asset de terceros conserva su licencia o autorización específica; ver [política de propiedad intelectual](docs/15-ip-license-policy.md) y [ADR-006](docs/adr/006-public-rights-reserved.md).
+- **D-09 acordada:** primera versión únicamente en español de Argentina (`es-AR`) para ambos negocios, rutas sin prefijo idiomático y sin infraestructura de traducción, según [ADR-007](docs/adr/007-single-locale-es-ar.md).
 
 ## Índice
 
@@ -31,8 +33,13 @@
 12. [Contribución y estrategia de PR](docs/12-contributing.md)
 13. [Especificación funcional del módulo de reservas](docs/13-booking-specification.md)
 14. [Cómo visualizar los diagramas](docs/14-diagram-guide.md)
-13. [Registros de decisión arquitectónica — ADR](docs/adr/)
-14. [Instrucciones para agentes de código](AGENTS.md)
+15. [Política de propiedad intelectual, terceros y contribuciones](docs/15-ip-license-policy.md)
+16. [Registros de decisión arquitectónica — ADR](docs/adr/)
+17. [Instrucciones para agentes de código](AGENTS.md)
+
+## Condiciones de uso del repositorio
+
+**Littzite es público y no concede una licencia de reutilización de su código original.** Se reserva el derecho de autor conforme a la normativa aplicable, sin perjuicio de los permisos y límites derivados de los Términos de GitHub y la legislación vigente. Los componentes de terceros (incluido cualquier código de AstroWind efectivamente incorporado en el futuro) conservan **sus propias licencias y avisos**. No asumir que el contenido, las marcas, las fotografías o los diseños de clientes están autorizados para reutilización. Ver [política detallada](docs/15-ip-license-policy.md).
 
 ## Estados de decisión
 

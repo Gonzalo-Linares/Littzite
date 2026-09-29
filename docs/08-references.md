@@ -17,3 +17,11 @@ No integrar una plataforma de pagos hasta verificar disponibilidad y condiciones
 - [Astro — Deployment](https://docs.astro.build/en/guides/deploy/): salidas estáticas y adaptadores cuando se requieran.
 - [GitHub — Mermaid](https://github.blog/developer-skills/github/include-diagrams-markdown-files-mermaid/): diagramas versionados en Markdown.
 - [Google — SEO Starter Guide](https://developers.google.com/search/docs/fundamentals/seo-starter-guide): contenido útil y estructura rastreable.
+
+## Propiedad intelectual y publicación pública
+
+- [GitHub — licencias para repositorios](https://docs.github.com/es/repositories/managing-your-repositorys-settings-and-features/customizing-your-repository/licensing-a-repository): distinción entre repositorio público y licencia de reutilización.
+- [Choose a License — No License](https://choosealicense.com/no-permission/): conservación de derechos por defecto, límites y permisos vinculados a los términos de GitHub.
+- [GitHub — Términos del servicio](https://docs.github.com/en/site-policy/github-terms/github-terms-of-service): facultades de visualización/fork de contenido publicado en la plataforma.
+
+Estas son referencias informativas para la documentación técnica; no sustituyen asesoramiento jurídico cuando se contraten trabajos o se acepten contribuciones ajenas.

@@ -15,7 +15,7 @@ flowchart LR
   H --> W
 ```
 
-No existen en v1 servidor de aplicación, base de datos, cuentas de visitantes ni repositorio central de reservas. Datos ingresados en un calendario externo quedan bajo las condiciones de su proveedor y del negocio.
+No existen en v1 servidor de aplicación, base de datos, cuentas de visitantes ni repositorio central de reservas. Datos ingresados en un calendario externo quedan bajo las condiciones de su proveedor y del negocio. Las consultas de tatuajes grandes se escriben y envían desde WhatsApp; Littzite no observa, confirma ni almacena el mensaje enviado.
 
 ## Amenazas y controles
 
@@ -25,14 +25,14 @@ No existen en v1 servidor de aplicación, base de datos, cuentas de visitantes n
 | Scripts/iframes terceros | Ejecución no controlada, privacidad | Cargar bajo demanda, CSP evaluada con proveedor real, inventario de terceros | Auditoría de red y CSP |
 | Mensajes de embeds | Mensajes falsificados | Validar `origin`, formato y tipo; no usar como confirmación de pago/reserva | Tests con mensajes inválidos |
 | Repo público / CI | Exposición de secretos | No poner credenciales en Git ni variables públicas; permisos mínimos y revisión de logs | Escaneo de secretos y PR review |
-| Presupuestos externos | Filtración, spam, referencias fotográficas sensibles o exceso de datos | Elegir canal bajo D-04; política de privacidad, mínimo necesario y permisos apropiados; no alojar archivos privados en la web estática | Prueba del recorrido aprobado y revisión de campos |
+| Presupuestos por WhatsApp | Número de destino erróneo, fuga de datos en URL/telemetría o expectativa errónea de confidencialidad | D-04: solo enlace de texto, número comercial E.164 validado, texto prellenado con datos públicos, sin formularios ni carga de imágenes propios; aviso claro de salida a tercero | Validación de número, host y texto; recorrido móvil/escritorio, revisar telemetría |
 | Fotos/testimonios | Uso sin derechos o identificación no consentida | Aprobación del cliente, fuente y licencias verificadas, retirada documentada | Checklist editorial |
 | Previews y staging | Indexación accidental o filtración de contenido | Previews no indexables; acceso restringido si no son públicas | Robots, meta y acceso |
-| Dependencias / template | Vulnerabilidades, licencia inadecuada | Auditoría selectiva, lockfile, actualización controlada, atribuciones requeridas | Revisión de dependencias/licencias |
+| Dependencias / template | Vulnerabilidades, licencias incumplidas, copia de assets no autorizados | Auditoría selectiva, lockfile, actualización controlada, procedencia y avisos de copyright exigibles; D-08B no afecta licencias de terceros | Revisión de dependencias/licencias y [política PI](15-ip-license-policy.md) |
 | Configuración cruzada | Teléfono, cuenta de calendario o tracking del cliente equivocado | Config aislada por app, validación de dominios, builds y pruebas cruzadas | E2E de ambas apps |
 
 ## Exclusiones que disparan rediseño
 
-No recibir ni almacenar historias clínicas, contraindicaciones, fotos privadas íntimas, documentos de identidad o detalles de salud en esta versión. Si cualquiera de los negocios necesita recolectarlos, detener el desarrollo de ese flujo para decidir minimización de datos, proveedor autorizado, retención, seguridad y requisitos legales con asesoramiento apropiado.
+No recibir ni almacenar historias clínicas, contraindicaciones, fotos privadas íntimas, documentos de identidad o detalles de salud en esta versión. Aunque el sitio solo ofrece texto, el usuario podría adjuntar imágenes directamente en WhatsApp, fuera del control de Littzite; no afirmar que el proveedor impide adjuntos. Si cualquiera de los negocios necesita recolectarlos, detener el desarrollo de ese flujo para decidir minimización de datos, proveedor autorizado, retención, seguridad y requisitos legales con asesoramiento apropiado.
 
 **No confundir** el evento visual `booking_widget_event` con `provider_confirmed_booking`. Para confirmación fiable en una fase futura: webhook verificado, idempotencia y una base de datos mínima justificada por nueva ADR.
