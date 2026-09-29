@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "@littzite/content-schema": "workspace:*",
+    "@littzite/sections": "workspace:*",
     "@littzite/ui": "workspace:*",
     "astro": "7.3.5"
   },
