@@ -1,6 +1,6 @@
 # ADR-010 — Aplicación de marca VIORA manteniendo la arquitectura compartida
 
-**Estado:** propuesto para revisión en PR-04 · **Fecha:** 2026-09-29
+**Estado:** aceptada tras la revisión de PR-04 · **Fecha:** 2026-09-29
 
 ## Contexto
 
@@ -24,7 +24,7 @@ El prototipo de estética del PR-03 usa una composición genérica que no repres
 
 ## Pendientes
 
-- **Permiso confirmado** por el usuario para incorporar al repositorio público las tres variantes oficiales del logo. Falta añadir los PNG originales a la rama del PR desde el ZIP preparado y verificar que las pruebas de build los encuentren.
+- **Permiso confirmado** por el usuario y tres variantes originales incorporadas al repositorio público, verificadas byte por byte contra el kit entregado. Su presencia es comprobada por los smoke tests de la app de estética; no se publican fuentes de terceros.
 - Comprobar tipografía real en los navegadores objetivo y definir distribución autorizada de las fuentes.
 - Aprobar datos de contacto y servicios activos con el negocio. La web sigue como preview `noindex`.
 

@@ -89,7 +89,6 @@
   background: var(--color-surface); display: flex; flex-direction: column; align-items: start;
 }
 .feature-card__number { font-size: .83rem; font-weight: 800; }
-.feature-card__symbol { font-size: 1.7rem; margin: -.35rem 0 auto auto; color: var(--color-accent); }
 .feature-card h3 { margin: 2.5rem 0 .7rem; font-size: clamp(1.3rem, 2vw, 1.7rem); letter-spacing: -.04em; }
 .feature-card p { font-size: .9rem; line-height: 1.75; margin: 0; opacity: .8; }
 

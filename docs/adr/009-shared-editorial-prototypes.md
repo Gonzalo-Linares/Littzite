@@ -1,6 +1,6 @@
 # ADR-009 — Primeras secciones visuales compartidas y prototipos no indexables
 
-**Estado:** propuesta para revisión en PR-03 · **Fecha:** 2026-09-29
+**Estado:** aceptada tras revisión de PR-03 · **Fecha:** 2026-09-29
 
 ## Contexto
 

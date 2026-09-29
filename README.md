@@ -1,10 +1,10 @@
 # Littzite — arquitectura fundacional
 
-**Estado:** documentación fundacional v0.5; PR-01/02 integrados y prototipos visuales PR-03 en revisión. **Fecha:** 2026-09-28/29.
+**Estado:** arquitectura documental v0.7; PR-01/02/03 integrados y adaptación de marca VIORA PR-04. **Fecha:** 2026-09-28/29.
 **Producto:** plataforma de creación de sitios comerciales modulares; primeros casos: estética integral y estudio de tatuajes en San Juan, Argentina.  
 **Propósito:** captación orgánica local, diferenciación visual, contacto y reservas/solicitudes mediante proveedores externos.
 
-> El repositorio incluye dos aplicaciones Astro, contratos Zod y UI compartidos, y prototipos visuales en revisión. VIORA ya tiene un manual de marca proporcionado para su implementación en una rama separada. La arquitectura restante describe el objetivo previsto: todavía **no** hay sitios comerciales terminados, contenido real, SEO productivo ni integraciones de reservas. Las decisiones pendientes requieren validación antes de implementarse.
+> El repositorio incluye dos aplicaciones Astro, contratos Zod, secciones compartidas y prototipos visuales. La app de estética incorpora el manual de marca y los tres logos oficiales autorizados de VIORA. La arquitectura restante describe el objetivo previsto: todavía **no** hay sitios comerciales terminados, contenido real, SEO productivo ni integraciones de reservas. Las decisiones pendientes requieren validación antes de implementarse.
 
 ## Acuerdos de alcance
 
@@ -51,7 +51,7 @@ corepack pnpm build
 corepack pnpm test
 ```
 
-Para trabajar en una sola aplicación, usar `corepack pnpm --filter @littzite/estetica <check|build|test>` o `@littzite/tattoo`. Las pruebas de salida requieren ejecutar antes el build de la app. Ambas páginas son prototipos editoriales con `noindex`, componentes compartidos y temas provisionales distintos; no tienen configuración comercial, dominios ni proveedor de reservas. Los targets y acciones de reserva/presupuesto solo aparecen en fixtures de test. La rama VIORA utiliza su paleta oficial y requiere tres variantes originales del logo en `apps/estetica/public/brand/`. Las instrucciones y limitaciones están en [la guía de marca](docs/16-viora-brand.md).
+Para trabajar en una sola aplicación, usar `corepack pnpm --filter @littzite/estetica <check|build|test>` o `@littzite/tattoo`. Las pruebas de salida requieren ejecutar antes el build de la app. Ambas páginas siguen siendo prototipos `noindex` con componentes compartidos; VIORA ya usa su identidad oficial y el sitio de tatuajes mantiene un tema provisional; no tienen configuración comercial, dominios ni proveedor de reservas. Los targets y acciones de reserva/presupuesto solo aparecen en fixtures de test. La rama VIORA utiliza su paleta oficial y requiere tres variantes originales del logo en `apps/estetica/public/brand/`. Las instrucciones y limitaciones están en [la guía de marca](docs/16-viora-brand.md).
 
 ## Condiciones de uso del repositorio
 
@@ -63,4 +63,4 @@ Para trabajar en una sola aplicación, usar `corepack pnpm --filter @littzite/es
 - **Propuesta**: planteada técnicamente, pendiente de ratificación, prueba o validación de costes.
 - **Pendiente**: no seleccionar proveedor, política comercial, flujo o integración sin información del negocio.
 
-**Próximos pasos tras PR-01:** ampliar contratos Zod y pruebas de límites entre paquetes → sistema de diseño y secciones compartidas justificadas → implementación de estética → implementación del tatuador. Las integraciones reales y los cobros requieren resolver sus decisiones comerciales antes de activarse.
+**Próximos pasos:** integrar el portfolio real autorizado del tatuador con archivos originales de calidad publicable; cerrar duración y disponibilidad de los cuatro servicios de VIORA, proveedor de agenda, textos comerciales y SEO antes del lanzamiento. Sin reservas ni pagos mientras esas decisiones permanezcan abiertas.

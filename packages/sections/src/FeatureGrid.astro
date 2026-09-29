@@ -23,7 +23,6 @@ const { section } = Astro.props;
       {section.items.map((item, index) => (
         <article class="feature-card">
           <span class="feature-card__number" aria-hidden="true">{String(index + 1).padStart(2, '0')}</span>
-          <span class="feature-card__symbol" aria-hidden="true">↗</span>
           <h3>{item.title}</h3>
           <p>{item.body}</p>
         </article>

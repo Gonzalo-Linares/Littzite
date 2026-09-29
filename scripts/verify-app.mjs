@@ -34,6 +34,7 @@ if (app === 'estetica') {
 assert.ok(html.includes('class="landing-hero landing-hero--'), 'Shared hero missing');
 assert.equal((html.match(/class="feature-card"/g) ?? []).length, app === 'estetica' ? 4 : 3, 'Feature cards missing');
 assert.ok(html.includes('id="alcance"'), 'Feature grid anchor missing');
+assert.ok(!html.includes('feature-card__symbol'), 'Informational cards must not suggest a nonexistent link');
 assert.ok(html.includes('class="skip-link" href="#contenido"'));
 assert.ok(html.includes('class="container"'));
 assert.ok(html.includes('class="action-link" href="#alcance"'));

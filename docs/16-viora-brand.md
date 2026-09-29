@@ -22,7 +22,7 @@ El frontend espera estos **archivos originales del kit sin modificar**:
 | `/brand/viora-principal.png` | `VIORA/logos/VIORA_principal_color.png` | Hero |
 | `/brand/viora-palabra.png` | `VIORA/logos/VIORA_palabra_ciruela.png` | Pie |
 
-Colocar los tres bajo `apps/estetica/public/brand/`. Se suministra aparte un ZIP pequeño con esta estructura, sin fuentes, para que el titular lo importe localmente. **Permiso confirmado por el usuario el 29/09/2026 para incorporar las tres variantes originales al repositorio público.** La rama del PR todavía no contiene esos PNG; el titular debe extraer el ZIP preparado y realizar un commit limitado a los tres logos. El test de salida exige que los tres estén presentes en `dist/brand/`, para evitar integrar una vista con imágenes rotas.
+Los tres PNG originales ya se incorporaron bajo `apps/estetica/public/brand/`, sin fuentes; el ZIP de preparación no forma parte del repositorio. **Permiso confirmado por el usuario el 29/09/2026 para incorporar las tres variantes originales al repositorio público.** Los tres PNG originales fueron incorporados a la rama por el titular y se comprobó su identidad exacta con los originales del kit; las tipografías del kit permanecen excluidas. El test de salida exige que los tres estén presentes en `dist/brand/`, para evitar integrar una vista con imágenes rotas.
 
 ## Secciones
 
@@ -40,4 +40,4 @@ Colocar los tres bajo `apps/estetica/public/brand/`. Se suministra aparte un ZIP
 
 ## Cómo verificar localmente
 
-Después de copiar los tres logos: ejecutar desde la raíz `corepack pnpm install --frozen-lockfile`, `corepack pnpm check:boundaries`, `corepack pnpm test:contracts`, `corepack pnpm check`, `corepack pnpm build` y `corepack pnpm test`. Los smoke tests aseguran logos disponibles, ausencia de contaminación a la app de tatuajes, cuatro tarjetas en VIORA y tres en el prototipo del tatuador. La CI está desactivada deliberadamente por el titular y no debe activarse sin su autorización.
+Con los tres logos ya incorporados: ejecutar desde la raíz `corepack pnpm install --frozen-lockfile`, `corepack pnpm check:boundaries`, `corepack pnpm test:contracts`, `corepack pnpm check`, `corepack pnpm build` y `corepack pnpm test`. Los smoke tests aseguran logos disponibles, ausencia de contaminación a la app de tatuajes, cuatro tarjetas en VIORA y tres en el prototipo del tatuador. La CI está desactivada deliberadamente por el titular y no debe activarse sin su autorización.
