@@ -37,6 +37,19 @@
 16. [Registros de decisión arquitectónica — ADR](docs/adr/)
 17. [Instrucciones para agentes de código](AGENTS.md)
 
+## Scaffold PR-01
+
+Requiere Node.js 24 y pnpm 12.6.0 (disponible mediante Corepack). Desde la raíz:
+
+```sh
+corepack pnpm install --frozen-lockfile
+corepack pnpm check
+corepack pnpm build
+corepack pnpm test
+```
+
+Para trabajar en una sola aplicación, usar `corepack pnpm --filter @littzite/estetica <check|build|test>` o `@littzite/tattoo`. Las pruebas de salida requieren ejecutar antes el build de la app. Ambas páginas son demos estáticas con `noindex`; no tienen configuración comercial, dominios ni proveedor de reservas.
+
 ## Condiciones de uso del repositorio
 
 **Littzite es público y no concede una licencia de reutilización de su código original.** Se reserva el derecho de autor conforme a la normativa aplicable, sin perjuicio de los permisos y límites derivados de los Términos de GitHub y la legislación vigente. Los componentes de terceros (incluido cualquier código de AstroWind efectivamente incorporado en el futuro) conservan **sus propias licencias y avisos**. No asumir que el contenido, las marcas, las fotografías o los diseños de clientes están autorizados para reutilización. Ver [política detallada](docs/15-ip-license-policy.md).

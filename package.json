@@ -1,0 +1,13 @@
+{
+  "name": "littzite",
+  "private": true,
+  "packageManager": "pnpm@12.6.0",
+  "engines": {
+    "node": ">=24.0.0 <25"
+  },
+  "scripts": {
+    "check": "corepack pnpm --filter @littzite/estetica check && corepack pnpm --filter @littzite/tattoo check",
+    "build": "corepack pnpm --filter @littzite/estetica build && corepack pnpm --filter @littzite/tattoo build",
+    "test": "corepack pnpm --filter @littzite/estetica test && corepack pnpm --filter @littzite/tattoo test"
+  }
+}

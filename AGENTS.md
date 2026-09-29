@@ -29,3 +29,7 @@ Leer `README.md`, `docs/01-vision-scope.md`, `docs/02-architecture.md`, `docs/09
 ## Orden previsto
 
 PR-00: documentación y aprobación; PR-01: scaffold mínimo pnpm + Astro + TypeScript + CI; PR-02: contratos Zod y sistema de diseño; PR posteriores: SEO/booking adapters y sitios reales. No mezclar arquitectura y diseño visual definitivo en el primer PR.
+
+## Scaffold PR-01
+
+El grafo implementado inicialmente es `apps/{estetica,tattoo} -> packages/{content-schema,ui}` y `packages/ui -> packages/content-schema`. `content-schema` solo valida `SiteConfig.defaultLocale` y `ui` contiene un layout mínimo compartido. Los paquetes `sections`, `seo` y `booking` del diagrama conceptual aún no existen; crearlos cuando tengan interfaces consumidas. Ejecutar `pnpm check`, `pnpm build` y `pnpm test` para verificar ambas apps; los comandos por app están en cada `package.json`.
