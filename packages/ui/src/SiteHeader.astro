@@ -10,10 +10,11 @@ interface Props {
   brand: string;
   descriptor: string;
   links: NavItem[];
+  badge?: NavItem;
 }
 
-const { brand, descriptor, links } = Astro.props;
-if (!links.every((link) => isAllowedHref(link.href))) throw new Error('Invalid navigation link');
+const { brand, descriptor, links, badge } = Astro.props;
+if (![...links, ...(badge ? [badge] : [])].every((link) => isAllowedHref(link.href))) throw new Error('Invalid navigation link');
 ---
 
 <header class="site-header">
@@ -26,6 +27,6 @@ if (!links.every((link) => isAllowedHref(link.href))) throw new Error('Invalid n
     <nav class="site-nav" aria-label="Navegación principal">
       {links.map((item) => <a href={item.href}>{item.label}</a>)}
     </nav>
-    <a class="site-header__badge" href="#alcance">Vista previa <span aria-hidden="true">↗</span></a>
+    {badge && <a class="site-header__badge" href={badge.href}>{badge.label} <span aria-hidden="true">↗</span></a>}
   </div>
 </header>

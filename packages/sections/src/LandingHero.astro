@@ -9,29 +9,32 @@ interface Props {
   variant: 'serene' | 'graphic';
   ctaLabel: string;
   ctaHref: string;
+  disclaimer?: string;
+  artLabel?: string;
+  artIndex?: string;
 }
 
-const { section, variant, ctaLabel, ctaHref } = Astro.props;
+const { section, variant, ctaLabel, ctaHref, disclaimer, artLabel, artIndex } = Astro.props;
 ---
 
 <section class={`landing-hero landing-hero--${variant}`} aria-labelledby="titulo-principal">
   <Container>
     <div class="landing-hero__grid">
       <div class="landing-hero__copy">
-        <p class="landing-hero__eyebrow">
+        {section.eyebrow && <p class="landing-hero__eyebrow">
           <span class="landing-hero__eyebrow-line" aria-hidden="true"></span>
-          {section.eyebrow ?? 'Prototipo visual'}
-        </p>
+          {section.eyebrow}
+        </p>}
         <h1 id="titulo-principal" class="landing-hero__heading">{section.heading}</h1>
         <p class="landing-hero__body">{section.body}</p>
         <div class="landing-hero__actions">
           <Link href={ctaHref}>{ctaLabel}</Link>
-          <span class="landing-hero__disclaimer">Experiencia visual en desarrollo</span>
+          {disclaimer && <span class="landing-hero__disclaimer">{disclaimer}</span>}
         </div>
         <div class="landing-hero__index" aria-hidden="true"><span>01</span><span class="landing-hero__index-line"></span><span>02</span></div>
       </div>
       <div class="landing-hero__art" aria-hidden="true">
-        <div class="landing-hero__art-top"><span>ESTUDIO VISUAL</span><span>001 / 002</span></div>
+        <div class="landing-hero__art-top"><span>{artLabel}</span><span>{artIndex}</span></div>
         <div class="landing-hero__canvas">
           <div class="landing-hero__shape landing-hero__shape--outer"></div>
           <div class="landing-hero__shape landing-hero__shape--inner"></div>
@@ -39,7 +42,7 @@ const { section, variant, ctaLabel, ctaHref } = Astro.props;
           <div class="landing-hero__cross landing-hero__cross--one">+</div>
           <div class="landing-hero__cross landing-hero__cross--two">+</div>
         </div>
-        <div class="landing-hero__art-bottom"><span>{section.visualCaption ?? 'Diseño en exploración'}</span><span aria-hidden="true">↗</span></div>
+        <div class="landing-hero__art-bottom"><span>{section.visualCaption}</span><span aria-hidden="true">↗</span></div>
       </div>
     </div>
   </Container>

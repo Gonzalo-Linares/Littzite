@@ -2,9 +2,10 @@
 interface Props {
   brand: string;
   note: string;
+  meta?: [string, string];
 }
 
-const { brand, note } = Astro.props;
+const { brand, note, meta } = Astro.props;
 ---
 
 <footer class="site-footer">
@@ -15,8 +16,8 @@ const { brand, note } = Astro.props;
     </div>
     <a href="#inicio" class="site-footer__back">Volver arriba <span aria-hidden="true">↑</span></a>
   </div>
-  <div class="container site-footer__meta">
-    <span>Prototipo visual · No es un sitio comercial activo</span>
-    <span>Diseñado con componentes compartidos en Littzite</span>
-  </div>
+  {meta && <div class="container site-footer__meta">
+    <span>{meta[0]}</span>
+    <span>{meta[1]}</span>
+  </div>}
 </footer>
