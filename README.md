@@ -1,10 +1,10 @@
 # Littzite — arquitectura fundacional
 
-**Estado:** v0.5, arquitectura documental en revisión. **Fecha:** 2026-09-28/29.  
+**Estado:** documentación fundacional v0.5; scaffold técnico PR-01 implementado para revisión. **Fecha:** 2026-09-28/29.  
 **Producto:** plataforma de creación de sitios comerciales modulares; primeros casos: estética integral y estudio de tatuajes en San Juan, Argentina.  
 **Propósito:** captación orgánica local, diferenciación visual, contacto y reservas/solicitudes mediante proveedores externos.
 
-> Este paquete contiene diseño y decisiones documentadas, **no** código implementado ni aprobación automática de todos los puntos. Las actualizaciones documentales se revisan en PR antes de integrarse en `main`.
+> El repositorio incluye un **scaffold técnico implementado** (dos aplicaciones Astro, validación mínima de `es-AR`, layout compartido y CI). El resto de la arquitectura documentada describe el objetivo previsto: todavía **no** hay sitios comerciales terminados, contenido real, SEO productivo ni integraciones de reservas. Las decisiones pendientes requieren validación antes de implementarse.
 
 ## Acuerdos de alcance
 
@@ -37,6 +37,19 @@
 16. [Registros de decisión arquitectónica — ADR](docs/adr/)
 17. [Instrucciones para agentes de código](AGENTS.md)
 
+## Scaffold PR-01
+
+Requiere Node.js 24 y pnpm 12.6.0 (disponible mediante Corepack). Desde la raíz:
+
+```sh
+corepack pnpm install --frozen-lockfile
+corepack pnpm check
+corepack pnpm build
+corepack pnpm test
+```
+
+Para trabajar en una sola aplicación, usar `corepack pnpm --filter @littzite/estetica <check|build|test>` o `@littzite/tattoo`. Las pruebas de salida requieren ejecutar antes el build de la app. Ambas páginas son demos estáticas con `noindex`; no tienen configuración comercial, dominios ni proveedor de reservas.
+
 ## Condiciones de uso del repositorio
 
 **Littzite es público y no concede una licencia de reutilización de su código original.** Se reserva el derecho de autor conforme a la normativa aplicable, sin perjuicio de los permisos y límites derivados de los Términos de GitHub y la legislación vigente. Los componentes de terceros (incluido cualquier código de AstroWind efectivamente incorporado en el futuro) conservan **sus propias licencias y avisos**. No asumir que el contenido, las marcas, las fotografías o los diseños de clientes están autorizados para reutilización. Ver [política detallada](docs/15-ip-license-policy.md).
@@ -47,4 +60,4 @@
 - **Propuesta**: planteada técnicamente, pendiente de ratificación, prueba o validación de costes.
 - **Pendiente**: no seleccionar proveedor, política comercial, flujo o integración sin información del negocio.
 
-**Orden de trabajo:** revisar la documentación y las decisiones aún bloqueantes → PR de scaffold mínimo → contratos Zod → primeras secciones compartidas → estética → tatuador. Los flujos confirmados se pueden modelar ya; no implementar un proveedor ni cobros hasta validarlos. No agregar código productivo en el PR documental.
+**Próximos pasos tras PR-01:** ampliar contratos Zod y pruebas de límites entre paquetes → sistema de diseño y secciones compartidas justificadas → implementación de estética → implementación del tatuador. Las integraciones reales y los cobros requieren resolver sus decisiones comerciales antes de activarse.

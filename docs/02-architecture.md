@@ -1,6 +1,8 @@
 # Arquitectura lógica y despliegue — v0.5
 
-## Monorepo propuesto
+## Monorepo objetivo (arquitectura conceptual)
+
+El siguiente árbol describe el destino previsto, **no** los directorios existentes en PR-01. El scaffold crea solo `apps/{estetica,tattoo}` y `packages/{content-schema,ui}`. Los demás paquetes surgirán únicamente cuando exista una interfaz compartida que realmente los necesite.
 
 ```text
 Littzite/
@@ -14,12 +16,25 @@ Littzite/
 │   ├── seo/                    # Head, canonical, JSON-LD, sitemap/utilidades
 │   └── booking/                # Contrato y adaptadores de proveedores
 ├── docs/                       # Esta documentación + ADRs
-├── .github/workflows/          # CI por rutas afectadas + builds de ambas apps
+├── .github/workflows/          # CI: hoy verifica y compila ambas apps en cada PR
 ├── pnpm-workspace.yaml
 └── pnpm-lock.yaml
 ```
 
 **Regla de dependencias:** `apps/* -> packages/*`. Nunca `apps/estetica -> apps/tattoo` ni dependencias circulares entre paquetes. Evitar separar en paquetes elementos que todavía no tengan una interfaz estable; la estructura podrá simplificarse tras una prueba de implementación.
+
+### Grafo implementado en PR-01
+
+```mermaid
+flowchart LR
+  E[apps/estetica] --> C[packages/content-schema]
+  E --> UI[packages/ui]
+  T[apps/tattoo] --> C
+  T --> UI
+  UI --> C
+```
+
+`content-schema` contiene únicamente la validación del locale de `SiteConfig`; `ui` expone un layout Astro mínimo consumido por ambas apps y toma el tipo de locale del esquema. El árbol anterior describe la arquitectura prevista, no carpetas ya creadas: `sections`, `seo` y `booking` esperan interfaces justificadas en PR posteriores. No hay ciclos entre paquetes ni imports entre aplicaciones.
 
 ## Diagrama de contexto (C4 nivel 1, simplificado)
 
@@ -101,7 +116,7 @@ flowchart LR
 
 - Cada aplicación define dominio/canonical, sitemap, iconos, imágenes sociales, cuenta de reservas y analítica independientes.
 - D-09: ambas apps publican contenido en `es-AR`, sin prefijo idiomático; el contrato `SiteConfig.defaultLocale` es la fuente de verdad para el idioma del documento, metadatos y formatos. Los paquetes compartidos no implementan un router de idiomas ni catálogos de traducción en v1.
-- Comparten librerías, no sesiones ni secretos. Los deployments se disparan por ruta afectada; un cambio en un paquete común exige compilar/probar ambas apps.
+- Comparten librerías, no sesiones ni secretos. **CI actual de PR-01:** siempre ejecuta `check`, `build` y `test` para ambas apps en cada PR; por lo tanto los cambios comunes quedan verificados en ambas. **Objetivo posterior:** despliegues independientes y selectivos por rutas afectadas, todavía no implementados.
 - No se almacena un registro local de reservas en v1; la fuente de verdad es el proveedor elegido.
 - Cada integración externa incluye fallback a enlace externo y una política ante indisponibilidad.
 
@@ -125,4 +140,4 @@ El proveedor de hosting está **propuesto**, no confirmado. Para el contenido p�
 
 ## Reglas para dependencias entre paquetes
 
-El grafo real se fijará en el PR de scaffold. Reglas invariantes: `apps/*` puede importar paquetes públicos; no hay importaciones cruzadas entre apps, ni dependencias inversas desde packages hacia apps, ni ciclos entre paquetes. No extraer una librería por cada componente antes de demostrar reutilización. **Un contrato compartido y su implementación tienen un solo propietario.**
+El grafo real del scaffold se muestra arriba y comprende dos apps, `content-schema` y `ui`. Los futuros paquetes solo se incorporarán cuando tengan consumidores concretos. Reglas invariantes: `apps/*` puede importar paquetes públicos; no hay importaciones cruzadas entre apps, ni dependencias inversas desde packages hacia apps, ni ciclos entre paquetes. No extraer una librería por cada componente antes de demostrar reutilización. **Un contrato compartido y su implementación tienen un solo propietario.**

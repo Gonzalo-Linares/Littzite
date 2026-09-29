@@ -1,0 +1,13 @@
+node_modules/
+.astro/
+dist/
+.DS_Store
+
+# Secrets and local environment settings (applies in the repo root and both apps)
+.env
+.env.*
+.envrc
+
+# Only sanitized environment examples may be committed
+!.env.example
+!.env.*.example
