@@ -3,8 +3,8 @@ import { readFile } from 'node:fs/promises';
 import { siteConfigSchema } from '../packages/content-schema/src/index.ts';
 
 const expectedTitles = {
-  estetica: 'Demo de estética',
-  tattoo: 'Demo de tatuajes',
+  estetica: 'Una pausa para vos',
+  tattoo: 'Ideas que dejan huella',
 };
 
 const app = process.argv[2];
@@ -15,7 +15,12 @@ const { siteContent } = await import(`../apps/${app}/src/site.config.ts`);
 const html = await readFile(new URL(`../apps/${app}/dist/index.html`, import.meta.url), 'utf8');
 assert.match(html, /<html lang="es-AR"(?:\s|>)/);
 assert.match(html, /<meta name="robots" content="noindex, nofollow">/);
-assert.ok(html.includes(`<h1>${expectedTitles[app]}</h1>`));
+assert.ok(html.includes(`>${expectedTitles[app]}</h1>`), 'Expected editorial heading');
+assert.ok(html.includes('class="site-header"'), 'Shared header missing');
+assert.ok(html.includes('class="site-footer"'), 'Shared footer missing');
+assert.ok(html.includes('class="landing-hero landing-hero--'), 'Shared hero missing');
+assert.equal((html.match(/class="feature-card"/g) ?? []).length, 3, 'Three feature cards expected');
+assert.ok(html.includes('id="alcance"'), 'Feature grid anchor missing');
 assert.ok(html.includes('class="skip-link" href="#contenido"'));
 assert.ok(html.includes('class="container"'));
 assert.ok(html.includes('class="action-link" href="#alcance"'));
@@ -28,4 +33,4 @@ for (const [otherApp, otherTitle] of Object.entries(expectedTitles)) {
   if (otherApp !== app) assert.ok(!html.includes(otherTitle), `${app} contains ${otherApp} content`);
 }
 
-console.log(`${app}: static HTML, locale, noindex and content isolation verified`);
+console.log(`${app}: static prototype, locale, noindex, shared sections and content isolation verified`);

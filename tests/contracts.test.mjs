@@ -103,3 +103,24 @@ test('external targets require HTTPS and contact numbers require E.164', () => {
   badNumber.site.contact.whatsapp = '1112345678';
   assert.equal(siteContentSchema.safeParse(badNumber).success, false);
 });
+
+test('visual feature-grid is validated and shared by both demo apps', () => {
+  for (const app of [estetica, tattoo]) {
+    const sections = app.pages.find((page) => page.slug === '').sections;
+    assert.deepEqual(sections.map((section) => section.type), ['intro', 'feature-grid']);
+    const grid = sections[1];
+    assert.equal(pageSectionSchema.safeParse(grid).success, true);
+    assert.equal(grid.items.length, 3);
+    assert.equal(new Set(grid.items.map((item) => item.id)).size, grid.items.length);
+  }
+});
+
+test('feature-grid rejects empty text, excess cards and duplicate IDs', () => {
+  const base = structuredClone(estetica);
+  const grid = base.pages[0].sections.find((section) => section.type === 'feature-grid');
+  const duplicate = structuredClone(base);
+  duplicate.pages[0].sections[1].items[1].id = duplicate.pages[0].sections[1].items[0].id;
+  assert.equal(siteContentSchema.safeParse(duplicate).success, false);
+  assert.equal(pageSectionSchema.safeParse({ ...grid, heading: '' }).success, false);
+  assert.equal(pageSectionSchema.safeParse({ ...grid, items: [...grid.items, ...grid.items] }).success, false);
+});
