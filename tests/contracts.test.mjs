@@ -139,3 +139,19 @@ test('VIORA theme, voice and four named lines match its brand manual', () => {
   ]);
   assert.ok(estetica.services.length === 0 && estetica.bookingTargets.length === 0 && estetica.quoteTargets.length === 0);
 });
+
+test('Juanjo brand stays independent and its commercial targets remain inactive', () => {
+  assert.deepEqual(tattoo.site.theme, {
+    surface: '#17191B', text: '#F8F4ED', accent: '#EF9476',
+    accentText: '#17191B', border: '#67696B', focus: '#FFD4B3',
+  });
+  const home = tattoo.pages.find((page) => page.slug === '');
+  assert.equal(home.sections[0].heading, 'De la idea a la piel.');
+  assert.deepEqual(home.sections[1].items.map((item) => item.id), [
+    'portfolio', 'piezas-pequenas', 'proyectos-grandes',
+  ]);
+  assert.equal(tattoo.services.length, 0);
+  assert.equal(tattoo.bookingTargets.length, 0);
+  assert.equal(tattoo.quoteTargets.length, 0);
+  assert.equal(tattoo.site.contact, undefined);
+});

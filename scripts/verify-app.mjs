@@ -4,7 +4,7 @@ import { siteConfigSchema } from '../packages/content-schema/src/index.ts';
 
 const expectedTitles = {
   estetica: 'Regalate una pausa.',
-  tattoo: 'Ideas que dejan huella',
+  tattoo: 'De la idea a la piel.',
 };
 
 const app = process.argv[2];
@@ -28,8 +28,15 @@ if (app === 'estetica') {
   for (const asset of ['viora-horizontal.png', 'viora-principal.png', 'viora-palabra.png']) {
     await access(new URL(`../apps/estetica/dist/brand/${asset}`, import.meta.url));
   }
-} else {
+ } else {
   assert.ok(!html.includes('viora-site') && !html.includes('/brand/viora-'), 'VIORA assets leaked into tattoo');
+  assert.ok(html.includes('class="juanjo-site"'), 'Juanjo body style missing');
+  assert.ok(html.includes('class="juanjo-gallery"'), 'Juanjo portfolio region missing');
+  assert.ok(html.includes('class="juanjo-gallery__empty"'), 'Honest portfolio empty state missing');
+  assert.ok(html.includes('href="https://www.instagram.com/juanjo.tattoos/"'), 'Approved Instagram link missing');
+  assert.ok(html.includes('id="portfolio"') && html.includes('id="alcance"'), 'Juanjo section anchors missing');
+  assert.ok(!html.includes('wa.me/') && !html.includes('api.whatsapp.com/'), 'Unapproved WhatsApp CTA was published');
+  assert.ok(!html.includes('juanjo-gallery__item--lead'), 'No real artwork should appear before originals arrive');
 }
 assert.ok(html.includes('class="landing-hero landing-hero--'), 'Shared hero missing');
 assert.equal((html.match(/class="feature-card"/g) ?? []).length, app === 'estetica' ? 4 : 3, 'Feature cards missing');
