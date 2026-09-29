@@ -4,19 +4,57 @@ import SiteHeader from '@littzite/ui/SiteHeader.astro';
 import SiteFooter from '@littzite/ui/SiteFooter.astro';
 import LandingHero from '@littzite/sections/LandingHero.astro';
 import FeatureGrid from '@littzite/sections/FeatureGrid.astro';
+import TattooGallery from '../components/TattooGallery.astro';
 import { siteContent } from '../site.config';
+import { tattooPortfolio } from '../portfolio';
+import '../styles/juanjo.css';
 
 const { site, pages } = siteContent;
 const home = pages.find((page) => page.slug === '');
 const intro = home?.sections.find((section) => section.type === 'intro');
 const features = home?.sections.find((section) => section.type === 'feature-grid');
-if (!home || !intro || !features) throw new Error('Incomplete tattoo prototype content');
+if (!home || !intro || !features) throw new Error('Incomplete Juanjo Tattoos preview');
 ---
 
-<BaseLayout locale={site.defaultLocale} theme={site.theme} title={home.title} noindex={true}>
-  <SiteHeader slot="header" brand="Tatuajes · Demo" descriptor="Littzite / concepto"
-    links={[{ label: 'El concepto', href: '#inicio' }, { label: 'Próximos pasos', href: '#alcance' }]} badge={{ label: 'Vista previa', href: '#alcance' }} />
-  <LandingHero section={intro} variant="graphic" ctaLabel="Explorar el concepto" ctaHref="#alcance" disclaimer="Prototipo visual en desarrollo" artLabel="ESTUDIO VISUAL" artIndex="001 / 002" />
+<BaseLayout locale={site.defaultLocale} theme={site.theme} title={home.title} noindex={true} bodyClass="juanjo-site">
+  <SiteHeader slot="header" brand="Juanjo Tattoos" descriptor="San Juan"
+    links={[
+      { label: 'Inicio', href: '#inicio' },
+      { label: 'Portfolio', href: '#portfolio' },
+      { label: 'Cómo consultar', href: '#alcance' },
+    ]}
+    badge={{ label: 'Instagram', href: 'https://www.instagram.com/juanjo.tattoos/' }}>
+    <span slot="brand" class="juanjo-wordmark" aria-hidden="true">
+      <span class="juanjo-wordmark__name">JUANJO<span>.</span></span>
+      <span class="juanjo-wordmark__tag">TATTOOS / SAN JUAN</span>
+    </span>
+  </SiteHeader>
+
+  <LandingHero section={intro} variant="graphic"
+    ctaLabel="Explorá el portfolio" ctaHref="#portfolio"
+    artLabel="JUANJO / EDITORIAL" artIndex="001 / 002">
+    <div slot="artwork" class="juanjo-hero__artwork" aria-hidden="true">
+      <div class="juanjo-hero__artwork-top"><span>FORMAS & CONTRASTE</span><span>JUANJO / SJ</span></div>
+      <span class="juanjo-hero__artwork-ring"></span>
+      <span class="juanjo-hero__artwork-mark">J</span>
+      <span class="juanjo-hero__artwork-line"></span>
+      <div class="juanjo-hero__artwork-bottom"><span>TINTA<br />EN PROCESO.</span><span>→</span></div>
+    </div>
+  </LandingHero>
+
+  <TattooGallery items={tattooPortfolio} />
   <FeatureGrid section={features} />
-  <SiteFooter slot="footer" brand="Tatuajes · Demo" note="Exploración visual sin portfolio, turnos ni contacto reales. Todas las fotos finales requieren autorización." meta={["Prototipo · No es un sitio comercial activo", "Componentes compartidos de Littzite"]} />
+
+  <div class="juanjo-outro" aria-label="Información de esta vista previa">
+    <div class="container juanjo-outro__inner">
+      <span>JUANJO TATTOOS / SAN JUAN</span>
+      <p>Los turnos y el canal de presupuestos se habilitarán cuando Juanjo confirme los detalles comerciales.</p>
+    </div>
+  </div>
+
+  <SiteFooter slot="footer" brand="Juanjo Tattoos"
+    note="Una vista previa del sitio. La identidad final y las fotografías del portfolio se completarán con Juanjo."
+    meta={['Vista previa · No admite reservas todavía', 'JUANJO TATTOOS / SAN JUAN']}>
+    <span slot="brand" class="juanjo-footer-wordmark">JUANJO<span>.</span><small>TATTOOS</small></span>
+  </SiteFooter>
 </BaseLayout>
