@@ -13,6 +13,9 @@
 | D-08A | **Acordada** | Repositorio Littzite **público**. | Revisar secretos, assets y licencias antes de commits; lo público no significa open-source. |
 | D-08B | **Acordada** | **Sin licencia de reutilización** para el código original de Littzite; conservar derechos de autor, sin archivo `LICENSE` abierto. | Aviso visible en README; política de terceros, assets y contribuciones documentada en [política de PI](15-ip-license-policy.md) y ADR-006. |
 | D-09 | **Acordada** | V1 exclusivamente en español de Argentina (`es-AR`) para ambas apps. | `SiteConfig.defaultLocale` validado; sin traducciones, selector idiomático ni rutas `/es/`, ver [ADR-007](adr/007-single-locale-es-ar.md). |
+| D-10A | **Acordada para prototipo** | Aplicar el manual de marca VIORA, edición 01 (septiembre de 2026), a la app de estética. | Paleta y voz oficiales, variantes originales del logo, CSS privado de app, cuatro líneas editoriales. Ver [guía VIORA](16-viora-brand.md) y ADR-010. |
+| D-10B | **Acordada** | El usuario confirmó permiso para incluir las tres versiones originales del logo VIORA en el repositorio público. | Incorporar únicamente los tres PNG originales preparados en `apps/estetica/public/brand/`, luego ejecutar pruebas locales. No implica autorización para redistribuir fuentes. |
+| D-11A | **Acordada** | El usuario confirmó permiso para usar las obras y fotografías del tatuador Juanjo como referencias y en el sitio. | Tomar como referencia el perfil `juanjo.tattoos` y los trabajos mostrados en las capturas; emplear imágenes de calidad aprobada cuando se aporten los archivos originales. |
 
 **No inferir:** que el tatuador trabaja solo, que los trabajos pequeños tienen una duración uniforme, que no existen señas, ni que Calendly/SimplyBook.me se haya elegido. WhatsApp es el canal de consulta, **no** el proveedor de agenda. Los ejemplos de esquemas son ilustrativos hasta validarse contra necesidades reales.
 
@@ -25,9 +28,11 @@
 | D-02B | Tatuador: número de artistas, definición comercial de trabajo pequeño/grande, servicios reservables y reglas de agenda | Tatuador | Clasificación pública, duración de eventos y lanzamiento del CTA |
 | D-03 | Señas, pagos en ARS, cancelación, reprogramación y recordatorios, **si se requieren** | Cada negocio | Configuración final del proveedor y textos comerciales |
 | D-04B | Número comercial de WhatsApp verificado, mensaje inicial y texto informativo de salida a tercero aprobados | Tatuador + equipo técnico | Publicación del CTA real de presupuesto (el canal y alcance texto-only están acordados en D-04A) |
-| D-05 | Nombre comercial, dominio, dirección y ubicación verificable de cada cliente | Cada negocio | Canonical, schema, Search Console y lanzamiento |
-| D-06 | Fotografías, derechos, consentimientos y quién editará contenidos | Cada negocio | Publicación de assets finales y proceso editorial |
+| D-05 | Nombre comercial del tatuador y dominio, dirección y ubicación verificable de ambos; **el nombre VIORA se confirmó mediante su manual** | Cada negocio | Canonical, schema, Search Console y lanzamiento |
+| D-06 | Fotografías originales de VIORA, permisos de retratos de terceras personas y responsables de edición; para Juanjo, obtener los originales de calidad publicable y acordar su selección | Cada negocio | Publicación del portfolio final y proceso editorial |
 | D-07 | Hosting y titularidad de dominios y cuentas | Cada negocio + equipo técnico | Despliegue de producción; Cloudflare Pages sigue siendo una propuesta |
+| D-10C | Servicios reales de VIORA, duración por tratamiento, disponibilidad, datos de contacto y proveedor de agenda | Profesional de estética | Contenido comercial y reservas reales; no bloquea el prototipo de marca |
+| D-11B | Selección de archivos originales para el portfolio de Juanjo, resolución apta para web, orden de las piezas y confirmación del tratamiento editorial del logotipo del perfil | Tatuador + equipo técnico | Publicación del portfolio final; no bloquea la exploración visual basada en las capturas |
 
 ## Criterios para cerrar una decisión
 

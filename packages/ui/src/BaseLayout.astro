@@ -7,9 +7,10 @@ interface Props {
   theme: SiteConfig['theme'];
   title: string;
   noindex: boolean;
+  bodyClass?: string;
 }
 
-const { locale, theme, title, noindex } = Astro.props;
+const { locale, theme, title, noindex, bodyClass } = Astro.props;
 const themeStyle = {
   '--color-surface': theme.surface,
   '--color-text': theme.text,
@@ -28,7 +29,7 @@ const themeStyle = {
     {noindex && <meta name="robots" content="noindex, nofollow" />}
     <title>{title}</title>
   </head>
-  <body id="inicio">
+  <body id="inicio" class={bodyClass}>
     <a class="skip-link" href="#contenido">Ir al contenido</a>
     <slot name="header" />
     <main id="contenido"><slot /></main>

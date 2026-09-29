@@ -1,16 +1,18 @@
 import { siteContentSchema } from '@littzite/content-schema';
 
-// Editorial sample only: these are not real client claims or published services.
+// D-09 / VIORA manual de marca, edición 01 (septiembre de 2026).
+// Los servicios del manual son líneas editoriales: disponibilidad, técnicas,
+// precios, duración y política de turnos deben confirmarse antes del lanzamiento.
 export const siteContent = siteContentSchema.parse({
   site: {
     defaultLocale: 'es-AR',
     theme: {
-      surface: '#f7f4ef',
-      text: '#242930',
-      accent: '#324c52',
-      accentText: '#ffffff',
-      border: '#b4b8b4',
-      focus: '#77551d',
+      surface: '#FAF5F0', // Marfil
+      text: '#39252D', // Tinta
+      accent: '#7B4655', // Ciruela
+      accentText: '#FAF5F0',
+      border: '#D7BEC4', // Borde derivado, no un color de marca principal
+      focus: '#39252D',
     },
   },
   services: [],
@@ -18,26 +20,27 @@ export const siteContent = siteContentSchema.parse({
   quoteTargets: [],
   pages: [{
     slug: '',
-    title: 'Prototipo de estética | Littzite',
+    title: 'VIORA · Estética integral | Vista previa',
     sections: [
       {
         id: 'intro',
         type: 'intro',
-        eyebrow: 'Estética / exploración editorial',
-        heading: 'Una pausa para vos',
-        body: 'Una propuesta visual para imaginar una experiencia clara y serena. Los tratamientos, el contenido y los turnos reales se incorporarán después de validarlos con el negocio.',
-        visualCaption: 'Calma, cuidado y espacio',
+        eyebrow: 'VIORA / estética integral',
+        heading: 'Regalate una pausa.',
+        body: 'Tu momento, tu bienestar. Un espacio donde el cuidado personal se encuentra con una atención cercana, serena y profesional.',
+        visualCaption: 'Tu momento, tu bienestar.',
       },
       {
         id: 'alcance',
         type: 'feature-grid',
-        eyebrow: 'El enfoque',
-        heading: 'Lo que tendrá este espacio',
-        intro: 'Tres partes de un futuro sitio de estética. Por ahora son una demostración de componentes y composición.',
+        eyebrow: 'Nuestro universo',
+        heading: 'Cada cuidado tiene su momento.',
+        intro: 'Las cuatro líneas de VIORA, según el manual de marca. Los detalles de cada servicio y la agenda estarán disponibles cuando estén confirmados.',
         items: [
-          { id: 'catalogo', title: 'Tratamientos', body: 'Un catálogo legible con fichas y duraciones reales cuando estén confirmadas.' },
-          { id: 'agenda', title: 'Reservas', body: 'Un acceso sencillo a la agenda externa de la profesional, una vez elegido el proveedor.' },
-          { id: 'identidad', title: 'Identidad', body: 'Fotografías, textos y detalles propios del negocio, publicados solo con autorización.' },
+          { id: 'facial', title: 'Limpieza facial', body: 'Un espacio para dedicarle atención a tu piel. Técnica y disponibilidad por confirmar.' },
+          { id: 'depilacion', title: 'Depilación definitiva', body: 'Información clara sobre el servicio cuando estén validados el equipo y el procedimiento.' },
+          { id: 'masajes', title: 'Masajes', body: 'Una propuesta de bienestar para bajar el ritmo y regalarte una pausa.' },
+          { id: 'reiki', title: 'Reiki', body: 'Una experiencia de bienestar, sin presentarla como tratamiento de enfermedades.' },
         ],
       },
     ],

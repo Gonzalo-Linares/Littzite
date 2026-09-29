@@ -5,18 +5,46 @@ import SiteFooter from '@littzite/ui/SiteFooter.astro';
 import LandingHero from '@littzite/sections/LandingHero.astro';
 import FeatureGrid from '@littzite/sections/FeatureGrid.astro';
 import { siteContent } from '../site.config';
+import '../styles/viora.css';
 
 const { site, pages } = siteContent;
 const home = pages.find((page) => page.slug === '');
 const intro = home?.sections.find((section) => section.type === 'intro');
 const features = home?.sections.find((section) => section.type === 'feature-grid');
-if (!home || !intro || !features) throw new Error('Incomplete aesthetics prototype content');
+if (!home || !intro || !features) throw new Error('Incomplete VIORA preview content');
 ---
 
-<BaseLayout locale={site.defaultLocale} theme={site.theme} title={home.title} noindex={true}>
-  <SiteHeader slot="header" brand="Estética · Demo" descriptor="Littzite / concepto"
-    links={[{ label: 'El concepto', href: '#inicio' }, { label: 'Próximos pasos', href: '#alcance' }]} badge={{ label: 'Vista previa', href: '#alcance' }} />
-  <LandingHero section={intro} variant="serene" ctaLabel="Explorar el concepto" ctaHref="#alcance" disclaimer="Prototipo visual en desarrollo" artLabel="ESTUDIO VISUAL" artIndex="001 / 002" />
+<BaseLayout locale={site.defaultLocale} theme={site.theme} title={home.title} noindex={true} bodyClass="viora-site">
+  <SiteHeader slot="header" brand="VIORA, estética integral" descriptor="Tu momento, tu bienestar"
+    links={[{ label: 'Inicio', href: '#inicio' }, { label: 'Experiencias', href: '#alcance' }, { label: 'Nuestra esencia', href: '#esencia' }]}
+    badge={{ label: 'Vista previa', href: '#alcance' }}>
+    <img slot="brand" class="viora-header-logo" src="/brand/viora-horizontal.png" width="1600" height="480"
+      alt="" decoding="async" />
+  </SiteHeader>
+
+  <LandingHero section={intro} variant="serene" ctaLabel="Conocé nuestras experiencias" ctaHref="#alcance"
+    artLabel="UN ESPACIO PARA VOS" artIndex="VIORA / 01">
+    <img slot="artwork" class="viora-hero-logo" src="/brand/viora-principal.png" width="1335" height="1700"
+      alt="" decoding="async" fetchpriority="high" />
+  </LandingHero>
+
   <FeatureGrid section={features} />
-  <SiteFooter slot="footer" brand="Estética · Demo" note="Prototipo sin servicios ni información comercial publicada. La identidad final se definirá con el negocio." meta={["Prototipo · No es un sitio comercial activo", "Componentes compartidos de Littzite"]} />
+
+  <section id="esencia" class="viora-essence" aria-labelledby="viora-essence-heading">
+    <div class="container viora-essence__inner">
+      <div class="viora-essence__lead">
+        <span class="viora-essence__eyebrow">La esencia de VIORA</span>
+        <h2 id="viora-essence-heading">Una identidad para cuidar.</h2>
+      </div>
+      <div class="viora-essence__text">
+        <p>VIORA nace de una idea simple: hacer del cuidado personal una experiencia amable, con atención, escucha y una comunicación honesta.</p>
+        <p>Este sitio todavía es una vista previa. Los horarios, la disponibilidad y las formas de reservar se publicarán después de confirmarlos.</p>
+      </div>
+    </div>
+  </section>
+
+  <SiteFooter slot="footer" brand="VIORA" note="Tu momento, tu bienestar. Datos comerciales y agenda pendientes de confirmación."
+    meta={["Vista previa · No admite reservas todavía", "VIORA · Estética integral"]}>
+    <img slot="brand" class="viora-footer-logo" src="/brand/viora-palabra.png" width="1310" height="275" alt="VIORA" loading="lazy" />
+  </SiteFooter>
 </BaseLayout>

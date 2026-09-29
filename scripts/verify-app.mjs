@@ -3,7 +3,7 @@ import { readFile } from 'node:fs/promises';
 import { siteConfigSchema } from '../packages/content-schema/src/index.ts';
 
 const expectedTitles = {
-  estetica: 'Una pausa para vos',
+  estetica: 'Regalate una pausa.',
   tattoo: 'Ideas que dejan huella',
 };
 
@@ -18,8 +18,21 @@ assert.match(html, /<meta name="robots" content="noindex, nofollow">/);
 assert.ok(html.includes(`>${expectedTitles[app]}</h1>`), 'Expected editorial heading');
 assert.ok(html.includes('class="site-header"'), 'Shared header missing');
 assert.ok(html.includes('class="site-footer"'), 'Shared footer missing');
+if (app === 'estetica') {
+  assert.ok(html.includes('class="viora-site"'), 'VIORA-only body style missing');
+  assert.ok(html.includes('/brand/viora-horizontal.png'), 'VIORA header asset missing');
+  assert.ok(html.includes('/brand/viora-principal.png'), 'VIORA hero asset missing');
+  assert.ok(html.includes('/brand/viora-palabra.png'), 'VIORA footer asset missing');
+  assert.ok(html.includes('id="esencia"'), 'VIORA essence section missing');
+  const { access } = await import('node:fs/promises');
+  for (const asset of ['viora-horizontal.png', 'viora-principal.png', 'viora-palabra.png']) {
+    await access(new URL(`../apps/estetica/dist/brand/${asset}`, import.meta.url));
+  }
+} else {
+  assert.ok(!html.includes('viora-site') && !html.includes('/brand/viora-'), 'VIORA assets leaked into tattoo');
+}
 assert.ok(html.includes('class="landing-hero landing-hero--'), 'Shared hero missing');
-assert.equal((html.match(/class="feature-card"/g) ?? []).length, 3, 'Three feature cards expected');
+assert.equal((html.match(/class="feature-card"/g) ?? []).length, app === 'estetica' ? 4 : 3, 'Feature cards missing');
 assert.ok(html.includes('id="alcance"'), 'Feature grid anchor missing');
 assert.ok(!html.includes('feature-card__symbol'), 'Informational cards must not suggest a nonexistent link');
 assert.ok(html.includes('class="skip-link" href="#contenido"'));

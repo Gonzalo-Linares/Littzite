@@ -1,0 +1,137 @@
+/*
+ * VIORA visual identity - Manual de marca, edición 01 (2026), pp. 2–15.
+ * Scope this stylesheet to estética; tattoo consumes none of these rules.
+ * Keep the original supplied logo proportions and colors. Fonts are named
+ * with system fallbacks; no third-party font binaries are committed.
+ */
+.viora-site {
+  --viora-plum: #7B4655;
+  --viora-rose: #C87D90;
+  --viora-soft-rose: #F0CED3;
+  --viora-ivory: #FAF5F0;
+  --viora-ink: #39252D;
+  --viora-sage: #A7AEA0;
+  font-family: "DejaVu Sans", Arial, sans-serif;
+}
+
+.viora-site .site-header { background: var(--viora-ivory); }
+.viora-site .site-header__inner { min-height: 7.1rem; }
+.viora-site .site-mark { display: inline-flex; width: min(13.5rem, 38vw); min-height: 3.5rem; }
+.viora-header-logo { width: 100%; height: auto; display: block; object-fit: contain; }
+.viora-site .site-nav a { font-weight: 600; letter-spacing: .01em; }
+.viora-site .site-header__badge { border-color: var(--viora-plum); color: var(--viora-plum); }
+.viora-site .site-header__badge:hover { background: var(--viora-soft-rose); }
+
+.viora-site .landing-hero__grid {
+  grid-template-columns: minmax(0,1.05fr) minmax(0,.95fr);
+  padding-block: clamp(4rem,8vw,8rem) clamp(5rem,8vw,8rem);
+  gap: clamp(2rem,4.5vw,5rem);
+}
+.viora-site .landing-hero__heading,
+.viora-site .feature-section__intro h2,
+.viora-essence h2 {
+  font-family: "Nimbus Roman", "Times New Roman", Georgia, serif;
+  font-weight: 400;
+  letter-spacing: -.04em;
+}
+.viora-site .landing-hero__heading {
+  max-width: 11ch; font-size: clamp(3.8rem,6.7vw,7.4rem); line-height: 1.03;
+  margin-block: 2rem 1.65rem;
+}
+.viora-site .landing-hero__eyebrow { color: var(--viora-plum); }
+.viora-site .landing-hero__eyebrow-line { width: 2.25rem; background: var(--viora-rose); }
+.viora-site .landing-hero__body { max-width: 31rem; line-height: 1.85; }
+.viora-site .landing-hero__index { display: none; }
+.viora-site .action-link { background: var(--viora-plum); color: var(--viora-ivory); border: 1px solid var(--viora-plum); border-radius: 2px; }
+.viora-site .landing-hero--serene .landing-hero__art {
+  min-height: clamp(34rem,48vw,43rem);
+  padding: clamp(1.2rem,2vw,2rem);
+  background: var(--viora-soft-rose);
+  color: var(--viora-plum);
+  border-radius: 0;
+}
+.viora-site .landing-hero__art-top { color: var(--viora-plum); font-size: .64rem; letter-spacing: .17em; }
+.viora-site .landing-hero__art-bottom { color: var(--viora-plum); font-size: .65rem; letter-spacing: .15em; }
+.viora-site .landing-hero__canvas { display: flex; align-items: center; justify-content: center; }
+.viora-hero-logo { display: block; width: min(66%, 24rem); max-height: 69%; object-fit: contain; }
+.viora-site .landing-hero__disclaimer { display: none; }
+
+.viora-site .feature-section {
+  background: color-mix(in srgb, var(--viora-ivory) 83%, white);
+  border-top: 1px solid color-mix(in srgb,var(--viora-plum) 20%, transparent);
+  padding-block: clamp(5rem,8vw,8rem);
+}
+.viora-site .feature-section__eyebrow,
+.viora-essence__eyebrow { color: var(--viora-plum); }
+.viora-site .feature-section__intro h2 { font-size: clamp(2.9rem,4.8vw,5.2rem); font-weight: 400; max-width: 15ch; }
+.viora-site .feature-grid {
+  grid-template-columns: repeat(2,minmax(0,1fr));
+  border-color: #DDC9CC;
+  background: #DDC9CC;
+  gap: 1px;
+}
+.viora-site .feature-card {
+  position: relative;
+  min-height: 16.5rem;
+  padding: clamp(1.65rem,3vw,3rem);
+  background: var(--viora-ivory);
+  transition: background .2s ease;
+}
+.viora-site .feature-card:nth-child(2),
+.viora-site .feature-card:nth-child(3) { background: #F9ECEB; }
+.viora-site .feature-card__number { color: var(--viora-plum); }
+.viora-site .feature-card__symbol { color: var(--viora-rose); }
+.viora-site .feature-card h3 {
+  font-family: "Nimbus Roman", "Times New Roman", Georgia, serif;
+  color: var(--viora-plum);
+  font-size: clamp(1.75rem,2.6vw,2.5rem);
+  font-weight: 400;
+  letter-spacing: -.035em;
+  margin-top: 3rem;
+}
+.viora-site .feature-card p { max-width: 27rem; line-height: 1.8; opacity: 1; }
+
+.viora-essence { background: var(--viora-plum); color: var(--viora-ivory); scroll-margin-top: 2rem; }
+.viora-essence__inner {
+  display: grid; grid-template-columns: minmax(0,1fr) minmax(0,.8fr);
+  gap: clamp(2rem,8vw,8rem);
+  align-items: center;
+  padding-block: clamp(5rem,9vw,9rem);
+}
+.viora-essence__eyebrow { font-size: .72rem; font-weight: 700; text-transform: uppercase; letter-spacing: .17em; color: var(--viora-soft-rose); }
+.viora-essence h2 { margin: 1.3rem 0 0; font-size: clamp(3.6rem,5.5vw,6.3rem); line-height: 1.06; max-width: 13ch; }
+.viora-essence__text { font-size: 1.03rem; line-height: 1.9; }
+.viora-essence__text p { margin: 0 0 1.5rem; }
+
+.viora-site .site-footer { background: var(--viora-ivory); }
+.viora-site .site-footer__inner { padding-block: 3.5rem; }
+.viora-footer-logo { width: min(13rem,60vw); height: auto; display: block; margin-bottom: 1rem; }
+
+@media (max-width: 900px) {
+  .viora-site .landing-hero__grid { grid-template-columns: 1fr 1fr; gap: 1.5rem; }
+  .viora-site .landing-hero__heading { font-size: clamp(3.3rem,6.7vw,5.3rem); }
+  .viora-site .landing-hero--serene .landing-hero__art { min-height: 33rem; }
+}
+@media (max-width: 740px) {
+  .viora-site .site-header__inner { gap: .7rem; }
+  .viora-site .site-mark { width: 10rem; }
+  .viora-site .landing-hero__grid,
+  .viora-essence__inner { grid-template-columns: 1fr; }
+  .viora-site .landing-hero__grid { padding-block: 3.25rem 4.5rem; gap: 2.25rem; }
+  .viora-site .landing-hero__heading { font-size: clamp(3.9rem,12vw,6rem); }
+  .viora-site .landing-hero--serene .landing-hero__art { min-height: clamp(26rem,92vw,37rem); }
+  .viora-hero-logo { width: min(85%,26rem); max-height: 68%; }
+  .viora-site .feature-grid { grid-template-columns: 1fr; }
+  .viora-site .feature-card { min-height: 12rem; }
+  .viora-site .feature-card h3 { margin-top: 1rem; }
+  .viora-essence__inner { padding-block: 4.5rem; }
+  .viora-essence h2 { font-size: clamp(3.2rem,11vw,5rem); }
+}
+@media (max-width: 410px) {
+  .viora-site .site-header__badge { font-size: .64rem; }
+  .viora-site .landing-hero__heading { font-size: 3.6rem; }
+  .viora-site .landing-hero__art-top { font-size: .54rem; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .viora-site .feature-card { transition: none; }
+}
