@@ -12,6 +12,8 @@ export function isAllowedHref(href: string): boolean {
       return new URL(href, base).origin === base;
     }
     if (!href.startsWith('https://')) return false;
+    const authority = href.slice('https://'.length).split(/[/?#]/, 1)[0];
+    if (!authority || authority.includes('@')) return false;
 
     const url = new URL(href);
     return url.protocol === 'https:' && Boolean(url.hostname) && !url.username && !url.password;
