@@ -17,15 +17,17 @@ jobs:
       matrix:
         app: [estetica, tattoo]
     steps:
-      - uses: actions/checkout@v4
-      - uses: pnpm/action-setup@v4
+      - uses: actions/checkout@v6
+      - uses: pnpm/action-setup@v6
         with:
           version: 12.6.0
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v6
         with:
           node-version: '24'
           cache: pnpm
       - run: pnpm install --frozen-lockfile
+      - run: pnpm check:boundaries
+      - run: pnpm test:contracts
       - run: pnpm --filter @littzite/${{ matrix.app }} check
       - run: pnpm --filter @littzite/${{ matrix.app }} build
       - run: pnpm --filter @littzite/${{ matrix.app }} test

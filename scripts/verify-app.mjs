@@ -11,10 +11,18 @@ const app = process.argv[2];
 assert.ok(Object.hasOwn(expectedTitles, app), `Unknown app: ${app}`);
 assert.equal(siteConfigSchema.safeParse({ defaultLocale: 'es' }).success, false);
 
+const { siteContent } = await import(`../apps/${app}/src/site.config.ts`);
 const html = await readFile(new URL(`../apps/${app}/dist/index.html`, import.meta.url), 'utf8');
-assert.match(html, /<html lang="es-AR">/);
+assert.match(html, /<html lang="es-AR"(?:\s|>)/);
 assert.match(html, /<meta name="robots" content="noindex, nofollow">/);
 assert.ok(html.includes(`<h1>${expectedTitles[app]}</h1>`));
+assert.ok(html.includes('class="skip-link" href="#contenido"'));
+assert.ok(html.includes('class="container"'));
+assert.ok(html.includes('class="action-link" href="#alcance"'));
+for (const [token, value] of Object.entries(siteContent.site.theme)) {
+  const cssName = token === 'accentText' ? 'accent-text' : token;
+  assert.ok(html.includes(`--color-${cssName}:${value}`), `Missing ${token} for ${app}`);
+}
 
 for (const [otherApp, otherTitle] of Object.entries(expectedTitles)) {
   if (otherApp !== app) assert.ok(!html.includes(otherTitle), `${app} contains ${otherApp} content`);

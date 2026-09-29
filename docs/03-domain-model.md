@@ -1,6 +1,12 @@
 # Modelo de dominio, clases y ERE conceptual — v0.5
 
-**Alcance:** modelos de contenido estático validado en build. **No** son tablas SQL, no hay backend propio, CRM, historia clínica ni motor de turnos. Los diagramas son diseño propuesto; todavía no existen clases o contratos implementados.
+**Alcance:** modelos de contenido estático validado en build. **No** son tablas SQL, no hay backend propio, CRM, historia clínica ni motor de turnos. Los diagramas son el diseño objetivo; PR-02 implementa el subconjunto descrito a continuación.
+
+## Estado de implementación PR-02
+
+`packages/content-schema` implementa `SiteConfig`, `ThemeConfig`, `ContactConfig`, `Location`, `Page`, dos variantes iniciales de `PageSection` (`intro` y `service-list`), `Service`, las tres variantes de `ServiceAction`, `BookingTarget`, `QuoteTarget` y el agregado `SiteContent`. Zod es la única fuente de tipos inferidos. `SiteContent` comprueba unicidad de slugs/IDs, tipos de target, referencias de secciones y métodos de contacto. Las apps demo consumen únicamente `SiteConfig` y una página `intro`, con colecciones de servicios y targets vacías.
+
+El diagrama conceptual incluye SEO, medios, precios, horarios, provider config y variantes de secciones aún no implementados. `canonicalOrigin` y contacto son opcionales mientras las apps son demos `noindex`; una publicación productiva exigirá datos verificados y gates adicionales. Un `BookingTarget` exige HTTPS sin credenciales en la URL, pero la aprobación del host y la capacidad del proveedor quedan pendientes de D-01C. Una acción de reserva no exige duración en el contrato global porque las reglas para tatuajes pequeños aún no están confirmadas; el gate de publicación de estética deberá exigir una duración real positiva por tratamiento. El número de WhatsApp existe solo en `ContactConfig`, nunca en `QuoteTarget`.
 
 ## Decisiones confirmadas que modelamos
 
@@ -260,7 +266,7 @@ type QuoteTarget = {
 
 En v1, un `QuoteTarget` de WhatsApp genera `https://wa.me/<numero>?text=<texto-codificado>` usando el único número E.164 aprobado en `ContactConfig`. Se codifica el mensaje con `encodeURIComponent`, se permite opcionalmente interpolar únicamente datos públicos como el nombre del servicio y no se introducen datos personales en la URL. El visitante redacta y envía el mensaje en WhatsApp; el clic **no prueba** que lo haya enviado. La web no recopila respuestas ni archivos.
 
-`SiteConfig.defaultLocale` se validará inicialmente para aceptar solo `es-AR`. No duplicar el locale en los componentes ni derivarlo del nombre del cliente. No agregar modelos de traducción o relaciones `PageTranslation` al ERE conceptual hasta que exista un requerimiento de otro idioma. Slugs y URLs serán simples, sin prefijo de idioma.
+`SiteConfig.defaultLocale` acepta solo `es-AR` en el contrato implementado. No duplicar el locale en los componentes ni derivarlo del nombre del cliente. No agregar modelos de traducción o relaciones `PageTranslation` al ERE conceptual hasta que exista un requerimiento de otro idioma. Slugs y URLs serán simples, sin prefijo de idioma.
 
 Los tipos son **ilustrativos**, no código productivo ni licencia para asumir que todos los proveedores admiten embeds. Al implementar, los esquemas Zod serán la única fuente de verdad para inferir los tipos y validar referencias cruzadas.
 

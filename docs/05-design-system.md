@@ -4,6 +4,10 @@
 
 **Compartir la gramática visual, no clonar la estética de las dos marcas.** Cada negocio tendrá fuentes, colores, ritmo, composición e imágenes propios, pero usará los mismos componentes accesibles, espacios semánticos, estados interactivos y reglas de responsive.
 
+## Implementado en PR-02
+
+`ThemeConfig` valida seis colores hexadecimales semánticos (`surface`, `text`, `accent`, `accentText`, `border`, `focus`). Cada app demo aporta valores provisionales propios. `BaseLayout` los expone como variables CSS, usa el locale de `SiteConfig` e incluye enlace para saltar al contenido. `Container` y `Link` son compartidos y se usan en ambas homes. El enlace conserva foco visible y un destino interno real. La identidad final, tipografías de marca y secciones comerciales siguen pendientes. No se agregó Tailwind: estas reglas pequeñas no justifican la dependencia todavía; ADR-002 sigue describiendo la opción elegida para v1 cuando haya estilos y contenido reales.
+
 ## Tokens semánticos
 
 | Nivel | Ejemplos | Responsable |

@@ -12,6 +12,8 @@
 
 ## Calidad automatizada
 
+**Gates implementados en PR-02:** `pnpm check:boundaries` revisa dependencias/imports y ciclos; `pnpm test:contracts` usa `node:test` para Zod y límites; `pnpm check`, `pnpm build` y `pnpm test` verifican ambas apps, incluyendo HTML estático, locale, `noindex`, tokens y aislamiento. CI ejecuta los gates en cada PR para ambas apps. La tabla siguiente enumera gates objetivo de fases posteriores; lint/format, Vitest, Playwright, axe/Lighthouse y link check aún no están configurados.
+
 | Gate | Qué comprueba | Cuándo |
 | --- | --- | --- |
 | `pnpm lint` / format | convenciones y código no usado | PR |
