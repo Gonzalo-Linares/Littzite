@@ -16,6 +16,10 @@ Se agrega `feature-grid` a `PageSection`, con tarjetas y copy validados por Zod.
 
 La estructura usa componentes Astro estáticos, puntos de ruptura responsivos, enlace de salto, navegación con etiquetas, estados de foco y `prefers-reduced-motion`. Tailwind y AstroWind siguen fuera de este PR, sin impedir su evaluación futura. Una sección de catálogo, una galería o un CTA de reserva no se implementan sin contenido y destino real.
 
+## Identidad aprobada de VIORA (PR-04 en revisión)
+
+La estética deja de tener un tema meramente ilustrativo y adopta el manual de marca aportado por su titular: marfil, ciruela, rosa, rosa suave y tinta; salvia es opcional. El tema semántico común de seis colores sigue estable y la paleta extendida, la tipografía y la composición específicas se definen en `apps/estetica/src/styles/viora.css`. Se reutilizan `SiteHeader`, `SiteFooter` y `LandingHero` mediante slots de marca, sin enseñar a los paquetes comunes el nombre del negocio. Cuatro líneas editoriales proceden del manual; no se declaran servicios reservables activos sin duración, precios o disponibilidad confirmados. Ver [guía de implementación](16-viora-brand.md) y ADR-010.
+
 ## Tokens semánticos
 
 | Nivel | Ejemplos | Responsable |

@@ -41,3 +41,9 @@ El grafo implementado inicialmente es `apps/{estetica,tattoo} -> packages/{conte
 ## Prototipos visuales PR-03
 
 Ambas aplicaciones comparten `SiteHeader` y `SiteFooter` de `ui`, así como `LandingHero` y `FeatureGrid` de `sections`. Las variantes `serene` y `graphic` se eligen en cada aplicación y no se deciden mediante `siteId`. Son demos `noindex` con ilustración CSS original y contenido provisional, sin datos comerciales ni reservas activas. Ejecutar los gates de ambas apps y `check:boundaries` ante cambios compartidos.
+
+## Identidad VIORA (PR-04)
+
+La identidad de la aplicación `estetica` adopta el manual entregado por el titular: ciruela `#7B4655`, rosa `#C87D90`, rosa suave `#F0CED3`, marfil `#FAF5F0`, tinta `#39252D` y salvia opcional `#A7AEA0`. Mantener el arte original del logo en sus variantes horizontal, principal y de palabra, sin recrearlo con CSS, recortar zonas de seguridad ni deformarlo. El CSS de VIORA permanece en `apps/estetica` y NO entra en `packages/ui` ni en `apps/tattoo`. Los slots genéricos de header, footer y hero permiten imágenes de cada cliente sin condicionales de marca. La voz es cercana, con voseo, sin promesas de resultados ni atribuir tratamientos médicos al reiki. Las fuentes del manual se mencionan con fallback, pero no se publican archivos de fuentes sin su propia auditoría de licencia. Fotos, horarios, condiciones, canales y precios requieren validación comercial. Consultar `docs/16-viora-brand.md` y ADR-010.
+
+La CI permanece desactivada por decisión del titular. No modificar el workflow para reactivarla; validar cambios mediante gates locales, registrar salidas concretas y no declarar GitHub Actions verde.

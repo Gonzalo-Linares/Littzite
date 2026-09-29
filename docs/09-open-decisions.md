@@ -13,6 +13,7 @@
 | D-08A | **Acordada** | Repositorio Littzite **público**. | Revisar secretos, assets y licencias antes de commits; lo público no significa open-source. |
 | D-08B | **Acordada** | **Sin licencia de reutilización** para el código original de Littzite; conservar derechos de autor, sin archivo `LICENSE` abierto. | Aviso visible en README; política de terceros, assets y contribuciones documentada en [política de PI](15-ip-license-policy.md) y ADR-006. |
 | D-09 | **Acordada** | V1 exclusivamente en español de Argentina (`es-AR`) para ambas apps. | `SiteConfig.defaultLocale` validado; sin traducciones, selector idiomático ni rutas `/es/`, ver [ADR-007](adr/007-single-locale-es-ar.md). |
+| D-10A | **Acordada para prototipo** | Aplicar el manual de marca VIORA, edición 01 (septiembre de 2026), a la app de estética. | Paleta y voz oficiales, variantes originales del logo, CSS privado de app, cuatro líneas editoriales. Ver [guía VIORA](16-viora-brand.md) y ADR-010. |
 
 **No inferir:** que el tatuador trabaja solo, que los trabajos pequeños tienen una duración uniforme, que no existen señas, ni que Calendly/SimplyBook.me se haya elegido. WhatsApp es el canal de consulta, **no** el proveedor de agenda. Los ejemplos de esquemas son ilustrativos hasta validarse contra necesidades reales.
 
@@ -28,6 +29,8 @@
 | D-05 | Nombre comercial, dominio, dirección y ubicación verificable de cada cliente | Cada negocio | Canonical, schema, Search Console y lanzamiento |
 | D-06 | Fotografías, derechos, consentimientos y quién editará contenidos | Cada negocio | Publicación de assets finales y proceso editorial |
 | D-07 | Hosting y titularidad de dominios y cuentas | Cada negocio + equipo técnico | Despliegue de producción; Cloudflare Pages sigue siendo una propuesta |
+| D-10B | Autorización explícita para incluir archivos del logo VIORA en GitHub público y confirmación de servicios/agenda actuales | Titular de marca + equipo técnico | Commit de los tres assets originales en el PR y publicación de datos comerciales reales |
+| D-11 | Identidad gráfica real y autorización para usar obras del tatuador; la cuenta `juanjo.tattoos` se suministró como inspiración, pero Instagram no fue accesible para auditarla | Tatuador + equipo técnico | Implementación visual basada en un portfolio verificado y sus derechos |
 
 ## Criterios para cerrar una decisión
 

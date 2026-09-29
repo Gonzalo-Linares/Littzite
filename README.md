@@ -4,7 +4,7 @@
 **Producto:** plataforma de creación de sitios comerciales modulares; primeros casos: estética integral y estudio de tatuajes en San Juan, Argentina.  
 **Propósito:** captación orgánica local, diferenciación visual, contacto y reservas/solicitudes mediante proveedores externos.
 
-> El repositorio incluye dos aplicaciones Astro, contratos Zod y UI compartidos, y prototipos visuales en revisión. La arquitectura restante describe el objetivo previsto: todavía **no** hay sitios comerciales terminados, contenido real, SEO productivo ni integraciones de reservas. Las decisiones pendientes requieren validación antes de implementarse.
+> El repositorio incluye dos aplicaciones Astro, contratos Zod y UI compartidos, y prototipos visuales en revisión. VIORA ya tiene un manual de marca proporcionado para su implementación en una rama separada. La arquitectura restante describe el objetivo previsto: todavía **no** hay sitios comerciales terminados, contenido real, SEO productivo ni integraciones de reservas. Las decisiones pendientes requieren validación antes de implementarse.
 
 ## Acuerdos de alcance
 
@@ -34,6 +34,7 @@
 13. [Especificación funcional del módulo de reservas](docs/13-booking-specification.md)
 14. [Cómo visualizar los diagramas](docs/14-diagram-guide.md)
 15. [Política de propiedad intelectual, terceros y contribuciones](docs/15-ip-license-policy.md)
+15a. [Integración visual del manual de marca VIORA](docs/16-viora-brand.md)
 16. [Registros de decisión arquitectónica — ADR](docs/adr/)
 17. [Instrucciones para agentes de código](AGENTS.md)
 
@@ -50,7 +51,7 @@ corepack pnpm build
 corepack pnpm test
 ```
 
-Para trabajar en una sola aplicación, usar `corepack pnpm --filter @littzite/estetica <check|build|test>` o `@littzite/tattoo`. Las pruebas de salida requieren ejecutar antes el build de la app. Ambas páginas son prototipos editoriales con `noindex`, componentes compartidos y temas provisionales distintos; no tienen configuración comercial, dominios ni proveedor de reservas. Los targets y acciones de reserva/presupuesto solo aparecen en fixtures de test.
+Para trabajar en una sola aplicación, usar `corepack pnpm --filter @littzite/estetica <check|build|test>` o `@littzite/tattoo`. Las pruebas de salida requieren ejecutar antes el build de la app. Ambas páginas son prototipos editoriales con `noindex`, componentes compartidos y temas provisionales distintos; no tienen configuración comercial, dominios ni proveedor de reservas. Los targets y acciones de reserva/presupuesto solo aparecen en fixtures de test. La rama VIORA utiliza su paleta oficial y requiere tres variantes originales del logo en `apps/estetica/public/brand/`. Las instrucciones y limitaciones están en [la guía de marca](docs/16-viora-brand.md).
 
 ## Condiciones de uso del repositorio
 
