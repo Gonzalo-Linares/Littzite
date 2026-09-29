@@ -1,4 +1,4 @@
-# Design system, parametrización y armonía — v0.3
+# Design system, parametrización y armonía — v0.6
 
 ## Principio
 
@@ -7,6 +7,14 @@
 ## Implementado en PR-02
 
 `ThemeConfig` valida seis colores hexadecimales semánticos (`surface`, `text`, `accent`, `accentText`, `border`, `focus`). Cada app demo aporta valores provisionales propios. `BaseLayout` los expone como variables CSS, usa el locale de `SiteConfig` e incluye enlace para saltar al contenido. `Container` y `Link` son compartidos y se usan en ambas homes. El enlace conserva foco visible y un destino interno real. La identidad final, tipografías de marca y secciones comerciales siguen pendientes. No se agregó Tailwind: estas reglas pequeñas no justifican la dependencia todavía; ADR-002 sigue describiendo la opción elegida para v1 cuando haya estilos y contenido reales.
+
+## Implementado en PR-03 (prototipos editoriales)
+
+Se incorpora `packages/sections` porque **dos secciones reales del prototipo** (`LandingHero` y `FeatureGrid`) son consumidas por ambas apps, sin condicionales por identidad comercial. `packages/ui` incorpora `SiteHeader` y `SiteFooter`, también compartidos, y conserva una única hoja de CSS para primitives/tokens. Las secciones tienen variantes explícitas `serene` y `graphic`: estética las usa en una composición serena y tatuajes en una editorial de alto contraste. Toda la ilustración del hero es **CSS original**, sin fuentes, fotos o scripts externos.
+
+Se agrega `feature-grid` a `PageSection`, con tarjetas y copy validados por Zod. Los dos sitios siguen como prototipos `noindex`; sus títulos, paletas, textos y elementos gráficos **no son marcas ni contenido comercial aprobado**. El contenido final, imágenes originales y agenda se agregan en PR separados.
+
+La estructura usa componentes Astro estáticos, puntos de ruptura responsivos, enlace de salto, navegación con etiquetas, estados de foco y `prefers-reduced-motion`. Tailwind y AstroWind siguen fuera de este PR, sin impedir su evaluación futura. Una sección de catálogo, una galería o un CTA de reserva no se implementan sin contenido y destino real.
 
 ## Tokens semánticos
 
