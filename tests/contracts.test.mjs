@@ -110,7 +110,7 @@ test('visual feature-grid is validated and shared by both demo apps', () => {
     assert.deepEqual(sections.map((section) => section.type), ['intro', 'feature-grid']);
     const grid = sections[1];
     assert.equal(pageSectionSchema.safeParse(grid).success, true);
-    assert.equal(grid.items.length, 3);
+    assert.equal(grid.items.length, app === estetica ? 4 : 3);
     assert.equal(new Set(grid.items.map((item) => item.id)).size, grid.items.length);
   }
 });
@@ -123,4 +123,19 @@ test('feature-grid rejects empty text, excess cards and duplicate IDs', () => {
   assert.equal(siteContentSchema.safeParse(duplicate).success, false);
   assert.equal(pageSectionSchema.safeParse({ ...grid, heading: '' }).success, false);
   assert.equal(pageSectionSchema.safeParse({ ...grid, items: [...grid.items, ...grid.items] }).success, false);
+});
+
+test('VIORA theme, voice and four named lines match its brand manual', () => {
+  assert.deepEqual(estetica.site.theme, {
+    surface: '#FAF5F0', text: '#39252D', accent: '#7B4655', accentText: '#FAF5F0',
+    border: '#D7BEC4', focus: '#39252D',
+  });
+  const home = estetica.pages.find((page) => page.slug === '');
+  const intro = home.sections.find((section) => section.type === 'intro');
+  const features = home.sections.find((section) => section.type === 'feature-grid');
+  assert.equal(intro.heading, 'Regalate una pausa.');
+  assert.deepEqual(features.items.map((item) => item.title), [
+    'Limpieza facial', 'Depilación definitiva', 'Masajes', 'Reiki',
+  ]);
+  assert.ok(estetica.services.length === 0 && estetica.bookingTargets.length === 0 && estetica.quoteTargets.length === 0);
 });
