@@ -24,7 +24,7 @@ El prototipo de estética del PR-03 usa una composición genérica que no repres
 
 ## Pendientes
 
-- Verificar permisos para incorporar las tres variantes oficiales del logo al repositorio abierto.
+- **Permiso confirmado** por el usuario para incorporar al repositorio público las tres variantes oficiales del logo. Falta añadir los PNG originales a la rama del PR desde el ZIP preparado y verificar que las pruebas de build los encuentren.
 - Comprobar tipografía real en los navegadores objetivo y definir distribución autorizada de las fuentes.
 - Aprobar datos de contacto y servicios activos con el negocio. La web sigue como preview `noindex`.
 

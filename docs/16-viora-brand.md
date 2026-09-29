@@ -22,7 +22,7 @@ El frontend espera estos **archivos originales del kit sin modificar**:
 | `/brand/viora-principal.png` | `VIORA/logos/VIORA_principal_color.png` | Hero |
 | `/brand/viora-palabra.png` | `VIORA/logos/VIORA_palabra_ciruela.png` | Pie |
 
-Colocar los tres bajo `apps/estetica/public/brand/`. Se suministra aparte un ZIP pequeño con esta estructura, sin fuentes, para que el titular lo importe localmente. **No subirlos al repositorio público hasta confirmar que existe permiso para exhibir las variantes reales de la marca allí.** El test de salida exige que los tres estén presentes en `dist/brand/`, para evitar integrar una vista con imágenes rotas.
+Colocar los tres bajo `apps/estetica/public/brand/`. Se suministra aparte un ZIP pequeño con esta estructura, sin fuentes, para que el titular lo importe localmente. **Permiso confirmado por el usuario el 29/09/2026 para incorporar las tres variantes originales al repositorio público.** La rama del PR todavía no contiene esos PNG; el titular debe extraer el ZIP preparado y realizar un commit limitado a los tres logos. El test de salida exige que los tres estén presentes en `dist/brand/`, para evitar integrar una vista con imágenes rotas.
 
 ## Secciones
 
@@ -36,7 +36,7 @@ Colocar los tres bajo `apps/estetica/public/brand/`. Se suministra aparte un ZIP
 - No aceptar ni inventar horarios, domicilio, tarifas, enlaces de reserva, Instagram ni WhatsApp. D-02A y D-01C siguen abiertos.
 - Reiki debe comunicarse como experiencia de bienestar y nunca como tratamiento de enfermedades o sustituto de atención médica (p. 4). No prometer resultados garantizados (p. 3).
 - Ambos sitios se mantienen `noindex`. El logo visible se integra mediante slots genéricos de Astro: `ui` y `sections` no importan assets de un cliente ni contienen condicionales por marca.
-- Las imágenes del kit no trasladan automáticamente derechos de publicación en un repositorio abierto; verificar su titularidad/permiso conforme a [política de PI](15-ip-license-policy.md). No exponer las fuentes del kit en descargas.
+- La autorización para los tres logos originales ya se confirmó; no se extiende automáticamente a las fuentes tipográficas, a fotografías de terceros ni al resto de los recursos del kit. Aplicar la [política de PI](15-ip-license-policy.md) y no exponer las fuentes del kit en descargas.
 
 ## Cómo verificar localmente
 
