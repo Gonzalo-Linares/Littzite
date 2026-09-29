@@ -1,0 +1,17 @@
+{
+  "name": "@littzite/sections",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "exports": {
+    "./LandingHero.astro": "./src/LandingHero.astro",
+    "./FeatureGrid.astro": "./src/FeatureGrid.astro"
+  },
+  "dependencies": {
+    "@littzite/content-schema": "workspace:*",
+    "@littzite/ui": "workspace:*"
+  },
+  "peerDependencies": {
+    "astro": "^7.3.5"
+  }
+}
