@@ -1,10 +1,10 @@
 # Littzite — arquitectura fundacional
 
-**Estado:** v0.5, arquitectura documental en revisión. **Fecha:** 2026-09-28/29.  
+**Estado:** documentación fundacional v0.5; scaffold técnico PR-01 implementado para revisión. **Fecha:** 2026-09-28/29.  
 **Producto:** plataforma de creación de sitios comerciales modulares; primeros casos: estética integral y estudio de tatuajes en San Juan, Argentina.  
 **Propósito:** captación orgánica local, diferenciación visual, contacto y reservas/solicitudes mediante proveedores externos.
 
-> Este paquete contiene diseño y decisiones documentadas, **no** código implementado ni aprobación automática de todos los puntos. Las actualizaciones documentales se revisan en PR antes de integrarse en `main`.
+> El repositorio incluye un **scaffold técnico implementado** (dos aplicaciones Astro, validación mínima de `es-AR`, layout compartido y CI). El resto de la arquitectura documentada describe el objetivo previsto: todavía **no** hay sitios comerciales terminados, contenido real, SEO productivo ni integraciones de reservas. Las decisiones pendientes requieren validación antes de implementarse.
 
 ## Acuerdos de alcance
 
@@ -60,4 +60,4 @@ Para trabajar en una sola aplicación, usar `corepack pnpm --filter @littzite/es
 - **Propuesta**: planteada técnicamente, pendiente de ratificación, prueba o validación de costes.
 - **Pendiente**: no seleccionar proveedor, política comercial, flujo o integración sin información del negocio.
 
-**Orden de trabajo:** revisar la documentación y las decisiones aún bloqueantes → PR de scaffold mínimo → contratos Zod → primeras secciones compartidas → estética → tatuador. Los flujos confirmados se pueden modelar ya; no implementar un proveedor ni cobros hasta validarlos. No agregar código productivo en el PR documental.
+**Próximos pasos tras PR-01:** ampliar contratos Zod y pruebas de límites entre paquetes → sistema de diseño y secciones compartidas justificadas → implementación de estética → implementación del tatuador. Las integraciones reales y los cobros requieren resolver sus decisiones comerciales antes de activarse.
