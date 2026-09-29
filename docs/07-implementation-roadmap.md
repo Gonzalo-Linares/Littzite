@@ -5,7 +5,8 @@
 - Aprobar objetivo, dos recorridos comerciales y exclusiones explícitas de v1.
 - Aprobar ADR-001 y ADR-004; revisar ADR-002, ADR-003 y ADR-005 y decidir los puntos abiertos necesarios antes de integrar reservas reales.
 - Registrar las respuestas ya confirmadas: estética con una profesional y tratamientos de duración fija; tatuajes pequeños de reserva directa y grandes por presupuesto. Confirmar D-04 (WhatsApp directo para presupuestos grandes, inicialmente solo texto). Mantener pendientes duraciones específicas, alcance del tatuador, proveedor de agenda, señas, número comercial real y editores.
-- Auditar AstroWind selectivamente: licencia MIT del código, recursos licenciados por separado, compatibilidad Astro/Tailwind, accesibilidad y dependencias.
+- D-08B aprobada: repositorio público sin licencia de reutilización para el código original. Adoptar la [política de terceros](15-ip-license-policy.md) y ADR-006; no generar automáticamente un `LICENSE` open-source.
+- Auditar AstroWind selectivamente: licencia MIT del código en la revisión concreta, avisos obligatorios, recursos licenciados por separado, compatibilidad Astro/Tailwind, accesibilidad y dependencias. Documentar qué se copia, desde dónde y bajo qué autorización.
 - Elegir proveedor de reservas **por negocio**, según pruebas de uso reales.
 
 **Salida:** PR documental sin código de producto; decisiones acordadas separadas de propuestas y pendientes con responsable.
@@ -53,3 +54,4 @@
 4. Componentes con estados vacíos, errores, responsive y teclado verificados.
 5. Cambios en rutas, SEO o contratos acompañados por pruebas y docs/ADR.
 6. Preview revisada antes de merge; despliegue y rollback independientes comprobables.
+7. Toda adición de código, tipografías, imágenes o plantillas de terceros tiene procedencia, licencia, autoría y permisos auditados; los avisos de copyright exigibles se conservan. Contribuciones externas sujetas a autorización antes del merge.

@@ -1,6 +1,6 @@
 # Littzite — reglas de trabajo para Codex y otros asistentes
 
-Leer `README.md`, `docs/01-vision-scope.md`, `docs/02-architecture.md`, `docs/09-open-decisions.md`, `docs/13-booking-specification.md` y ADR relevantes antes de proponer cualquier implementación. La documentación v0.4 describe acuerdos, propuestas y decisiones pendientes; **no** asumir que lo pendiente fue aprobado.
+Leer `README.md`, `docs/01-vision-scope.md`, `docs/02-architecture.md`, `docs/09-open-decisions.md`, `docs/13-booking-specification.md`, `docs/15-ip-license-policy.md` y ADR relevantes antes de proponer cualquier implementación. La documentación v0.4 describe acuerdos, propuestas y decisiones pendientes; **no** asumir que lo pendiente fue aprobado.
 
 ## Invariantes
 
@@ -14,6 +14,7 @@ Leer `README.md`, `docs/01-vision-scope.md`, `docs/02-architecture.md`, `docs/09
 8. SEO local útil, contenido real, accesibilidad, velocidad móvil, privacidad y licencias de activos como requisitos de diseño.
 9. AstroWind solo como fuente selectiva luego de auditoría de código, dependencias y licencias, conservando atribución exigida.
 10. Un servicio puede presentar varias `ServiceAction` tipadas (reserva directa, presupuesto, contacto) sin copiar fichas ni crear condicionales por app. `ServiceAction`, `BookingTarget` y `QuoteTarget` son conceptos distintos; los targets externos nunca están incrustados en componentes genéricos.
+11. D-08B: el repositorio es público, pero el código original de Littzite **no tiene licencia de reutilización**. No crear `LICENSE` con MIT, GPL, Apache, Creative Commons ni otra licencia sin decisión nueva. Identificar el código y assets de terceros, conservar sus avisos, registrar origen, versión, rutas y obligaciones antes de copiarlos. No asumir que una imagen, fuente, marca o contribución externa pasa a ser propiedad de Littzite.
 
 ## Antes de cada PR
 
@@ -22,6 +23,7 @@ Leer `README.md`, `docs/01-vision-scope.md`, `docs/02-architecture.md`, `docs/09
 - Testear el comportamiento modificado; si cambia `packages/*`, revisar y ejecutar gates de ambas apps.
 - No duplicar funciones existentes ni copiar componentes enteros para cambios cosméticos. Verificar que las abstracciones no crean dependencias circulares.
 - Actualizar diagramas/ADR/guías si cambian responsabilidades. Informar comandos y resultados reales, sin atribuirse checks no ejecutados.
+- Si se incorpora código de AstroWind u otro tercero, verificar la licencia efectiva del commit importado, archivar los avisos requeridos en `THIRD_PARTY_NOTICES.md` cuando corresponda y evitar recursos gráficos no autorizados. No aceptar contribuciones externas sin permiso escrito suficiente para el uso previsto.
 
 ## Orden previsto
 

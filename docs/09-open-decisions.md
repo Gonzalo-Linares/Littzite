@@ -10,7 +10,8 @@
 | D-01B | **Acordada** | Tatuador: turnos directos para trabajos pequeños; presupuesto previo para trabajos grandes. | Un servicio/página puede tener varias `ServiceAction` tipadas. |
 | D-03A | **Pendiente explícito** | No está definido si habrá señas para ninguno de los negocios. | No implementar ni publicitar pagos, política de cobro ni señalización de cita pagada. |
 | D-04A | **Acordada** | Tatuajes grandes: presupuestos por WhatsApp directo, inicialmente solo texto, sin formulario ni carga de imágenes propios. | `QuoteTarget` de WhatsApp con número obtenido de `ContactConfig`; sin backend ni base de datos para presupuestos. |
-| D-08A | **Acordada** | Repositorio Littzite **público**. | Revisar secretos, assets y licencias antes de commits; la licencia del código sigue pendiente. |
+| D-08A | **Acordada** | Repositorio Littzite **público**. | Revisar secretos, assets y licencias antes de commits; lo público no significa open-source. |
+| D-08B | **Acordada** | **Sin licencia de reutilización** para el código original de Littzite; conservar derechos de autor, sin archivo `LICENSE` abierto. | Aviso visible en README; política de terceros, assets y contribuciones documentada en [política de PI](15-ip-license-policy.md) y ADR-006. |
 
 **No inferir:** que el tatuador trabaja solo, que los trabajos pequeños tienen una duración uniforme, que no existen señas, ni que Calendly/SimplyBook.me se haya elegido. WhatsApp es el canal de consulta, **no** el proveedor de agenda. Los ejemplos de esquemas son ilustrativos hasta validarse contra necesidades reales.
 
@@ -26,7 +27,6 @@
 | D-05 | Nombre comercial, dominio, dirección y ubicación verificable de cada cliente | Cada negocio | Canonical, schema, Search Console y lanzamiento |
 | D-06 | Fotografías, derechos, consentimientos y quién editará contenidos | Cada negocio | Publicación de assets finales y proceso editorial |
 | D-07 | Hosting y titularidad de dominios y cuentas | Cada negocio + equipo técnico | Despliegue de producción; Cloudflare Pages sigue siendo una propuesta |
-| D-08B | Licencia del código del repositorio público y política de reutilización de terceros | Titular de Littzite | Publicación de código con permiso de reutilización explícito; no bloquea trabajo propio con derechos reservados |
 | D-09 | Necesidad efectiva de idiomas adicionales o varios países | Cada negocio | Internacionalización real; v1 puede comenzar con contenido en español si se valida |
 
 ## Criterios para cerrar una decisión

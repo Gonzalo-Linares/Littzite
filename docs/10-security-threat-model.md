@@ -28,7 +28,7 @@ No existen en v1 servidor de aplicación, base de datos, cuentas de visitantes n
 | Presupuestos por WhatsApp | Número de destino erróneo, fuga de datos en URL/telemetría o expectativa errónea de confidencialidad | D-04: solo enlace de texto, número comercial E.164 validado, texto prellenado con datos públicos, sin formularios ni carga de imágenes propios; aviso claro de salida a tercero | Validación de número, host y texto; recorrido móvil/escritorio, revisar telemetría |
 | Fotos/testimonios | Uso sin derechos o identificación no consentida | Aprobación del cliente, fuente y licencias verificadas, retirada documentada | Checklist editorial |
 | Previews y staging | Indexación accidental o filtración de contenido | Previews no indexables; acceso restringido si no son públicas | Robots, meta y acceso |
-| Dependencias / template | Vulnerabilidades, licencia inadecuada | Auditoría selectiva, lockfile, actualización controlada, atribuciones requeridas | Revisión de dependencias/licencias |
+| Dependencias / template | Vulnerabilidades, licencias incumplidas, copia de assets no autorizados | Auditoría selectiva, lockfile, actualización controlada, procedencia y avisos de copyright exigibles; D-08B no afecta licencias de terceros | Revisión de dependencias/licencias y [política PI](15-ip-license-policy.md) |
 | Configuración cruzada | Teléfono, cuenta de calendario o tracking del cliente equivocado | Config aislada por app, validación de dominios, builds y pruebas cruzadas | E2E de ambas apps |
 
 ## Exclusiones que disparan rediseño
