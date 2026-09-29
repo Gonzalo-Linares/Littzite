@@ -28,8 +28,10 @@ const themeStyle = {
     {noindex && <meta name="robots" content="noindex, nofollow" />}
     <title>{title}</title>
   </head>
-  <body>
+  <body id="inicio">
     <a class="skip-link" href="#contenido">Ir al contenido</a>
+    <slot name="header" />
     <main id="contenido"><slot /></main>
+    <slot name="footer" />
   </body>
 </html>

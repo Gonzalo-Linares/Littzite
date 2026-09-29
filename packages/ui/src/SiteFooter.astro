@@ -1,0 +1,22 @@
+---
+interface Props {
+  brand: string;
+  note: string;
+}
+
+const { brand, note } = Astro.props;
+---
+
+<footer class="site-footer">
+  <div class="container site-footer__inner">
+    <div>
+      <p class="site-footer__brand">{brand}</p>
+      <p class="site-footer__note">{note}</p>
+    </div>
+    <a href="#inicio" class="site-footer__back">Volver arriba <span aria-hidden="true">↑</span></a>
+  </div>
+  <div class="container site-footer__meta">
+    <span>Prototipo visual · No es un sitio comercial activo</span>
+    <span>Diseñado con componentes compartidos en Littzite</span>
+  </div>
+</footer>
