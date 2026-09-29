@@ -4,10 +4,10 @@
  * All declarations are app-scoped; VIORA retains its independent styling.
  */
 .juanjo-site {
-  --juanjo-bg: #17191B;
+  --juanjo-bg: var(--color-surface);
   --juanjo-surface: #202124;
-  --juanjo-accent: #EF9476;
-  --juanjo-cream: #F8F4ED;
+  --juanjo-accent: var(--color-accent);
+  --juanjo-cream: var(--color-text);
   --juanjo-muted: #C5C1BB;
   font-family: "Segoe UI", Arial, sans-serif;
   background: var(--juanjo-bg);
