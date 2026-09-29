@@ -53,3 +53,7 @@ No usar strings de nombres de clientes para decidir estilos dentro de componente
 **v1:** `SiteConfig` TS + Content Collections (`services`, `pages`, `portfolio`, `testimonials`) y Zod. Un responsable técnico actualiza contenido mediante PR. No introducir un CMS por adelantado.
 
 **Evolución:** si el cliente necesita editar independientemente y con frecuencia, añadir un adaptador de fuente de contenido y evaluar un CMS alojado. No acoplar los componentes al origen del dato.
+
+## Identidad editorial de Juanjo (PR-05, propuesta)
+
+Las capturas aportadas por el propietario orientan una estética gráfica de alto contraste: carbón, marfil y acento coral de **interpretación provisional**, no una nueva marca gráfica aprobada. La cabecera usa wordmark tipográfico de vista previa; el logo circular real se incorporará solamente desde el original autorizado. El hero reutiliza `LandingHero` con un artwork CSS propio en slot de app; las tarjetas mantienen `FeatureGrid`. La grilla de fotografías aún tiene un solo consumidor, por lo que permanece en `apps/tattoo`. Estado vacío sin imágenes inventadas y link al perfil oficial mientras llegan originales. Ver [guía editorial](17-juanjo-web-identity.md).

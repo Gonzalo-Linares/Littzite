@@ -1,6 +1,6 @@
 # Littzite — arquitectura fundacional
 
-**Estado:** arquitectura documental v0.7; PR-01/02/03 integrados y adaptación de marca VIORA PR-04. **Fecha:** 2026-09-28/29.
+**Estado:** arquitectura documental v0.8; PR-01/02/03 y VIORA integrados; identidad editorial y galería de Juanjo en PR-05. **Fecha:** 2026-09-28/29.
 **Producto:** plataforma de creación de sitios comerciales modulares; primeros casos: estética integral y estudio de tatuajes en San Juan, Argentina.  
 **Propósito:** captación orgánica local, diferenciación visual, contacto y reservas/solicitudes mediante proveedores externos.
 
@@ -35,8 +35,9 @@
 14. [Cómo visualizar los diagramas](docs/14-diagram-guide.md)
 15. [Política de propiedad intelectual, terceros y contribuciones](docs/15-ip-license-policy.md)
 16. [Integración visual del manual de marca VIORA](docs/16-viora-brand.md)
-17. [Registros de decisión arquitectónica — ADR](docs/adr/)
-18. [Instrucciones para agentes de código](AGENTS.md)
+17. [Identidad editorial y galería preparada de Juanjo Tattoos](docs/17-juanjo-web-identity.md)
+18. [Registros de decisión arquitectónica — ADR](docs/adr/)
+19. [Instrucciones para agentes de código](AGENTS.md)
 
 ## Comprobaciones locales
 
@@ -51,7 +52,7 @@ corepack pnpm build
 corepack pnpm test
 ```
 
-Para trabajar en una sola aplicación, usar `corepack pnpm --filter @littzite/estetica <check|build|test>` o `@littzite/tattoo`. Las pruebas de salida requieren ejecutar antes el build de la app. Ambas páginas siguen siendo prototipos `noindex` con componentes compartidos; VIORA ya usa su identidad oficial y el sitio de tatuajes mantiene un tema provisional; no tienen configuración comercial, dominios ni proveedor de reservas. Los targets y acciones de reserva/presupuesto solo aparecen en fixtures de test. La rama VIORA utiliza su paleta oficial y requiere tres variantes originales del logo en `apps/estetica/public/brand/`. Las instrucciones y limitaciones están en [la guía de marca](docs/16-viora-brand.md).
+Para trabajar en una sola aplicación, usar `corepack pnpm --filter @littzite/estetica <check|build|test>` o `@littzite/tattoo`. Las pruebas de salida requieren ejecutar antes el build de la app. Ambas páginas siguen siendo prototipos `noindex` con componentes compartidos; VIORA ya usa su identidad oficial; Juanjo tiene una interpretación editorial provisional basada en las capturas que proporcionó el usuario, sin fotografías ni logotipo gráfico originales aún; no tienen configuración comercial, dominios ni proveedor de reservas. Los targets y acciones de reserva/presupuesto solo aparecen en fixtures de test. La rama VIORA utiliza su paleta oficial y requiere tres variantes originales del logo en `apps/estetica/public/brand/`. Las instrucciones y limitaciones están en [la guía de marca](docs/16-viora-brand.md).
 
 ## Condiciones de uso del repositorio
 
@@ -63,4 +64,4 @@ Para trabajar en una sola aplicación, usar `corepack pnpm --filter @littzite/es
 - **Propuesta**: planteada técnicamente, pendiente de ratificación, prueba o validación de costes.
 - **Pendiente**: no seleccionar proveedor, política comercial, flujo o integración sin información del negocio.
 
-**Próximos pasos:** integrar el portfolio real autorizado del tatuador con archivos originales de calidad publicable; cerrar duración y disponibilidad de los cuatro servicios de VIORA, proveedor de agenda, textos comerciales y SEO antes del lanzamiento. Sin reservas ni pagos mientras esas decisiones permanezcan abiertas.
+**Próximos pasos:** recibir e integrar el logotipo y 6–12 originales del tatuador para poblar la galería preparada en PR-05; cerrar duración y disponibilidad de los cuatro servicios de VIORA, proveedor de agenda, textos comerciales y SEO antes del lanzamiento. Sin reservas ni pagos mientras esas decisiones permanezcan abiertas.

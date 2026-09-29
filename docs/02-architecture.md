@@ -145,3 +145,7 @@ El proveedor de hosting está **propuesto**, no confirmado. Para el contenido p�
 ## Reglas para dependencias entre paquetes
 
 El grafo implementado se muestra arriba y comprende dos apps y tres paquetes realmente consumidos: `content-schema`, `ui` y `sections`. Los futuros paquetes solo se incorporarán cuando tengan consumidores concretos. Reglas invariantes: `apps/*` puede importar paquetes públicos; no hay importaciones cruzadas entre apps, ni dependencias inversas desde packages hacia apps, ni ciclos entre paquetes. No extraer una librería por cada componente antes de demostrar reutilización. **Un contrato compartido y su implementación tienen un solo propietario.**
+
+## PR-05: galería específica de Juanjo
+
+La composición de Juanjo sigue utilizando `ui` y `sections` públicos. El portfolio de imágenes con `astro:assets` pertenece por ahora a `apps/tattoo`, con un único consumidor y sin nuevo paquete compartido. Los datos editoriales y estilos permanecen dentro de la app; las imágenes auténticas se importarán estáticamente cuando se entreguen los originales. Este cambio no modifica el grafo de dependencias de paquetes. Ver [ADR-011](adr/011-tattoo-portfolio-local.md).
