@@ -21,6 +21,7 @@ assert.ok(html.includes('class="site-footer"'), 'Shared footer missing');
 assert.ok(html.includes('class="landing-hero landing-hero--'), 'Shared hero missing');
 assert.equal((html.match(/class="feature-card"/g) ?? []).length, 3, 'Three feature cards expected');
 assert.ok(html.includes('id="alcance"'), 'Feature grid anchor missing');
+assert.ok(!html.includes('feature-card__symbol'), 'Informational cards must not suggest a nonexistent link');
 assert.ok(html.includes('class="skip-link" href="#contenido"'));
 assert.ok(html.includes('class="container"'));
 assert.ok(html.includes('class="action-link" href="#alcance"'));
