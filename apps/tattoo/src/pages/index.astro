@@ -15,8 +15,8 @@ if (!home || !intro || !features) throw new Error('Incomplete tattoo prototype c
 
 <BaseLayout locale={site.defaultLocale} theme={site.theme} title={home.title} noindex={true}>
   <SiteHeader slot="header" brand="Tatuajes · Demo" descriptor="Littzite / concepto"
-    links={[{ label: 'El concepto', href: '#inicio' }, { label: 'Próximos pasos', href: '#alcance' }]} />
-  <LandingHero section={intro} variant="graphic" ctaLabel="Explorar el concepto" ctaHref="#alcance" />
+    links={[{ label: 'El concepto', href: '#inicio' }, { label: 'Próximos pasos', href: '#alcance' }]} badge={{ label: 'Vista previa', href: '#alcance' }} />
+  <LandingHero section={intro} variant="graphic" ctaLabel="Explorar el concepto" ctaHref="#alcance" disclaimer="Prototipo visual en desarrollo" artLabel="ESTUDIO VISUAL" artIndex="001 / 002" />
   <FeatureGrid section={features} />
-  <SiteFooter slot="footer" brand="Tatuajes · Demo" note="Exploración visual sin portfolio, turnos ni contacto reales. Todas las fotos finales requieren autorización." />
+  <SiteFooter slot="footer" brand="Tatuajes · Demo" note="Exploración visual sin portfolio, turnos ni contacto reales. Todas las fotos finales requieren autorización." meta={["Prototipo · No es un sitio comercial activo", "Componentes compartidos de Littzite"]} />
 </BaseLayout>
