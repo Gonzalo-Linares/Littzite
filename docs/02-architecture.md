@@ -1,4 +1,4 @@
-# Arquitectura lógica y despliegue — v0.4
+# Arquitectura lógica y despliegue — v0.5
 
 ## Monorepo propuesto
 
@@ -100,6 +100,7 @@ flowchart LR
 ## Independencia operativa
 
 - Cada aplicación define dominio/canonical, sitemap, iconos, imágenes sociales, cuenta de reservas y analítica independientes.
+- D-09: ambas apps publican contenido en `es-AR`, sin prefijo idiomático; el contrato `SiteConfig.defaultLocale` es la fuente de verdad para el idioma del documento, metadatos y formatos. Los paquetes compartidos no implementan un router de idiomas ni catálogos de traducción en v1.
 - Comparten librerías, no sesiones ni secretos. Los deployments se disparan por ruta afectada; un cambio en un paquete común exige compilar/probar ambas apps.
 - No se almacena un registro local de reservas en v1; la fuente de verdad es el proveedor elegido.
 - Cada integración externa incluye fallback a enlace externo y una política ante indisponibilidad.

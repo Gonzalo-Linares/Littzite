@@ -1,4 +1,4 @@
-# Modelo de dominio, clases y ERE conceptual — v0.4
+# Modelo de dominio, clases y ERE conceptual — v0.5
 
 **Alcance:** modelos de contenido estático validado en build. **No** son tablas SQL, no hay backend propio, CRM, historia clínica ni motor de turnos. Los diagramas son diseño propuesto; todavía no existen clases o contratos implementados.
 
@@ -7,6 +7,7 @@
 - **Estética:** una profesional y servicios con duración fija. El valor en minutos por tratamiento, horarios, local y proveedor son datos aún no confirmados.
 - **Tatuador:** un trabajo pequeño se puede reservar directamente; un trabajo grande requiere presupuesto previo. No está definido el umbral de tamaño ni que el tatuador trabaje solo.
 - **D-04:** presupuestos para trabajos grandes por WhatsApp directo, inicialmente solo texto. No se cargan archivos en Littzite. Número comercial real y texto inicial, pendientes de validar.
+- **D-09:** español de Argentina (`es-AR`) como único idioma inicial en ambas apps. `SiteConfig.defaultLocale` conserva un único origen validado para `html lang`, metadatos y formatos.
 - **Señas, pagos, reprogramación y cancelaciones:** pendiente para ambos negocios.
 
 ## Separar servicio, acción de conversión y proveedor
@@ -258,6 +259,8 @@ type QuoteTarget = {
 ```
 
 En v1, un `QuoteTarget` de WhatsApp genera `https://wa.me/<numero>?text=<texto-codificado>` usando el único número E.164 aprobado en `ContactConfig`. Se codifica el mensaje con `encodeURIComponent`, se permite opcionalmente interpolar únicamente datos públicos como el nombre del servicio y no se introducen datos personales en la URL. El visitante redacta y envía el mensaje en WhatsApp; el clic **no prueba** que lo haya enviado. La web no recopila respuestas ni archivos.
+
+`SiteConfig.defaultLocale` se validará inicialmente para aceptar solo `es-AR`. No duplicar el locale en los componentes ni derivarlo del nombre del cliente. No agregar modelos de traducción o relaciones `PageTranslation` al ERE conceptual hasta que exista un requerimiento de otro idioma. Slugs y URLs serán simples, sin prefijo de idioma.
 
 Los tipos son **ilustrativos**, no código productivo ni licencia para asumir que todos los proveedores admiten embeds. Al implementar, los esquemas Zod serán la única fuente de verdad para inferir los tipos y validar referencias cruzadas.
 

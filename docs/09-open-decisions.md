@@ -1,4 +1,4 @@
-# Decisiones acordadas, pendientes y criterios de desbloqueo — v0.4
+# Decisiones acordadas, pendientes y criterios de desbloqueo — v0.5
 
 **Regla:** distinguir decisión de producto confirmada, selección de herramienta propuesta e información real pendiente del negocio. Los pendientes no bloquean contratos transversales; sí bloquean la integración y publicación del flujo afectado. Toda alteración de una frontera arquitectónica exige actualizar la ADR y las pruebas previstas.
 
@@ -12,6 +12,7 @@
 | D-04A | **Acordada** | Tatuajes grandes: presupuestos por WhatsApp directo, inicialmente solo texto, sin formulario ni carga de imágenes propios. | `QuoteTarget` de WhatsApp con número obtenido de `ContactConfig`; sin backend ni base de datos para presupuestos. |
 | D-08A | **Acordada** | Repositorio Littzite **público**. | Revisar secretos, assets y licencias antes de commits; lo público no significa open-source. |
 | D-08B | **Acordada** | **Sin licencia de reutilización** para el código original de Littzite; conservar derechos de autor, sin archivo `LICENSE` abierto. | Aviso visible en README; política de terceros, assets y contribuciones documentada en [política de PI](15-ip-license-policy.md) y ADR-006. |
+| D-09 | **Acordada** | V1 exclusivamente en español de Argentina (`es-AR`) para ambas apps. | `SiteConfig.defaultLocale` validado; sin traducciones, selector idiomático ni rutas `/es/`, ver [ADR-007](adr/007-single-locale-es-ar.md). |
 
 **No inferir:** que el tatuador trabaja solo, que los trabajos pequeños tienen una duración uniforme, que no existen señas, ni que Calendly/SimplyBook.me se haya elegido. WhatsApp es el canal de consulta, **no** el proveedor de agenda. Los ejemplos de esquemas son ilustrativos hasta validarse contra necesidades reales.
 
@@ -27,7 +28,6 @@
 | D-05 | Nombre comercial, dominio, dirección y ubicación verificable de cada cliente | Cada negocio | Canonical, schema, Search Console y lanzamiento |
 | D-06 | Fotografías, derechos, consentimientos y quién editará contenidos | Cada negocio | Publicación de assets finales y proceso editorial |
 | D-07 | Hosting y titularidad de dominios y cuentas | Cada negocio + equipo técnico | Despliegue de producción; Cloudflare Pages sigue siendo una propuesta |
-| D-09 | Necesidad efectiva de idiomas adicionales o varios países | Cada negocio | Internacionalización real; v1 puede comenzar con contenido en español si se valida |
 
 ## Criterios para cerrar una decisión
 

@@ -1,4 +1,4 @@
-# Visión, límites y requisitos — v0.4
+# Visión, límites y requisitos — v0.5
 
 ## Objetivo de negocio
 
@@ -13,6 +13,7 @@ Dos webs en San Juan, Argentina: una estética integral y un estudio de tatuajes
 - Analítica mínima: visita desde buscador, clic en CTA y evento de reserva reportado por proveedor cuando exista y cuando el seguimiento esté habilitado conforme a privacidad.
 - Configuración por negocio: marca, tokens, locales, horarios, servicios, CTA, perfiles sociales, mapas, proveedor de agenda, páginas, menú y footer.
 - Contenido y configuración con validación estática en el build y chequeos de unicidad de slugs.
+- D-09: primera versión exclusivamente en español de Argentina (`es-AR`) para ambos sitios. Los slugs serán descriptivos en español, sin prefijo `/es/`; formatos regionales centralizados mediante `Intl` y metadatos de idioma coherentes.
 
 ## Diferencias por negocio
 
@@ -25,6 +26,7 @@ Dos webs en San Juan, Argentina: una estética integral y un estudio de tatuajes
 - Panel de administración propio, roles, autenticación, CRM, historial de pacientes/clientes, agenda propia, procesamiento propio de pagos, multi-tenant compartido y motor visual de páginas.
 - Gestión de fotografías privadas o información sensible sobre salud. Las referencias para presupuesto requieren un proceso de privacidad específico si se decide recibir archivos.
 - Garantías de ranking en Google o resultados económicos no controlables.
+- Infraestructura de internacionalización, selectores de idioma, traducción de contenido, rutas locales alternativas y `hreflang`; se evaluarán únicamente si surge un requisito concreto.
 
 ## Requisitos no funcionales iniciales
 

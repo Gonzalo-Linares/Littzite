@@ -1,4 +1,4 @@
-# Plan de implementación y Definition of Done — v0.4
+# Plan de implementación y Definition of Done — v0.5
 
 ## Fase 0 — Documentación y decisiones
 
@@ -7,6 +7,7 @@
 - Registrar las respuestas ya confirmadas: estética con una profesional y tratamientos de duración fija; tatuajes pequeños de reserva directa y grandes por presupuesto. Confirmar D-04 (WhatsApp directo para presupuestos grandes, inicialmente solo texto). Mantener pendientes duraciones específicas, alcance del tatuador, proveedor de agenda, señas, número comercial real y editores.
 - D-08B aprobada: repositorio público sin licencia de reutilización para el código original. Adoptar la [política de terceros](15-ip-license-policy.md) y ADR-006; no generar automáticamente un `LICENSE` open-source.
 - Auditar AstroWind selectivamente: licencia MIT del código en la revisión concreta, avisos obligatorios, recursos licenciados por separado, compatibilidad Astro/Tailwind, accesibilidad y dependencias. Documentar qué se copia, desde dónde y bajo qué autorización.
+- D-09 aprobada: ambos sitios iniciales usan solo `es-AR`, sin traducciones ni prefijos de idioma; consultar ADR-007.
 - Elegir proveedor de reservas **por negocio**, según pruebas de uso reales.
 
 **Salida:** PR documental sin código de producto; decisiones acordadas separadas de propuestas y pendientes con responsable.
@@ -16,7 +17,7 @@
 - Monorepo pnpm, Astro/TypeScript estricto, Tailwind, lockfile y dos apps mínimas.
 - `content-schema`: Zod `SiteConfig`, `Service`, `ServiceAction[]`, `BookingTarget`, `QuoteTarget`, `PageSection` y `SeoMetadata`; integridad de referencias cruzadas.
 - `ui`: tokens, buttons, layout, accesibilidad y responsive.
-- `seo`: canonical, metadatos, JSON-LD, sitemap y checks de integridad.
+- `seo`: canonical, metadatos, JSON-LD, sitemap y checks de integridad; consumo de `SiteConfig.defaultLocale` para idioma de página y metadatos, sin i18n de múltiples idiomas.
 - `booking`: resolver acciones y validar enlaces/fallback. Implementar embed específico **solo después** de elegir el proveedor real de cada negocio.
 - CI: formato, lint, typecheck y compilación de ambas apps.
 

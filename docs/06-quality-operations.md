@@ -1,8 +1,9 @@
-# Calidad, SEO, seguridad y operaciones — v0.3
+# Calidad, SEO, seguridad y operaciones — v0.5
 
 ## SEO local por construcción
 
 - `canonicalOrigin` específico por sitio, canonical absoluta por página; sitemap solo con URLs indexables válidas; `robots.txt` independiente.
+- D-09: usar `SiteConfig.defaultLocale = 'es-AR'` como única fuente de verdad para `<html lang>`, idioma de metadatos y formatos regionales por `Intl` cuando corresponda. Una sola versión de URL sin prefijo `/es/`; no emitir `hreflang` ficticio ni páginas traducidas. Slugs legibles en español y metadatos únicos por servicio.
 - Título y descripción únicos y útiles, URL legible y HTML indexable por cada tratamiento/estilo genuinamente distinto. Evitar páginas casi duplicadas por barrio o palabra clave.
 - Datos estructurados `LocalBusiness` con el subtipo correcto y la información **visible y verificable**; páginas de servicio con datos semánticos cuando correspondan.
 - Perfil de Empresa en Google separado por negocio, contacto/NAP consistente, reseñas legítimas y fotografías originales autorizadas.
@@ -15,7 +16,7 @@
 | --- | --- | --- |
 | `pnpm lint` / format | convenciones y código no usado | PR |
 | `pnpm typecheck` | TypeScript estricto, Astro y contratos | PR |
-| Validación de contenido | Zod, referencias, URLs, slugs y campos SEO | PR/build |
+| Validación de contenido | Zod, referencias, URLs, slugs, locale `es-AR` y campos SEO | PR/build |
 | Vitest | uniones discriminadas de `ServiceAction`, referencias a `BookingTarget`/`QuoteTarget`, fallback, URLs, SEO y secciones lógicas | PR |
 | Build ambas apps | ausencia de imports cruzados, errores de SSR/build y assets | PR común |
 | Playwright | menú móvil, reserva directa de estética, doble CTA tatuador, fallback, contacto, rutas y sitemap | PR/release |

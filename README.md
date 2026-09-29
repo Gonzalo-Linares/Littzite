@@ -1,6 +1,6 @@
 # Littzite — arquitectura fundacional
 
-**Estado:** v0.4, arquitectura documental en revisión. **Fecha:** 2026-09-28/29.  
+**Estado:** v0.5, arquitectura documental en revisión. **Fecha:** 2026-09-28/29.  
 **Producto:** plataforma de creación de sitios comerciales modulares; primeros casos: estética integral y estudio de tatuajes en San Juan, Argentina.  
 **Propósito:** captación orgánica local, diferenciación visual, contacto y reservas/solicitudes mediante proveedores externos.
 
@@ -15,6 +15,7 @@
 - Reservas desacopladas detrás de acciones tipadas por servicio: **estética con una profesional y tratamientos de duración fija**; **tatuajes pequeños con reserva directa y grandes mediante solicitud de presupuesto**. El proveedor de agenda por negocio y las señas siguen pendientes; **D-04 aprobada**: presupuestos de tatuajes grandes por WhatsApp, inicialmente solo texto, sin formulario ni subida de imágenes propios. No desarrollar agenda propia.
 - Reutilización selectiva de AstroWind solo luego de auditar código, versión y licencias independientes de sus recursos.
 - **D-08B acordada:** repositorio público, **sin licencia de reutilización para el código original de Littzite**. Cada dependencia, fragmento de plantilla o asset de terceros conserva su licencia o autorización específica; ver [política de propiedad intelectual](docs/15-ip-license-policy.md) y [ADR-006](docs/adr/006-public-rights-reserved.md).
+- **D-09 acordada:** primera versión únicamente en español de Argentina (`es-AR`) para ambos negocios, rutas sin prefijo idiomático y sin infraestructura de traducción, según [ADR-007](docs/adr/007-single-locale-es-ar.md).
 
 ## Índice
 
