@@ -1,4 +1,4 @@
-# Visión, límites y requisitos — v0.3
+# Visión, límites y requisitos — v0.4
 
 ## Objetivo de negocio
 
@@ -18,7 +18,7 @@ Dos webs en San Juan, Argentina: una estética integral y un estudio de tatuajes
 
 **Estética (flujo confirmado):** una sola profesional; catálogo de tratamientos de duración fija. Cada duración concreta, horarios y proveedor externo requieren validación de la profesional. Precio público y posibilidad de seña no están confirmados.
 
-**Tatuador (flujo confirmado):** la misma página o ficha puede presentar dos acciones independientes: reservar directamente un trabajo pequeño y solicitar presupuesto para uno grande. Portafolio por estilo/trabajo. El umbral entre pequeño y grande, los tiempos de agenda, el canal de presupuesto y la necesidad de señas NO están confirmados.
+**Tatuador (flujo confirmado):** la misma página o ficha puede presentar dos acciones independientes: reservar directamente un trabajo pequeño y solicitar presupuesto para uno grande. Portafolio por estilo/trabajo. El canal de presupuesto de trabajos grandes se confirmó como **WhatsApp directo, inicialmente solo texto**. El umbral entre pequeño y grande, los tiempos de agenda, el número comercial verificado y la necesidad de señas NO están confirmados.
 
 ## Fuera de alcance v1
 
@@ -44,5 +44,5 @@ Dos webs en San Juan, Argentina: una estética integral y un estudio de tatuajes
 - Estética: una profesional y duraciones fijas confirmadas; faltan duración concreta por tratamiento, horarios y local. Tatuador: cantidad de artistas y reglas concretas por tipo de trabajo por confirmar.
 - ¿Necesitan señas, pagos en ARS, reprogramación y recordatorios? ¿Qué calendario utilizan hoy?
 - ¿Quién actualiza contenido y con qué frecuencia? ¿Qué fotografías tienen permiso de publicar?
-- ¿Qué canal externo y qué datos mínimos necesitará el tatuador para elaborar un presupuesto? No implementar almacenamiento de fotos o archivos hasta validar el canal y los permisos.
+- WhatsApp fue elegido como canal de presupuestos para trabajos grandes, inicialmente solo texto. Falta verificar el número comercial, aprobar el texto de apertura y el aviso de salida a un tercero. No crear formulario, subida de fotos ni almacenamiento propio.
 - ¿Ambos negocios tendrán su propio dominio, cuentas de agenda y accesos administrativos? (recomendado).

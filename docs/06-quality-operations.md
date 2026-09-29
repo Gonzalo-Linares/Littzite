@@ -33,7 +33,7 @@ Testear adaptadores con stubs; E2E de widget externo solo como smoke test no det
 - Scripts de terceros mínimos, CSP compatible con los proveedores elegidos, sin perder seguridad por la facilidad de incrustación.
 - Política de privacidad, cookies, condiciones/cancelación y derechos de imágenes adaptadas a cada negocio y revisadas antes del lanzamiento.
 - Captar solo datos imprescindibles. Evitar recibir datos sensibles de salud en formularios públicos; si surge una necesidad real, diseñar un flujo específico y revisar requisitos legales.
-- Presupuestos de tatuajes: no recibir imágenes, información privada ni documentos en la web propia sin canal, finalidad, política y controles previamente definidos.
+- Presupuestos de tatuajes: D-04 define WhatsApp directo, inicialmente solo texto. Littzite no implementa formulario, subida de archivos ni almacenamiento de mensajes; el número comercial real se valida antes de lanzar el CTA. Informar que se abandona el sitio para contactar a un tercero. No recopilar ni registrar el contenido del mensaje.
 - Sin prometer métricas exactas de reserva por simples clics. Separar `cta_clicked`, `booking_widget_event` y `provider_confirmed_booking` cuando este último dato exista.
 
 ## Despliegue

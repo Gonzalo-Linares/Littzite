@@ -1,6 +1,6 @@
 # ADR-003 — Acciones comerciales tipadas y adaptadores externos de reservas
 
-**Estado:** **Aceptada** para desacoplamiento, estética de una profesional y doble recorrido del tatuador. **Pendiente** proveedor, canal de presupuesto, señas y reglas comerciales. **Fecha de actualización:** 2026-09-29.
+**Estado:** **Aceptada** para desacoplamiento, estética de una profesional, doble recorrido del tatuador y D-04 (WhatsApp directo, inicialmente solo texto). **Pendiente** proveedor de reservas, número real, señas y reglas comerciales. **Fecha de actualización:** 2026-09-29.
 
 ## Contexto
 
@@ -10,7 +10,7 @@ Se confirmó una sola profesional en estética con tratamientos de duración fij
 
 - Cada `Service` puede declarar `ServiceAction[]`, una unión discriminada: `direct-booking`, `quote-request`, `contact`. Cada acción tiene ID y CTA propios; los destinos se resuelven mediante referencias validadas (`BookingTarget`, `QuoteTarget`).
 - El adaptador de agenda transforma un `BookingTarget` confirmado en una experiencia soportada: enlace HTTPS obligatorio y embed **solo si** el proveedor seleccionado lo permite. No imponer una API universal que oculte diferencias de capacidades.
-- `quote-request` nunca equivale a reserva confirmada. El canal se selecciona y valida bajo D-04. No crear backend de archivos o formularios hasta tener requisitos y aprobación de privacidad.
+- `quote-request` nunca equivale a reserva confirmada. Para el primer tatuador, D-04 selecciona WhatsApp, solo texto en v1. El `QuoteTarget` referencia el único número comercial E.164 aprobado de `ContactConfig`, y un resolver genera el enlace `wa.me` con texto público opcional codificado. No crear backend de archivos o formularios propios.
 - La disponibilidad, confirmación, cancelación y, si corresponde, el cobro pertenecen al proveedor externo, no al frontend de Littzite.
 - Una sola implementación compartida de CTA/resolución permite recorridos distintos por datos y composición sin `if(siteId)`.
 
@@ -18,7 +18,7 @@ Se confirmó una sola profesional en estética con tratamientos de duración fij
 
 - No hay calendario, citas ni pagos almacenados en v1. Las métricas de clics no prueban citas.
 - Para la estética, exigir duración real validada por tratamiento antes de activar reservas públicas.
-- Para el tatuador, no inventar tamaño máximo, duración, número de artistas, formulario ni canal de presupuesto.
+- Para el tatuador, no inventar tamaño máximo, duración, número de artistas ni señas. WhatsApp es canal de presupuestos aprobado, pero el número comercial real y texto de apertura siguen en D-04B.
 - La elección de Calendly, SimplyBook.me u otro proveedor requiere comparar casos reales y documentar configuración y fallback antes de agregar el adaptador específico. No implementar preventivamente todos.
 - La política de señas, reprogramación y cancelación sigue en D-03; su ausencia de definición **no significa que sea gratuita o que no exista**.
 
@@ -35,3 +35,4 @@ Se confirmó una sola profesional en estética con tratamientos de duración fij
 - Tests Zod e integridad: `targetId` existente y del tipo correcto, URL HTTPS, lista permitida de hosts y fallback.
 - Una reserva de estética con duración positiva validada, destino externo correcto y fallback cuando no carga embed.
 - El intento de habilitar seña, flujo de archivos o confirmación propia exige requisitos aprobados, revisión de seguridad y ADR nueva si modifica el alcance.
+- Test de `QuoteTarget` WhatsApp: usa un único número de `ContactConfig`, validación E.164, construcción de `wa.me`, prellenado codificado sin datos personales, y no se habilita sin D-04B aprobado.

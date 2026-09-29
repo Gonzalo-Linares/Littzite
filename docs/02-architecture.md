@@ -1,4 +1,4 @@
-# Arquitectura lógica y despliegue — v0.3
+# Arquitectura lógica y despliegue — v0.4
 
 ## Monorepo propuesto
 
@@ -30,7 +30,7 @@ flowchart LR
   L[Littzite: sitios públicos independientes]
   S[Buscadores y mapas]
   R[Proveedor externo de reservas]
-  W[WhatsApp / canal de presupuestos externo]
+  W[WhatsApp externo: presupuesto por texto]
   U -->|Encuentra negocios| S
   S -->|Visita orgánica| L
   U -->|Consulta y navega| L
@@ -72,7 +72,7 @@ flowchart TB
     DEP2 -. Métricas, con consentimiento cuando proceda .-> SEARCH
 ```
 
-Los proveedores pueden coincidir o ser distintos; **no se seleccionó ninguno**. El flujo de presupuesto del tatuador sale a un canal externo igualmente pendiente.
+Los proveedores pueden coincidir o ser distintos; **no se seleccionó ninguno**. El flujo de presupuesto del tatuador sale a **WhatsApp** mediante enlace construido desde `ContactConfig` y `QuoteTarget`: solo texto en v1. Número comercial y mensaje inicial, pendientes de validar antes de publicar.
 
 ## Límites de responsabilidad
 
@@ -83,7 +83,7 @@ Los proveedores pueden coincidir o ser distintos; **no se seleccionó ninguno**.
 | `sections` | Composición de bloques reutilizables con props tipadas | Consultar contenido global de una app |
 | `seo` | Metadatos, URL canonical, schema, sitemap helpers | Inventar reseñas o localidades no verificadas |
 | `booking` | Resolver acciones `direct-booking`, targets y adaptadores soportados | Crear agenda local, decidir política de señas o fingir una API de reserva universal |
-| `content-schema` + resolver de acciones | Validar `ServiceAction[]` y relaciones con destinos de reserva/presupuesto | Hardcodear flujos por identidad de app |
+| `content-schema` + resolver de acciones | Validar `ServiceAction[]` y relaciones con destinos de reserva/presupuesto; WhatsApp obtiene el único número de `ContactConfig` | Hardcodear flujos por identidad de app ni duplicar números comerciales |
 | `apps/*` | Identidad, contenido, orden de páginas, proveedores y deploy | Reimplementar lógica compartida |
 
 ## Ciclo de contenido
@@ -117,7 +117,7 @@ flowchart TB
   CDN2 --> DB[Dominio, Search Console y analítica B]
   CDN1 -. widget / enlace .-> BA[Proveedor de agenda A por definir]
   CDN2 -. reserva directa .-> BB[Proveedor de agenda B por definir]
-  CDN2 -. presupuesto .-> QC[Canal de presupuesto por definir]
+  CDN2 -. presupuesto .-> QC[WhatsApp: consulta de texto]
 ```
 
 El proveedor de hosting está **propuesto**, no confirmado. Para el contenido público se privilegia salida estática. Aislar variables de entorno y cuentas por proyecto. En previews, impedir indexación por controles de acceso cuando estén disponibles; `noindex` no reemplaza un control de acceso.

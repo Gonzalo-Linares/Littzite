@@ -1,6 +1,6 @@
-# Flujos y secuencias — v0.3
+# Flujos y secuencias — v0.4
 
-Las siguientes secuencias describen **flujos confirmados y contratos previstos**, no integraciones ya implementadas. El proveedor y las cuentas por negocio todavía no están elegidos.
+Las siguientes secuencias describen **flujos confirmados y contratos previstos**, no integraciones ya implementadas. El proveedor de reservas y las cuentas por negocio todavía no están elegidos. El canal de presupuestos de tatuajes grandes **sí** fue elegido: WhatsApp directo, inicialmente solo texto, sin formulario ni archivos propios.
 
 ## Estética: reserva de un tratamiento de duración fija
 
@@ -40,7 +40,7 @@ flowchart TD
   E --> F[Confirmación en el proveedor]
   B -->|Trabajo grande| G[Ver trabajos y criterios del presupuesto]
   G --> H[Acción tipada quote-request]
-  H --> I[Canal externo por definir]
+  H --> I[WhatsApp: mensaje de texto]
   I --> J[Artista evalúa y cotiza]
   J --> K{¿Acepta el cliente?}
   K -->|Sí| L[Negocio acuerda siguientes pasos]
@@ -56,13 +56,13 @@ sequenceDiagram
   actor U as Cliente
   participant W as Web tatuador
   participant A as Resolver ServiceAction
-  participant Q as Canal de presupuesto externo
+  participant Q as WhatsApp externo
   participant T as Tatuador
   U->>W: Selecciona trabajo grande
   W->>A: Resuelve quote-request
-  A-->>W: QuoteTarget configurado y validado
-  W-->>U: CTA y política de privacidad
-  U->>Q: Inicia consulta por canal aprobado
+  A-->>W: QuoteTarget WhatsApp y teléfono comercial validados
+  W-->>U: CTA: abrir WhatsApp + aviso de tercero
+  U->>Q: Redacta y envía su consulta de texto
   Q->>T: Entrega solicitud según proveedor
   T-->>U: Revisa y comunica presupuesto
   opt Si acepta y hay disponibilidad
@@ -70,7 +70,7 @@ sequenceDiagram
   end
 ```
 
-Si el canal de presupuestos no está validado, **no se publica un enlace ficticio ni un formulario propio**. El destino será una decisión D-04 previa al lanzamiento.
+El canal está definido por D-04 como WhatsApp de texto. Si el teléfono comercial o el texto editorial no están validados, **no se publica un enlace ficticio ni un formulario propio**. No existe subida de imágenes desde Littzite ni se registra el contenido de los mensajes. El envío efectivo no puede deducirse del clic.
 
 ## Fallo del widget y retorno seguro
 

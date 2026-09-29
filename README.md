@@ -1,6 +1,6 @@
 # Littzite — arquitectura fundacional
 
-**Estado:** v0.3, arquitectura documental en revisión. **Fecha:** 2026-09-28/29.  
+**Estado:** v0.4, arquitectura documental en revisión. **Fecha:** 2026-09-28/29.  
 **Producto:** plataforma de creación de sitios comerciales modulares; primeros casos: estética integral y estudio de tatuajes en San Juan, Argentina.  
 **Propósito:** captación orgánica local, diferenciación visual, contacto y reservas/solicitudes mediante proveedores externos.
 
@@ -12,7 +12,7 @@
 - Modificar una capacidad común una sola vez, consumirla desde ambos sitios y validarla en ambas apps; evitar hardcodear identidad comercial dentro de los paquetes.
 - Cada app tiene identidad y páginas propias. No crear una megatemplate con condicionales por cliente, ni un SaaS multi-tenant en v1.
 - Contenido inicial gestionado como archivos versionados en Git; sin CMS, backend ni base de datos propios para la primera versión, salvo un requisito aprobado que lo justifique.
-- Reservas desacopladas detrás de acciones tipadas por servicio: **estética con una profesional y tratamientos de duración fija**; **tatuajes pequeños con reserva directa y grandes mediante solicitud de presupuesto**. El proveedor por negocio, el canal de presupuesto y las señas siguen pendientes. No desarrollar agenda propia.
+- Reservas desacopladas detrás de acciones tipadas por servicio: **estética con una profesional y tratamientos de duración fija**; **tatuajes pequeños con reserva directa y grandes mediante solicitud de presupuesto**. El proveedor de agenda por negocio y las señas siguen pendientes; **D-04 aprobada**: presupuestos de tatuajes grandes por WhatsApp, inicialmente solo texto, sin formulario ni subida de imágenes propios. No desarrollar agenda propia.
 - Reutilización selectiva de AstroWind solo luego de auditar código, versión y licencias independientes de sus recursos.
 
 ## Índice
