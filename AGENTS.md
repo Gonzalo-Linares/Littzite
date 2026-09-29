@@ -32,4 +32,8 @@ PR-00: documentación y aprobación; PR-01: scaffold mínimo pnpm + Astro + Type
 
 ## Scaffold PR-01
 
-El grafo implementado inicialmente es `apps/{estetica,tattoo} -> packages/{content-schema,ui}` y `packages/ui -> packages/content-schema`. `content-schema` solo valida `SiteConfig.defaultLocale` y `ui` contiene un layout mínimo compartido. Los paquetes `sections`, `seo` y `booking` del diagrama conceptual aún no existen; crearlos cuando tengan interfaces consumidas. Ejecutar `pnpm check`, `pnpm build` y `pnpm test` para verificar ambas apps; los comandos por app están en cada `package.json`.
+El grafo implementado inicialmente es `apps/{estetica,tattoo} -> packages/{content-schema,ui}` y `packages/ui -> packages/content-schema`. PR-01 validó solo `SiteConfig.defaultLocale` y compartió un layout mínimo; PR-02 amplía ambos paquetes. Los paquetes `sections`, `seo` y `booking` del diagrama conceptual aún no existen; crearlos cuando tengan interfaces consumidas. Ejecutar `pnpm check`, `pnpm build` y `pnpm test` para verificar ambas apps; los comandos por app están en cada `package.json`.
+
+## Contratos PR-02
+
+`siteContentSchema` valida los datos de una app y sus referencias internas. Las configuraciones demo no contienen datos comerciales ni targets externos. Antes de publicar reservas o WhatsApp se requieren el proveedor/host aprobado, duración verificada donde corresponda y D-04B; un fixture de test no autoriza un CTA público. `packages/ui` consume el tema tipado y no conoce el negocio. Ejecutar también `pnpm check:boundaries` y `pnpm test:contracts`; la CI aplica ambos junto a los gates de cada app. El checker de límites cubre manifests e imports literales; revisar manualmente nuevas convenciones de importación si se introducen.

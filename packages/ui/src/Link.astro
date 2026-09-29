@@ -1,0 +1,12 @@
+---
+import { isAllowedHref } from './link-utils';
+
+interface Props {
+  href: string;
+}
+
+const { href } = Astro.props;
+if (!isAllowedHref(href)) throw new Error('Unsupported link URL');
+---
+
+<a class="action-link" href={href}><slot /></a>

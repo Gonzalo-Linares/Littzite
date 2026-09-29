@@ -1,0 +1,38 @@
+:root {
+  font-family: system-ui, sans-serif;
+  color: var(--color-text);
+  background: var(--color-surface);
+}
+
+* { box-sizing: border-box; }
+body { margin: 0; line-height: 1.6; }
+
+.container {
+  width: min(100% - 2rem, 72rem);
+  margin-inline: auto;
+}
+
+a { color: inherit; }
+a:focus-visible { outline: 3px solid var(--color-focus); outline-offset: 3px; }
+
+.skip-link {
+  position: absolute;
+  top: 0.75rem;
+  left: 0.75rem;
+  padding: 0.5rem 0.75rem;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  transform: translateY(-200%);
+}
+.skip-link:focus { transform: translateY(0); }
+
+.action-link {
+  display: inline-block;
+  padding: 0.65rem 1rem;
+  border-radius: 0.4rem;
+  background: var(--color-accent);
+  color: var(--color-accent-text);
+  text-decoration: none;
+  font-weight: 650;
+}
+.action-link:hover { text-decoration: underline; }

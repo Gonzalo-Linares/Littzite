@@ -4,7 +4,9 @@
   "private": true,
   "type": "module",
   "exports": {
-    "./BaseLayout.astro": "./src/BaseLayout.astro"
+    "./BaseLayout.astro": "./src/BaseLayout.astro",
+    "./Container.astro": "./src/Container.astro",
+    "./Link.astro": "./src/Link.astro"
   },
   "dependencies": {
     "@littzite/content-schema": "workspace:*"

@@ -1,17 +1,27 @@
 ---
 import type { SiteConfig } from '@littzite/content-schema';
+import './styles.css';
 
 interface Props {
   locale: SiteConfig['defaultLocale'];
+  theme: SiteConfig['theme'];
   title: string;
   noindex: boolean;
 }
 
-const { locale, title, noindex } = Astro.props;
+const { locale, theme, title, noindex } = Astro.props;
+const themeStyle = {
+  '--color-surface': theme.surface,
+  '--color-text': theme.text,
+  '--color-accent': theme.accent,
+  '--color-accent-text': theme.accentText,
+  '--color-border': theme.border,
+  '--color-focus': theme.focus,
+};
 ---
 
 <!doctype html>
-<html lang={locale}>
+<html lang={locale} style={themeStyle}>
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -19,6 +29,7 @@ const { locale, title, noindex } = Astro.props;
     <title>{title}</title>
   </head>
   <body>
-    <main><slot /></main>
+    <a class="skip-link" href="#contenido">Ir al contenido</a>
+    <main id="contenido"><slot /></main>
   </body>
 </html>

@@ -1,9 +1,17 @@
 ---
 import BaseLayout from '@littzite/ui/BaseLayout.astro';
-import { siteConfig } from '../site.config';
+import Container from '@littzite/ui/Container.astro';
+import Link from '@littzite/ui/Link.astro';
+import { siteContent } from '../site.config';
+
+const { site, pages } = siteContent;
+const home = pages.find((page) => page.slug === '');
+if (!home) throw new Error('Missing home page');
 ---
 
-<BaseLayout locale={siteConfig.defaultLocale} title="Demo de tatuajes | Littzite" noindex={true}>
-  <h1>Demo de tatuajes</h1>
-  <p>Entrada técnica de la aplicación de tatuajes. La identidad y el contenido se definirán más adelante.</p>
+<BaseLayout locale={site.defaultLocale} theme={site.theme} title={home.title} noindex={true}>
+  <Container>
+    {home.sections.map((section) => section.type === 'intro' && <section id="alcance"><h1>{section.heading}</h1><p>{section.body}</p></section>)}
+    <Link href="#alcance">Ver alcance del demo</Link>
+  </Container>
 </BaseLayout>

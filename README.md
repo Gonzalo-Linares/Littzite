@@ -1,10 +1,10 @@
 # Littzite — arquitectura fundacional
 
-**Estado:** documentación fundacional v0.5; scaffold técnico PR-01 implementado para revisión. **Fecha:** 2026-09-28/29.  
+**Estado:** documentación fundacional v0.5; scaffold PR-01 integrado y contratos/UI mínimos propuestos en PR-02. **Fecha:** 2026-09-28/29.
 **Producto:** plataforma de creación de sitios comerciales modulares; primeros casos: estética integral y estudio de tatuajes en San Juan, Argentina.  
 **Propósito:** captación orgánica local, diferenciación visual, contacto y reservas/solicitudes mediante proveedores externos.
 
-> El repositorio incluye un **scaffold técnico implementado** (dos aplicaciones Astro, validación mínima de `es-AR`, layout compartido y CI). El resto de la arquitectura documentada describe el objetivo previsto: todavía **no** hay sitios comerciales terminados, contenido real, SEO productivo ni integraciones de reservas. Las decisiones pendientes requieren validación antes de implementarse.
+> El repositorio incluye dos aplicaciones Astro y contratos Zod/UI compartidos mínimos. La arquitectura restante describe el objetivo previsto: todavía **no** hay sitios comerciales terminados, contenido real, SEO productivo ni integraciones de reservas. Las decisiones pendientes requieren validación antes de implementarse.
 
 ## Acuerdos de alcance
 
@@ -37,18 +37,20 @@
 16. [Registros de decisión arquitectónica — ADR](docs/adr/)
 17. [Instrucciones para agentes de código](AGENTS.md)
 
-## Scaffold PR-01
+## Comprobaciones locales
 
 Requiere Node.js 24 y pnpm 12.6.0 (disponible mediante Corepack). Desde la raíz:
 
 ```sh
 corepack pnpm install --frozen-lockfile
+corepack pnpm check:boundaries
+corepack pnpm test:contracts
 corepack pnpm check
 corepack pnpm build
 corepack pnpm test
 ```
 
-Para trabajar en una sola aplicación, usar `corepack pnpm --filter @littzite/estetica <check|build|test>` o `@littzite/tattoo`. Las pruebas de salida requieren ejecutar antes el build de la app. Ambas páginas son demos estáticas con `noindex`; no tienen configuración comercial, dominios ni proveedor de reservas.
+Para trabajar en una sola aplicación, usar `corepack pnpm --filter @littzite/estetica <check|build|test>` o `@littzite/tattoo`. Las pruebas de salida requieren ejecutar antes el build de la app. Ambas páginas son demos estáticas con `noindex` y temas provisionales distintos; no tienen configuración comercial, dominios ni proveedor de reservas. Los targets y acciones de reserva/presupuesto solo aparecen en fixtures de test.
 
 ## Condiciones de uso del repositorio
 

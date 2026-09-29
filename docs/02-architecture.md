@@ -23,7 +23,7 @@ Littzite/
 
 **Regla de dependencias:** `apps/* -> packages/*`. Nunca `apps/estetica -> apps/tattoo` ni dependencias circulares entre paquetes. Evitar separar en paquetes elementos que todavía no tengan una interfaz estable; la estructura podrá simplificarse tras una prueba de implementación.
 
-### Grafo implementado en PR-01
+### Grafo implementado en PR-01/02
 
 ```mermaid
 flowchart LR
@@ -34,7 +34,7 @@ flowchart LR
   UI --> C
 ```
 
-`content-schema` contiene únicamente la validación del locale de `SiteConfig`; `ui` expone un layout Astro mínimo consumido por ambas apps y toma el tipo de locale del esquema. El árbol anterior describe la arquitectura prevista, no carpetas ya creadas: `sections`, `seo` y `booking` esperan interfaces justificadas en PR posteriores. No hay ciclos entre paquetes ni imports entre aplicaciones.
+`content-schema` contiene los contratos Zod de sitio, páginas, servicios y destinos, más validación de referencias dentro de un `SiteContent`. `ui` expone layout, contenedor, enlace y tokens CSS, consumidos por ambas apps; toma los tipos de locale y tema del esquema. El árbol anterior describe la arquitectura prevista, no carpetas ya creadas: `sections`, `seo` y `booking` esperan interfaces justificadas en PR posteriores. No hay ciclos entre paquetes ni imports entre aplicaciones. `scripts/check-boundaries.mjs` comprueba manifests e imports literales en CI.
 
 ## Diagrama de contexto (C4 nivel 1, simplificado)
 
