@@ -120,6 +120,7 @@
   .viora-site .landing-hero__grid { padding-block: 3.25rem 4.5rem; gap: 2.25rem; }
   .viora-site .landing-hero__heading { font-size: clamp(3.9rem,12vw,6rem); }
   .viora-site .landing-hero--serene .landing-hero__art { min-height: clamp(26rem,92vw,37rem); }
+  .viora-hero-logo { width: min(85%,26rem); max-height: 68%; }
   .viora-site .feature-grid { grid-template-columns: 1fr; }
   .viora-site .feature-card { min-height: 12rem; }
   .viora-site .feature-card h3 { margin-top: 1rem; }

@@ -26,7 +26,7 @@
 | D-02B | Tatuador: número de artistas, definición comercial de trabajo pequeño/grande, servicios reservables y reglas de agenda | Tatuador | Clasificación pública, duración de eventos y lanzamiento del CTA |
 | D-03 | Señas, pagos en ARS, cancelación, reprogramación y recordatorios, **si se requieren** | Cada negocio | Configuración final del proveedor y textos comerciales |
 | D-04B | Número comercial de WhatsApp verificado, mensaje inicial y texto informativo de salida a tercero aprobados | Tatuador + equipo técnico | Publicación del CTA real de presupuesto (el canal y alcance texto-only están acordados en D-04A) |
-| D-05 | Nombre comercial, dominio, dirección y ubicación verificable de cada cliente | Cada negocio | Canonical, schema, Search Console y lanzamiento |
+| D-05 | Nombre comercial del tatuador y dominio, dirección y ubicación verificable de ambos; **el nombre VIORA se confirmó mediante su manual** | Cada negocio | Canonical, schema, Search Console y lanzamiento |
 | D-06 | Fotografías, derechos, consentimientos y quién editará contenidos | Cada negocio | Publicación de assets finales y proceso editorial |
 | D-07 | Hosting y titularidad de dominios y cuentas | Cada negocio + equipo técnico | Despliegue de producción; Cloudflare Pages sigue siendo una propuesta |
 | D-10B | Autorización explícita para incluir archivos del logo VIORA en GitHub público y confirmación de servicios/agenda actuales | Titular de marca + equipo técnico | Commit de los tres assets originales en el PR y publicación de datos comerciales reales |

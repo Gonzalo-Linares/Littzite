@@ -34,9 +34,9 @@
 13. [Especificación funcional del módulo de reservas](docs/13-booking-specification.md)
 14. [Cómo visualizar los diagramas](docs/14-diagram-guide.md)
 15. [Política de propiedad intelectual, terceros y contribuciones](docs/15-ip-license-policy.md)
-15a. [Integración visual del manual de marca VIORA](docs/16-viora-brand.md)
-16. [Registros de decisión arquitectónica — ADR](docs/adr/)
-17. [Instrucciones para agentes de código](AGENTS.md)
+16. [Integración visual del manual de marca VIORA](docs/16-viora-brand.md)
+17. [Registros de decisión arquitectónica — ADR](docs/adr/)
+18. [Instrucciones para agentes de código](AGENTS.md)
 
 ## Comprobaciones locales
 
