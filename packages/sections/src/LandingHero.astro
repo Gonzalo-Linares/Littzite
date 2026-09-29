@@ -36,11 +36,13 @@ const { section, variant, ctaLabel, ctaHref, disclaimer, artLabel, artIndex } = 
       <div class="landing-hero__art" aria-hidden="true">
         <div class="landing-hero__art-top"><span>{artLabel}</span><span>{artIndex}</span></div>
         <div class="landing-hero__canvas">
-          <div class="landing-hero__shape landing-hero__shape--outer"></div>
-          <div class="landing-hero__shape landing-hero__shape--inner"></div>
-          <div class="landing-hero__shape landing-hero__shape--accent"></div>
-          <div class="landing-hero__cross landing-hero__cross--one">+</div>
-          <div class="landing-hero__cross landing-hero__cross--two">+</div>
+          <slot name="artwork">
+            <div class="landing-hero__shape landing-hero__shape--outer"></div>
+            <div class="landing-hero__shape landing-hero__shape--inner"></div>
+            <div class="landing-hero__shape landing-hero__shape--accent"></div>
+            <div class="landing-hero__cross landing-hero__cross--one">+</div>
+            <div class="landing-hero__cross landing-hero__cross--two">+</div>
+          </slot>
         </div>
         <div class="landing-hero__art-bottom"><span>{section.visualCaption}</span><span aria-hidden="true">↗</span></div>
       </div>

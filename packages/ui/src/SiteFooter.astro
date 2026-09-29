@@ -11,7 +11,7 @@ const { brand, note, meta } = Astro.props;
 <footer class="site-footer">
   <div class="container site-footer__inner">
     <div>
-      <p class="site-footer__brand">{brand}</p>
+      <slot name="brand"><p class="site-footer__brand">{brand}</p></slot>
       <p class="site-footer__note">{note}</p>
     </div>
     <a href="#inicio" class="site-footer__back">Volver arriba <span aria-hidden="true">↑</span></a>
