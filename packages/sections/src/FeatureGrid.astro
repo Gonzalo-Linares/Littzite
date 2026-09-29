@@ -1,0 +1,32 @@
+---
+import type { PageSection } from '@littzite/content-schema';
+import Container from '@littzite/ui/Container.astro';
+import './styles.css';
+
+interface Props {
+  section: Extract<PageSection, { type: 'feature-grid' }>;
+}
+
+const { section } = Astro.props;
+---
+
+<section class="feature-section" id={section.id} aria-labelledby={`${section.id}-titulo`}>
+  <Container>
+    <div class="feature-section__intro">
+      <div>
+        <p class="feature-section__eyebrow">{section.eyebrow}</p>
+        <h2 id={`${section.id}-titulo`}>{section.heading}</h2>
+      </div>
+      <p>{section.intro}</p>
+    </div>
+    <div class="feature-grid">
+      {section.items.map((item, index) => (
+        <article class="feature-card">
+          <span class="feature-card__number" aria-hidden="true">{String(index + 1).padStart(2, '0')}</span>
+          <h3>{item.title}</h3>
+          <p>{item.body}</p>
+        </article>
+      ))}
+    </div>
+  </Container>
+</section>

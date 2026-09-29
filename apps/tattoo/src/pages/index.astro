@@ -1,17 +1,22 @@
 ---
 import BaseLayout from '@littzite/ui/BaseLayout.astro';
-import Container from '@littzite/ui/Container.astro';
-import Link from '@littzite/ui/Link.astro';
+import SiteHeader from '@littzite/ui/SiteHeader.astro';
+import SiteFooter from '@littzite/ui/SiteFooter.astro';
+import LandingHero from '@littzite/sections/LandingHero.astro';
+import FeatureGrid from '@littzite/sections/FeatureGrid.astro';
 import { siteContent } from '../site.config';
 
 const { site, pages } = siteContent;
 const home = pages.find((page) => page.slug === '');
-if (!home) throw new Error('Missing home page');
+const intro = home?.sections.find((section) => section.type === 'intro');
+const features = home?.sections.find((section) => section.type === 'feature-grid');
+if (!home || !intro || !features) throw new Error('Incomplete tattoo prototype content');
 ---
 
 <BaseLayout locale={site.defaultLocale} theme={site.theme} title={home.title} noindex={true}>
-  <Container>
-    {home.sections.map((section) => section.type === 'intro' && <section id="alcance"><h1>{section.heading}</h1><p>{section.body}</p></section>)}
-    <Link href="#alcance">Ver alcance del demo</Link>
-  </Container>
+  <SiteHeader slot="header" brand="Tatuajes · Demo" descriptor="Littzite / concepto"
+    links={[{ label: 'El concepto', href: '#inicio' }, { label: 'Próximos pasos', href: '#alcance' }]} badge={{ label: 'Vista previa', href: '#alcance' }} />
+  <LandingHero section={intro} variant="graphic" ctaLabel="Explorar el concepto" ctaHref="#alcance" disclaimer="Prototipo visual en desarrollo" artLabel="ESTUDIO VISUAL" artIndex="001 / 002" />
+  <FeatureGrid section={features} />
+  <SiteFooter slot="footer" brand="Tatuajes · Demo" note="Exploración visual sin portfolio, turnos ni contacto reales. Todas las fotos finales requieren autorización." meta={["Prototipo · No es un sitio comercial activo", "Componentes compartidos de Littzite"]} />
 </BaseLayout>

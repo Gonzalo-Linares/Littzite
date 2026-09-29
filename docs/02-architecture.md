@@ -2,7 +2,7 @@
 
 ## Monorepo objetivo (arquitectura conceptual)
 
-El siguiente árbol describe el destino previsto, **no** los directorios existentes en PR-01. El scaffold crea solo `apps/{estetica,tattoo}` y `packages/{content-schema,ui}`. Los demás paquetes surgirán únicamente cuando exista una interfaz compartida que realmente los necesite.
+El árbol combina componentes implementados con **módulos conceptuales**. A partir del prototipo visual PR-03 existen `apps/{estetica,tattoo}` y `packages/{content-schema,ui,sections}`; solamente `seo` y `booking` permanecen previstos para cuando haya integraciones y destinos aprobados.
 
 ```text
 Littzite/
@@ -23,18 +23,22 @@ Littzite/
 
 **Regla de dependencias:** `apps/* -> packages/*`. Nunca `apps/estetica -> apps/tattoo` ni dependencias circulares entre paquetes. Evitar separar en paquetes elementos que todavía no tengan una interfaz estable; la estructura podrá simplificarse tras una prueba de implementación.
 
-### Grafo implementado en PR-01/02
+### Grafo implementado en PR-03
 
 ```mermaid
 flowchart LR
   E[apps/estetica] --> C[packages/content-schema]
   E --> UI[packages/ui]
+  E --> S[packages/sections]
   T[apps/tattoo] --> C
   T --> UI
+  T --> S
+  S --> UI
+  S --> C
   UI --> C
 ```
 
-`content-schema` contiene los contratos Zod de sitio, páginas, servicios y destinos, más validación de referencias dentro de un `SiteContent`. `ui` expone layout, contenedor, enlace y tokens CSS, consumidos por ambas apps; toma los tipos de locale y tema del esquema. El árbol anterior describe la arquitectura prevista, no carpetas ya creadas: `sections`, `seo` y `booking` esperan interfaces justificadas en PR posteriores. No hay ciclos entre paquetes ni imports entre aplicaciones. `scripts/check-boundaries.mjs` comprueba manifests e imports literales en CI.
+`content-schema` contiene los contratos Zod de sitio, páginas, servicios, secciones y destinos, más validación de referencias dentro de `SiteContent`. `ui` expone layout, cabecera, pie, contenedor, enlaces y tokens CSS; `sections` expone `LandingHero` y `FeatureGrid`, usados por ambas apps y dependientes únicamente de APIs públicas de `ui` y `content-schema`. El árbol conceptual aún incluye `seo` y `booking`, **no creados** hasta necesitar contratos implementados. No hay ciclos entre paquetes ni imports entre aplicaciones. `scripts/check-boundaries.mjs` comprueba manifests e imports literales en CI.
 
 ## Diagrama de contexto (C4 nivel 1, simplificado)
 
@@ -140,4 +144,4 @@ El proveedor de hosting está **propuesto**, no confirmado. Para el contenido p�
 
 ## Reglas para dependencias entre paquetes
 
-El grafo real del scaffold se muestra arriba y comprende dos apps, `content-schema` y `ui`. Los futuros paquetes solo se incorporarán cuando tengan consumidores concretos. Reglas invariantes: `apps/*` puede importar paquetes públicos; no hay importaciones cruzadas entre apps, ni dependencias inversas desde packages hacia apps, ni ciclos entre paquetes. No extraer una librería por cada componente antes de demostrar reutilización. **Un contrato compartido y su implementación tienen un solo propietario.**
+El grafo implementado se muestra arriba y comprende dos apps y tres paquetes realmente consumidos: `content-schema`, `ui` y `sections`. Los futuros paquetes solo se incorporarán cuando tengan consumidores concretos. Reglas invariantes: `apps/*` puede importar paquetes públicos; no hay importaciones cruzadas entre apps, ni dependencias inversas desde packages hacia apps, ni ciclos entre paquetes. No extraer una librería por cada componente antes de demostrar reutilización. **Un contrato compartido y su implementación tienen un solo propietario.**

@@ -1,0 +1,23 @@
+---
+interface Props {
+  brand: string;
+  note: string;
+  meta?: [string, string];
+}
+
+const { brand, note, meta } = Astro.props;
+---
+
+<footer class="site-footer">
+  <div class="container site-footer__inner">
+    <div>
+      <p class="site-footer__brand">{brand}</p>
+      <p class="site-footer__note">{note}</p>
+    </div>
+    <a href="#inicio" class="site-footer__back">Volver arriba <span aria-hidden="true">↑</span></a>
+  </div>
+  {meta && <div class="container site-footer__meta">
+    <span>{meta[0]}</span>
+    <span>{meta[1]}</span>
+  </div>}
+</footer>

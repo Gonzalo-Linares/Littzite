@@ -6,7 +6,9 @@
   "exports": {
     "./BaseLayout.astro": "./src/BaseLayout.astro",
     "./Container.astro": "./src/Container.astro",
-    "./Link.astro": "./src/Link.astro"
+    "./Link.astro": "./src/Link.astro",
+    "./SiteHeader.astro": "./src/SiteHeader.astro",
+    "./SiteFooter.astro": "./src/SiteFooter.astro"
   },
   "dependencies": {
     "@littzite/content-schema": "workspace:*"

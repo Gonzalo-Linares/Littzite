@@ -1,5 +1,6 @@
 import { siteContentSchema } from '@littzite/content-schema';
 
+// Editorial sample only: no real portfolio, availability or commercial data.
 export const siteContent = siteContentSchema.parse({
   site: {
     defaultLocale: 'es-AR',
@@ -17,12 +18,28 @@ export const siteContent = siteContentSchema.parse({
   quoteTargets: [],
   pages: [{
     slug: '',
-    title: 'Demo de tatuajes | Littzite',
-    sections: [{
-      id: 'intro',
-      type: 'intro',
-      heading: 'Demo de tatuajes',
-      body: 'Entrada técnica de la aplicación de tatuajes. La identidad y el contenido se definirán más adelante.',
-    }],
+    title: 'Prototipo de tatuajes | Littzite',
+    sections: [
+      {
+        id: 'intro',
+        type: 'intro',
+        eyebrow: 'Tatuajes / exploración editorial',
+        heading: 'Ideas que dejan huella',
+        body: 'Un prototipo para dar protagonismo al arte, el portfolio y los distintos recorridos de consulta. Las imágenes, los servicios y el contacto definitivos aún están pendientes.',
+        visualCaption: 'Una idea. Una composición.',
+      },
+      {
+        id: 'alcance',
+        type: 'feature-grid',
+        eyebrow: 'El concepto',
+        heading: 'Arte, consulta y recorrido',
+        intro: 'Una estructura pensada para mostrar trabajos auténticos y orientar al visitante sin mezclar turnos y presupuestos.',
+        items: [
+          { id: 'portfolio', title: 'Portfolio', body: 'Galerías editoriales con fotografías originales y permisos verificados.' },
+          { id: 'turnos', title: 'Turnos pequeños', body: 'Reservas directas para los trabajos que el artista habilite, sin agenda propia.' },
+          { id: 'presupuestos', title: 'Piezas grandes', body: 'Consultas iniciales por WhatsApp, solo texto en el flujo del sitio.' },
+        ],
+      },
+    ],
   }],
 });

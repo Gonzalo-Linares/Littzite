@@ -80,7 +80,15 @@ export const quoteTargetSchema = z.object({
 export type QuoteTarget = z.infer<typeof quoteTargetSchema>;
 
 export const pageSectionSchema = z.discriminatedUnion('type', [
-  z.object({ id: idSchema, type: z.literal('intro'), heading: textSchema, body: textSchema }).strict(),
+  z.object({ id: idSchema, type: z.literal('intro'), heading: textSchema, body: textSchema, eyebrow: textSchema.optional(), visualCaption: textSchema.optional() }).strict(),
+  z.object({
+    id: idSchema,
+    type: z.literal('feature-grid'),
+    eyebrow: textSchema,
+    heading: textSchema,
+    intro: textSchema,
+    items: z.array(z.object({ id: idSchema, title: textSchema, body: textSchema }).strict()).min(2).max(4),
+  }).strict(),
   z.object({ id: idSchema, type: z.literal('service-list'), serviceIds: z.array(idSchema).min(1) }).strict(),
 ]);
 export type PageSection = z.infer<typeof pageSectionSchema>;
@@ -142,6 +150,9 @@ export const siteContentSchema = z.object({
       context.addIssue({ code: 'custom', message: `Duplicate sections in ${page.slug}` });
     }
     for (const section of page.sections) {
+      if (section.type === 'feature-grid' && !unique(section.items.map(({ id }) => id))) {
+        context.addIssue({ code: 'custom', message: `Duplicate feature items in ${section.id}` });
+      }
       if (section.type === 'service-list') {
         if (!unique(section.serviceIds)) context.addIssue({ code: 'custom', message: `Duplicate services in ${section.id}` });
         for (const id of section.serviceIds) {
