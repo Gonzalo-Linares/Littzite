@@ -17,6 +17,8 @@ El sitio incluye por ahora un *wordmark* puramente tipográfico `JUANJO.`, un he
 - `apps/tattoo/src/portfolio.ts`: contrato local `TattooPortfolioItem` y guardas para IDs, títulos, texto alternativo y originales de al menos 640 × 640 píxeles. La validación no sustituye una revisión editorial de enfoque, permiso o peso de archivo.
 - Se mantienen tres tarjetas de información no clicables. Los trabajos pequeños usarán agenda externa solo después de aprobar D-01C y D-02B; los grandes tendrán WhatsApp directo únicamente en texto una vez cerrado D-04B.
 
+La razón para mantener la galería dentro de la aplicación, en vez de incorporarla prematuramente a los paquetes compartidos, se registra en [ADR-011](adr/011-tattoo-portfolio-local.md).
+
 ## Añadir originales sin cambiar la arquitectura
 
 Al recibir los archivos originales autorizados, incorporarlos a `apps/tattoo/src/assets/portfolio/` y realizar importaciones estáticas en `apps/tattoo/src/portfolio.ts`. Ejemplo ilustrativo, **no activado ni incluido**:
