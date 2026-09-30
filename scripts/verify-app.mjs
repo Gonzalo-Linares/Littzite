@@ -2,11 +2,12 @@ import assert from 'node:assert/strict';
 import { fileURLToPath } from 'node:url';
 import { readFile } from 'node:fs/promises';
 import { siteConfigSchema } from '../packages/content-schema/src/index.ts';
+import { assertMetadata } from './html-metadata.mjs';
 import { verifyInternalLinks } from './verify-site-links.mjs';
 
 const expectedTitles = {
-  estetica: 'Regalate una pausa.',
-  tattoo: 'De la idea a la piel.',
+  estetica: 'VIORA · Estética integral | Vista previa',
+  tattoo: 'Juanjo Tattoos · San Juan | Vista previa',
 };
 
 const app = process.argv[2];
@@ -19,7 +20,8 @@ assert.equal((html.match(/<header class="site-header">/g) ?? []).length, 1, `${a
 assert.equal((html.match(/<footer class="site-footer">/g) ?? []).length, 1, `${app}: expected one footer`);
 assert.match(html, /<html lang="es-AR"(?:\s|>)/);
 assert.match(html, /<meta name="robots" content="noindex, nofollow">/);
-assert.ok(html.includes(`>${expectedTitles[app]}</h1>`), 'Expected editorial heading');
+assertMetadata(html, siteContent.pages.find((page) => page.slug === '').seo, app);
+assert.ok(html.includes(`>${app === 'estetica' ? 'Regalate una pausa.' : 'De la idea a la piel.'}</h1>`), 'Expected editorial heading');
 assert.ok(html.includes('class="site-header"'), 'Shared header missing');
 assert.ok(html.includes('class="site-footer"'), 'Shared footer missing');
 if (app === 'estetica') {
@@ -54,6 +56,9 @@ if (app === 'estetica') {
     assert.ok(html.includes(`href="/servicios/${service.slug}/"`), `${service.slug}: card link missing`);
     const route = new URL(`../apps/estetica/dist/servicios/${service.slug}/index.html`, import.meta.url);
     const detail = await readFile(route, 'utf8');
+    const detailSeo = { title: `${service.displayName} | VIORA · Vista previa`, description: service.description };
+    assertMetadata(detail, detailSeo, service.slug);
+    assert.notEqual(detailSeo.title, siteContent.pages[0].seo.title, `${service.slug}: detail title must differ from home`);
     assertVioraFrame(detail, service.slug);
     assert.ok(detail.includes(`<h1 id="viora-service-title">${service.displayName}</h1>`), `${service.slug}: title missing`);
     assert.ok(detail.includes(service.description), `${service.slug}: canonical description missing`);

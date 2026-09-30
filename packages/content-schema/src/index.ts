@@ -114,9 +114,15 @@ export const pageSectionSchema = z.discriminatedUnion('type', [
 ]);
 export type PageSection = z.infer<typeof pageSectionSchema>;
 
+export const seoMetadataSchema = z.object({
+  title: textSchema,
+  description: textSchema,
+}).strict();
+export type SeoMetadata = z.infer<typeof seoMetadataSchema>;
+
 export const pageSchema = z.object({
   slug: z.string().regex(/^(?:[a-z0-9]+(?:-[a-z0-9]+)*)?$/),
-  title: textSchema,
+  seo: seoMetadataSchema,
   sections: z.array(pageSectionSchema),
 }).strict();
 export type Page = z.infer<typeof pageSchema>;

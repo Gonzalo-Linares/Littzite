@@ -11,7 +11,7 @@ const catalog = home?.sections.find((section) => section.type === 'service-list'
 if (!home || !intro || !catalog) throw new Error('Incomplete VIORA preview content');
 ---
 
-<VioraSiteLayout title={home.title}>
+<VioraSiteLayout seo={home.seo}>
 
   <LandingHero section={intro} variant="serene" ctaLabel="Conocé nuestras experiencias" ctaHref="#alcance"
     artLabel="UN ESPACIO PARA VOS" artIndex="VIORA / 01">

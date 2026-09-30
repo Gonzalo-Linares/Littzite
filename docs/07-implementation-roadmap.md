@@ -1,6 +1,6 @@
 # Plan de implementación y Definition of Done — estado vigente
 
-**Corte 30/09/2026:** dos apps Astro estáticas no indexadas; tres paquetes compartidos; identidad VIORA, catálogo de cuatro servicios, layout local y cuatro defaults Cal.com de prueba; identidad editorial Juanjo con galería fotográfica aún vacía. Sin reservas activas, SEO de producción, deploy final, SDK externo ni CMS. GitHub Actions está desactivado por decisión del titular.
+**Corte 30/09/2026:** dos apps Astro estáticas no indexadas; cuatro paquetes compartidos (`content-schema`, `ui`, `sections`, `booking`); identidad VIORA, catálogo de cuatro servicios, layout local y cuatro defaults Cal.com de prueba; identidad editorial Juanjo con galería fotográfica aún vacía. El preview implementa `title` y `description` tipados por página, incluido cada servicio VIORA. Sin reservas activas, SEO de lanzamiento, deploy final, SDK externo ni CMS. GitHub Actions está desactivado por decisión del titular.
 
 ## Fase 0 — Documentación y decisiones
 
@@ -19,11 +19,11 @@
 - Monorepo pnpm, Astro/TypeScript estricto, CSS propio sin Tailwind, lockfile y dos apps mínimas.
 - `content-schema`: Zod `SiteConfig`, `Service`, `ServiceAction[]`, `BookingTarget`, `QuoteTarget`, `PageSection` y `SeoMetadata`; integridad de referencias cruzadas.
 - `ui`: tokens, buttons, layout, accesibilidad y responsive.
-- `seo`: canonical, metadatos, JSON-LD, sitemap y checks de integridad; consumo de `SiteConfig.defaultLocale` para idioma de página y metadatos, sin i18n de múltiples idiomas.
-- `booking`: resolver acciones y validar enlaces/fallback. Implementar embed específico **solo después** de elegir el proveedor real de cada negocio.
+- SEO de lanzamiento pendiente: canonical, sitemap, `robots.txt` productivo, JSON-LD, Open Graph, dominios y Search Console. `title` y `description` tipados y renderizados en el preview ya están implementados sin paquete `seo`.
+- `booking` implementado: registro cerrado de providers y validación fail-closed de `BookingTarget`; inicialmente admite `cal-com` y depende solo de `content-schema`. No resuelve `ServiceAction`. La resolución de `direct-booking` queda futura, cuando exista un target auténtico aprobado, una acción real y un caller productivo.
 - CI: formato, lint, typecheck y compilación de ambas apps.
 
-**Estado:** dos prototipos diferentes con componentes compartidos y validación local reportada por PR; CI actualmente desactivada. Los módulos SEO y booking no forman parte de esta salida.
+**Estado:** dos prototipos diferentes con componentes compartidos y validación local; CI actualmente desactivada. El contrato y render de metadata básico forman parte del preview; el SEO de lanzamiento y la activación de reservas siguen pendientes.
 
 ## Fase 2 — Estética (primer caso real)
 

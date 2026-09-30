@@ -2,11 +2,11 @@
 
 **Alcance:** modelos de contenido estático validado en build. **No** son tablas SQL, no hay backend propio, CRM, historia clínica ni motor de turnos. Los diagramas son el diseño objetivo; PR-02 implementa el subconjunto descrito a continuación.
 
-## Estado de implementación PR-02
+## Estado de implementación
 
-`packages/content-schema` implementa SiteConfig, ThemeConfig, ContactConfig, Location, Page, tres variantes PageSection (`intro`, `feature-grid`, `service-list`), Service, tres variantes ServiceAction, BookingTarget, QuoteTarget y el agregado SiteContent. Zod es fuente de tipos inferidos. VIORA contiene cuatro servicios informativos, catálogo por referencias y cuatro detalles Astro, con defaults editables de 60 minutos para el piloto de Cal.com. Juanjo tiene intro y feature-grid, sin servicios ni destinos activos y con galería fotográfica local todavía vacía.
+`packages/content-schema` implementa SiteConfig, ThemeConfig, ContactConfig, Location, Page, SeoMetadata, tres variantes PageSection (`intro`, `feature-grid`, `service-list`), Service, tres variantes ServiceAction, BookingTarget, QuoteTarget y el agregado SiteContent. `Page` contiene `slug`, `seo` y `sections`; `SeoMetadata` contiene únicamente `title` y `description`. Zod sigue siendo la fuente de verdad de los contratos y los tipos inferidos. VIORA contiene cuatro servicios informativos, catálogo por referencias y cuatro detalles Astro, con defaults editables de 60 minutos para el piloto de Cal.com. Juanjo tiene intro y feature-grid, sin servicios ni destinos activos y con galería fotográfica local todavía vacía.
 
-Los diagramas siguientes describen también modelos FUTUROS NO implementados: SEO metadata, medios adicionales, precios, horarios, proveedor configurado y nuevas variantes de sección. El contrato vigente es exclusivamente el esquema Zod del repositorio. `canonicalOrigin` y contacto son opcionales mientras las apps son demos `noindex`; una publicación productiva exigirá datos verificados y gates adicionales. Un `BookingTarget` exige HTTPS sin credenciales en la URL, pero la aprobación del host y la capacidad del proveedor quedan pendientes de D-01C. Una acción de reserva no exige duración en el contrato global porque las reglas para tatuajes pequeños aún no están confirmadas; el gate de publicación de estética deberá exigir una duración real positiva por tratamiento. El número de WhatsApp existe solo en `ContactConfig`, nunca en `QuoteTarget`.
+Los diagramas siguientes son conceptuales y combinan el contrato implementado con ideas futuras; no definen por sí solos campos Zod. Hoy ambas homes tienen metadata propia y los detalles VIORA derivan metadata de su servicio. `BaseLayout` renderiza title y description y conserva `noindex, nofollow`. Canonical, `canonicalPath`, sitemap, `robots.txt` productivo, JSON-LD, Open Graph, dominios y Search Console no están implementados. El contrato vigente es exclusivamente el esquema Zod del repositorio. `canonicalOrigin` y contacto son opcionales mientras las apps son demos `noindex`; una publicación productiva exigirá datos verificados y gates adicionales. Un `BookingTarget` exige HTTPS sin credenciales en la URL, pero la aprobación del host y la capacidad del proveedor quedan pendientes de D-01C. Una acción de reserva no exige duración en el contrato global porque las reglas para tatuajes pequeños aún no están confirmadas; el gate de publicación de estética deberá exigir una duración real positiva por tratamiento. El número de WhatsApp existe solo en `ContactConfig`, nunca en `QuoteTarget`.
 
 ## Decisiones confirmadas que modelamos
 
@@ -52,7 +52,6 @@ classDiagram
   }
   class Page {
     +string slug
-    +string title
     +SeoMetadata seo
     +PageSection[] sections
   }
@@ -111,7 +110,6 @@ classDiagram
   class SeoMetadata {
     +string title
     +string description
-    +string canonicalPath
   }
   SiteConfig *-- ThemeConfig
   SiteConfig *-- ContactConfig
@@ -208,7 +206,6 @@ erDiagram
   SEO_METADATA {
     string title
     string description
-    string canonicalPath
   }
 ```
 

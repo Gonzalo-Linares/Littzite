@@ -4,12 +4,15 @@ import {
   bookingTargetSchema,
   contrastRatio,
   pageSectionSchema,
+  pageSchema,
+  seoMetadataSchema,
   serviceActionSchema,
   siteContentSchema,
   siteConfigSchema,
 } from '../packages/content-schema/src/index.ts';
 import { siteContent as estetica } from '../apps/estetica/src/site.config.ts';
 import { siteContent as tattoo } from '../apps/tattoo/src/site.config.ts';
+import { assertMetadata } from '../scripts/html-metadata.mjs';
 
 const theme = {
   surface: '#ffffff', text: '#222222', accent: '#334455',
@@ -27,7 +30,7 @@ function fixture() {
       ],
     }],
     pages: [{
-      slug: '', title: 'Fixture',
+      slug: '', seo: { title: 'Fixture', description: 'Descripción de prueba' },
       sections: [{ id: 'services', type: 'service-list', serviceIds: ['sample'] }],
     }],
     bookingTargets: [{ id: 'calendar', providerKey: 'fixture-provider', fallbackUrl: 'https://booking.example.test/' }],
@@ -41,6 +44,7 @@ test('both demo apps validate independently and use different themes', () => {
   assert.equal(estetica.site.defaultLocale, 'es-AR');
   assert.equal(tattoo.site.defaultLocale, 'es-AR');
   assert.notDeepEqual(estetica.site.theme, tattoo.site.theme);
+  assert.notDeepEqual(estetica.pages[0].seo, tattoo.pages[0].seo);
   for (const content of [estetica, tattoo]) {
     const { surface, text, accent, accentText, focus } = content.site.theme;
     assert.ok(contrastRatio(surface, text) >= 4.5);
@@ -49,6 +53,26 @@ test('both demo apps validate independently and use different themes', () => {
   }
   assert.deepEqual(estetica.bookingTargets, []);
   assert.deepEqual(tattoo.quoteTargets, []);
+});
+
+test('SEO metadata is strict, trimmed, non-empty and required by Page', () => {
+  const valid = { title: ' Título ', description: ' Descripción ' };
+  assert.deepEqual(seoMetadataSchema.parse(valid), { title: 'Título', description: 'Descripción' });
+  assert.equal(seoMetadataSchema.safeParse({ ...valid, title: '' }).success, false);
+  assert.equal(seoMetadataSchema.safeParse({ ...valid, description: '' }).success, false);
+  assert.equal(seoMetadataSchema.safeParse({ ...valid, description: '  ' }).success, false);
+  assert.equal(seoMetadataSchema.safeParse({ ...valid, keywords: ['x'] }).success, false);
+  assert.equal(pageSchema.safeParse({ slug: '', seo: valid, sections: [] }).success, true);
+  assert.equal(pageSchema.safeParse({ slug: '', sections: [] }).success, false);
+  assert.equal(pageSchema.safeParse({ slug: '', seo: { ...valid, description: '' }, sections: [] }).success, false);
+  assert.equal(pageSchema.safeParse({ slug: '', title: 'Legacy', sections: [] }).success, false);
+  assert.equal('title' in pageSchema.parse({ slug: '', seo: valid, sections: [] }), false);
+});
+
+test('HTML metadata smoke accepts correctly escaped text and attributes', () => {
+  const seo = { title: 'VIORA <cuidado> & bienestar', description: 'Texto con <, >, & y "comillas"' };
+  const safeHtml = '<title>VIORA &lt;cuidado&gt; &amp; bienestar</title><meta name="description" content="Texto con &lt;, &gt;, &amp; y &quot;comillas&quot;">';
+  assert.doesNotThrow(() => assertMetadata(safeHtml, seo, 'escape fixture'));
 });
 
 test('only es-AR and valid theme tokens are accepted', () => {
