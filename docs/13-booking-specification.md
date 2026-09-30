@@ -65,6 +65,14 @@ Véanse [registro de decisiones](09-open-decisions.md), [modelo de dominio](03-d
 
 ## Decisión de piloto VIORA (30/09/2026)
 
+### Fundación compartida (PR-09)
+
+`packages/booking` es una librería ESM/TypeScript headless que depende solo de `content-schema`. `siteContentSchema` conserva la validación de formas, referencias y unicidad; `booking` agrega el registro cerrado de proveedores y la política de URL por proveedor. Las dos apps validan sus colecciones completas de `bookingTargets` después del parseo, incluso si están vacías: son consumidores del policy gate de configuración, no del flujo de reservas.
+
+El único proveedor admitido en esta fundación es `cal-com`: URL HTTPS con origen exacto `https://cal.com`, sin credenciales y con ruta distinta de `/`. Se aceptan query y fragmento; no se impone un patrón de usuario/evento ni se reescribe la URL. Proveedores desconocidos fallan al validar con diagnóstico de `targetId` y `providerKey`. PR-09 no implementa resolución de `ServiceAction`; esa responsabilidad se añadirá cuando exista una acción directa con target auténtico. La librería no contiene SDK, secretos, API, interfaz, modal, iframe ni estado mutable. El piloto VIORA sigue sin acciones ni targets y no muestra enlaces comerciales.
+
+Juanjo consume la misma validación general de destinos, pero no configura proveedor ni target. La regla de agenda directa para trabajos pequeños sigue sin activarse hasta aprobar proveedor y URLs reales. Véase [ADR-013](adr/013-booking-provider-foundation.md).
+
 El titular eligió **Cal.com Individual Gratis** para probar los turnos de una profesional de VIORA, con un volumen estimado de alrededor de **15 citas mensuales**, sujeto a variación. La configuración inicial del sitio contiene cuatro `Service.durationMinutes: 60` independientes, **solo valores provisionales editables**. Ni los 60 minutos ni la agenda están aprobados todavía como reglas técnicas o comerciales para el público. La profesional debe revisar especialmente los tiempos de depilación según zona antes de habilitar clientes reales.
 
 La profesional es titular de la cuenta y gestiona sus cuatro tipos de evento, disponibilidad efectiva, calendario de conflictos y mensajes; Cal.com es la fuente de verdad de citas. No almacenar datos de clientes ni credenciales de proveedor en Littzite. Durante la preparación, `Service.actions=[]` y `bookingTargets=[]`: ninguna ficha ofrece aún reserva, por mucho que tenga duración.

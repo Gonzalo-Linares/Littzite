@@ -23,6 +23,8 @@ assert.ok(html.includes(`>${expectedTitles[app]}</h1>`), 'Expected editorial hea
 assert.ok(html.includes('class="site-header"'), 'Shared header missing');
 assert.ok(html.includes('class="site-footer"'), 'Shared footer missing');
 if (app === 'estetica') {
+  assert.equal(siteContent.bookingTargets.length, 0, 'VIORA must not have live booking targets');
+  assert.ok(siteContent.services.every(({ actions }) => actions.length === 0), 'VIORA services must not have booking CTAs');
   const assertVioraFrame = (markup, page) => {
     assert.equal((markup.match(/<header class="site-header">/g) ?? []).length, 1, `${page}: expected one VIORA header`);
     assert.equal((markup.match(/<footer class="site-footer">/g) ?? []).length, 1, `${page}: expected one VIORA footer`);
@@ -40,6 +42,7 @@ if (app === 'estetica') {
   assert.ok(html.includes('/brand/viora-palabra.png'), 'VIORA footer asset missing');
   assert.ok(html.includes('id="esencia"'), 'VIORA essence section missing');
   assert.ok(!/(?:cal\.com|booking\.example|wa\.me|api\.whatsapp)/i.test(html), 'No commercial destination may be published');
+  assert.ok(!/<a[^>]*>[^<]*(Reservar|Agendar|Consultar)[^<]*<\/a>/i.test(html), 'VIORA home must not publish a commercial booking CTA');
   const { access } = await import('node:fs/promises');
   for (const asset of ['viora-horizontal.png', 'viora-principal.png', 'viora-palabra.png']) {
     await access(new URL(`../apps/estetica/dist/brand/${asset}`, import.meta.url));
@@ -65,6 +68,8 @@ if (app === 'estetica') {
   }
   await assert.rejects(access(new URL('../apps/estetica/dist/servicios/no-existe/index.html', import.meta.url)));
  } else {
+  assert.equal(siteContent.bookingTargets.length, 0, 'Juanjo must not have provider targets');
+  assert.ok(siteContent.services.every(({ actions }) => actions.length === 0), 'Juanjo must not have active booking CTAs');
   assert.ok(!html.includes('viora-site') && !html.includes('/brand/viora-'), 'VIORA assets leaked into tattoo');
   assert.ok(html.includes('class="juanjo-site"'), 'Juanjo body style missing');
   assert.ok(html.includes('class="juanjo-gallery"'), 'Juanjo portfolio region missing');
@@ -72,6 +77,7 @@ if (app === 'estetica') {
   assert.ok(html.includes('href="https://www.instagram.com/juanjo.tattoos/"'), 'Approved Instagram link missing');
   assert.ok(html.includes('id="portfolio"') && html.includes('id="alcance"'), 'Juanjo section anchors missing');
   assert.ok(!html.includes('wa.me/') && !html.includes('api.whatsapp.com/'), 'Unapproved WhatsApp CTA was published');
+  assert.ok(!html.includes('cal.com') && !/<a[^>]*>[^<]*(Reservar|Agendar)[^<]*<\/a>/i.test(html), 'Juanjo must not publish a booking provider or CTA');
   assert.ok(!html.includes('juanjo-gallery__item--lead'), 'No real artwork should appear before originals arrive');
 }
 assert.ok(html.includes('class="landing-hero landing-hero--'), 'Shared hero missing');

@@ -172,6 +172,9 @@ importers:
 
   apps/estetica:
     dependencies:
+      '@littzite/booking':
+        specifier: workspace:*
+        version: link:../../packages/booking
       '@littzite/content-schema':
         specifier: workspace:*
         version: link:../../packages/content-schema
@@ -194,6 +197,9 @@ importers:
 
   apps/tattoo:
     dependencies:
+      '@littzite/booking':
+        specifier: workspace:*
+        version: link:../../packages/booking
       '@littzite/content-schema':
         specifier: workspace:*
         version: link:../../packages/content-schema
@@ -213,6 +219,12 @@ importers:
       typescript:
         specifier: 5.9.3
         version: 5.9.3
+
+  packages/booking:
+    dependencies:
+      '@littzite/content-schema':
+        specifier: workspace:*
+        version: link:../content-schema
 
   packages/content-schema:
     dependencies:
