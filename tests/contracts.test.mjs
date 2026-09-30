@@ -104,19 +104,20 @@ test('external targets require HTTPS and contact numbers require E.164', () => {
   assert.equal(siteContentSchema.safeParse(badNumber).success, false);
 });
 
-test('visual feature-grid is validated and shared by both demo apps', () => {
-  for (const app of [estetica, tattoo]) {
-    const sections = app.pages.find((page) => page.slug === '').sections;
-    assert.deepEqual(sections.map((section) => section.type), ['intro', 'feature-grid']);
-    const grid = sections[1];
-    assert.equal(pageSectionSchema.safeParse(grid).success, true);
-    assert.equal(grid.items.length, app === estetica ? 4 : 3);
-    assert.equal(new Set(grid.items.map((item) => item.id)).size, grid.items.length);
-  }
+test('VIORA service-list references all services and Juanjo keeps its shared feature-grid', () => {
+  const vioraSections = estetica.pages.find((page) => page.slug === '').sections;
+  assert.deepEqual(vioraSections.map((section) => section.type), ['intro', 'service-list']);
+  const serviceList = vioraSections[1];
+  assert.equal(pageSectionSchema.safeParse(serviceList).success, true);
+  assert.deepEqual(serviceList.serviceIds, estetica.services.map((service) => service.id));
+
+  const juanjoSections = tattoo.pages.find((page) => page.slug === '').sections;
+  assert.deepEqual(juanjoSections.map((section) => section.type), ['intro', 'feature-grid']);
+  assert.equal(juanjoSections[1].items.length, 3);
 });
 
 test('feature-grid rejects empty text, excess cards and duplicate IDs', () => {
-  const base = structuredClone(estetica);
+  const base = structuredClone(tattoo);
   const grid = base.pages[0].sections.find((section) => section.type === 'feature-grid');
   const duplicate = structuredClone(base);
   duplicate.pages[0].sections[1].items[1].id = duplicate.pages[0].sections[1].items[0].id;
@@ -125,19 +126,38 @@ test('feature-grid rejects empty text, excess cards and duplicate IDs', () => {
   assert.equal(pageSectionSchema.safeParse({ ...grid, items: [...grid.items, ...grid.items] }).success, false);
 });
 
-test('VIORA theme, voice and four named lines match its brand manual', () => {
+test('VIORA theme, voice and four named services match its brand manual', () => {
   assert.deepEqual(estetica.site.theme, {
     surface: '#FAF5F0', text: '#39252D', accent: '#7B4655', accentText: '#FAF5F0',
     border: '#D7BEC4', focus: '#39252D',
   });
   const home = estetica.pages.find((page) => page.slug === '');
   const intro = home.sections.find((section) => section.type === 'intro');
-  const features = home.sections.find((section) => section.type === 'feature-grid');
+  const serviceList = home.sections.find((section) => section.type === 'service-list');
   assert.equal(intro.heading, 'Regalate una pausa.');
-  assert.deepEqual(features.items.map((item) => item.title), [
-    'Limpieza facial', 'Depilación definitiva', 'Masajes', 'Reiki',
+  assert.deepEqual(serviceList.serviceIds, ['limpieza-facial', 'depilacion-definitiva', 'masajes', 'reiki']);
+  assert.deepEqual(estetica.services.map(({ displayName, slug }) => [displayName, slug]), [
+    ['Limpieza facial', 'limpieza-facial'],
+    ['Depilación definitiva', 'depilacion-definitiva'],
+    ['Masajes', 'masajes'],
+    ['Reiki', 'reiki'],
   ]);
-  assert.ok(estetica.services.length === 0 && estetica.bookingTargets.length === 0 && estetica.quoteTargets.length === 0);
+  assert.ok(estetica.services.every((service) => service.actions.length === 0 && service.durationMinutes === undefined));
+  assert.deepEqual(estetica.bookingTargets, []);
+  assert.deepEqual(estetica.quoteTargets, []);
+});
+
+test('VIORA service slugs are unique, URL-safe and referenced by the catalog', () => {
+  assert.equal(new Set(estetica.services.map((service) => service.slug)).size, 4);
+  assert.ok(estetica.services.every((service) => /^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(service.slug)));
+
+  const duplicateSlug = structuredClone(estetica);
+  duplicateSlug.services[1].slug = duplicateSlug.services[0].slug;
+  assert.equal(siteContentSchema.safeParse(duplicateSlug).success, false);
+
+  const missingReference = structuredClone(estetica);
+  missingReference.pages[0].sections[1].serviceIds[0] = 'missing-service';
+  assert.equal(siteContentSchema.safeParse(missingReference).success, false);
 });
 
 test('Juanjo brand stays independent and its commercial targets remain inactive', () => {

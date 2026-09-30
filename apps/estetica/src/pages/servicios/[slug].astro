@@ -1,0 +1,44 @@
+---
+import BaseLayout from '@littzite/ui/BaseLayout.astro';
+import SiteHeader from '@littzite/ui/SiteHeader.astro';
+import SiteFooter from '@littzite/ui/SiteFooter.astro';
+import Container from '@littzite/ui/Container.astro';
+import { siteContent } from '../../site.config';
+import '../../styles/viora.css';
+
+export function getStaticPaths() {
+  return siteContent.services.map((service) => ({
+    params: { slug: service.slug },
+    props: { service },
+  }));
+}
+
+const { service } = Astro.props;
+const { site } = siteContent;
+---
+
+<BaseLayout locale={site.defaultLocale} theme={site.theme} title={`${service.displayName} | VIORA · Vista previa`} noindex={true} bodyClass="viora-site">
+  <SiteHeader slot="header" brand="VIORA, estética integral" descriptor="Tu momento, tu bienestar"
+    links={[{ label: 'Inicio', href: '/' }, { label: 'Servicios', href: '/#alcance' }, { label: 'Nuestra esencia', href: '/#esencia' }]}
+    badge={{ label: 'Vista previa', href: '/#alcance' }}>
+    <img slot="brand" class="viora-header-logo" src="/brand/viora-horizontal.png" width="1600" height="480"
+      alt="" decoding="async" />
+  </SiteHeader>
+
+  <section class="viora-service-detail" aria-labelledby="viora-service-title">
+    <Container>
+      <a class="viora-service-detail__back" href="/#alcance">← Volver a servicios</a>
+      <article>
+        <p class="feature-section__eyebrow">VIORA / servicios</p>
+        <h1 id="viora-service-title">{service.displayName}</h1>
+        <p class="viora-service-detail__description">{service.description}</p>
+        <p class="viora-service-detail__note">Esta información es orientativa. Los detalles del servicio y su disponibilidad se confirmarán antes de ofrecer turnos.</p>
+      </article>
+    </Container>
+  </section>
+
+  <SiteFooter slot="footer" brand="VIORA" note="Tu momento, tu bienestar. Datos comerciales y agenda pendientes de confirmación."
+    meta={["Vista previa · No admite reservas todavía", "VIORA · Estética integral"]}>
+    <img slot="brand" class="viora-footer-logo" src="/brand/viora-palabra.png" width="1310" height="275" alt="VIORA" loading="lazy" />
+  </SiteFooter>
+</BaseLayout>

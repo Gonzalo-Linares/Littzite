@@ -1,0 +1,39 @@
+﻿---
+import type { Service, PageSection } from '@littzite/content-schema';
+import Container from '@littzite/ui/Container.astro';
+import '../styles/viora.css';
+
+interface Props {
+  section: Extract<PageSection, { type: 'service-list' }>;
+  services: Service[];
+}
+
+const { section, services } = Astro.props;
+const servicesById = new Map(services.map((service) => [service.id, service]));
+const listedServices = section.serviceIds.map((id) => {
+  const service = servicesById.get(id);
+  if (!service) throw new Error(`Missing service ${id} in VIORA catalog`);
+  return service;
+});
+---
+
+<section class="feature-section viora-service-catalog" id={section.id} aria-labelledby={`${section.id}-titulo`}>
+  <Container>
+    <div class="feature-section__intro">
+      <div>
+        <p class="feature-section__eyebrow">Nuestro universo</p>
+        <h2 id={`${section.id}-titulo`}>Cada cuidado tiene su momento.</h2>
+      </div>
+      <p>Conocé las líneas de VIORA. La información sobre técnicas, duración y disponibilidad se confirmará antes de ofrecer turnos.</p>
+    </div>
+    <div class="feature-grid">
+      {listedServices.map((service, index) => (
+        <article class="feature-card">
+          <span class="feature-card__number" aria-hidden="true">{String(index + 1).padStart(2, '0')}</span>
+          <h3><a class="viora-service-card__link" href={`/servicios/${service.slug}/`}>{service.displayName}</a></h3>
+          <p>{service.description}</p>
+        </article>
+      ))}
+    </div>
+  </Container>
+</section>

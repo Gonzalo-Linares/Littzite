@@ -15,7 +15,12 @@ export const siteContent = siteContentSchema.parse({
       focus: '#39252D',
     },
   },
-  services: [],
+  services: [
+    { id: 'limpieza-facial', slug: 'limpieza-facial', displayName: 'Limpieza facial', description: 'Una l\u00ednea de cuidado facial de VIORA. La t\u00e9cnica y el alcance de la propuesta se confirmar\u00e1n antes de ofrecer turnos.', actions: [] },
+    { id: 'depilacion-definitiva', slug: 'depilacion-definitiva', displayName: 'Depilaci\u00f3n definitiva', description: 'Una l\u00ednea de cuidado personal de VIORA. El equipo, el procedimiento y su alcance se confirmar\u00e1n antes de ofrecer turnos.', actions: [] },
+    { id: 'masajes', slug: 'masajes', displayName: 'Masajes', description: 'Una l\u00ednea de bienestar de VIORA. Las modalidades y el alcance de la propuesta se confirmar\u00e1n antes de ofrecer turnos.', actions: [] },
+    { id: 'reiki', slug: 'reiki', displayName: 'Reiki', description: 'Una experiencia de bienestar de VIORA. Se comunica como una pr\u00e1ctica de bienestar y no como tratamiento de enfermedades.', actions: [] },
+  ],
   bookingTargets: [],
   quoteTargets: [],
   pages: [{
@@ -32,16 +37,8 @@ export const siteContent = siteContentSchema.parse({
       },
       {
         id: 'alcance',
-        type: 'feature-grid',
-        eyebrow: 'Nuestro universo',
-        heading: 'Cada cuidado tiene su momento.',
-        intro: 'Las cuatro líneas de VIORA, según el manual de marca. Los detalles de cada servicio y la agenda estarán disponibles cuando estén confirmados.',
-        items: [
-          { id: 'facial', title: 'Limpieza facial', body: 'Un espacio para dedicarle atención a tu piel. Técnica y disponibilidad por confirmar.' },
-          { id: 'depilacion', title: 'Depilación definitiva', body: 'Información clara sobre el servicio cuando estén validados el equipo y el procedimiento.' },
-          { id: 'masajes', title: 'Masajes', body: 'Una propuesta de bienestar para bajar el ritmo y regalarte una pausa.' },
-          { id: 'reiki', title: 'Reiki', body: 'Una experiencia de bienestar, sin presentarla como tratamiento de enfermedades.' },
-        ],
+        type: 'service-list',
+        serviceIds: ['limpieza-facial', 'depilacion-definitiva', 'masajes', 'reiki'],
       },
     ],
   }],

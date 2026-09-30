@@ -3,15 +3,15 @@ import BaseLayout from '@littzite/ui/BaseLayout.astro';
 import SiteHeader from '@littzite/ui/SiteHeader.astro';
 import SiteFooter from '@littzite/ui/SiteFooter.astro';
 import LandingHero from '@littzite/sections/LandingHero.astro';
-import FeatureGrid from '@littzite/sections/FeatureGrid.astro';
+import ServiceCatalog from '../components/ServiceCatalog.astro';
 import { siteContent } from '../site.config';
 import '../styles/viora.css';
 
 const { site, pages } = siteContent;
 const home = pages.find((page) => page.slug === '');
 const intro = home?.sections.find((section) => section.type === 'intro');
-const features = home?.sections.find((section) => section.type === 'feature-grid');
-if (!home || !intro || !features) throw new Error('Incomplete VIORA preview content');
+const catalog = home?.sections.find((section) => section.type === 'service-list');
+if (!home || !intro || !catalog) throw new Error('Incomplete VIORA preview content');
 ---
 
 <BaseLayout locale={site.defaultLocale} theme={site.theme} title={home.title} noindex={true} bodyClass="viora-site">
@@ -28,7 +28,7 @@ if (!home || !intro || !features) throw new Error('Incomplete VIORA preview cont
       alt="" decoding="async" fetchpriority="high" />
   </LandingHero>
 
-  <FeatureGrid section={features} />
+  <ServiceCatalog section={catalog} services={siteContent.services} />
 
   <section id="esencia" class="viora-essence" aria-labelledby="viora-essence-heading">
     <div class="container viora-essence__inner">

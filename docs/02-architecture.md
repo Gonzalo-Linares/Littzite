@@ -149,3 +149,7 @@ El grafo implementado se muestra arriba y comprende dos apps y tres paquetes rea
 ## PR-05: galería específica de Juanjo
 
 La composición de Juanjo sigue utilizando `ui` y `sections` públicos. El portfolio de imágenes con `astro:assets` pertenece por ahora a `apps/tattoo`, con un único consumidor y sin nuevo paquete compartido. Los datos editoriales y estilos permanecen dentro de la app; las imágenes auténticas se importarán estáticamente cuando se entreguen los originales. Este cambio no modifica el grafo de dependencias de paquetes. Ver [ADR-011](adr/011-tattoo-portfolio-local.md).
+
+## PR-06: catalogo informativo local de VIORA
+
+El catalogo se implementa dentro de `apps/estetica`: `site.config.ts` es la fuente de fichas y orden; `ServiceCatalog.astro` renderiza las referencias `service-list`; la ruta estatica `[slug].astro` deriva sus paths de `siteContent.services`. Esto no modifica el grafo de paquetes ni introduce un consumidor compartido nuevo. Cada detalle conserva `es-AR`, layout compartido y `noindex`. Las fichas sin acciones no requieren ni invocan proveedor de reservas. D-02A y D-01C siguen bloqueando la activacion de turnos reales.

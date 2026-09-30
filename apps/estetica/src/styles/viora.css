@@ -90,6 +90,32 @@
   margin-top: 3rem;
 }
 .viora-site .feature-card p { max-width: 27rem; line-height: 1.8; opacity: 1; }
+.viora-service-card__link { color: inherit; text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: .2em; }
+.viora-service-card__link:hover { text-decoration-thickness: 2px; }
+.viora-service-card__link:focus-visible,
+.viora-service-detail__back:focus-visible {
+  outline: 3px solid var(--color-focus);
+  outline-offset: 4px;
+}
+
+.viora-service-detail {
+  min-height: min(62vh, 48rem);
+  padding-block: clamp(3rem, 8vw, 7rem);
+  background: color-mix(in srgb, var(--viora-ivory) 83%, white);
+}
+.viora-service-detail__back { color: var(--viora-plum); font-weight: 600; }
+.viora-service-detail article { max-width: 52rem; margin: clamp(3rem, 8vw, 6rem) auto 0; }
+.viora-service-detail h1 {
+  margin: 1rem 0 1.5rem;
+  color: var(--viora-plum);
+  font-family: "Nimbus Roman", "Times New Roman", Georgia, serif;
+  font-size: clamp(3rem, 7vw, 6rem);
+  font-weight: 400;
+  letter-spacing: -.04em;
+  line-height: 1.05;
+}
+.viora-service-detail__description { max-width: 43rem; font-size: clamp(1.15rem, 2vw, 1.4rem); line-height: 1.8; }
+.viora-service-detail__note { margin-top: 2rem; color: color-mix(in srgb, var(--viora-ink) 76%, transparent); line-height: 1.7; }
 
 .viora-essence { background: var(--viora-plum); color: var(--viora-ivory); scroll-margin-top: 2rem; }
 .viora-essence__inner {
