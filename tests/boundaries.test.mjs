@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict';
 import { after, test } from 'node:test';
-import { mkdtemp, mkdir, rm, writeFile } from 'node:fs/promises';
+import { mkdtemp, mkdir, readFile, rm, writeFile } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
 import path from 'node:path';
 import { inspectWorkspace } from '../scripts/check-boundaries.mjs';
@@ -60,4 +60,42 @@ test('dynamic imports and relative paths outside a unit fail', async () => {
   const errors = await inspectWorkspace(root);
   assert.ok(errors.some((error) => error.includes('imports apps/two')));
   assert.ok(errors.some((error) => error.includes('outside workspace')));
+});
+
+test('ignores misleading source comments and scans Astro frontmatter and scripts', async () => {
+  const root = await workspace();
+  const content = [
+    "---",
+    "// import '@littzite/fake';",
+    "import { value } from '@littzite/ui';",
+    "---",
+    "<section>import '@littzite/fake'</section>",
+    "<script>import { value } from '@littzite/schema';</script>",
+  ].join('\n');
+  await writeFile(path.join(root, 'apps/one/src/example.astro'), content);
+  const manifestPath = path.join(root, 'apps/one/package.json');
+  const manifest = JSON.parse(await readFile(manifestPath, 'utf8'));
+  manifest.dependencies['@littzite/schema'] = 'workspace:*';
+  await writeFile(manifestPath, JSON.stringify(manifest));
+  assert.deepEqual(await inspectWorkspace(root), []);
+});
+
+test('rejects dynamic module specifiers instead of silently bypassing the checker', async () => {
+  const root = await workspace();
+  await writeFile(path.join(root, 'apps/one/src/index.ts'), [
+    "const target = '@littzite/two';",
+    "await import(target);",
+    "const x = require(target);",
+  ].join('\n'));
+  const errors = await inspectWorkspace(root);
+  assert.equal(errors.filter((error) => error.includes('Non-literal')).length, 2);
+});
+
+test('parses CSS imports but ignores imports in CSS comments', async () => {
+  const root = await workspace();
+  await writeFile(path.join(root, 'apps/one/src/design.css'),
+    "/* @import '@littzite/fake'; */\n@import '@littzite/ui/src/hidden.css';");
+  const errors = await inspectWorkspace(root);
+  assert.ok(errors.some((error) => error.includes('imports private')));
+  assert.ok(!errors.some((error) => error.includes('fake')));
 });

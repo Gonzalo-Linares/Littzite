@@ -164,7 +164,7 @@ settings:
 
 importers:
 
-  .: {}
+  .:\n    devDependencies:\n      typescript:\n        specifier: 5.9.3\n        version: 5.9.3
 
   apps/estetica:
     dependencies:

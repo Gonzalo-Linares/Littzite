@@ -1,10 +1,10 @@
 import { readdir, readFile } from 'node:fs/promises';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
+import ts from 'typescript';
 
 const workspaceRoot = path.resolve(fileURLToPath(new URL('..', import.meta.url)));
 const sourceExtensions = new Set(['.astro', '.ts', '.tsx', '.js', '.mjs', '.jsx', '.css']);
-const importPattern = /(?:\bimport\s*(?:\(\s*|[^'";]*?\sfrom\s*)?|\bexport\s+[^'";]*?\sfrom\s*|\brequire\s*\(\s*|@import\s*)['"]([^'"]+)['"]/g;
 
 async function sourceFiles(directory) {
   const files = [];
@@ -21,6 +21,51 @@ function ownerOf(relativePath) {
   const parts = relativePath.split(path.sep);
   if (parts.length < 2 || !['apps', 'packages'].includes(parts[0])) return null;
   return `${parts[0]}/${parts[1]}`;
+}
+
+function importSpecifiers(source, filename) {
+  const imports = [];
+  const errors = [];
+  const extension = path.extname(filename);
+  const cssImports = (styles) => {
+    const withoutComments = styles.replace(/\/\*[\s\S]*?\*\//g, '');
+    for (const match of withoutComments.matchAll(/@import\s+(?:url\(\s*)?['"]([^'"]+)['"]\s*\)?/g)) imports.push(match[1]);
+  };
+  if (extension === '.css') {
+    cssImports(source);
+    return { imports, errors };
+  }
+  const sources = [];
+  if (extension === '.astro') {
+    const frontmatter = source.match(/^\uFEFF?---\s*\r?\n([\s\S]*?)\r?\n---/);
+    if (frontmatter) sources.push(frontmatter[1]);
+    for (const match of source.matchAll(/<script\b[^>]*>([\s\S]*?)<\/script>/gi)) sources.push(match[1]);
+    for (const match of source.matchAll(/<style\b[^>]*>([\s\S]*?)<\/style>/gi)) cssImports(match[1]);
+  } else sources.push(source);
+  for (const [index, code] of sources.entries()) {
+    const kind = ['.tsx', '.jsx'].includes(extension) ? ts.ScriptKind.TSX : ts.ScriptKind.TS;
+    const ast = ts.createSourceFile(`${filename}:${index}`, code, ts.ScriptTarget.Latest, true, kind);
+    function add(literal, kindName) {
+      if (literal && ts.isStringLiteralLike(literal)) imports.push(literal.text);
+      else errors.push(`Non-literal ${kindName} in ${filename}`);
+    }
+    function visit(node) {
+      if (ts.isImportDeclaration(node) || ts.isExportDeclaration(node)) {
+        if (node.moduleSpecifier) add(node.moduleSpecifier, 'module specifier');
+      } else if (ts.isImportEqualsDeclaration(node) && ts.isExternalModuleReference(node.moduleReference)) {
+        add(node.moduleReference.expression, 'import-equals');
+      } else if (ts.isImportTypeNode(node) && ts.isLiteralTypeNode(node.argument)) {
+        add(node.argument.literal, 'import-type');
+      } else if (ts.isCallExpression(node) &&
+        (node.expression.kind === ts.SyntaxKind.ImportKeyword ||
+          (ts.isIdentifier(node.expression) && node.expression.text === 'require'))) {
+        add(node.arguments.length === 1 ? node.arguments[0] : null, 'dynamic import/require');
+      }
+      ts.forEachChild(node, visit);
+    }
+    visit(ast);
+  }
+  return { imports, errors };
 }
 
 export async function inspectWorkspace(root) {
@@ -51,8 +96,9 @@ export async function inspectWorkspace(root) {
 
     for (const file of await sourceFiles(path.join(root, unit))) {
       const source = await readFile(file, 'utf8');
-      for (const match of source.matchAll(importPattern)) {
-        const specifier = match[1];
+      const { imports, errors } = importSpecifiers(source, file);
+      violations.push(...errors.map((error) => `${path.relative(root, file)}: ${error}`));
+      for (const specifier of imports) {
         if (!specifier) continue;
         if (specifier.startsWith('.')) {
           const resolved = path.resolve(path.dirname(file), specifier);
