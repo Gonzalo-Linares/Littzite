@@ -1,0 +1,52 @@
+---
+import { Picture } from 'astro:assets';
+import type { VioraServiceVisual } from '../service-visuals.validation';
+
+interface Props {
+  visual: VioraServiceVisual;
+  context: 'card' | 'detail';
+  transitionName?: string;
+}
+
+const { visual, context, transitionName } = Astro.props;
+const sizes = context === 'card'
+  ? '(min-width: 1180px) 520px, (min-width: 741px) calc(50vw - 2rem), calc(100vw - 2.5rem)'
+  : '(min-width: 1180px) 620px, (min-width: 741px) 48vw, calc(100vw - 2.5rem)';
+const widths = [360, 560, 840, 1120, visual.primary.width];
+const imageStyle = [
+  `object-position: ${visual.focalPosition ?? '50% 50%'}`,
+  ...(transitionName ? [`view-transition-name: ${transitionName}`] : []),
+].join('; ');
+---
+
+<figure class:list={[
+  'viora-service-visual',
+  `viora-service-visual--${context}`,
+  { 'viora-service-visual--has-reveal': visual.reveal !== undefined },
+]}>
+  <Picture
+    src={visual.primary}
+    alt={visual.primaryAlt}
+    widths={widths}
+    sizes={sizes}
+    formats={['avif', 'webp']}
+    fallbackFormat="jpg"
+    priority={context === 'detail'}
+    loading={context === 'detail' ? 'eager' : 'lazy'}
+    style={imageStyle}
+    pictureAttributes={{ class: 'viora-service-visual__layer viora-service-visual__primary' }}
+  />
+  {visual.reveal && (
+    <Picture
+      src={visual.reveal}
+      alt={visual.revealAlt ?? ''}
+      widths={widths}
+      sizes={sizes}
+      formats={['avif', 'webp']}
+      fallbackFormat="jpg"
+      loading="lazy"
+      style={`object-position: ${visual.focalPosition ?? '50% 50%'}`}
+      pictureAttributes={{ class: 'viora-service-visual__layer viora-service-visual__reveal' }}
+    />
+  )}
+</figure>

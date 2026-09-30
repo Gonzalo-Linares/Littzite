@@ -3,6 +3,7 @@ import LandingHero from '@littzite/sections/LandingHero.astro';
 import ServiceCatalog from '../components/ServiceCatalog.astro';
 import VioraSiteLayout from '../layouts/VioraSiteLayout.astro';
 import { siteContent } from '../site.config';
+import { serviceVisuals } from '../service-visuals';
 
 const { pages } = siteContent;
 const home = pages.find((page) => page.slug === '');
@@ -19,7 +20,7 @@ if (!home || !intro || !catalog) throw new Error('Incomplete VIORA preview conte
       alt="" decoding="async" fetchpriority="high" />
   </LandingHero>
 
-  <ServiceCatalog section={catalog} services={siteContent.services} />
+  <ServiceCatalog section={catalog} services={siteContent.services} visuals={serviceVisuals} />
 
   <section id="esencia" class="viora-essence" aria-labelledby="viora-essence-heading">
     <div class="container viora-essence__inner">

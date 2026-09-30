@@ -60,21 +60,23 @@ if (app === 'estetica') {
   for (const asset of ['viora-horizontal.png', 'viora-principal.png', 'viora-palabra.png']) {
     await access(new URL(`../apps/estetica/dist/brand/${asset}`, import.meta.url));
   }
-  assert.equal((html.match(/class="viora-catalog__card"/g) ?? []).length, 4, 'Expected four VIORA service cards');
+  assert.equal((html.match(/class="viora-catalog__card(?:\s[^"]*)?"/g) ?? []).length, 4, 'Expected four VIORA service cards');
   assert.deepEqual(
     Array.from(html.matchAll(/view-transition-name: (viora-service-[a-z0-9-]+)/g), ([, name]) => name),
     siteContent.services.map(({ slug }) => `viora-service-${slug}`),
     'VIORA card transition names must be unique and derived from service slugs',
   );
   for (const service of siteContent.services) {
-    assert.ok(html.includes(`>${service.displayName}</a>`), `${service.slug}: card title missing`);
+    assert.ok(html.includes(`<span>${service.displayName}</span>`), `${service.slug}: card title missing`);
     assert.ok(html.includes(service.description), `${service.slug}: card description missing`);
     assert.ok(html.includes(`href="/servicios/${service.slug}/"`), `${service.slug}: card link missing`);
+    assert.ok(html.includes(`viora-service-image-${service.slug}`), `${service.slug}: card image transition name missing`);
     const route = new URL(`../apps/estetica/dist/servicios/${service.slug}/index.html`, import.meta.url);
     const detail = await readFile(route, 'utf8');
     const detailSeo = { title: `${service.displayName} | VIORA · Vista previa`, description: service.description };
     assertMetadata(detail, detailSeo, service.slug);
     assert.ok(detail.includes(`view-transition-name: viora-service-${service.slug}`), `${service.slug}: shared transition name missing from detail`);
+    assert.ok(detail.includes(`viora-service-image-${service.slug}`), `${service.slug}: detail image transition name missing`);
     assert.notEqual(detailSeo.title, siteContent.pages[0].seo.title, `${service.slug}: detail title must differ from home`);
     assertVioraFrame(detail, service.slug);
     assert.match(detail, new RegExp(`<h1 id="viora-service-title"[^>]*>${service.displayName}</h1>`), `${service.slug}: title missing`);

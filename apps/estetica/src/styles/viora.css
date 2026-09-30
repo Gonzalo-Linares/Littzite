@@ -83,6 +83,9 @@
 .viora-site .viora-catalog__intro > p {
   max-width: 26rem; line-height: 1.75; margin: 0 0 .35rem; opacity: .78;
 }
+.viora-site .viora-catalog__intro > .viora-catalog__visual-note {
+  margin-top: .65rem; font-size: .78rem; line-height: 1.55; opacity: .68;
+}
 .viora-site .viora-catalog__grid {
   display: grid; grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 1px; border: 1px solid #DDC9CC; background: #DDC9CC;
@@ -92,37 +95,85 @@
   min-height: 16.5rem; padding: clamp(1.65rem, 3vw, 3rem);
   background: var(--viora-ivory); transition: background-color .2s ease, box-shadow .2s ease;
 }
-.viora-site .viora-catalog__card:nth-child(2),
-.viora-site .viora-catalog__card:nth-child(3) { background: #F9ECEB; }
 .viora-site .viora-catalog__card-number {
   color: var(--viora-plum); font-size: .83rem; font-weight: 800;
 }
 .viora-site .viora-catalog__card h3 {
-  margin: 3rem 0 .7rem;
+  position: relative; z-index: 2; margin: 3rem 0 .7rem;
   font-family: "Nimbus Roman", "Times New Roman", Georgia, serif;
   color: var(--viora-plum); font-size: clamp(1.75rem, 2.6vw, 2.5rem);
   font-weight: 400; letter-spacing: -.035em;
 }
 .viora-site .viora-catalog__card p {
-  margin: 0; max-width: 27rem; font-size: .9rem; line-height: 1.8; opacity: 1;
+  position: relative; z-index: 2; margin: 0; max-width: 27rem; font-size: .9rem; line-height: 1.8; opacity: 1;
 }
 .viora-service-card__link {
-  display: inline-flex; align-items: center; min-height: 2.75rem;
-  color: inherit; text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: .2em;
-  transition: color .18s ease, text-decoration-thickness .18s ease;
+  position: relative; display: flex; flex-direction: column; align-items: start; gap: .75rem;
+  min-height: 2.75rem; color: inherit; text-decoration: none;
+  transition: color .18s ease;
 }
-.viora-service-card__link:hover { color: color-mix(in srgb, var(--viora-plum) 78%, black); text-decoration-thickness: 2px; }
+.viora-service-card__link::after { content: ""; position: absolute; z-index: 3; inset: -.45rem -.5rem; }
+.viora-service-card__explore {
+  display: inline-flex; align-items: center; gap: .55rem; min-height: 2.75rem;
+  font-family: "DejaVu Sans", Arial, sans-serif; font-size: .72rem; font-weight: 750;
+  letter-spacing: .12em; text-transform: uppercase;
+}
+.viora-service-card__explore > span { transition: transform .2s ease; }
 .viora-service-card__link:active { transform: translateY(1px); }
 .viora-site .viora-catalog__card:focus-within { background-color: #F9ECEB; }
 .viora-site .viora-catalog__card-number { transition: transform .2s ease; }
 .viora-site .viora-catalog__card:focus-within .viora-catalog__card-number { transform: translateY(-2px); }
-@media (hover: hover) {
+@media (hover: hover) and (pointer: fine) {
   .viora-site .viora-catalog__card:hover {
     position: relative; z-index: 1; background-color: #F9ECEB;
     box-shadow: 0 .55rem 1.5rem rgb(57 37 45 / 8%);
   }
   .viora-site .viora-catalog__card:hover .viora-catalog__card-number { transform: translateY(-2px); }
+  .viora-site .viora-catalog__card:hover .viora-service-visual__reveal,
+  .viora-site .viora-catalog__card:focus-within .viora-service-visual__reveal {
+    clip-path: polygon(34% 0, 100% 0, 100% 100%, 0 100%);
+  }
+  .viora-site .viora-catalog__card:hover .viora-service-visual__primary,
+  .viora-site .viora-catalog__card:focus-within .viora-service-visual__primary { transform: scale(1.035); }
+  .viora-service-card__link:hover .viora-service-card__explore > span,
+  .viora-service-card__link:focus-visible .viora-service-card__explore > span { transform: translate(3px, -2px); }
 }
+.viora-service-card__link:focus-visible,
+.viora-service-detail__back:focus-visible {
+  outline: 3px solid var(--color-focus);
+  outline-offset: 4px;
+}
+
+.viora-site .viora-catalog__card--visual {
+  min-height: 32rem; padding: clamp(1.5rem, 3vw, 2.6rem);
+  justify-content: end; overflow: hidden; color: var(--viora-ivory); background: var(--viora-ink);
+}
+.viora-site .viora-catalog__card--visual::before {
+  position: absolute; z-index: 1; inset: 0; content: ""; pointer-events: none;
+  background: linear-gradient(180deg, rgb(25 18 21 / 3%) 16%, rgb(25 18 21 / 28%) 48%, rgb(25 18 21 / 88%) 100%);
+  transition: background-color .5s ease;
+}
+.viora-site .viora-catalog__card--visual .viora-catalog__card-number {
+  position: absolute; z-index: 2; top: clamp(1.5rem, 3vw, 2.6rem); left: clamp(1.5rem, 3vw, 2.6rem);
+  color: var(--viora-ivory); text-shadow: 0 1px 12px rgb(0 0 0 / 28%);
+}
+.viora-site .viora-catalog__card--visual h3 {
+  margin: 0 0 .8rem; color: var(--viora-ivory); font-size: clamp(1.9rem, 3vw, 2.9rem);
+}
+.viora-site .viora-catalog__card--visual p { max-width: 31rem; color: var(--viora-ivory); opacity: .92; }
+.viora-site .viora-catalog__card--visual .viora-service-card__explore { color: #F7DCE1; }
+.viora-site .viora-catalog__card--visual:focus-within { background: var(--viora-ink); }
+.viora-service-visual {
+  position: relative; display: block; width: 100%; aspect-ratio: 5 / 4; margin: 0; overflow: hidden;
+  background: color-mix(in srgb, var(--viora-plum) 18%, var(--viora-ivory));
+}
+.viora-service-visual--card { position: absolute; z-index: 0; inset: 0; aspect-ratio: auto; }
+.viora-service-visual--detail { aspect-ratio: 4 / 5; }
+.viora-service-visual__layer { position: absolute; inset: 0; display: block; width: 100%; height: 100%; }
+.viora-service-visual__layer img { display: block; width: 100%; height: 100%; object-fit: cover; }
+.viora-service-visual__primary img { transition: transform .9s cubic-bezier(.2,.7,.2,1); }
+.viora-service-visual__reveal { z-index: 1; clip-path: polygon(100% 0, 100% 0, 100% 100%, 100% 100%); transition: clip-path .75s cubic-bezier(.2,.7,.2,1); }
+.viora-service-visual--detail .viora-service-visual__reveal { clip-path: polygon(66% 0, 100% 0, 100% 100%, 32% 100%); }
 .viora-service-card__link:focus-visible,
 .viora-service-detail__back:focus-visible {
   outline: 3px solid var(--color-focus);
@@ -136,6 +187,11 @@
 }
 .viora-service-detail__back { display: inline-flex; align-items: center; min-height: 2.75rem; color: var(--viora-plum); font-weight: 600; }
 .viora-service-detail article { max-width: 52rem; margin: clamp(3rem, 8vw, 6rem) auto 0; }
+.viora-service-detail article.viora-service-detail__article--visual {
+  display: grid; grid-template-columns: minmax(0, .9fr) minmax(0, 1fr); align-items: center;
+  gap: clamp(2rem, 6vw, 6rem); max-width: 76rem;
+}
+.viora-service-detail__copy { min-width: 0; }
 .viora-service-detail h1 {
   margin: 1rem 0 1.5rem;
   color: var(--viora-plum);
@@ -147,6 +203,7 @@
 }
 .viora-service-detail__description { max-width: 43rem; font-size: clamp(1.15rem, 2vw, 1.4rem); line-height: 1.8; }
 .viora-service-detail__note { margin-top: 2rem; color: color-mix(in srgb, var(--viora-ink) 76%, transparent); line-height: 1.7; }
+.viora-service-detail__visual-note { margin-top: 1.4rem; color: color-mix(in srgb, var(--viora-ink) 68%, transparent); font-size: .8rem; line-height: 1.6; }
 
 .viora-essence { background: var(--viora-plum); color: var(--viora-ivory); scroll-margin-top: 2rem; }
 .viora-essence__inner {
@@ -187,7 +244,11 @@
   .viora-hero-logo { width: min(85%,26rem); max-height: 68%; }
   .viora-site .viora-catalog__grid { grid-template-columns: 1fr; }
   .viora-site .viora-catalog__card { min-height: 12rem; }
+  .viora-site .viora-catalog__card--visual { min-height: clamp(27rem, 100vw, 34rem); }
   .viora-site .viora-catalog__card h3 { margin-top: 1rem; }
+  .viora-site .viora-catalog__card--visual h3 { margin-top: 0; }
+  .viora-service-detail article.viora-service-detail__article--visual { grid-template-columns: minmax(0, 1fr); gap: 2rem; }
+  .viora-service-visual--detail { aspect-ratio: 5 / 4; }
   .viora-essence__inner { padding-block: 4.5rem; }
   .viora-essence h2 { font-size: clamp(3.2rem,11vw,5rem); }
 }
@@ -202,4 +263,9 @@
   .viora-site *::after { scroll-behavior: auto !important; transition-duration: .01ms !important; animation-duration: .01ms !important; }
   ::view-transition-old(root), ::view-transition-new(root),
   ::view-transition-old(*), ::view-transition-new(*) { animation-duration: .01ms !important; }
+  .viora-service-visual__primary img,
+  .viora-service-visual__reveal { transition: none; }
+  .viora-service-visual--has-reveal .viora-service-visual__reveal {
+    clip-path: polygon(38% 0, 100% 0, 100% 100%, 0 100%);
+  }
 }

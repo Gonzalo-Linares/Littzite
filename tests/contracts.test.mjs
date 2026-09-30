@@ -13,6 +13,7 @@ import {
 import { siteContent as estetica } from '../apps/estetica/src/site.config.ts';
 import { siteContent as tattoo } from '../apps/tattoo/src/site.config.ts';
 import { assertMetadata } from '../scripts/html-metadata.mjs';
+import { validateServiceVisuals } from '../apps/estetica/src/service-visuals.validation.ts';
 
 const theme = {
   surface: '#ffffff', text: '#222222', accent: '#334455',
@@ -92,6 +93,24 @@ test('SiteConfig accepts an optional root-relative local browser icon only', () 
   assert.equal(siteConfigSchema.safeParse({ ...base, iconHref: '/../icon.png' }).success, false);
   assert.equal(estetica.site.iconHref, '/brand/viora-principal.png');
   assert.equal('iconHref' in tattoo.site, false);
+});
+
+test('VIORA visuals validate optional service references and image alternatives independently', () => {
+  const services = [{ id: 'sample' }, { id: 'future-service' }];
+  const image = { src: '/sample.jpg', width: 1400, height: 900, format: 'jpg' };
+  const primaryOnly = { serviceId: 'sample', primary: image, primaryAlt: 'Una imagen editorial de prueba.' };
+
+  assert.doesNotThrow(() => validateServiceVisuals(services, []));
+  assert.doesNotThrow(() => validateServiceVisuals(services, [primaryOnly]));
+  assert.doesNotThrow(() => validateServiceVisuals(services, [
+    { ...primaryOnly, reveal: image, revealAlt: 'Una segunda imagen editorial.' },
+  ]));
+  assert.throws(() => validateServiceVisuals(services, [{ ...primaryOnly, serviceId: 'missing' }]), /unknown VIORA service/);
+  assert.throws(() => validateServiceVisuals(services, [primaryOnly, primaryOnly]), /Duplicate VIORA visual/);
+  assert.throws(() => validateServiceVisuals(services, [{ ...primaryOnly, primaryAlt: '  ' }]), /Primary image alt is required/);
+  assert.throws(() => validateServiceVisuals(services, [{ ...primaryOnly, reveal: image }]), /Reveal image alt is required/);
+  assert.throws(() => validateServiceVisuals(services, [{ ...primaryOnly, revealAlt: 'Alt sin imagen.' }]), /Reveal alt requires/);
+  assert.throws(() => validateServiceVisuals(services, [{ ...primaryOnly, primary: { ...image, width: 0 } }]), /Invalid primary image/);
 });
 
 test("all future brand themes enforce semantic contrast, not just today's two apps", () => {
