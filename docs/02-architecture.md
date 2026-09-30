@@ -41,7 +41,7 @@ flowchart LR
   UI --> C
 ```
 
-`content-schema` contiene los contratos Zod de sitio, páginas, servicios, secciones y destinos, más validación de referencias dentro de `SiteContent`. `ui` expone layout, cabecera, pie, contenedor, enlaces y tokens CSS; `sections` expone `LandingHero` y `FeatureGrid`, usados por ambas apps y dependientes únicamente de APIs públicas de `ui` y `content-schema`. `booking` depende solo de `content-schema`; valida proveedores soportados y resuelve acciones directas a fallbacks externos, sin Astro, DOM, red ni estado. Su registro soporta solo `cal-com` bajo política fail-closed. No hay ciclos entre paquetes ni imports entre aplicaciones. `scripts/check-boundaries.mjs` comprueba manifests, imports con AST de TypeScript (incluido frontmatter Astro), CSS @import y ciclos **localmente**; GitHub Actions está desactivado por decisión del propietario.
+`content-schema` contiene los contratos Zod de sitio, páginas, servicios, secciones y destinos, más validación de referencias dentro de `SiteContent`. `ui` expone layout, cabecera, pie, contenedor, enlaces y tokens CSS; `sections` expone `LandingHero` y `FeatureGrid`, usados por ambas apps y dependientes únicamente de APIs públicas de `ui` y `content-schema`. `booking` depende solo de `content-schema`; valida proveedores soportados y sus URLs bajo política fail-closed, sin Astro, DOM, red ni estado. Su registro soporta solo `cal-com`. PR-09 no resuelve acciones `ServiceAction`; las dos apps son consumidores del gate de validación de configuración, no del flujo de reservas. No hay ciclos entre paquetes ni imports entre aplicaciones. `scripts/check-boundaries.mjs` comprueba manifests, imports con AST de TypeScript (incluido frontmatter Astro), CSS @import y ciclos **localmente**; GitHub Actions está desactivado por decisión del propietario.
 
 ## Diagrama de contexto (C4 nivel 1, simplificado)
 
@@ -104,8 +104,8 @@ Cal.com fue seleccionado **solo para un piloto futuro de VIORA**, hoy en standby
 | `ui` | Botones, controles, patrones accesibles, tokens | Decisiones de negocio o llamadas a proveedores |
 | `sections` | Composición de bloques reutilizables con props tipadas | Consultar contenido global de una app |
 | `seo` | Metadatos, URL canonical, schema, sitemap helpers | Inventar reseñas o localidades no verificadas |
-| `booking` | Resolver acciones `direct-booking`, targets y adaptadores soportados | Crear agenda local, decidir política de señas o fingir una API de reserva universal |
-| `content-schema` + resolver de acciones | Validar `ServiceAction[]` y relaciones con destinos de reserva/presupuesto; WhatsApp obtiene el único número de `ContactConfig` | Hardcodear flujos por identidad de app ni duplicar números comerciales |
+| `booking` | Registro cerrado de proveedores y validación fail-closed de URLs `BookingTarget` | Resolver `ServiceAction`, crear agenda local, decidir política de señas o fingir una API de reserva universal |
+| `content-schema` | Validar `ServiceAction[]` y relaciones con destinos de reserva/presupuesto; WhatsApp obtiene el único número de `ContactConfig` | Hardcodear flujos por identidad de app ni duplicar números comerciales |
 | `apps/*` | Identidad, contenido, orden de páginas, proveedores y deploy | Reimplementar lógica compartida |
 
 ## Ciclo de contenido
@@ -147,7 +147,7 @@ El proveedor de hosting está **propuesto**, no confirmado. Para el contenido p�
 
 ## Reglas para dependencias entre paquetes
 
-El grafo implementado se muestra arriba y comprende dos apps y cuatro paquetes realmente consumidos: `content-schema`, `ui`, `sections` y `booking`. `booking` puede depender únicamente de `content-schema`; no depende de `ui`, `sections` ni apps. Reglas invariantes: `apps/*` puede importar paquetes públicos; no hay importaciones cruzadas entre apps, ni dependencias inversas desde packages hacia apps, ni ciclos entre paquetes. No extraer una librería por cada componente antes de demostrar reutilización. **Un contrato compartido y su implementación tienen un solo propietario.**
+El grafo implementado se muestra arriba y comprende dos apps y cuatro paquetes realmente consumidos: `content-schema`, `ui`, `sections` y `booking`. El checker aplica la allowlist `packages/booking -> packages/content-schema`; bloquea dependencias de booking hacia cualquier otro package workspace, incluidas futuras incorporaciones, así como la regla general que impide dependencias de packages hacia apps. Reglas invariantes: `apps/*` puede importar paquetes públicos; no hay importaciones cruzadas entre apps ni ciclos entre paquetes. No extraer una librería por cada componente antes de demostrar reutilización. **Un contrato compartido y su implementación tienen un solo propietario.**
 
 ## PR-05: galería específica de Juanjo
 

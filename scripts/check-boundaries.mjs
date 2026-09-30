@@ -5,6 +5,15 @@ import ts from 'typescript';
 
 const workspaceRoot = path.resolve(fileURLToPath(new URL('..', import.meta.url)));
 const sourceExtensions = new Set(['.astro', '.ts', '.tsx', '.js', '.mjs', '.jsx', '.css']);
+const packageDependencyAllowlist = Object.freeze({
+  'packages/booking': Object.freeze(['packages/content-schema']),
+});
+
+function hasDisallowedPackageDependency(unit, target) {
+  const allowedPackages = packageDependencyAllowlist[unit];
+  return unit.startsWith('packages/') && target.startsWith('packages/') &&
+    allowedPackages !== undefined && !allowedPackages.includes(target);
+}
 
 async function sourceFiles(directory) {
   const files = [];
@@ -83,13 +92,18 @@ export async function inspectWorkspace(root) {
   const names = new Map([...units].map(([unit, manifest]) => [manifest.name, unit]));
   const packageGraph = new Map();
   for (const [unit, manifest] of units) {
-    const dependencies = { ...manifest.dependencies, ...manifest.devDependencies, ...manifest.peerDependencies };
+    const dependencies = {
+      ...manifest.dependencies,
+      ...manifest.devDependencies,
+      ...manifest.peerDependencies,
+      ...manifest.optionalDependencies,
+    };
     const neighbors = [];
     for (const name of Object.keys(dependencies)) {
       const target = names.get(name);
       if (!target) continue;
       if (unit.startsWith('packages/') && target.startsWith('apps/')) violations.push(`${unit} depends on ${target}`);
-      if (unit === 'packages/booking' && ['packages/ui', 'packages/sections'].includes(target)) violations.push(`${unit} depends on forbidden ${target}`);
+      if (hasDisallowedPackageDependency(unit, target)) violations.push(`${unit} depends on disallowed ${target}`);
       if (unit.startsWith('apps/') && target.startsWith('apps/') && unit !== target) violations.push(`${unit} depends on ${target}`);
       if (target.startsWith('packages/') && unit.startsWith('packages/')) neighbors.push(target);
     }
@@ -120,7 +134,7 @@ export async function inspectWorkspace(root) {
           continue;
         }
         if (unit.startsWith('packages/') && target.startsWith('apps/')) violations.push(`${path.relative(root, file)} imports ${target}`);
-        if (unit === 'packages/booking' && ['packages/ui', 'packages/sections'].includes(target)) violations.push(`${path.relative(root, file)} imports forbidden ${target}`);
+        if (hasDisallowedPackageDependency(unit, target)) violations.push(`${path.relative(root, file)} imports disallowed ${target}`);
         if (unit.startsWith('apps/') && target.startsWith('apps/') && unit !== target) violations.push(`${path.relative(root, file)} imports ${target}`);
         if (unit !== target && !Object.hasOwn(dependencies, name)) violations.push(`${unit} imports undeclared ${name}`);
         const exportKey = specifier === name ? '.' : `./${parts.slice(2).join('/')}`;

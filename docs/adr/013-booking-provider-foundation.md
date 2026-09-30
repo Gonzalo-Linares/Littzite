@@ -1,27 +1,30 @@
-# ADR-013: Fundacion headless para proveedores de reservas
+# ADR-013: Fundacion headless para politicas de proveedores de reservas
 
 **Estado:** aceptada para PR-09 (30/09/2026)
 
 ## Contexto
 
-Las dos aplicaciones tienen recorridos aprobados de reserva directa, pero solo VIORA eligio proveedor para un piloto futuro. La cuenta y las URLs de Cal.com siguen pendientes; no se debe habilitar UI ni inventar destinos. `content-schema` ya valida la forma del target, HTTPS, credenciales y referencias, pero no debe asumir politicas particulares de proveedores.
+Las aplicaciones tienen recorridos comerciales aprobados de reserva directa, pero no tienen acciones direct-booking ni targets autenticos configurados. VIORA eligio Cal.com para un piloto futuro; su cuenta y URLs siguen pendientes. Juanjo no tiene proveedor ni destinos. ADR-012 sigue vigente: solo tras recibir URLs reales y aprobacion profesional se configuraran targets/actions y se implementara la resolucion del flujo correspondiente.
 
 ## Decision
 
-- Crear `packages/booking`, ESM/TypeScript puro, con unica dependencia `@littzite/content-schema` y export publico de raiz.
-- `content-schema` conserva forma, IDs, referencias, HTTPS y unicidad de `SiteContent`; `booking` es propietario del registro cerrado de proveedores, politica de URL especifica y resolucion de acciones `direct-booking`.
-- El unico proveedor inicialmente soportado es `cal-com`. Aceptar solo origen exacto `https://cal.com`, sin userinfo y con ruta no raiz. Preservar query y fragmento. No imponer una forma de usuario/evento.
-- Rechazar proveedores desconocidos. Ambas apps validan todas sus listas de targets luego del parseo del esquema, incluidas listas vacias, para que futuros targets no soportados fallen durante la compilacion.
-- La resolucion es local y pura: no red, DOM, Astro, SDK, estado mutable, disponibilidad ni confirmacion. Devuelve los datos de accion y el fallback externo validado.
-- Las aplicaciones pueden consumir `booking`; este solo depende de `content-schema`, nunca de `ui`, `sections` o apps.
+- Crear `packages/booking`, ESM/TypeScript headless, con unica dependencia workspace `@littzite/content-schema` y export publico de raiz.
+- `content-schema` conserva forma, IDs, referencias, unicidad y validacion HTTPS general. `booking` posee el registro cerrado de proveedores y las politicas de URL especificas.
+- Soportar inicialmente solo `cal-com`: origen efectivo exacto `https://cal.com`, HTTPS, sin userinfo y con ruta distinta de `/`. Permitir query y fragmento, conservar la URL sin reescribirla y no exigir un patron de usuario/evento.
+- Rechazar proveedores no soportados con diagnostico que incluya `targetId` y `providerKey`.
+- Integrar `validateBookingTargets` en las dos apps despues del parseo de `siteContentSchema`, para validar la lista completa incluso cuando esta vacia. Son dos consumidores reales del policy gate de configuracion, no del flujo de reservas.
+- El checker expresa una allowlist por unidad: `packages/booking` puede depender de `packages/content-schema` y de ningun otro package workspace; la regla general sigue bloqueando dependencias de packages hacia apps.
+- PR-09 implementa el registro/politica de proveedores, validacion fail-closed e integracion del gate en ambas apps. No implementa resolucion de `ServiceAction`.
 
-## Consecuencias
+## Consecuencias y limites
 
-VIORA mantiene cuatro servicios con duraciones iniciales independientes de 60 minutos, `actions: []` y `bookingTargets: []`. Ningun HTML ofrece reservas ni publica una URL de Cal.com. Juanjo sigue sin proveedor ni destinos. Activar una agenda requiere cuenta y URLs reales aprobadas, duraciones/reglas comerciales verificadas y un cambio separado de alcance. Embed, API keys, webhooks, backend, almacenamiento y pagos no forman parte de esta decision.
+VIORA mantiene cuatro servicios con defaults independientes de 60 minutos, `actions: []` y `bookingTargets: []`. No se publica URL ni CTA comercial. Juanjo sigue sin proveedor ni targets. El paquete no contiene UI, resolucion de acciones, red, Astro, DOM, SDK, secretos ni estado mutable. No crea agenda, disponibilidad ni confirmaciones.
+
+Targets/actions reales y la resolucion del flujo se implementaran solo cuando existan URLs autenticas y aprobacion profesional, segun ADR-012. Embed, API keys, webhooks, backend, almacenamiento y pagos quedan fuera de esta decision.
 
 ## Alternativas descartadas
 
-- Poner URLs y reglas de host en `content-schema`: mezcla el contrato general con politica de proveedor.
-- Integrar el SDK o API de Cal.com: no se necesita red para validar/resolver fallback, y la cuenta no esta lista.
-- Crear UI compartida o especifica: no hay destinos aprobados ni requisito de activacion.
-- Permitir cualquier URL HTTPS: no falla cerrado ante proveedor desconocido y no comprueba el host de Cal.com.
+- Poner hosts y reglas de proveedores en `content-schema`: mezcla el contrato general con una politica especifica.
+- Resolver acciones sin caller real ni target autentico: crea codigo ejecutable especulativo antes de que exista un flujo configurado.
+- Integrar SDK o API de Cal.com: no se necesita red para validar el destino y la cuenta no esta lista.
+- Permitir cualquier URL HTTPS: no falla cerrado para hosts ajenos al proveedor aprobado.
