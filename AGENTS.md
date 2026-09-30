@@ -59,3 +59,8 @@ Las cuatro fichas de `apps/estetica/src/site.config.ts` son la unica fuente de t
 ## Cal.com: piloto de VIORA (PR-08a)
 
 El titular eligió Cal.com Individual Gratis para probar una única agenda profesional y autorizó cuatro duraciones iniciales independientes de 60 minutos. Son placeholders configurables, pendientes de revisión profesional —especialmente depilación según zona—. Mantener `actions: []`, `bookingTargets: []`, `noindex` y ninguna UI de reserva hasta disponer de cuatro URLs públicas verificadas de la cuenta real, disponibilidad aprobada, consentimiento/privacidad y resultados de reserva de prueba. No inventar usuario, event slugs, teléfono, domicilio, pagos, API keys ni proveedores para Juanjo. La propietaria de la cuenta controla horarios y citas en Cal.com. CI continúa desactivada por decisión del titular. Ver issue #15 y ADR-012.
+
+
+## Layout local de VIORA (PR-07)
+
+`VioraSiteLayout.astro` en `apps/estetica` concentra cabecera, navegación `/` y `/#...`, logos, pie, `viora.css`, locale y `noindex`, componiendo solamente los componentes públicos de `packages/ui`. Portada y detalles deben conservar sus cuerpos propios y consumir ese layout sin repetir marco de marca. No mover branding a paquetes compartidos ni modificar Juanjo. Los servicios conservan defaults Cal.com independientes de 60 minutos como configuración provisional, `actions: []` y `bookingTargets: []`; no mostrar esas duraciones ni activar reservas antes de URLs y aprobaciones reales. CI sigue desactivada; registrar los seis gates locales.

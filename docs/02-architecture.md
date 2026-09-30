@@ -16,7 +16,7 @@ Littzite/
 │   ├── seo/                    # Head, canonical, JSON-LD, sitemap/utilidades
 │   └── booking/                # Contrato y adaptadores de proveedores
 ├── docs/                       # Esta documentación + ADRs
-├── .github/workflows/          # CI: hoy verifica y compila ambas apps en cada PR
+├── .github/workflows/          # Workflows presentes, CI desactivada por el propietario
 ├── pnpm-workspace.yaml
 └── pnpm-lock.yaml
 ```
@@ -69,10 +69,10 @@ flowchart TB
     Core[Paquetes compartidos: UI, secciones, SEO, esquema, reservas]
     ES[Astro: estética + contenido/configuración]
     TA[Astro: tatuador + contenido/configuración]
-    CI[CI: tipos, validación, tests, auditoría y build]
+    CI[Verificacion local de ambas apps; workflow de GitHub desactivado]
     DEP1[Hosting estático A + dominio A]
     DEP2[Hosting estático B + dominio B]
-    CAL[Proveedor de citas A pendiente]
+    CAL[Cal.com: piloto VIORA; cuenta y URLs pendientes]
     SIM[Proveedor de citas B pendiente]
     SEARCH[Search Console / analítica por sitio]
 
@@ -120,7 +120,7 @@ flowchart LR
 
 - Cada aplicación define dominio/canonical, sitemap, iconos, imágenes sociales, cuenta de reservas y analítica independientes.
 - D-09: ambas apps publican contenido en `es-AR`, sin prefijo idiomático; el contrato `SiteConfig.defaultLocale` es la fuente de verdad para el idioma del documento, metadatos y formatos. Los paquetes compartidos no implementan un router de idiomas ni catálogos de traducción en v1.
-- Comparten librerías, no sesiones ni secretos. **CI actual de PR-01:** siempre ejecuta `check`, `build` y `test` para ambas apps en cada PR; por lo tanto los cambios comunes quedan verificados en ambas. **Objetivo posterior:** despliegues independientes y selectivos por rutas afectadas, todavía no implementados.
+- Comparten librerias, no sesiones ni secretos. Los workflows de GitHub Actions permanecen desactivados por decision del propietario; los seis gates deben ejecutarse localmente antes de integrar cambios. Los despliegues independientes y selectivos por rutas siguen sin implementarse.
 - No se almacena un registro local de reservas en v1; la fuente de verdad es el proveedor elegido.
 - Cada integración externa incluye fallback a enlace externo y una política ante indisponibilidad.
 
@@ -153,3 +153,8 @@ La composición de Juanjo sigue utilizando `ui` y `sections` públicos. El portf
 ## PR-06: catalogo informativo local de VIORA
 
 El catalogo se implementa dentro de `apps/estetica`: `site.config.ts` es la fuente de fichas y orden; `ServiceCatalog.astro` renderiza las referencias `service-list`; la ruta estatica `[slug].astro` deriva sus paths de `siteContent.services`. Esto no modifica el grafo de paquetes ni introduce un consumidor compartido nuevo. Cada detalle conserva `es-AR`, layout compartido y `noindex`. Las fichas sin acciones no requieren ni invocan proveedor de reservas. D-02A y D-01C siguen bloqueando la activacion de turnos reales.
+
+
+## PR-07: layout de aplicacion para VIORA
+
+`apps/estetica/src/layouts/VioraSiteLayout.astro` compone `BaseLayout`, `SiteHeader` y `SiteFooter` públicos y concentra la navegación absoluta desde cualquier ruta, logos oficiales, hoja `viora.css`, locale `es-AR` y `noindex`. La portada y los detalles conservan sus cuerpos distintos y consumen el mismo marco. No cambia el grafo de paquetes ni el layout de Juanjo.

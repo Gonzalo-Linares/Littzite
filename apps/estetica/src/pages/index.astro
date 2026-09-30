@@ -1,26 +1,17 @@
 ---
-import BaseLayout from '@littzite/ui/BaseLayout.astro';
-import SiteHeader from '@littzite/ui/SiteHeader.astro';
-import SiteFooter from '@littzite/ui/SiteFooter.astro';
 import LandingHero from '@littzite/sections/LandingHero.astro';
 import ServiceCatalog from '../components/ServiceCatalog.astro';
+import VioraSiteLayout from '../layouts/VioraSiteLayout.astro';
 import { siteContent } from '../site.config';
-import '../styles/viora.css';
 
-const { site, pages } = siteContent;
+const { pages } = siteContent;
 const home = pages.find((page) => page.slug === '');
 const intro = home?.sections.find((section) => section.type === 'intro');
 const catalog = home?.sections.find((section) => section.type === 'service-list');
 if (!home || !intro || !catalog) throw new Error('Incomplete VIORA preview content');
 ---
 
-<BaseLayout locale={site.defaultLocale} theme={site.theme} title={home.title} noindex={true} bodyClass="viora-site">
-  <SiteHeader slot="header" brand="VIORA, estética integral" descriptor="Tu momento, tu bienestar"
-    links={[{ label: 'Inicio', href: '#inicio' }, { label: 'Experiencias', href: '#alcance' }, { label: 'Nuestra esencia', href: '#esencia' }]}
-    badge={{ label: 'Vista previa', href: '#alcance' }}>
-    <img slot="brand" class="viora-header-logo" src="/brand/viora-horizontal.png" width="1600" height="480"
-      alt="" decoding="async" />
-  </SiteHeader>
+<VioraSiteLayout title={home.title}>
 
   <LandingHero section={intro} variant="serene" ctaLabel="Conocé nuestras experiencias" ctaHref="#alcance"
     artLabel="UN ESPACIO PARA VOS" artIndex="VIORA / 01">
@@ -43,8 +34,4 @@ if (!home || !intro || !catalog) throw new Error('Incomplete VIORA preview conte
     </div>
   </section>
 
-  <SiteFooter slot="footer" brand="VIORA" note="Tu momento, tu bienestar. Datos comerciales y agenda pendientes de confirmación."
-    meta={["Vista previa · No admite reservas todavía", "VIORA · Estética integral"]}>
-    <img slot="brand" class="viora-footer-logo" src="/brand/viora-palabra.png" width="1310" height="275" alt="VIORA" loading="lazy" />
-  </SiteFooter>
-</BaseLayout>
+</VioraSiteLayout>

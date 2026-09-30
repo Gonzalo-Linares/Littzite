@@ -1,6 +1,6 @@
 # Littzite — arquitectura fundacional
 
-**Estado:** arquitectura documental v0.8; PR-01/02/03, identidad VIORA y catálogo informativo PR-06; identidad editorial y galería de Juanjo en PR-05. **Fecha:** 2026-09-28/29.
+**Estado:** arquitectura documental v0.8; PR-01/02/03, identidad VIORA y catálogo informativo PR-06 y layout VIORA PR-07; identidad editorial y galería de Juanjo en PR-05. **Fecha:** 2026-09-28/29.
 **Producto:** plataforma de creación de sitios comerciales modulares; primeros casos: estética integral y estudio de tatuajes en San Juan, Argentina.  
 **Propósito:** captación orgánica local, diferenciación visual, contacto y reservas/solicitudes mediante proveedores externos.
 
@@ -12,7 +12,7 @@
 - Modificar una capacidad común una sola vez, consumirla desde ambos sitios y validarla en ambas apps; evitar hardcodear identidad comercial dentro de los paquetes.
 - Cada app tiene identidad y páginas propias. No crear una megatemplate con condicionales por cliente, ni un SaaS multi-tenant en v1.
 - Contenido inicial gestionado como archivos versionados en Git; sin CMS, backend ni base de datos propios para la primera versión, salvo un requisito aprobado que lo justifique.
-- Reservas desacopladas detrás de acciones tipadas por servicio: **estética con una profesional y tratamientos de duración fija**; **tatuajes pequeños con reserva directa y grandes mediante solicitud de presupuesto**. El proveedor de agenda por negocio y las señas siguen pendientes; **D-04 aprobada**: presupuestos de tatuajes grandes por WhatsApp, inicialmente solo texto, sin formulario ni subida de imágenes propios. No desarrollar agenda propia.
+- Reservas desacopladas mediante acciones tipadas: estetica con una profesional y duraciones tecnicas por validar; tatuajes pequenos con reserva directa y grandes mediante presupuesto. Cal.com fue elegido para un piloto de VIORA, pero no hay cuenta/eventos/URLs reales aprobados ni reservas publicas; el proveedor de tatuajes sigue sin definir. D-04 confirma presupuestos de tatuajes grandes por WhatsApp, solo texto y sin formulario ni carga propia.
 - Reutilización selectiva de AstroWind solo luego de auditar código, versión y licencias independientes de sus recursos.
 - **D-08B acordada:** repositorio público, **sin licencia de reutilización para el código original de Littzite**. Cada dependencia, fragmento de plantilla o asset de terceros conserva su licencia o autorización específica; ver [política de propiedad intelectual](docs/15-ip-license-policy.md) y [ADR-006](docs/adr/006-public-rights-reserved.md).
 - **D-09 acordada:** primera versión únicamente en español de Argentina (`es-AR`) para ambos negocios, rutas sin prefijo idiomático y sin infraestructura de traducción, según [ADR-007](docs/adr/007-single-locale-es-ar.md).
@@ -64,4 +64,4 @@ Para trabajar en una sola aplicación, usar `corepack pnpm --filter @littzite/es
 - **Propuesta**: planteada técnicamente, pendiente de ratificación, prueba o validación de costes.
 - **Pendiente**: no seleccionar proveedor, política comercial, flujo o integración sin información del negocio.
 
-**Próximos pasos:** recibir e integrar el logotipo y 6–12 originales del tatuador para poblar la galería preparada en PR-05; cerrar duración y disponibilidad de los cuatro servicios de VIORA, proveedor de agenda, textos comerciales y SEO antes del lanzamiento. Sin reservas ni pagos mientras esas decisiones permanezcan abiertas.
+**Próximos pasos:** completar el portfolio de Juanjo cuando lleguen originales autorizados; revisar con la profesional las duraciones provisionales de 60 minutos y las zonas de depilación; después configurar y probar los cuatro eventos y URLs reales de Cal.com, disponibilidad, ubicación y textos antes de activar reservas. Resolver SEO y publicación productiva por separado.

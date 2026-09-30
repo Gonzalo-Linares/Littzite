@@ -16,9 +16,9 @@ Se agrega `feature-grid` a `PageSection`, con tarjetas y copy validados por Zod.
 
 La estructura usa componentes Astro estáticos, puntos de ruptura responsivos, enlace de salto, navegación con etiquetas, estados de foco y `prefers-reduced-motion`. Tailwind y AstroWind siguen fuera de este PR, sin impedir su evaluación futura. Una sección de catálogo, una galería o un CTA de reserva no se implementan sin contenido y destino real.
 
-## Identidad aprobada de VIORA (PR-04 en revisión)
+## Identidad aprobada de VIORA (PR-04)
 
-La estética deja de tener un tema meramente ilustrativo y adopta el manual de marca aportado por su titular: marfil, ciruela, rosa, rosa suave y tinta; salvia es opcional. El tema semántico común de seis colores sigue estable y la paleta extendida, la tipografía y la composición específicas se definen en `apps/estetica/src/styles/viora.css`. Se reutilizan `SiteHeader`, `SiteFooter` y `LandingHero` mediante slots de marca, sin enseñar a los paquetes comunes el nombre del negocio. Cuatro líneas editoriales proceden del manual; no se declaran servicios reservables activos sin duración, precios o disponibilidad confirmados. Ver [guía de implementación](16-viora-brand.md) y ADR-010.
+La estética adopta el manual de marca aportado por su titular: marfil, ciruela, rosa, rosa suave y tinta; salvia es opcional. El tema semántico común de seis colores sigue estable; paleta extendida, tipografía y composición viven en `apps/estetica/src/styles/viora.css`. `VioraSiteLayout` local de la app compone los componentes públicos compartidos y centraliza logos, navegación, pie y CSS sin trasladar marca a `packages/ui`. Cuatro líneas editoriales tienen fichas; sus 60 minutos son valores provisionales del piloto, no duraciones técnicas publicadas, y no hay acciones ni reservas activas. Ver [guía de implementación](16-viora-brand.md), ADR-010 y ADR-012.
 
 ## Tokens semánticos
 
@@ -54,6 +54,6 @@ No usar strings de nombres de clientes para decidir estilos dentro de componente
 
 **Evolución:** si el cliente necesita editar independientemente y con frecuencia, añadir un adaptador de fuente de contenido y evaluar un CMS alojado. No acoplar los componentes al origen del dato.
 
-## Identidad editorial de Juanjo (PR-05, propuesta)
+## Identidad editorial de Juanjo (PR-05)
 
 Las capturas aportadas por el propietario orientan una estética gráfica de alto contraste: carbón, marfil y acento coral de **interpretación provisional**, no una nueva marca gráfica aprobada. La cabecera usa wordmark tipográfico de vista previa; el logo circular real se incorporará solamente desde el original autorizado. El hero reutiliza `LandingHero` con un artwork CSS propio en slot de app; las tarjetas mantienen `FeatureGrid`. La grilla de fotografías aún tiene un solo consumidor, por lo que permanece en `apps/tattoo`. Estado vacío sin imágenes inventadas y link al perfil oficial mientras llegan originales. Ver [guía editorial](17-juanjo-web-identity.md).
