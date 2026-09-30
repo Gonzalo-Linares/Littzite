@@ -2,19 +2,13 @@ import assert from 'node:assert/strict';
 import { fileURLToPath } from 'node:url';
 import { readFile } from 'node:fs/promises';
 import { siteConfigSchema } from '../packages/content-schema/src/index.ts';
+import { assertMetadata } from './html-metadata.mjs';
 import { verifyInternalLinks } from './verify-site-links.mjs';
 
 const expectedTitles = {
   estetica: 'VIORA · Estética integral | Vista previa',
   tattoo: 'Juanjo Tattoos · San Juan | Vista previa',
 };
-
-function assertMetadata(markup, seo, label) {
-  assert.equal((markup.match(/<title>/g) ?? []).length, 1, `${label}: expected one title`);
-  assert.equal((markup.match(/<meta name="description"/g) ?? []).length, 1, `${label}: expected one description`);
-  assert.ok(markup.includes(`<title>${seo.title}</title>`), `${label}: title does not match validated metadata`);
-  assert.ok(markup.includes(`<meta name="description" content="${seo.description}">`), `${label}: description does not match validated metadata`);
-}
 
 const app = process.argv[2];
 assert.ok(Object.hasOwn(expectedTitles, app), `Unknown app: ${app}`);

@@ -12,6 +12,7 @@ import {
 } from '../packages/content-schema/src/index.ts';
 import { siteContent as estetica } from '../apps/estetica/src/site.config.ts';
 import { siteContent as tattoo } from '../apps/tattoo/src/site.config.ts';
+import { assertMetadata } from '../scripts/html-metadata.mjs';
 
 const theme = {
   surface: '#ffffff', text: '#222222', accent: '#334455',
@@ -66,6 +67,12 @@ test('SEO metadata is strict, trimmed, non-empty and required by Page', () => {
   assert.equal(pageSchema.safeParse({ slug: '', seo: { ...valid, description: '' }, sections: [] }).success, false);
   assert.equal(pageSchema.safeParse({ slug: '', title: 'Legacy', sections: [] }).success, false);
   assert.equal('title' in pageSchema.parse({ slug: '', seo: valid, sections: [] }), false);
+});
+
+test('HTML metadata smoke accepts correctly escaped text and attributes', () => {
+  const seo = { title: 'VIORA <cuidado> & bienestar', description: 'Texto con <, >, & y "comillas"' };
+  const safeHtml = '<title>VIORA &lt;cuidado&gt; &amp; bienestar</title><meta name="description" content="Texto con &lt;, &gt;, &amp; y &quot;comillas&quot;">';
+  assert.doesNotThrow(() => assertMetadata(safeHtml, seo, 'escape fixture'));
 });
 
 test('only es-AR and valid theme tokens are accepted', () => {
