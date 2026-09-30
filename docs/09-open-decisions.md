@@ -8,6 +8,8 @@
 | --- | --- | --- | --- |
 | D-01A | **Acordada** | Estética: una sola profesional con servicios de duración fija. | Modelo de servicios; acciones de reserva directa por tratamiento sin agenda propia. |
 | D-01B | **Acordada** | Tatuador: turnos directos para trabajos pequeños; presupuesto previo para trabajos grandes. | Un servicio/página puede tener varias `ServiceAction` tipadas. |
+| D-01C-VIORA | **Acordada para piloto** (30/09/2026) | Probar Cal.com Individual Gratis para la única profesional de VIORA. Volumen estimado, no contractual: unos 15 turnos/mes. | Crear y comprobar cuatro eventos reales de Cal.com y obtener enlaces aprobados. **No habilita** todavía CTA público, embed ni manejo propio de reservas. |
+| D-02A-TRIAL | **Acordada para piloto** (30/09/2026) | Valor inicial independiente de **60 minutos por cada uno** de los cuatro servicios VIORA. | Son valores configurables de prueba, no duraciones técnicas definitivas ni publicables hasta que la profesional revise cada tratamiento; la duración de depilación puede depender de la zona. |
 | D-03A | **Pendiente explícito** | No está definido si habrá señas para ninguno de los negocios. | No implementar ni publicitar pagos, política de cobro ni señalización de cita pagada. |
 | D-04A | **Acordada** | Tatuajes grandes: presupuestos por WhatsApp directo, inicialmente solo texto, sin formulario ni carga de imágenes propios. | `QuoteTarget` de WhatsApp con número obtenido de `ContactConfig`; sin backend ni base de datos para presupuestos. |
 | D-08A | **Acordada** | Repositorio Littzite **público**. | Revisar secretos, assets y licencias antes de commits; lo público no significa open-source. |
@@ -18,21 +20,21 @@
 | D-11A | **Acordada** | El usuario confirmó permiso para usar las obras y fotografías del tatuador Juanjo como referencias y en el sitio. | Tomar como referencia el perfil `juanjo.tattoos` y los trabajos mostrados en las capturas; emplear imágenes de calidad aprobada cuando se aporten los archivos originales. |
 | D-11C | **Propuesta de PR-05** | Interpretación editorial provisional de Juanjo basada en sus capturas, con paleta carbón/marfil/coral y galería local que permanece vacía hasta recibir originales. | No confundir tipografía decorativa con logo real ni inferir autorización para mostrar retratos de terceros. [Guía Juanjo](17-juanjo-web-identity.md) y ADR-011. |
 
-**No inferir:** que el tatuador trabaja solo, que los trabajos pequeños tienen una duración uniforme, que no existen señas, ni que Calendly/SimplyBook.me se haya elegido. WhatsApp es el canal de consulta, **no** el proveedor de agenda. Los ejemplos de esquemas son ilustrativos hasta validarse contra necesidades reales.
+**No inferir:** que el tatuador trabaja solo, que los trabajos pequeños tienen una duración uniforme, que no existen señas, ni que Cal.com haya sido elegido para tatuajes o aprobado aún para reservas públicas de VIORA. WhatsApp es el canal de consulta, **no** el proveedor de agenda. Los ejemplos de esquemas son ilustrativos hasta validarse contra necesidades reales.
 
 ## Decisiones abiertas
 
 | ID | Qué falta | Responsable previsto | Bloquea |
 | --- | --- | --- | --- |
-| D-01C | Proveedor de calendario por negocio, credenciales, tipos de evento y alcance de sus embeds | Titular de cada negocio + equipo técnico | Integración real; no bloquea contratos de reserva |
-| D-02A | Estética: listado, duración en minutos de cada tratamiento, horario, local y reglas de disponibilidad | Profesional de estética | Configuración y publicación de turnos reales |
+| D-01C | **VIORA: Cal.com elegido para prueba**, pendiente crear cuenta, verificar cuatro URLs individuales, políticas y modo de integración. **Tatuajes: proveedor sin definir.** | Titular de cada negocio + equipo técnico | Activación de reserva real; no bloquea contenidos informativos |
+| D-02A | Estética: **duración provisional de 60 min por tratamiento para prueba**. Falta validación profesional de duración definitiva por servicio/zona, horario, ubicación y reglas de disponibilidad | Profesional de estética | Publicación de turnos reales |
 | D-02B | Tatuador: número de artistas, definición comercial de trabajo pequeño/grande, servicios reservables y reglas de agenda | Tatuador | Clasificación pública, duración de eventos y lanzamiento del CTA |
 | D-03 | Señas, pagos en ARS, cancelación, reprogramación y recordatorios, **si se requieren** | Cada negocio | Configuración final del proveedor y textos comerciales |
 | D-04B | Número comercial de WhatsApp verificado, mensaje inicial y texto informativo de salida a tercero aprobados | Tatuador + equipo técnico | Publicación del CTA real de presupuesto (el canal y alcance texto-only están acordados en D-04A) |
 | D-05 | Nombre comercial del tatuador y dominio, dirección y ubicación verificable de ambos; **el nombre VIORA se confirmó mediante su manual** | Cada negocio | Canonical, schema, Search Console y lanzamiento |
 | D-06 | Fotografías originales de VIORA, permisos de retratos de terceras personas y responsables de edición; para Juanjo, obtener los originales de calidad publicable y acordar su selección | Cada negocio | Publicación del portfolio final y proceso editorial |
 | D-07 | Hosting y titularidad de dominios y cuentas | Cada negocio + equipo técnico | Despliegue de producción; Cloudflare Pages sigue siendo una propuesta |
-| D-10C | Servicios reales de VIORA, duración por tratamiento, disponibilidad, datos de contacto y proveedor de agenda | Profesional de estética | Contenido comercial y reservas reales; no bloquea el prototipo de marca |
+| D-10C | VIORA: revisar duraciones definitivas, alcance real de tratamientos, disponibilidad, ubicación, datos de contacto, cuenta y eventos Cal.com | Profesional de estética | Contenido comercial y reservas reales; no bloquea el piloto privado |
 | D-11B | Selección de archivos originales para el portfolio de Juanjo, resolución apta para web, orden de las piezas y confirmación del tratamiento editorial del logotipo del perfil | Tatuador + equipo técnico | Publicación del portfolio final; no bloquea la exploración visual basada en las capturas |
 
 ## Criterios para cerrar una decisión
@@ -45,4 +47,4 @@
 
 ## Próxima validación comercial
 
-**D-04B:** confirmar número comercial real en formato internacional E.164, texto de apertura aprobado y aviso de salida a WhatsApp. D-01C, D-02A/B y D-03 siguen pendientes; no se debe inferir proveedor de agenda, duración, cantidad de artistas, señas ni política de cancelación.
+**D-04B:** confirmar número comercial real en formato internacional E.164, texto de apertura aprobado y aviso de salida a WhatsApp. D-01C y D-02A están parcialmente resueltos **solo para el piloto VIORA** (Cal.com y 60 minutos configurables por servicio). Faltan los enlaces reales y la aprobación de horarios, ubicación y duraciones definitivas; D-02B y D-03 siguen pendientes. No se debe inferir duración del tatuador, señas ni política de cancelación.
