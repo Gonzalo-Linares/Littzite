@@ -1,16 +1,17 @@
 import { siteContentSchema } from '@littzite/content-schema';
 
-// Editorial sample only: no real portfolio, availability or commercial data.
+// Portfolio photographs, brand artwork and booking destinations are deliberately
+// absent until Juanjo supplies originals and approves the commercial details.
 export const siteContent = siteContentSchema.parse({
   site: {
     defaultLocale: 'es-AR',
     theme: {
-      surface: '#1d2025',
-      text: '#f4f0e8',
-      accent: '#dfbb87',
-      accentText: '#202126',
-      border: '#777879',
-      focus: '#f2d7a4',
+      surface: '#17191B',
+      text: '#F8F4ED',
+      accent: '#EF9476',
+      accentText: '#17191B',
+      border: '#67696B',
+      focus: '#FFD4B3',
     },
   },
   services: [],
@@ -18,26 +19,38 @@ export const siteContent = siteContentSchema.parse({
   quoteTargets: [],
   pages: [{
     slug: '',
-    title: 'Prototipo de tatuajes | Littzite',
+    title: 'Juanjo Tattoos · San Juan | Vista previa',
     sections: [
       {
         id: 'intro',
         type: 'intro',
-        eyebrow: 'Tatuajes / exploración editorial',
-        heading: 'Ideas que dejan huella',
-        body: 'Un prototipo para dar protagonismo al arte, el portfolio y los distintos recorridos de consulta. Las imágenes, los servicios y el contacto definitivos aún están pendientes.',
-        visualCaption: 'Una idea. Una composición.',
+        eyebrow: 'JUANJO TATTOOS / SAN JUAN',
+        heading: 'De la idea a la piel.',
+        body: 'Cada pieza empieza con una idea. Conocé el universo visual de Juanjo y explorá sus trabajos actuales mientras preparamos su portfolio web.',
+        visualCaption: 'TRAZO / CONTRASTE / EXPRESIÓN',
       },
       {
         id: 'alcance',
         type: 'feature-grid',
-        eyebrow: 'El concepto',
-        heading: 'Arte, consulta y recorrido',
-        intro: 'Una estructura pensada para mostrar trabajos auténticos y orientar al visitante sin mezclar turnos y presupuestos.',
+        eyebrow: 'CÓMO FUNCIONARÁ',
+        heading: 'Cada proyecto, su camino.',
+        intro: 'Dos recorridos distintos: reserva directa para trabajos pequeños habilitados y consulta previa para proyectos grandes. Las condiciones y los enlaces se publicarán cuando estén confirmados.',
         items: [
-          { id: 'portfolio', title: 'Portfolio', body: 'Galerías editoriales con fotografías originales y permisos verificados.' },
-          { id: 'turnos', title: 'Turnos pequeños', body: 'Reservas directas para los trabajos que el artista habilite, sin agenda propia.' },
-          { id: 'presupuestos', title: 'Piezas grandes', body: 'Consultas iniciales por WhatsApp, solo texto en el flujo del sitio.' },
+          {
+            id: 'portfolio',
+            title: 'Trabajos originales',
+            body: 'Una selección de piezas fotografiadas por el artista, que incorporaremos al portfolio cuando estén disponibles los archivos originales.',
+          },
+          {
+            id: 'piezas-pequenas',
+            title: 'Piezas pequeñas',
+            body: 'Podrán reservarse directamente cuando Juanjo confirme qué trabajos entran en esta categoría y habilite su agenda.',
+          },
+          {
+            id: 'proyectos-grandes',
+            title: 'Proyectos grandes',
+            body: 'El primer contacto será por WhatsApp, solo texto desde este sitio. El número y el mensaje definitivo siguen pendientes de aprobación.',
+          },
         ],
       },
     ],

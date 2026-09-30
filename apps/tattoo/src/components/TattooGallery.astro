@@ -1,0 +1,57 @@
+---
+import { Image } from 'astro:assets';
+import Link from '@littzite/ui/Link.astro';
+import type { TattooPortfolioItem } from '../portfolio';
+
+interface Props {
+  items: readonly TattooPortfolioItem[];
+}
+
+const { items } = Astro.props;
+---
+
+<section class="juanjo-gallery" id="portfolio" aria-labelledby="portfolio-heading">
+  <div class="container">
+    <div class="juanjo-gallery__heading">
+      <div>
+        <p class="juanjo-kicker"><span aria-hidden="true">/</span> 01 — PORTFOLIO</p>
+        <h2 id="portfolio-heading">El trabajo habla.</h2>
+      </div>
+      <p>En esta sección vas a encontrar las piezas originales del artista. Hasta completar la selección, podés ver sus publicaciones actuales en Instagram.</p>
+    </div>
+
+    {items.length > 0 ? (
+      <div class="juanjo-gallery__grid">
+        {items.map((item, index) => (
+          <figure class:list={['juanjo-gallery__item', { 'juanjo-gallery__item--lead': index === 0 }]}>
+            <Image
+              src={item.image}
+              alt={item.alt}
+              widths={[480, 760, 1120]}
+              sizes="(max-width: 680px) 100vw, (max-width: 1060px) 50vw, 33vw"
+              format="webp"
+              loading={index === 0 ? 'eager' : 'lazy'}
+            />
+            <figcaption><span>{String(index + 1).padStart(2, '0')}</span>{item.title}</figcaption>
+          </figure>
+        ))}
+      </div>
+    ) : (
+      <div class="juanjo-gallery__empty">
+        <div class="juanjo-gallery__graphic" aria-hidden="true">
+          <span class="juanjo-gallery__graphic-id">JJ // 01</span>
+          <span class="juanjo-gallery__graphic-letter">J</span>
+          <span class="juanjo-gallery__graphic-ring"></span>
+          <span class="juanjo-gallery__graphic-caption">ESTUDIO EDITORIAL / SAN JUAN</span>
+        </div>
+        <div class="juanjo-gallery__placeholder-copy">
+          <p class="juanjo-kicker">LA COLECCIÓN ESTÁ EN PREPARACIÓN</p>
+          <h3>Obras reales.<br />Sin imágenes de relleno.</h3>
+          <p>Estamos seleccionando las fotografías originales de Juanjo para mostrarlas con el detalle que merecen. El trabajo publicado hasta hoy se puede consultar en su cuenta oficial.</p>
+          <Link href="https://www.instagram.com/juanjo.tattoos/">Ver trabajos en Instagram</Link>
+          <p class="juanjo-gallery__third-party">Este enlace abre Instagram, un servicio externo.</p>
+        </div>
+      </div>
+    )}
+  </div>
+</section>
