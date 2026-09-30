@@ -16,7 +16,7 @@ const features = home?.sections.find((section) => section.type === 'feature-grid
 if (!home || !intro || !features) throw new Error('Incomplete Juanjo Tattoos preview');
 ---
 
-<BaseLayout locale={site.defaultLocale} theme={site.theme} seo={home.seo} noindex={true} bodyClass="juanjo-site">
+<BaseLayout locale={site.defaultLocale} theme={site.theme} seo={home.seo} noindex={true} iconHref={site.iconHref} bodyClass="juanjo-site">
   <SiteHeader slot="header" brand="Juanjo Tattoos" descriptor="San Juan"
     links={[
       { label: 'Inicio', href: '#inicio' },
