@@ -1,0 +1,35 @@
+---
+import BaseLayout from '@littzite/ui/BaseLayout.astro';
+import SiteHeader from '@littzite/ui/SiteHeader.astro';
+import SiteFooter from '@littzite/ui/SiteFooter.astro';
+import { siteContent } from '../site.config';
+import '../styles/viora.css';
+
+interface Props {
+  title: string;
+}
+
+const { title } = Astro.props;
+const { site } = siteContent;
+---
+
+<BaseLayout locale={site.defaultLocale} theme={site.theme} title={title} noindex={true} bodyClass="viora-site">
+  <SiteHeader slot="header" brand={'VIORA, est\u00e9tica integral'} descriptor="Tu momento, tu bienestar"
+    links={[
+      { label: 'Inicio', href: '/' },
+      { label: 'Experiencias', href: '/#alcance' },
+      { label: 'Nuestra esencia', href: '/#esencia' },
+    ]}
+    badge={{ label: 'Vista previa', href: '/#alcance' }}>
+    <img slot="brand" class="viora-header-logo" src="/brand/viora-horizontal.png" width="1600" height="480"
+      alt="" decoding="async" />
+  </SiteHeader>
+
+  <slot />
+
+  <SiteFooter slot="footer" brand="VIORA" note={'Tu momento, tu bienestar. Datos comerciales y agenda pendientes de confirmaci\u00f3n.'}
+    meta={["Vista previa \u00b7 No admite reservas todav\u00eda", "VIORA \u00b7 Est\u00e9tica integral"]}>
+    <img slot="brand" class="viora-footer-logo" src="/brand/viora-palabra.png" width="1310" height="275"
+      alt="VIORA" loading="lazy" />
+  </SiteFooter>
+</BaseLayout>

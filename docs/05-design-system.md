@@ -6,7 +6,7 @@
 
 ## Implementado en PR-02
 
-`ThemeConfig` valida seis colores hexadecimales semánticos (`surface`, `text`, `accent`, `accentText`, `border`, `focus`). Cada app demo aporta valores provisionales propios. `BaseLayout` los expone como variables CSS, usa el locale de `SiteConfig` e incluye enlace para saltar al contenido. `Container` y `Link` son compartidos y se usan en ambas homes. El enlace conserva foco visible y un destino interno real. La identidad final, tipografías de marca y secciones comerciales siguen pendientes. No se agregó Tailwind: estas reglas pequeñas no justifican la dependencia todavía; ADR-002 sigue describiendo la opción elegida para v1 cuando haya estilos y contenido reales.
+`ThemeConfig` valida seis colores hexadecimales semánticos y mínimos de contraste (cuerpo y texto de acento 4,5:1; foco sobre superficie 3:1) (`surface`, `text`, `accent`, `accentText`, `border`, `focus`). VIORA utiliza su paleta oficial y Juanjo un tema editorial provisional que no reemplaza su logotipo auténtico. `BaseLayout` los expone como variables CSS, usa el locale de `SiteConfig` e incluye enlace para saltar al contenido. `Container` y `Link` son compartidos y se usan en ambas homes. El enlace conserva foco visible y un destino interno real. La identidad VIORA ya está integrada; la identidad gráfica original y las fotografías de Juanjo, junto con los datos comerciales definitivos de ambas apps, siguen pendientes. No se agregó Tailwind: estas reglas pequeñas no justifican la dependencia todavía; ADR-002 sigue describiendo la opción elegida para v1 cuando haya estilos y contenido reales.
 
 ## Implementado en PR-03 (prototipos editoriales)
 
@@ -16,9 +16,9 @@ Se agrega `feature-grid` a `PageSection`, con tarjetas y copy validados por Zod.
 
 La estructura usa componentes Astro estáticos, puntos de ruptura responsivos, enlace de salto, navegación con etiquetas, estados de foco y `prefers-reduced-motion`. Tailwind y AstroWind siguen fuera de este PR, sin impedir su evaluación futura. Una sección de catálogo, una galería o un CTA de reserva no se implementan sin contenido y destino real.
 
-## Identidad aprobada de VIORA (PR-04 en revisión)
+## Identidad aprobada de VIORA (PR-04)
 
-La estética deja de tener un tema meramente ilustrativo y adopta el manual de marca aportado por su titular: marfil, ciruela, rosa, rosa suave y tinta; salvia es opcional. El tema semántico común de seis colores sigue estable y la paleta extendida, la tipografía y la composición específicas se definen en `apps/estetica/src/styles/viora.css`. Se reutilizan `SiteHeader`, `SiteFooter` y `LandingHero` mediante slots de marca, sin enseñar a los paquetes comunes el nombre del negocio. Cuatro líneas editoriales proceden del manual; no se declaran servicios reservables activos sin duración, precios o disponibilidad confirmados. Ver [guía de implementación](16-viora-brand.md) y ADR-010.
+La estética adopta el manual de marca aportado por su titular: marfil, ciruela, rosa, rosa suave y tinta; salvia es opcional. El tema semántico común de seis colores sigue estable; paleta extendida, tipografía y composición viven en `apps/estetica/src/styles/viora.css`. `VioraSiteLayout` local de la app compone los componentes públicos compartidos y centraliza logos, navegación, pie y CSS sin trasladar marca a `packages/ui`. Cuatro líneas editoriales tienen fichas; sus 60 minutos son valores provisionales del piloto, no duraciones técnicas publicadas, y no hay acciones ni reservas activas. Ver [guía de implementación](16-viora-brand.md), ADR-010 y ADR-012.
 
 ## Tokens semánticos
 
@@ -28,14 +28,14 @@ La estética deja de tener un tema meramente ilustrativo y adopta el manual de m
 | Semántico | `--color-surface`, `--color-text`, `--color-accent`, `--color-border`, `--focus-ring` | contrato `ThemeConfig` |
 | Marca | valores concretos por app: estética / tatuador | `apps/*/site.config.ts` |
 | Variante visual | `editorial`, `split`, `minimal`, `gallery-first` | `packages/sections` |
-| Contenido | título, imagen, CTA, testimonios, orden | Content Collections de app |
+| Contenido implementado | servicios/páginas en `apps/*/src/site.config.ts`, portfolio tipado de Juanjo | cada app; no hay Astro Content Collections todavía |
 
 No usar strings de nombres de clientes para decidir estilos dentro de componentes comunes. Preferir props explícitas (`variant`) y CSS custom properties. No permitir variantes ilimitadas si todavía no existe una necesidad real.
 
-## Catálogo compartido inicial
+## Componentes existentes y catálogo potencial (no todo está implementado)
 
-- `Button`, `Link`, `Container`, `SectionHeading`, `ResponsiveImage`, `Badge`, `Accordion`, `Dialog`, `FormField` si realmente hay formularios propios.
-- `Header`, `Footer`, `Hero`, `ServiceGrid`, `ServiceCard`, `ImageGallery`, `FAQSection`, `ContactSection`, `ServiceActions`, `BookingCTA`, `QuoteCTA`, `Testimonials`. Un `ServiceActions` recibe acciones tipadas y no conoce la identidad del negocio.
+- **Implementados:** BaseLayout, SiteHeader, SiteFooter, Container y Link en ui; LandingHero y FeatureGrid en sections. ServiceCatalog y TattooGallery son específicos de sus apps. **Potenciales:** Button, SectionHeading, ResponsiveImage, Badge, Accordion, Dialog y FormField, solo si hay consumidores reales.
+- **Futuros, todavía no compartidos:** ServiceActions, BookingCTA, QuoteCTA, FAQSection, ContactSection y Testimonials; deberán usar contratos tipados sin conocer marcas.
 - Tipos y contratos de sección documentados; `Header` debe consumir el mismo menú tipado y contacto que el `Footer`, sin copiar links.
 
 ## Reglas de consistencia
@@ -50,10 +50,10 @@ No usar strings de nombres de clientes para decidir estilos dentro de componente
 
 ## Opciones de contenido
 
-**v1:** `SiteConfig` TS + Content Collections (`services`, `pages`, `portfolio`, `testimonials`) y Zod. Un responsable técnico actualiza contenido mediante PR. No introducir un CMS por adelantado.
+**Implementado:** SiteContent TS/Zod por app y un portfolio tipado local para Juanjo; edición técnica mediante PR. Content Collections o CMS son posibilidades futuras si aparecen necesidades reales de edición, no tecnología incorporada en esta revisión.
 
 **Evolución:** si el cliente necesita editar independientemente y con frecuencia, añadir un adaptador de fuente de contenido y evaluar un CMS alojado. No acoplar los componentes al origen del dato.
 
-## Identidad editorial de Juanjo (PR-05, propuesta)
+## Identidad editorial de Juanjo (PR-05)
 
 Las capturas aportadas por el propietario orientan una estética gráfica de alto contraste: carbón, marfil y acento coral de **interpretación provisional**, no una nueva marca gráfica aprobada. La cabecera usa wordmark tipográfico de vista previa; el logo circular real se incorporará solamente desde el original autorizado. El hero reutiliza `LandingHero` con un artwork CSS propio en slot de app; las tarjetas mantienen `FeatureGrid`. La grilla de fotografías aún tiene un solo consumidor, por lo que permanece en `apps/tattoo`. Estado vacío sin imágenes inventadas y link al perfil oficial mientras llegan originales. Ver [guía editorial](17-juanjo-web-identity.md).

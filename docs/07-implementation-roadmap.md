@@ -1,4 +1,6 @@
-# Plan de implementación y Definition of Done — v0.5
+# Plan de implementación y Definition of Done — estado vigente
+
+**Corte 30/09/2026:** dos apps Astro estáticas no indexadas; tres paquetes compartidos; identidad VIORA, catálogo de cuatro servicios, layout local y cuatro defaults Cal.com de prueba; identidad editorial Juanjo con galería fotográfica aún vacía. Sin reservas activas, SEO de producción, deploy final, SDK externo ni CMS. GitHub Actions está desactivado por decisión del titular.
 
 ## Fase 0 — Documentación y decisiones
 
@@ -14,14 +16,14 @@
 
 ## Fase 1 — Scaffold, contratos y catálogo visual
 
-- Monorepo pnpm, Astro/TypeScript estricto, Tailwind, lockfile y dos apps mínimas.
+- Monorepo pnpm, Astro/TypeScript estricto, CSS propio sin Tailwind, lockfile y dos apps mínimas.
 - `content-schema`: Zod `SiteConfig`, `Service`, `ServiceAction[]`, `BookingTarget`, `QuoteTarget`, `PageSection` y `SeoMetadata`; integridad de referencias cruzadas.
 - `ui`: tokens, buttons, layout, accesibilidad y responsive.
 - `seo`: canonical, metadatos, JSON-LD, sitemap y checks de integridad; consumo de `SiteConfig.defaultLocale` para idioma de página y metadatos, sin i18n de múltiples idiomas.
 - `booking`: resolver acciones y validar enlaces/fallback. Implementar embed específico **solo después** de elegir el proveedor real de cada negocio.
 - CI: formato, lint, typecheck y compilación de ambas apps.
 
-**Salida:** dos sitios de prueba diferentes compartiendo componentes y pasando CI.
+**Estado:** dos prototipos diferentes con componentes compartidos y validación local reportada por PR; CI actualmente desactivada. Los módulos SEO y booking no forman parte de esta salida.
 
 ## Fase 2 — Estética (primer caso real)
 
@@ -54,5 +56,9 @@
 3. Validación, types y tests relevantes; ambas apps pasan cuando cambia un paquete compartido.
 4. Componentes con estados vacíos, errores, responsive y teclado verificados.
 5. Cambios en rutas, SEO o contratos acompañados por pruebas y docs/ADR.
-6. Preview revisada antes de merge; despliegue y rollback independientes comprobables.
+6. Preview revisada antes de merge; despliegue y rollback independientes quedan pendientes hasta configurar hosting real.
 7. Toda adición de código, tipografías, imágenes o plantillas de terceros tiene procedencia, licencia, autoría y permisos auditados; los avisos de copyright exigibles se conservan. Contribuciones externas sujetas a autorización antes del merge.
+
+## Gates locales obligatorios
+
+Ejecutar los seis controles indicados en README sobre el último HEAD y adjuntar resultados. No activar GitHub Actions ni afirmar que está verde. Antes de publicación productiva se exigirán gates adicionales de SEO, privacidad, proveedor real, accesibilidad y rendimiento medido.

@@ -16,7 +16,7 @@ Littzite/
 │   ├── seo/                    # Head, canonical, JSON-LD, sitemap/utilidades
 │   └── booking/                # Contrato y adaptadores de proveedores
 ├── docs/                       # Esta documentación + ADRs
-├── .github/workflows/          # CI: hoy verifica y compila ambas apps en cada PR
+├── .github/workflows/          # Workflows presentes, CI desactivada por el propietario
 ├── pnpm-workspace.yaml
 └── pnpm-lock.yaml
 ```
@@ -38,7 +38,7 @@ flowchart LR
   UI --> C
 ```
 
-`content-schema` contiene los contratos Zod de sitio, páginas, servicios, secciones y destinos, más validación de referencias dentro de `SiteContent`. `ui` expone layout, cabecera, pie, contenedor, enlaces y tokens CSS; `sections` expone `LandingHero` y `FeatureGrid`, usados por ambas apps y dependientes únicamente de APIs públicas de `ui` y `content-schema`. El árbol conceptual aún incluye `seo` y `booking`, **no creados** hasta necesitar contratos implementados. No hay ciclos entre paquetes ni imports entre aplicaciones. `scripts/check-boundaries.mjs` comprueba manifests e imports literales en CI.
+`content-schema` contiene los contratos Zod de sitio, páginas, servicios, secciones y destinos, más validación de referencias dentro de `SiteContent`. `ui` expone layout, cabecera, pie, contenedor, enlaces y tokens CSS; `sections` expone `LandingHero` y `FeatureGrid`, usados por ambas apps y dependientes únicamente de APIs públicas de `ui` y `content-schema`. El árbol conceptual aún incluye `seo` y `booking`, **no creados** hasta necesitar contratos implementados. No hay ciclos entre paquetes ni imports entre aplicaciones. `scripts/check-boundaries.mjs` comprueba manifests, imports con AST de TypeScript (incluido frontmatter Astro), CSS @import y ciclos **localmente**; GitHub Actions está desactivado por decisión del propietario.
 
 ## Diagrama de contexto (C4 nivel 1, simplificado)
 
@@ -69,10 +69,10 @@ flowchart TB
     Core[Paquetes compartidos: UI, secciones, SEO, esquema, reservas]
     ES[Astro: estética + contenido/configuración]
     TA[Astro: tatuador + contenido/configuración]
-    CI[CI: tipos, validación, tests, auditoría y build]
+    CI[Verificacion local de ambas apps; workflow de GitHub desactivado]
     DEP1[Hosting estático A + dominio A]
     DEP2[Hosting estático B + dominio B]
-    CAL[Proveedor de citas A pendiente]
+    CAL[Cal.com: piloto VIORA; cuenta y URLs pendientes]
     SIM[Proveedor de citas B pendiente]
     SEARCH[Search Console / analítica por sitio]
 
@@ -91,7 +91,7 @@ flowchart TB
     DEP2 -. Métricas, con consentimiento cuando proceda .-> SEARCH
 ```
 
-Los proveedores pueden coincidir o ser distintos; **no se seleccionó ninguno**. El flujo de presupuesto del tatuador sale a **WhatsApp** mediante enlace construido desde `ContactConfig` y `QuoteTarget`: solo texto en v1. Número comercial y mensaje inicial, pendientes de validar antes de publicar.
+Cal.com fue seleccionado **solo para un piloto futuro de VIORA**, hoy en standby: la profesional todavía no configuró cuenta, eventos ni URLs. El proveedor de tatuajes sigue pendiente; su presupuesto por WhatsApp será texto directo, sin número ni mensaje aprobado todavía. `ContactConfig`, `BookingTarget` y `QuoteTarget` son contratos, no integraciones activas.
 
 ## Límites de responsabilidad
 
@@ -118,9 +118,9 @@ flowchart LR
 
 ## Independencia operativa
 
-- Cada aplicación define dominio/canonical, sitemap, iconos, imágenes sociales, cuenta de reservas y analítica independientes.
+- Cada aplicación **deberá definir** dominio/canonical, sitemap, iconos, imágenes sociales, cuenta de reservas y analítica independientes antes del lanzamiento; todavía no hay despliegue productivo ni esas integraciones.
 - D-09: ambas apps publican contenido en `es-AR`, sin prefijo idiomático; el contrato `SiteConfig.defaultLocale` es la fuente de verdad para el idioma del documento, metadatos y formatos. Los paquetes compartidos no implementan un router de idiomas ni catálogos de traducción en v1.
-- Comparten librerías, no sesiones ni secretos. **CI actual de PR-01:** siempre ejecuta `check`, `build` y `test` para ambas apps en cada PR; por lo tanto los cambios comunes quedan verificados en ambas. **Objetivo posterior:** despliegues independientes y selectivos por rutas afectadas, todavía no implementados.
+- Comparten librerias, no sesiones ni secretos. Los workflows de GitHub Actions permanecen desactivados por decision del propietario; los seis gates deben ejecutarse localmente antes de integrar cambios. Los despliegues independientes y selectivos por rutas siguen sin implementarse.
 - No se almacena un registro local de reservas en v1; la fuente de verdad es el proveedor elegido.
 - Cada integración externa incluye fallback a enlace externo y una política ante indisponibilidad.
 
@@ -153,3 +153,8 @@ La composición de Juanjo sigue utilizando `ui` y `sections` públicos. El portf
 ## PR-06: catalogo informativo local de VIORA
 
 El catalogo se implementa dentro de `apps/estetica`: `site.config.ts` es la fuente de fichas y orden; `ServiceCatalog.astro` renderiza las referencias `service-list`; la ruta estatica `[slug].astro` deriva sus paths de `siteContent.services`. Esto no modifica el grafo de paquetes ni introduce un consumidor compartido nuevo. Cada detalle conserva `es-AR`, layout compartido y `noindex`. Las fichas sin acciones no requieren ni invocan proveedor de reservas. D-02A y D-01C siguen bloqueando la activacion de turnos reales.
+
+
+## PR-07: layout de aplicacion para VIORA
+
+`apps/estetica/src/layouts/VioraSiteLayout.astro` compone `BaseLayout`, `SiteHeader` y `SiteFooter` públicos y concentra la navegación absoluta desde cualquier ruta, logos oficiales, hoja `viora.css`, locale `es-AR` y `noindex`. La portada y los detalles conservan sus cuerpos distintos y consumen el mismo marco. El catálogo dispone de estilos locales explícitos y ya no depende de clases privadas de sections ni de importar LandingHero. No cambia el grafo de paquetes ni el layout de Juanjo.

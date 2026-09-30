@@ -28,7 +28,7 @@ Los tres PNG originales ya se incorporaron bajo `apps/estetica/public/brand/`, s
 
 - Cabecera horizontal con el logo oficial; menú solo a anclas existentes; los rótulos de estado siguen siendo propios de la app.
 - Hero con el logo principal oficial sobre rosa suave, titulando «Regalate una pausa.» y la frase del manual.
-- Cuatro líneas del manual (p. 4): limpieza facial, depilación definitiva, masajes y reiki, descriptas como recorrido editorial. **No son servicios publicables ni reservables todavía**; validar técnica concreta, habilitaciones que correspondan, duración fija por tratamiento y agenda.
+- Cuatro líneas del manual (p. 4): limpieza facial, depilación definitiva, masajes y reiki. Se presentan como fichas informativas en el prototipo `noindex`; el equipo, las técnicas, el alcance y las duraciones técnicas siguen pendientes de validación. Los valores independientes de 60 minutos son solo defaults provisionales para el piloto Cal.com, no se muestran como duraciones de tratamiento.
 - Sección institucional `esencia` con propósito sin afirmaciones médicas. Pie con el nombre oficial y aclaración de vista previa.
 
 ## Seguridad, accesibilidad y límites de publicación
@@ -44,4 +44,9 @@ Con los tres logos ya incorporados: ejecutar desde la raíz `corepack pnpm insta
 
 ## Catalogo informativo (PR-06)
 
-Las cuatro lineas ahora tienen fichas editoriales en el catalogo local de VIORA y paginas estaticas de detalle enlazadas desde la portada. Titulos, slugs y descripciones salen unicamente de `Service`; la portada referencia IDs mediante `service-list`. Las fichas contienen duraciones **provisionales e independientes de 60 minutos** para configurar el piloto de Cal.com; no se muestran públicamente, no equivalen a duraciones definitivas y deben revisarse con la profesional. No contienen precio, acciones ni destinos de contacto/reserva. Reiki se presenta como experiencia de bienestar, sin atribuciones medicas. Las paginas mantienen `es-AR` y `noindex`. Cal.com se eligió para prueba; la publicación de turnos exige revisar cada duración, crear la cuenta y los cuatro eventos, aprobar sus URLs y la disponibilidad, y comprobar las condiciones del proveedor. La activación se implementará en otro PR.
+Las cuatro líneas tienen fichas editoriales en el catálogo local de VIORA y páginas estáticas de detalle enlazadas desde la portada. Títulos, slugs y descripciones salen de `Service`; la portada referencia IDs mediante `service-list`. Las fichas contienen duraciones provisionales independientes de 60 minutos para Cal.com; no se muestran públicamente ni equivalen a duraciones definitivas. No incluyen precio, acciones ni destinos de contacto/reserva. Reiki se presenta como experiencia de bienestar, sin atribuciones médicas. Las páginas mantienen `es-AR` y `noindex`. Para turnos reales faltan la revisión profesional de cada duración, cuenta/eventos y URLs aprobadas, disponibilidad y revisión de privacidad.
+
+
+## Layout de aplicacion VIORA (PR-07)
+
+`apps/estetica/src/layouts/VioraSiteLayout.astro` centraliza el marco visual con los componentes públicos de `packages/ui`: cabecera, navegación, logos oficiales y pie. También aplica `viora.css`, el locale configurado `es-AR` y `noindex`. La portada conserva hero, catálogo y esencia; las páginas de servicio conservan el detalle y el enlace de retorno. Las cuatro fichas mantienen `actions: []` y no tienen targets de reserva.

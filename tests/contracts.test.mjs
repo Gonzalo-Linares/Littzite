@@ -2,6 +2,7 @@ import assert from 'node:assert/strict';
 import test from 'node:test';
 import {
   bookingTargetSchema,
+  contrastRatio,
   pageSectionSchema,
   serviceActionSchema,
   siteContentSchema,
@@ -14,16 +15,6 @@ const theme = {
   surface: '#ffffff', text: '#222222', accent: '#334455',
   accentText: '#ffffff', border: '#999999', focus: '#775500',
 };
-
-function contrast(first, second) {
-  function luminance(hex) {
-    const channels = [1, 3, 5].map((index) => parseInt(hex.slice(index, index + 2), 16) / 255);
-    const linear = channels.map((value) => value <= 0.04045 ? value / 12.92 : ((value + 0.055) / 1.055) ** 2.4);
-    return linear[0] * 0.2126 + linear[1] * 0.7152 + linear[2] * 0.0722;
-  }
-  const values = [luminance(first), luminance(second)].sort((a, b) => b - a);
-  return (values[0] + 0.05) / (values[1] + 0.05);
-}
 
 function fixture() {
   return {
@@ -52,9 +43,9 @@ test('both demo apps validate independently and use different themes', () => {
   assert.notDeepEqual(estetica.site.theme, tattoo.site.theme);
   for (const content of [estetica, tattoo]) {
     const { surface, text, accent, accentText, focus } = content.site.theme;
-    assert.ok(contrast(surface, text) >= 4.5);
-    assert.ok(contrast(accent, accentText) >= 4.5);
-    assert.ok(contrast(surface, focus) >= 3);
+    assert.ok(contrastRatio(surface, text) >= 4.5);
+    assert.ok(contrastRatio(accent, accentText) >= 4.5);
+    assert.ok(contrastRatio(surface, focus) >= 3);
   }
   assert.deepEqual(estetica.bookingTargets, []);
   assert.deepEqual(tattoo.quoteTargets, []);
@@ -64,6 +55,14 @@ test('only es-AR and valid theme tokens are accepted', () => {
   assert.equal(siteConfigSchema.safeParse({ defaultLocale: 'es', theme }).success, false);
   assert.equal(siteConfigSchema.safeParse({ defaultLocale: 'en-US', theme }).success, false);
   assert.equal(siteConfigSchema.safeParse({ defaultLocale: 'es-AR', theme: { ...theme, accent: 'red' } }).success, false);
+});
+
+test("all future brand themes enforce semantic contrast, not just today's two apps", () => {
+  const base = { defaultLocale: 'es-AR', theme };
+  assert.equal(siteConfigSchema.safeParse(base).success, true);
+  assert.equal(siteConfigSchema.safeParse({ ...base, theme: { ...theme, text: '#fefefe' } }).success, false);
+  assert.equal(siteConfigSchema.safeParse({ ...base, theme: { ...theme, accentText: '#334456' } }).success, false);
+  assert.equal(siteConfigSchema.safeParse({ ...base, theme: { ...theme, focus: '#ffffff' } }).success, false);
 });
 
 test('one service can have direct booking and WhatsApp quote actions', () => {

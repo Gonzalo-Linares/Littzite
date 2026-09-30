@@ -49,8 +49,6 @@ a:focus-visible, button:focus-visible { outline: 3px solid var(--color-focus); o
 }
 .action-link::after { content: "↗"; font-size: 1.15rem; line-height: 1; }
 .action-link:hover { transform: translateY(-2px); filter: brightness(1.06); }
-.action-link--quiet { background: transparent; color: var(--color-text); border-color: var(--color-border); }
-.action-link--quiet::after { content: "↓"; }
 
 .site-footer { border-top: 1px solid var(--color-border); }
 .site-footer__inner { padding-block: 3rem; display: flex; align-items: flex-start; justify-content: space-between; gap: 2rem; }

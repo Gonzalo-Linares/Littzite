@@ -9,6 +9,17 @@ const httpsUrlSchema = z.url().refine((value) => {
   return url.protocol === 'https:' && !url.username && !url.password;
 });
 
+// Relative luminance and minimum WCAG contrast for semantic token pairs.
+export function contrastRatio(first: string, second: string): number {
+  function luminance(hex: string): number {
+    const channels = [1, 3, 5].map((index) => parseInt(hex.slice(index, index + 2), 16) / 255);
+    const linear = channels.map((value) => value <= .04045 ? value / 12.92 : ((value + .055) / 1.055) ** 2.4);
+    return linear[0] * .2126 + linear[1] * .7152 + linear[2] * .0722;
+  }
+  const values = [luminance(first), luminance(second)].sort((a, b) => b - a);
+  return (values[0] + .05) / (values[1] + .05);
+}
+
 export const themeConfigSchema = z.object({
   surface: colorSchema,
   text: colorSchema,
@@ -16,7 +27,17 @@ export const themeConfigSchema = z.object({
   accentText: colorSchema,
   border: colorSchema,
   focus: colorSchema,
-}).strict();
+}).strict().superRefine((theme, ctx) => {
+  for (const [label, foreground, background, minimum] of [
+    ['body text', theme.text, theme.surface, 4.5],
+    ['accent text', theme.accentText, theme.accent, 4.5],
+    ['focus ring', theme.focus, theme.surface, 3],
+  ] as const) {
+    if (contrastRatio(foreground, background) < minimum) {
+      ctx.addIssue({ code: 'custom', message: `${label} contrast must be at least ${minimum}:1` });
+    }
+  }
+});
 export type ThemeConfig = z.infer<typeof themeConfigSchema>;
 
 export const contactConfigSchema = z.object({
