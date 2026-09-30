@@ -44,7 +44,11 @@ assert.ok(html.includes('id="alcance"'), 'Feature grid anchor missing');
 assert.ok(!html.includes('feature-card__symbol'), 'Informational cards must not suggest a nonexistent link');
 assert.ok(html.includes('class="skip-link" href="#contenido"'));
 assert.ok(html.includes('class="container"'));
-assert.ok(html.includes('class="action-link" href="#alcance"'));
+const expectedHeroHref = app === 'tattoo' ? '#portfolio' : '#alcance';
+assert.ok(
+  html.includes(`class="action-link" href="${expectedHeroHref}"`),
+  `${app}: hero CTA must point to ${expectedHeroHref}`,
+);
 for (const [token, value] of Object.entries(siteContent.site.theme)) {
   const cssName = token === 'accentText' ? 'accent-text' : token;
   assert.ok(html.includes(`--color-${cssName}:${value}`), `Missing ${token} for ${app}`);
