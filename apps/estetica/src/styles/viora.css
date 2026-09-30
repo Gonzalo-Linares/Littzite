@@ -28,7 +28,7 @@
   gap: clamp(2rem,4.5vw,5rem);
 }
 .viora-site .landing-hero__heading,
-.viora-site .feature-section__intro h2,
+.viora-site .viora-catalog__intro h2,
 .viora-essence h2 {
   font-family: "Nimbus Roman", "Times New Roman", Georgia, serif;
   font-weight: 400;
@@ -56,40 +56,54 @@
 .viora-hero-logo { display: block; width: min(66%, 24rem); max-height: 69%; object-fit: contain; }
 .viora-site .landing-hero__disclaimer { display: none; }
 
-.viora-site .feature-section {
+/* Self-contained local catalog; no implicit dependency on @littzite/sections CSS. */
+.viora-site .viora-catalog {
   background: color-mix(in srgb, var(--viora-ivory) 83%, white);
-  border-top: 1px solid color-mix(in srgb,var(--viora-plum) 20%, transparent);
-  padding-block: clamp(5rem,8vw,8rem);
+  border-top: 1px solid color-mix(in srgb, var(--viora-plum) 20%, transparent);
+  scroll-margin-top: 2rem;
+  padding-block: clamp(5rem, 8vw, 8rem);
 }
-.viora-site .feature-section__eyebrow,
-.viora-essence__eyebrow { color: var(--viora-plum); }
-.viora-site .feature-section__intro h2 { font-size: clamp(2.9rem,4.8vw,5.2rem); font-weight: 400; max-width: 15ch; }
-.viora-site .feature-grid {
-  grid-template-columns: repeat(2,minmax(0,1fr));
-  border-color: #DDC9CC;
-  background: #DDC9CC;
-  gap: 1px;
+.viora-site .viora-catalog__intro {
+  display: flex; justify-content: space-between; align-items: end; gap: 2rem;
+  margin-bottom: clamp(2rem, 4vw, 4rem);
 }
-.viora-site .feature-card {
-  position: relative;
-  min-height: 16.5rem;
-  padding: clamp(1.65rem,3vw,3rem);
-  background: var(--viora-ivory);
-  transition: background .2s ease;
+.viora-site .viora-catalog__eyebrow,
+.viora-site .viora-service-detail__eyebrow {
+  margin: 0; color: var(--viora-plum);
+  font-size: .73rem; font-weight: 800; letter-spacing: .21em;
+  text-transform: uppercase; line-height: 1.4;
 }
-.viora-site .feature-card:nth-child(2),
-.viora-site .feature-card:nth-child(3) { background: #F9ECEB; }
-.viora-site .feature-card__number { color: var(--viora-plum); }
-.viora-site .feature-card__symbol { color: var(--viora-rose); }
-.viora-site .feature-card h3 {
+.viora-site .viora-catalog__intro h2 {
+  margin: .9rem 0 0; font-size: clamp(2.9rem, 4.8vw, 5.2rem);
+  font-weight: 400; line-height: 1.08; letter-spacing: -.07em;
+  max-width: 15ch;
+}
+.viora-site .viora-catalog__intro > p {
+  max-width: 26rem; line-height: 1.75; margin: 0 0 .35rem; opacity: .78;
+}
+.viora-site .viora-catalog__grid {
+  display: grid; grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1px; border: 1px solid #DDC9CC; background: #DDC9CC;
+}
+.viora-site .viora-catalog__card {
+  position: relative; display: flex; flex-direction: column; align-items: start;
+  min-height: 16.5rem; padding: clamp(1.65rem, 3vw, 3rem);
+  background: var(--viora-ivory); transition: background .2s ease;
+}
+.viora-site .viora-catalog__card:nth-child(2),
+.viora-site .viora-catalog__card:nth-child(3) { background: #F9ECEB; }
+.viora-site .viora-catalog__card-number {
+  color: var(--viora-plum); font-size: .83rem; font-weight: 800;
+}
+.viora-site .viora-catalog__card h3 {
+  margin: 3rem 0 .7rem;
   font-family: "Nimbus Roman", "Times New Roman", Georgia, serif;
-  color: var(--viora-plum);
-  font-size: clamp(1.75rem,2.6vw,2.5rem);
-  font-weight: 400;
-  letter-spacing: -.035em;
-  margin-top: 3rem;
+  color: var(--viora-plum); font-size: clamp(1.75rem, 2.6vw, 2.5rem);
+  font-weight: 400; letter-spacing: -.035em;
 }
-.viora-site .feature-card p { max-width: 27rem; line-height: 1.8; opacity: 1; }
+.viora-site .viora-catalog__card p {
+  margin: 0; max-width: 27rem; font-size: .9rem; line-height: 1.8; opacity: 1;
+}
 .viora-service-card__link { color: inherit; text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: .2em; }
 .viora-service-card__link:hover { text-decoration-thickness: 2px; }
 .viora-service-card__link:focus-visible,
@@ -147,9 +161,9 @@
   .viora-site .landing-hero__heading { font-size: clamp(3.9rem,12vw,6rem); }
   .viora-site .landing-hero--serene .landing-hero__art { min-height: clamp(26rem,92vw,37rem); }
   .viora-hero-logo { width: min(85%,26rem); max-height: 68%; }
-  .viora-site .feature-grid { grid-template-columns: 1fr; }
-  .viora-site .feature-card { min-height: 12rem; }
-  .viora-site .feature-card h3 { margin-top: 1rem; }
+  .viora-site .viora-catalog__grid { grid-template-columns: 1fr; }
+  .viora-site .viora-catalog__card { min-height: 12rem; }
+  .viora-site .viora-catalog__card h3 { margin-top: 1rem; }
   .viora-essence__inner { padding-block: 4.5rem; }
   .viora-essence h2 { font-size: clamp(3.2rem,11vw,5rem); }
 }
@@ -159,5 +173,5 @@
   .viora-site .landing-hero__art-top { font-size: .54rem; }
 }
 @media (prefers-reduced-motion: reduce) {
-  .viora-site .feature-card { transition: none; }
+  .viora-site .viora-catalog__card { transition: none; }
 }

@@ -42,7 +42,7 @@ if (app === 'estetica') {
   for (const asset of ['viora-horizontal.png', 'viora-principal.png', 'viora-palabra.png']) {
     await access(new URL(`../apps/estetica/dist/brand/${asset}`, import.meta.url));
   }
-  assert.equal((html.match(/class="feature-card"/g) ?? []).length, 4, 'Expected four VIORA service cards');
+  assert.equal((html.match(/class="viora-catalog__card"/g) ?? []).length, 4, 'Expected four VIORA service cards');
   for (const service of siteContent.services) {
     assert.ok(html.includes(`>${service.displayName}</a>`), `${service.slug}: card title missing`);
     assert.ok(html.includes(service.description), `${service.slug}: card description missing`);
@@ -73,7 +73,7 @@ if (app === 'estetica') {
   assert.ok(!html.includes('juanjo-gallery__item--lead'), 'No real artwork should appear before originals arrive');
 }
 assert.ok(html.includes('class="landing-hero landing-hero--'), 'Shared hero missing');
-assert.equal((html.match(/class="feature-card"/g) ?? []).length, app === 'estetica' ? 4 : 3, 'Feature cards missing');
+if (app === 'tattoo') assert.equal((html.match(/class="feature-card"/g) ?? []).length, 3, 'Juanjo feature cards missing');
 assert.ok(html.includes('id="alcance"'), 'Feature grid anchor missing');
 assert.ok(!html.includes('feature-card__symbol'), 'Informational cards must not suggest a nonexistent link');
 assert.ok(html.includes('class="skip-link" href="#contenido"'));
