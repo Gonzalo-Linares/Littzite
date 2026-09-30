@@ -65,6 +65,14 @@ Véanse [registro de decisiones](09-open-decisions.md), [modelo de dominio](03-d
 
 ## Decisión de piloto VIORA (30/09/2026)
 
+### Fundación compartida (PR-09)
+
+`packages/booking` es una librería ESM/TypeScript headless que depende solo de `content-schema`. `siteContentSchema` conserva la validación de formas, referencias y unicidad; `booking` agrega el registro cerrado de proveedores, la política de URL por proveedor y la resolución de `direct-booking`. Las dos apps validan sus colecciones completas de `bookingTargets` después del parseo, incluso si están vacías.
+
+El único proveedor admitido en esta fundación es `cal-com`: URL HTTPS con origen exacto `https://cal.com`, sin credenciales y con ruta distinta de `/`. Se conservan query y fragmento; no se impone un patrón de usuario/evento. Proveedores desconocidos fallan al validar. Resolver requiere una acción `direct-booking` y su target existente; no consulta red, disponibilidad ni confirma turnos y no muta la configuración. La librería no contiene SDK, secretos, API, interfaz, modal, iframe ni estado mutable. El piloto VIORA sigue sin acciones ni targets y no muestra enlaces comerciales.
+
+Juanjo consume la misma validación general de destinos, pero no configura proveedor ni target. La regla de agenda directa para trabajos pequeños sigue sin activarse hasta aprobar proveedor y URLs reales. Véase [ADR-013](adr/013-booking-provider-foundation.md).
+
 El titular eligió **Cal.com Individual Gratis** para probar los turnos de una profesional de VIORA, con un volumen estimado de alrededor de **15 citas mensuales**, sujeto a variación. La configuración inicial del sitio contiene cuatro `Service.durationMinutes: 60` independientes, **solo valores provisionales editables**. Ni los 60 minutos ni la agenda están aprobados todavía como reglas técnicas o comerciales para el público. La profesional debe revisar especialmente los tiempos de depilación según zona antes de habilitar clientes reales.
 
 La profesional es titular de la cuenta y gestiona sus cuatro tipos de evento, disponibilidad efectiva, calendario de conflictos y mensajes; Cal.com es la fuente de verdad de citas. No almacenar datos de clientes ni credenciales de proveedor en Littzite. Durante la preparación, `Service.actions=[]` y `bookingTargets=[]`: ninguna ficha ofrece aún reserva, por mucho que tenga duración.

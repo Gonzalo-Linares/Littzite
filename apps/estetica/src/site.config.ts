@@ -1,4 +1,5 @@
 import { siteContentSchema } from '@littzite/content-schema';
+import { validateBookingTargets } from '@littzite/booking';
 
 // D-09 / VIORA manual de marca, edición 01 (septiembre de 2026).
 // Los servicios del manual son líneas editoriales: disponibilidad, técnicas,
@@ -7,7 +8,7 @@ import { siteContentSchema } from '@littzite/content-schema';
 // prueba, editable independientemente por servicio. NO constituye duración técnica
 // aprobada para producción: validar con la profesional, especialmente depilación.
 // Sin actions/bookingTargets hasta recibir URLs reales y aprobación de publicación.
-export const siteContent = siteContentSchema.parse({
+const parsedContent = siteContentSchema.parse({
   site: {
     defaultLocale: 'es-AR',
     theme: {
@@ -47,3 +48,6 @@ export const siteContent = siteContentSchema.parse({
     ],
   }],
 });
+
+validateBookingTargets(parsedContent.bookingTargets);
+export const siteContent = parsedContent;

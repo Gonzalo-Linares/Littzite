@@ -2,7 +2,7 @@
 
 ## Monorepo objetivo (arquitectura conceptual)
 
-El árbol combina componentes implementados con **módulos conceptuales**. A partir del prototipo visual PR-03 existen `apps/{estetica,tattoo}` y `packages/{content-schema,ui,sections}`; solamente `seo` y `booking` permanecen previstos para cuando haya integraciones y destinos aprobados.
+El árbol combina componentes implementados con **módulos conceptuales**. `apps/{estetica,tattoo}` consume contratos de `content-schema`, `ui`, `sections` y la fundación headless `booking`; solamente `seo` permanece previsto para cuando haya requisitos concretos.
 
 ```text
 Littzite/
@@ -30,15 +30,18 @@ flowchart LR
   E[apps/estetica] --> C[packages/content-schema]
   E --> UI[packages/ui]
   E --> S[packages/sections]
+  E --> B[packages/booking]
   T[apps/tattoo] --> C
   T --> UI
   T --> S
+  T --> B
+  B --> C
   S --> UI
   S --> C
   UI --> C
 ```
 
-`content-schema` contiene los contratos Zod de sitio, páginas, servicios, secciones y destinos, más validación de referencias dentro de `SiteContent`. `ui` expone layout, cabecera, pie, contenedor, enlaces y tokens CSS; `sections` expone `LandingHero` y `FeatureGrid`, usados por ambas apps y dependientes únicamente de APIs públicas de `ui` y `content-schema`. El árbol conceptual aún incluye `seo` y `booking`, **no creados** hasta necesitar contratos implementados. No hay ciclos entre paquetes ni imports entre aplicaciones. `scripts/check-boundaries.mjs` comprueba manifests, imports con AST de TypeScript (incluido frontmatter Astro), CSS @import y ciclos **localmente**; GitHub Actions está desactivado por decisión del propietario.
+`content-schema` contiene los contratos Zod de sitio, páginas, servicios, secciones y destinos, más validación de referencias dentro de `SiteContent`. `ui` expone layout, cabecera, pie, contenedor, enlaces y tokens CSS; `sections` expone `LandingHero` y `FeatureGrid`, usados por ambas apps y dependientes únicamente de APIs públicas de `ui` y `content-schema`. `booking` depende solo de `content-schema`; valida proveedores soportados y resuelve acciones directas a fallbacks externos, sin Astro, DOM, red ni estado. Su registro soporta solo `cal-com` bajo política fail-closed. No hay ciclos entre paquetes ni imports entre aplicaciones. `scripts/check-boundaries.mjs` comprueba manifests, imports con AST de TypeScript (incluido frontmatter Astro), CSS @import y ciclos **localmente**; GitHub Actions está desactivado por decisión del propietario.
 
 ## Diagrama de contexto (C4 nivel 1, simplificado)
 
@@ -144,7 +147,7 @@ El proveedor de hosting está **propuesto**, no confirmado. Para el contenido p�
 
 ## Reglas para dependencias entre paquetes
 
-El grafo implementado se muestra arriba y comprende dos apps y tres paquetes realmente consumidos: `content-schema`, `ui` y `sections`. Los futuros paquetes solo se incorporarán cuando tengan consumidores concretos. Reglas invariantes: `apps/*` puede importar paquetes públicos; no hay importaciones cruzadas entre apps, ni dependencias inversas desde packages hacia apps, ni ciclos entre paquetes. No extraer una librería por cada componente antes de demostrar reutilización. **Un contrato compartido y su implementación tienen un solo propietario.**
+El grafo implementado se muestra arriba y comprende dos apps y cuatro paquetes realmente consumidos: `content-schema`, `ui`, `sections` y `booking`. `booking` puede depender únicamente de `content-schema`; no depende de `ui`, `sections` ni apps. Reglas invariantes: `apps/*` puede importar paquetes públicos; no hay importaciones cruzadas entre apps, ni dependencias inversas desde packages hacia apps, ni ciclos entre paquetes. No extraer una librería por cada componente antes de demostrar reutilización. **Un contrato compartido y su implementación tienen un solo propietario.**
 
 ## PR-05: galería específica de Juanjo
 

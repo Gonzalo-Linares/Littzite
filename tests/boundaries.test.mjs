@@ -14,9 +14,11 @@ async function workspace() {
   const root = await mkdtemp(path.join(tmpdir(), 'littzite-boundaries-'));
   roots.push(root);
   for (const [unit, manifest] of Object.entries({
-    'apps/one': { name: '@littzite/one', dependencies: { '@littzite/ui': 'workspace:*' } },
-    'apps/two': { name: '@littzite/two', dependencies: { '@littzite/ui': 'workspace:*' } },
+    'apps/one': { name: '@littzite/one', dependencies: { '@littzite/ui': 'workspace:*', '@littzite/booking': 'workspace:*' } },
+    'apps/two': { name: '@littzite/two', dependencies: { '@littzite/ui': 'workspace:*', '@littzite/booking': 'workspace:*' } },
+    'packages/booking': { name: '@littzite/booking', exports: { '.': './src/index.ts' }, dependencies: { '@littzite/schema': 'workspace:*' } },
     'packages/ui': { name: '@littzite/ui', exports: { '.': './src/index.ts' }, dependencies: { '@littzite/schema': 'workspace:*' } },
+    'packages/sections': { name: '@littzite/sections', exports: { '.': './src/index.ts' }, dependencies: { '@littzite/ui': 'workspace:*', '@littzite/schema': 'workspace:*' } },
     'packages/schema': { name: '@littzite/schema', exports: { '.': './src/index.ts' } },
   })) {
     await mkdir(path.join(root, unit, 'src'), { recursive: true });
@@ -30,6 +32,39 @@ test('valid app to public package imports pass', async () => {
   const root = await workspace();
   await writeFile(path.join(root, 'apps/one/src/index.ts'), "import { value } from '@littzite/ui';");
   assert.deepEqual(await inspectWorkspace(root), []);
+});
+
+test('apps may consume booking and booking may consume only the schema layer', async () => {
+  const root = await workspace();
+  await writeFile(path.join(root, 'apps/one/src/index.ts'), "import '@littzite/booking';");
+  await writeFile(path.join(root, 'packages/booking/src/index.ts'), "import '@littzite/schema';");
+  assert.deepEqual(await inspectWorkspace(root), []);
+});
+
+test('booking cannot depend on UI, sections, or applications, or expose internal imports', async () => {
+  const root = await workspace();
+  const manifestPath = path.join(root, 'packages/booking/package.json');
+  await writeFile(manifestPath, JSON.stringify({
+    name: '@littzite/booking',
+    exports: { '.': './src/index.ts' },
+    dependencies: {
+      '@littzite/schema': 'workspace:*',
+      '@littzite/ui': 'workspace:*',
+      '@littzite/sections': 'workspace:*',
+      '@littzite/one': 'workspace:*',
+    },
+  }));
+  await writeFile(path.join(root, 'packages/booking/src/index.ts'), [
+    "import '@littzite/ui';",
+    "import '@littzite/sections';",
+    "import '@littzite/one';",
+    "import '@littzite/booking/src/private.ts';",
+  ].join('\n'));
+  const errors = await inspectWorkspace(root);
+  assert.ok(errors.some((error) => error.includes('forbidden packages/ui')));
+  assert.ok(errors.some((error) => error.includes('forbidden packages/sections')));
+  assert.ok(errors.some((error) => error.includes('depends on apps/one')));
+  assert.ok(errors.some((error) => error.includes('imports private')));
 });
 
 test('app cross imports and package to app dependencies fail', async () => {

@@ -1,8 +1,9 @@
 import { siteContentSchema } from '@littzite/content-schema';
+import { validateBookingTargets } from '@littzite/booking';
 
 // Portfolio photographs, brand artwork and booking destinations are deliberately
 // absent until Juanjo supplies originals and approves the commercial details.
-export const siteContent = siteContentSchema.parse({
+const parsedContent = siteContentSchema.parse({
   site: {
     defaultLocale: 'es-AR',
     theme: {
@@ -56,3 +57,6 @@ export const siteContent = siteContentSchema.parse({
     ],
   }],
 });
+
+validateBookingTargets(parsedContent.bookingTargets);
+export const siteContent = parsedContent;

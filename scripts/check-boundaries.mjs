@@ -89,6 +89,7 @@ export async function inspectWorkspace(root) {
       const target = names.get(name);
       if (!target) continue;
       if (unit.startsWith('packages/') && target.startsWith('apps/')) violations.push(`${unit} depends on ${target}`);
+      if (unit === 'packages/booking' && ['packages/ui', 'packages/sections'].includes(target)) violations.push(`${unit} depends on forbidden ${target}`);
       if (unit.startsWith('apps/') && target.startsWith('apps/') && unit !== target) violations.push(`${unit} depends on ${target}`);
       if (target.startsWith('packages/') && unit.startsWith('packages/')) neighbors.push(target);
     }
@@ -119,6 +120,7 @@ export async function inspectWorkspace(root) {
           continue;
         }
         if (unit.startsWith('packages/') && target.startsWith('apps/')) violations.push(`${path.relative(root, file)} imports ${target}`);
+        if (unit === 'packages/booking' && ['packages/ui', 'packages/sections'].includes(target)) violations.push(`${path.relative(root, file)} imports forbidden ${target}`);
         if (unit.startsWith('apps/') && target.startsWith('apps/') && unit !== target) violations.push(`${path.relative(root, file)} imports ${target}`);
         if (unit !== target && !Object.hasOwn(dependencies, name)) violations.push(`${unit} imports undeclared ${name}`);
         const exportKey = specifier === name ? '.' : `./${parts.slice(2).join('/')}`;
