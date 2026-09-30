@@ -1,16 +1,16 @@
-# Modelo de dominio, clases y ERE conceptual — v0.5
+# Modelo de dominio: contratos implementados y diagramas conceptuales
 
 **Alcance:** modelos de contenido estático validado en build. **No** son tablas SQL, no hay backend propio, CRM, historia clínica ni motor de turnos. Los diagramas son el diseño objetivo; PR-02 implementa el subconjunto descrito a continuación.
 
 ## Estado de implementación PR-02
 
-`packages/content-schema` implementa `SiteConfig`, `ThemeConfig`, `ContactConfig`, `Location`, `Page`, dos variantes iniciales de `PageSection` (`intro` y `service-list`), `Service`, las tres variantes de `ServiceAction`, `BookingTarget`, `QuoteTarget` y el agregado `SiteContent`. Zod es la única fuente de tipos inferidos. `SiteContent` comprueba unicidad de slugs/IDs, tipos de target, referencias de secciones y métodos de contacto. Las apps demo consumen únicamente `SiteConfig` y una página `intro`, con colecciones de servicios y targets vacías.
+`packages/content-schema` implementa SiteConfig, ThemeConfig, ContactConfig, Location, Page, tres variantes PageSection (`intro`, `feature-grid`, `service-list`), Service, tres variantes ServiceAction, BookingTarget, QuoteTarget y el agregado SiteContent. Zod es fuente de tipos inferidos. VIORA contiene cuatro servicios informativos, catálogo por referencias y cuatro detalles Astro, con defaults editables de 60 minutos para el piloto de Cal.com. Juanjo tiene intro y feature-grid, sin servicios ni destinos activos y con galería fotográfica local todavía vacía.
 
-El diagrama conceptual incluye SEO, medios, precios, horarios, provider config y variantes de secciones aún no implementados. `canonicalOrigin` y contacto son opcionales mientras las apps son demos `noindex`; una publicación productiva exigirá datos verificados y gates adicionales. Un `BookingTarget` exige HTTPS sin credenciales en la URL, pero la aprobación del host y la capacidad del proveedor quedan pendientes de D-01C. Una acción de reserva no exige duración en el contrato global porque las reglas para tatuajes pequeños aún no están confirmadas; el gate de publicación de estética deberá exigir una duración real positiva por tratamiento. El número de WhatsApp existe solo en `ContactConfig`, nunca en `QuoteTarget`.
+Los diagramas siguientes describen también modelos FUTUROS NO implementados: SEO metadata, medios adicionales, precios, horarios, proveedor configurado y nuevas variantes de sección. El contrato vigente es exclusivamente el esquema Zod del repositorio. `canonicalOrigin` y contacto son opcionales mientras las apps son demos `noindex`; una publicación productiva exigirá datos verificados y gates adicionales. Un `BookingTarget` exige HTTPS sin credenciales en la URL, pero la aprobación del host y la capacidad del proveedor quedan pendientes de D-01C. Una acción de reserva no exige duración en el contrato global porque las reglas para tatuajes pequeños aún no están confirmadas; el gate de publicación de estética deberá exigir una duración real positiva por tratamiento. El número de WhatsApp existe solo en `ContactConfig`, nunca en `QuoteTarget`.
 
 ## Decisiones confirmadas que modelamos
 
-- **Estética:** una profesional y servicios con duración fija. El valor en minutos por tratamiento, horarios, local y proveedor son datos aún no confirmados.
+- **Estética:** una profesional; cada servicio tiene un default provisional de 60 minutos, independiente y no publicado. Cal.com está seleccionado únicamente para un piloto en standby; la duración técnica definitiva, la cuenta, eventos, URLs, horarios y ubicación no se han validado.
 - **Tatuador:** un trabajo pequeño se puede reservar directamente; un trabajo grande requiere presupuesto previo. No está definido el umbral de tamaño ni que el tatuador trabaje solo.
 - **D-04:** presupuestos para trabajos grandes por WhatsApp directo, inicialmente solo texto. No se cargan archivos en Littzite. Número comercial real y texto inicial, pendientes de validar.
 - **D-09:** español de Argentina (`es-AR`) como único idioma inicial en ambas apps. `SiteConfig.defaultLocale` conserva un único origen validado para `html lang`, metadatos y formatos.
@@ -282,6 +282,6 @@ Los tipos son **ilustrativos**, no código productivo ni licencia para asumir qu
 
 ## Implementacion de catalogo VIORA (PR-06)
 
-`apps/estetica/src/site.config.ts` ahora define las cuatro fichas informativas de VIORA con `Service` y `actions: []`; `durationMinutes` se omite mientras D-02A siga pendiente. La portada declara un `service-list` por IDs, cuya integridad valida `siteContentSchema`. `ServiceCatalog.astro` resuelve y muestra las mismas fichas sin duplicar titulos, slugs ni descripciones. `[slug].astro` usa `getStaticPaths()` sobre `siteContent.services` para generar `/servicios/<slug>/` y compartir el layout, locale y estado `noindex`.
+`apps/estetica/src/site.config.ts` define las cuatro fichas informativas de VIORA con `Service`, `actions: []` y `durationMinutes: 60` editable individualmente para prueba; esas duraciones no se renderizan ni están aprobadas como duración técnica definitiva. La portada declara un `service-list` por IDs, cuya integridad valida `siteContentSchema`. `ServiceCatalog.astro` resuelve y muestra las mismas fichas sin duplicar titulos, slugs ni descripciones. `[slug].astro` usa `getStaticPaths()` sobre `siteContent.services` para generar `/servicios/<slug>/` y compartir el layout, locale y estado `noindex`.
 
 La presencia de una ficha informativa no habilita su reserva. Un PR posterior necesitara duracion positiva validada, disponibilidad y proveedor aprobados (D-02A/D-01C), una accion tipada y su destino aprobado. No cambian los contratos compartidos ni se crea backend, paquete de catalogo o integracion de reservas.

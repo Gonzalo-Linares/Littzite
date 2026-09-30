@@ -1,6 +1,6 @@
-# Calidad, SEO, seguridad y operaciones — v0.5
+# Calidad, SEO, seguridad y operaciones — implementado y pendiente
 
-## SEO local por construcción
+## SEO local — criterios de lanzamiento todavía no implementados
 
 - `canonicalOrigin` específico por sitio, canonical absoluta por página; sitemap solo con URLs indexables válidas; `robots.txt` independiente.
 - D-09: usar `SiteConfig.defaultLocale = 'es-AR'` como única fuente de verdad para `<html lang>`, idioma de metadatos y formatos regionales por `Intl` cuando corresponda. Una sola versión de URL sin prefijo `/es/`; no emitir `hreflang` ficticio ni páginas traducidas. Slugs legibles en español y metadatos únicos por servicio.
@@ -12,7 +12,7 @@
 
 ## Calidad automatizada
 
-**Gates implementados en PR-02:** `pnpm check:boundaries` revisa dependencias/imports y ciclos; `pnpm test:contracts` usa `node:test` para Zod y límites; `pnpm check`, `pnpm build` y `pnpm test` verifican ambas apps, incluyendo HTML estático, locale, `noindex`, tokens y aislamiento. CI ejecuta los gates en cada PR para ambas apps. La tabla siguiente enumera gates objetivo de fases posteriores; lint/format, Vitest, Playwright, axe/Lighthouse y link check aún no están configurados.
+**Gates existentes:** pnpm check:boundaries revisa manifiestos, imports y ciclos; pnpm test:contracts usa node:test para contratos; pnpm check, build y test verifican ambas apps y su HTML estático. El smoke posterior al build comprueba enlaces y anclas internas. GitHub Actions **está desactivado por decisión del propietario**: cada PR debe registrar los seis controles ejecutados localmente en su último HEAD. Lint/format, Vitest, Playwright, axe y Lighthouse todavía no están configurados; la tabla detalla objetivos futuros.
 
 | Gate | Qué comprueba | Cuándo |
 | --- | --- | --- |

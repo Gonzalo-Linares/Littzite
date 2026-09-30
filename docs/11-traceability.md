@@ -12,7 +12,7 @@ Este documento vincula requisitos y pruebas previstas; no significa que haya có
 | R-06 | Seguridad y privacidad por construcción | `docs/10-security-threat-model.md` | Análisis de scripts, URLs y pruebas de configuración cruzada |
 | R-07 | Despliegues y cuentas separados | `docs/02-architecture.md` | Config aislada y pruebas de build |
 | R-08 | Sin código muerto ni dependencias innecesarias en el scaffold | `AGENTS.md`, ADR-005 | Revisar árbol, bundles, auditoría de componentes importados |
-| R-09 | Un cambio transversal valida ambos sitios | `docs/04-sequences-flows.md` | CI ejecuta pruebas y builds de ambas apps ante cambios comunes |
+| R-09 | Un cambio transversal valida ambos sitios | `docs/04-sequences-flows.md` | ambas apps pasan sus gates locales antes de integrar cambios comunes; CI está desactivada por decisión del titular |
 | R-10 | Documentación sincronizada con cambios importantes | `docs/12-contributing.md` | Checklist PR y actualización ADR/diagramas |
 | R-11 | Una misma ficha puede exponer dos acciones sin condicionales por cliente | `docs/03-domain-model.md`, ADR-003 | Test de `ServiceAction[]`, tipos Zod, orden y labels de CTA |
 | R-12 | Ni señas ni presupuestos con archivos se implementan sin aprobación | `docs/09-open-decisions.md`, `docs/10-security-threat-model.md` | Revisión de flags, terceros, formularios y datos recogidos |

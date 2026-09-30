@@ -6,7 +6,7 @@
 
 ## Implementado en PR-02
 
-`ThemeConfig` valida seis colores hexadecimales semánticos (`surface`, `text`, `accent`, `accentText`, `border`, `focus`). Cada app demo aporta valores provisionales propios. `BaseLayout` los expone como variables CSS, usa el locale de `SiteConfig` e incluye enlace para saltar al contenido. `Container` y `Link` son compartidos y se usan en ambas homes. El enlace conserva foco visible y un destino interno real. La identidad final, tipografías de marca y secciones comerciales siguen pendientes. No se agregó Tailwind: estas reglas pequeñas no justifican la dependencia todavía; ADR-002 sigue describiendo la opción elegida para v1 cuando haya estilos y contenido reales.
+`ThemeConfig` valida seis colores hexadecimales semánticos (`surface`, `text`, `accent`, `accentText`, `border`, `focus`). VIORA utiliza su paleta oficial y Juanjo un tema editorial provisional que no reemplaza su logotipo auténtico. `BaseLayout` los expone como variables CSS, usa el locale de `SiteConfig` e incluye enlace para saltar al contenido. `Container` y `Link` son compartidos y se usan en ambas homes. El enlace conserva foco visible y un destino interno real. La identidad VIORA ya está integrada; la identidad gráfica original y las fotografías de Juanjo, junto con los datos comerciales definitivos de ambas apps, siguen pendientes. No se agregó Tailwind: estas reglas pequeñas no justifican la dependencia todavía; ADR-002 sigue describiendo la opción elegida para v1 cuando haya estilos y contenido reales.
 
 ## Implementado en PR-03 (prototipos editoriales)
 
@@ -28,14 +28,14 @@ La estética adopta el manual de marca aportado por su titular: marfil, ciruela,
 | Semántico | `--color-surface`, `--color-text`, `--color-accent`, `--color-border`, `--focus-ring` | contrato `ThemeConfig` |
 | Marca | valores concretos por app: estética / tatuador | `apps/*/site.config.ts` |
 | Variante visual | `editorial`, `split`, `minimal`, `gallery-first` | `packages/sections` |
-| Contenido | título, imagen, CTA, testimonios, orden | Content Collections de app |
+| Contenido implementado | servicios/páginas en `apps/*/src/site.config.ts`, portfolio tipado de Juanjo | cada app; no hay Astro Content Collections todavía |
 
 No usar strings de nombres de clientes para decidir estilos dentro de componentes comunes. Preferir props explícitas (`variant`) y CSS custom properties. No permitir variantes ilimitadas si todavía no existe una necesidad real.
 
-## Catálogo compartido inicial
+## Componentes existentes y catálogo potencial (no todo está implementado)
 
-- `Button`, `Link`, `Container`, `SectionHeading`, `ResponsiveImage`, `Badge`, `Accordion`, `Dialog`, `FormField` si realmente hay formularios propios.
-- `Header`, `Footer`, `Hero`, `ServiceGrid`, `ServiceCard`, `ImageGallery`, `FAQSection`, `ContactSection`, `ServiceActions`, `BookingCTA`, `QuoteCTA`, `Testimonials`. Un `ServiceActions` recibe acciones tipadas y no conoce la identidad del negocio.
+- **Implementados:** BaseLayout, SiteHeader, SiteFooter, Container y Link en ui; LandingHero y FeatureGrid en sections. ServiceCatalog y TattooGallery son específicos de sus apps. **Potenciales:** Button, SectionHeading, ResponsiveImage, Badge, Accordion, Dialog y FormField, solo si hay consumidores reales.
+- **Futuros, todavía no compartidos:** ServiceActions, BookingCTA, QuoteCTA, FAQSection, ContactSection y Testimonials; deberán usar contratos tipados sin conocer marcas.
 - Tipos y contratos de sección documentados; `Header` debe consumir el mismo menú tipado y contacto que el `Footer`, sin copiar links.
 
 ## Reglas de consistencia
@@ -50,7 +50,7 @@ No usar strings de nombres de clientes para decidir estilos dentro de componente
 
 ## Opciones de contenido
 
-**v1:** `SiteConfig` TS + Content Collections (`services`, `pages`, `portfolio`, `testimonials`) y Zod. Un responsable técnico actualiza contenido mediante PR. No introducir un CMS por adelantado.
+**Implementado:** SiteContent TS/Zod por app y un portfolio tipado local para Juanjo; edición técnica mediante PR. Content Collections o CMS son posibilidades futuras si aparecen necesidades reales de edición, no tecnología incorporada en esta revisión.
 
 **Evolución:** si el cliente necesita editar independientemente y con frecuencia, añadir un adaptador de fuente de contenido y evaluar un CMS alojado. No acoplar los componentes al origen del dato.
 

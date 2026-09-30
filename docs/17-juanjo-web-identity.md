@@ -1,6 +1,6 @@
 # Juanjo Tattoos — Identidad editorial y galería preparada para originales
 
-**Estado:** propuesta de PR-05 para revisión. **Referencias:** capturas del perfil `@juanjo.tattoos` y de sus tatuajes facilitadas por el usuario el 29/09/2026. Se confirmó autorización para usar los trabajos y materiales de ambos negocios en Littzite. Los archivos fotográficos originales y el logotipo nativo de Juanjo **todavía no se recibieron**.
+**Estado:** base editorial PR-05 fusionada; portfolio fotográfico final pendiente de originales. **Referencias:** capturas del perfil `@juanjo.tattoos` y de sus tatuajes facilitadas por el usuario el 29/09/2026. Se confirmó autorización para usar los trabajos y materiales de ambos negocios en Littzite. Los archivos fotográficos originales y el logotipo nativo de Juanjo **todavía no se recibieron**.
 
 ## Lectura de las referencias proporcionadas
 
