@@ -33,7 +33,7 @@ Los tres PNG originales ya se incorporaron bajo `apps/estetica/public/brand/`, s
 
 ## Seguridad, accesibilidad y límites de publicación
 
-- No aceptar ni inventar horarios, domicilio, tarifas, enlaces de reserva, Instagram ni WhatsApp. D-02A y D-01C siguen abiertos.
+- No aceptar ni inventar horarios, domicilio, tarifas, enlaces de reserva, Instagram ni WhatsApp. D-01C y D-02A están **parcialmente resueltos para la prueba** de Cal.com, no para reservas públicas.
 - Reiki debe comunicarse como experiencia de bienestar y nunca como tratamiento de enfermedades o sustituto de atención médica (p. 4). No prometer resultados garantizados (p. 3).
 - Ambos sitios se mantienen `noindex`. El logo visible se integra mediante slots genéricos de Astro: `ui` y `sections` no importan assets de un cliente ni contienen condicionales por marca.
 - La autorización para los tres logos originales ya se confirmó; no se extiende automáticamente a las fuentes tipográficas, a fotografías de terceros ni al resto de los recursos del kit. Aplicar la [política de PI](15-ip-license-policy.md) y no exponer las fuentes del kit en descargas.
@@ -44,4 +44,4 @@ Con los tres logos ya incorporados: ejecutar desde la raíz `corepack pnpm insta
 
 ## Catalogo informativo (PR-06)
 
-Las cuatro lineas ahora tienen fichas editoriales en el catalogo local de VIORA y paginas estaticas de detalle enlazadas desde la portada. Titulos, slugs y descripciones salen unicamente de `Service`; la portada referencia IDs mediante `service-list`. Las fichas no contienen duracion, precio, acciones ni destinos de contacto/reserva. Reiki se presenta como experiencia de bienestar, sin atribuciones medicas. Las paginas mantienen `es-AR` y `noindex`. La publicacion de turnos requiere cerrar D-02A y D-01C y se implementara en un cambio posterior.
+Las cuatro lineas ahora tienen fichas editoriales en el catalogo local de VIORA y paginas estaticas de detalle enlazadas desde la portada. Titulos, slugs y descripciones salen unicamente de `Service`; la portada referencia IDs mediante `service-list`. Las fichas contienen duraciones **provisionales e independientes de 60 minutos** para configurar el piloto de Cal.com; no se muestran públicamente, no equivalen a duraciones definitivas y deben revisarse con la profesional. No contienen precio, acciones ni destinos de contacto/reserva. Reiki se presenta como experiencia de bienestar, sin atribuciones medicas. Las paginas mantienen `es-AR` y `noindex`. Cal.com se eligió para prueba; la publicación de turnos exige revisar cada duración, crear la cuenta y los cuatro eventos, aprobar sus URLs y la disponibilidad, y comprobar las condiciones del proveedor. La activación se implementará en otro PR.

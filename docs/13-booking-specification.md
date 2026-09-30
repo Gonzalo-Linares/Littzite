@@ -62,3 +62,13 @@ Véanse [registro de decisiones](09-open-decisions.md), [modelo de dominio](03-d
 5. Littzite no implementa formulario de presupuesto, selector de archivos, almacenamiento de mensajes ni confirmación propia. WhatsApp podría permitir que el visitante adjunte archivos allí: eso queda fuera del alcance del sitio.
 
 **Pruebas previstas:** número en E.164 y perteneciente al negocio; codificación del texto y acentos; plantillas con datos únicamente públicos; bloqueo si falta configuración; enlace funcional en móvil y escritorio; aviso de tercero; analítica de clic sin mensajes ni identificadores privados; ausencia de código de formularios/archivos propios.
+
+## Decisión de piloto VIORA (30/09/2026)
+
+El titular eligió **Cal.com Individual Gratis** para probar los turnos de una profesional de VIORA, con un volumen estimado de alrededor de **15 citas mensuales**, sujeto a variación. La configuración inicial del sitio contiene cuatro `Service.durationMinutes: 60` independientes, **solo valores provisionales editables**. Ni los 60 minutos ni la agenda están aprobados todavía como reglas técnicas o comerciales para el público. La profesional debe revisar especialmente los tiempos de depilación según zona antes de habilitar clientes reales.
+
+La profesional es titular de la cuenta y gestiona sus cuatro tipos de evento, disponibilidad efectiva, calendario de conflictos y mensajes; Cal.com es la fuente de verdad de citas. No almacenar datos de clientes ni credenciales de proveedor en Littzite. Durante la preparación, `Service.actions=[]` y `bookingTargets=[]`: ninguna ficha ofrece aún reserva, por mucho que tenga duración.
+
+Luego de crear los cuatro eventos, pedir únicamente sus cuatro URLs públicas HTTPS de Cal.com, una por servicio. Verificar la pertenencia a la cuenta real de VIORA, el host legítimo, la duración revisada y la disponibilidad común de la profesional; rechazar URLs o datos ficticios. Evaluar enlace externo como primer fallback estable y embed solo tras comprobar consentimiento/privacidad, experiencia móvil y carga diferida. Ni un clic ni callbacks visuales del embed constituyen confirmación verificable de la cita.
+
+Cal.com Individual informa actualmente 1 usuario con eventos, calendarios y reservas ilimitados: [página oficial de precios](https://cal.com/es/pricing). Soporta inline/popup: [documentación oficial de embed](https://cal.com/embed). Esto no implica que sus políticas, servicios y distribución móvil se mantengan invariables; verificar de nuevo al lanzar.

@@ -142,7 +142,7 @@ test('VIORA theme, voice and four named services match its brand manual', () => 
     ['Masajes', 'masajes'],
     ['Reiki', 'reiki'],
   ]);
-  assert.ok(estetica.services.every((service) => service.actions.length === 0 && service.durationMinutes === undefined));
+  assert.ok(estetica.services.every((service) => service.actions.length === 0 && service.durationMinutes === 60));
   assert.deepEqual(estetica.bookingTargets, []);
   assert.deepEqual(estetica.quoteTargets, []);
 });
@@ -174,4 +174,18 @@ test('Juanjo brand stays independent and its commercial targets remain inactive'
   assert.equal(tattoo.bookingTargets.length, 0);
   assert.equal(tattoo.quoteTargets.length, 0);
   assert.equal(tattoo.site.contact, undefined);
+});
+
+test('VIORA trial durations are independently editable without enabling booking', () => {
+  const trial = structuredClone(estetica);
+  assert.equal(trial.services.length, 4);
+  assert.deepEqual(trial.services.map(({ durationMinutes }) => durationMinutes), [60, 60, 60, 60]);
+  trial.services[0].durationMinutes = 45;
+  const parsed = siteContentSchema.parse(trial);
+  assert.deepEqual(parsed.services.map(({ durationMinutes }) => durationMinutes), [45, 60, 60, 60]);
+  assert.ok(parsed.services.every((service) => service.actions.length === 0));
+  assert.deepEqual(parsed.bookingTargets, []);
+
+  trial.services[0].durationMinutes = 0;
+  assert.equal(siteContentSchema.safeParse(trial).success, false);
 });
