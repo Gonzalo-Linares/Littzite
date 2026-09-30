@@ -7,7 +7,7 @@
   },
   "scripts": {
     "check:boundaries": "node scripts/check-boundaries.mjs",
-    "test:contracts": "node --test tests/contracts.test.mjs tests/boundaries.test.mjs tests/link-utils.test.mjs tests/portfolio.test.mjs",
+    "test:contracts": "node --test tests/contracts.test.mjs tests/boundaries.test.mjs tests/link-utils.test.mjs tests/portfolio.test.mjs tests/site-links.test.mjs",
     "check": "corepack pnpm --filter @littzite/estetica check && corepack pnpm --filter @littzite/tattoo check",
     "build": "corepack pnpm --filter @littzite/estetica build && corepack pnpm --filter @littzite/tattoo build",
     "test": "corepack pnpm --filter @littzite/estetica test && corepack pnpm --filter @littzite/tattoo test"

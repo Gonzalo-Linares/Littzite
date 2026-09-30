@@ -1,6 +1,7 @@
 import assert from 'node:assert/strict';
 import { readFile } from 'node:fs/promises';
 import { siteConfigSchema } from '../packages/content-schema/src/index.ts';
+import { verifyInternalLinks } from './verify-site-links.mjs';
 
 const expectedTitles = {
   estetica: 'Regalate una pausa.',
@@ -92,4 +93,5 @@ for (const [otherApp, otherTitle] of Object.entries(expectedTitles)) {
   if (otherApp !== app) assert.ok(!html.includes(otherTitle), `${app} contains ${otherApp} content`);
 }
 
-console.log(`${app}: static prototype, locale, noindex, shared sections and content isolation verified`);
+const links = await verifyInternalLinks(new URL(`../apps/${app}/dist/`, import.meta.url).pathname);
+console.log(`${app}: static prototype, locale, noindex, content isolation and ${links.checked} internal links across ${links.pages} pages verified`);
