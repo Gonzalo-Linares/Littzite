@@ -57,7 +57,7 @@ test('only es-AR and valid theme tokens are accepted', () => {
   assert.equal(siteConfigSchema.safeParse({ defaultLocale: 'es-AR', theme: { ...theme, accent: 'red' } }).success, false);
 });
 
-test('all future brand themes enforce semantic contrast, not just today's two apps', () => {
+test("all future brand themes enforce semantic contrast, not just today's two apps", () => {
   const base = { defaultLocale: 'es-AR', theme };
   assert.equal(siteConfigSchema.safeParse(base).success, true);
   assert.equal(siteConfigSchema.safeParse({ ...base, theme: { ...theme, text: '#fefefe' } }).success, false);
