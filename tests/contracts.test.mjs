@@ -13,7 +13,7 @@ import {
 import { siteContent as estetica } from '../apps/estetica/src/site.config.ts';
 import { siteContent as tattoo } from '../apps/tattoo/src/site.config.ts';
 import { assertMetadata } from '../scripts/html-metadata.mjs';
-import { validateServiceVisuals } from '../apps/estetica/src/service-visuals.validation.ts';
+import { resolveServiceVisual, validateServiceVisuals } from '../apps/estetica/src/service-visuals.validation.ts';
 
 const theme = {
   surface: '#ffffff', text: '#222222', accent: '#334455',
@@ -101,6 +101,9 @@ test('VIORA visuals validate optional service references and image alternatives 
   const primaryOnly = { serviceId: 'sample', primary: image, primaryAlt: 'Una imagen editorial de prueba.' };
 
   assert.doesNotThrow(() => validateServiceVisuals(services, []));
+  assert.equal(resolveServiceVisual([], 'future-service'), undefined);
+  assert.equal(resolveServiceVisual([primaryOnly], 'future-service'), undefined);
+  assert.equal(resolveServiceVisual([primaryOnly], 'sample'), primaryOnly);
   assert.doesNotThrow(() => validateServiceVisuals(services, [primaryOnly]));
   assert.doesNotThrow(() => validateServiceVisuals(services, [
     { ...primaryOnly, reveal: image, revealAlt: 'Una segunda imagen editorial.' },

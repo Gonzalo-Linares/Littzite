@@ -2,7 +2,7 @@
 import type { Service, PageSection } from '@littzite/content-schema';
 import Container from '@littzite/ui/Container.astro';
 import ServiceVisual from './ServiceVisual.astro';
-import type { VioraServiceVisual } from '../service-visuals.validation';
+import { resolveServiceVisual, type VioraServiceVisual } from '../service-visuals.validation';
 
 interface Props {
   section: Extract<PageSection, { type: 'service-list' }>;
@@ -12,11 +12,10 @@ interface Props {
 
 const { section, services, visuals } = Astro.props;
 const servicesById = new Map(services.map((service) => [service.id, service]));
-const visualsByServiceId = new Map(visuals.map((visual) => [visual.serviceId, visual]));
 const listedServices = section.serviceIds.map((id) => {
   const service = servicesById.get(id);
   if (!service) throw new Error(`Missing service ${id} in VIORA catalog`);
-  return { service, visual: visualsByServiceId.get(service.id) };
+  return { service, visual: resolveServiceVisual(visuals, service.id) };
 });
 ---
 

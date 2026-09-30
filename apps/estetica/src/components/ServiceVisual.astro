@@ -1,5 +1,4 @@
 ---
-import { Picture } from 'astro:assets';
 import type { VioraServiceVisual } from '../service-visuals.validation';
 
 interface Props {
@@ -9,10 +8,6 @@ interface Props {
 }
 
 const { visual, context, transitionName } = Astro.props;
-const sizes = context === 'card'
-  ? '(min-width: 1180px) 520px, (min-width: 741px) calc(50vw - 2rem), calc(100vw - 2.5rem)'
-  : '(min-width: 1180px) 620px, (min-width: 741px) 48vw, calc(100vw - 2.5rem)';
-const widths = [360, 560, 840, 1120, visual.primary.width];
 const imageStyle = [
   `object-position: ${visual.focalPosition ?? '50% 50%'}`,
   ...(transitionName ? [`view-transition-name: ${transitionName}`] : []),
@@ -24,29 +19,27 @@ const imageStyle = [
   `viora-service-visual--${context}`,
   { 'viora-service-visual--has-reveal': visual.reveal !== undefined },
 ]}>
-  <Picture
-    src={visual.primary}
+  <img
+    class="viora-service-visual__layer viora-service-visual__primary"
+    src={visual.primary.src}
     alt={visual.primaryAlt}
-    widths={widths}
-    sizes={sizes}
-    formats={['avif', 'webp']}
-    fallbackFormat="jpg"
-    priority={context === 'detail'}
+    width={visual.primary.width}
+    height={visual.primary.height}
     loading={context === 'detail' ? 'eager' : 'lazy'}
+    fetchpriority={context === 'detail' ? 'high' : undefined}
+    decoding="async"
     style={imageStyle}
-    pictureAttributes={{ class: 'viora-service-visual__layer viora-service-visual__primary' }}
   />
   {visual.reveal && (
-    <Picture
-      src={visual.reveal}
+    <img
+      class="viora-service-visual__layer viora-service-visual__reveal"
+      src={visual.reveal.src}
       alt={visual.revealAlt ?? ''}
-      widths={widths}
-      sizes={sizes}
-      formats={['avif', 'webp']}
-      fallbackFormat="jpg"
+      width={visual.reveal.width}
+      height={visual.reveal.height}
       loading="lazy"
+      decoding="async"
       style={`object-position: ${visual.focalPosition ?? '50% 50%'}`}
-      pictureAttributes={{ class: 'viora-service-visual__layer viora-service-visual__reveal' }}
     />
   )}
 </figure>

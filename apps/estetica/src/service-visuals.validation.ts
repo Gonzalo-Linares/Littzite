@@ -10,6 +10,13 @@ export interface VioraServiceVisual {
   focalPosition?: string;
 }
 
+export function resolveServiceVisual(
+  visuals: readonly VioraServiceVisual[],
+  serviceId: string,
+): VioraServiceVisual | undefined {
+  return visuals.find((visual) => visual.serviceId === serviceId);
+}
+
 const isUsefulAlt = (value: string | undefined): value is string =>
   typeof value === 'string' && value.trim().length > 0;
 

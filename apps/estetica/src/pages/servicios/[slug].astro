@@ -4,6 +4,7 @@ import VioraSiteLayout from '../../layouts/VioraSiteLayout.astro';
 import ServiceVisual from '../../components/ServiceVisual.astro';
 import { siteContent } from '../../site.config';
 import { serviceVisuals } from '../../service-visuals';
+import { resolveServiceVisual } from '../../service-visuals.validation';
 
 export function getStaticPaths() {
   return siteContent.services.map((service) => ({
@@ -13,7 +14,7 @@ export function getStaticPaths() {
 }
 
 const { service } = Astro.props;
-const visual = serviceVisuals.find(({ serviceId }) => serviceId === service.id);
+const visual = resolveServiceVisual(serviceVisuals, service.id);
 ---
 
 <VioraSiteLayout seo={{ title: `${service.displayName} | VIORA · Vista previa`, description: service.description }}>

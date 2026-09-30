@@ -61,8 +61,16 @@ if (app === 'estetica') {
     await access(new URL(`../apps/estetica/dist/brand/${asset}`, import.meta.url));
   }
   assert.equal((html.match(/class="viora-catalog__card(?:\s[^"]*)?"/g) ?? []).length, 4, 'Expected four VIORA service cards');
+  const homeVisualImages = Array.from(html.matchAll(/<img\b(?=[^>]*class="viora-service-visual__layer viora-service-visual__(?:primary|reveal)")[^>]*>/g), ([tag]) => tag);
+  assert.equal(homeVisualImages.length, 8, 'Expected primary and reveal images for each configured VIORA service');
+  for (const [index, tag] of homeVisualImages.entries()) {
+    assert.match(tag, /\bsrc="\/_astro\/[^"]+\.jpg"/, `VIORA catalog image ${index + 1}: expected a bundled local source`);
+    assert.match(tag, /\balt="[^"]+"/, `VIORA catalog image ${index + 1}: expected descriptive alt text`);
+    assert.match(tag, /\bwidth="\d+"[^>]*\bheight="\d+"|\bheight="\d+"[^>]*\bwidth="\d+"/, `VIORA catalog image ${index + 1}: expected intrinsic dimensions`);
+    assert.doesNotMatch(tag, /\bsrcset=/, `VIORA catalog image ${index + 1}: do not publish fabricated responsive candidates`);
+  }
   assert.deepEqual(
-    Array.from(html.matchAll(/view-transition-name: (viora-service-[a-z0-9-]+)/g), ([, name]) => name),
+    Array.from(html.matchAll(/view-transition-name: (viora-service-(?!image-)[a-z0-9-]+)/g), ([, name]) => name),
     siteContent.services.map(({ slug }) => `viora-service-${slug}`),
     'VIORA card transition names must be unique and derived from service slugs',
   );
@@ -79,6 +87,10 @@ if (app === 'estetica') {
     assert.ok(detail.includes(`viora-service-image-${service.slug}`), `${service.slug}: detail image transition name missing`);
     assert.notEqual(detailSeo.title, siteContent.pages[0].seo.title, `${service.slug}: detail title must differ from home`);
     assertVioraFrame(detail, service.slug);
+    const detailVisualImages = Array.from(detail.matchAll(/<img\b(?=[^>]*class="viora-service-visual__layer viora-service-visual__(?:primary|reveal)")[^>]*>/g), ([tag]) => tag);
+    assert.equal(detailVisualImages.length, 2, `${service.slug}: expected primary and reveal images`);
+    assert.match(detailVisualImages[0], /\bloading="eager"/i, `${service.slug}: detail primary image should load eagerly`);
+    assert.match(detailVisualImages[1], /\bloading="lazy"/i, `${service.slug}: reveal image should stay lazy`);
     assert.match(detail, new RegExp(`<h1 id="viora-service-title"[^>]*>${service.displayName}</h1>`), `${service.slug}: title missing`);
     assert.ok(detail.includes(service.description), `${service.slug}: canonical description missing`);
     assert.ok(detail.includes('<html lang="es-AR"'), `${service.slug}: locale missing`);

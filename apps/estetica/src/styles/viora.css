@@ -169,9 +169,8 @@
 }
 .viora-service-visual--card { position: absolute; z-index: 0; inset: 0; aspect-ratio: auto; }
 .viora-service-visual--detail { aspect-ratio: 4 / 5; }
-.viora-service-visual__layer { position: absolute; inset: 0; display: block; width: 100%; height: 100%; }
-.viora-service-visual__layer img { display: block; width: 100%; height: 100%; object-fit: cover; }
-.viora-service-visual__primary img { transition: transform .9s cubic-bezier(.2,.7,.2,1); }
+.viora-service-visual__layer { position: absolute; inset: 0; display: block; width: 100%; height: 100%; object-fit: cover; }
+.viora-service-visual__primary { transition: transform .9s cubic-bezier(.2,.7,.2,1); }
 .viora-service-visual__reveal { z-index: 1; clip-path: polygon(100% 0, 100% 0, 100% 100%, 100% 100%); transition: clip-path .75s cubic-bezier(.2,.7,.2,1); }
 .viora-service-visual--detail .viora-service-visual__reveal { clip-path: polygon(66% 0, 100% 0, 100% 100%, 32% 100%); }
 .viora-service-card__link:focus-visible,
@@ -263,7 +262,7 @@
   .viora-site *::after { scroll-behavior: auto !important; transition-duration: .01ms !important; animation-duration: .01ms !important; }
   ::view-transition-old(root), ::view-transition-new(root),
   ::view-transition-old(*), ::view-transition-new(*) { animation-duration: .01ms !important; }
-  .viora-service-visual__primary img,
+  .viora-service-visual__primary,
   .viora-service-visual__reveal { transition: none; }
   .viora-service-visual--has-reveal .viora-service-visual__reveal {
     clip-path: polygon(38% 0, 100% 0, 100% 100%, 0 100%);

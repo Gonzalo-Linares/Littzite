@@ -1,3 +1,6 @@
-import { defineConfig } from 'astro/config';
+import { defineConfig, passthroughImageService } from 'astro/config';
 
-export default defineConfig({ output: 'static' });
+export default defineConfig({
+  output: 'static',
+  image: { service: passthroughImageService() },
+});
