@@ -91,7 +91,7 @@ flowchart TB
     DEP2 -. Métricas, con consentimiento cuando proceda .-> SEARCH
 ```
 
-Los proveedores pueden coincidir o ser distintos; **no se seleccionó ninguno**. El flujo de presupuesto del tatuador sale a **WhatsApp** mediante enlace construido desde `ContactConfig` y `QuoteTarget`: solo texto en v1. Número comercial y mensaje inicial, pendientes de validar antes de publicar.
+Cal.com fue seleccionado **solo para un piloto futuro de VIORA**, hoy en standby: la profesional todavía no configuró cuenta, eventos ni URLs. El proveedor de tatuajes sigue pendiente; su presupuesto por WhatsApp será texto directo, sin número ni mensaje aprobado todavía. `ContactConfig`, `BookingTarget` y `QuoteTarget` son contratos, no integraciones activas.
 
 ## Límites de responsabilidad
 
@@ -118,7 +118,7 @@ flowchart LR
 
 ## Independencia operativa
 
-- Cada aplicación define dominio/canonical, sitemap, iconos, imágenes sociales, cuenta de reservas y analítica independientes.
+- Cada aplicación **deberá definir** dominio/canonical, sitemap, iconos, imágenes sociales, cuenta de reservas y analítica independientes antes del lanzamiento; todavía no hay despliegue productivo ni esas integraciones.
 - D-09: ambas apps publican contenido en `es-AR`, sin prefijo idiomático; el contrato `SiteConfig.defaultLocale` es la fuente de verdad para el idioma del documento, metadatos y formatos. Los paquetes compartidos no implementan un router de idiomas ni catálogos de traducción en v1.
 - Comparten librerias, no sesiones ni secretos. Los workflows de GitHub Actions permanecen desactivados por decision del propietario; los seis gates deben ejecutarse localmente antes de integrar cambios. Los despliegues independientes y selectivos por rutas siguen sin implementarse.
 - No se almacena un registro local de reservas en v1; la fuente de verdad es el proveedor elegido.
@@ -157,4 +157,4 @@ El catalogo se implementa dentro de `apps/estetica`: `site.config.ts` es la fuen
 
 ## PR-07: layout de aplicacion para VIORA
 
-`apps/estetica/src/layouts/VioraSiteLayout.astro` compone `BaseLayout`, `SiteHeader` y `SiteFooter` públicos y concentra la navegación absoluta desde cualquier ruta, logos oficiales, hoja `viora.css`, locale `es-AR` y `noindex`. La portada y los detalles conservan sus cuerpos distintos y consumen el mismo marco. No cambia el grafo de paquetes ni el layout de Juanjo.
+`apps/estetica/src/layouts/VioraSiteLayout.astro` compone `BaseLayout`, `SiteHeader` y `SiteFooter` públicos y concentra la navegación absoluta desde cualquier ruta, logos oficiales, hoja `viora.css`, locale `es-AR` y `noindex`. La portada y los detalles conservan sus cuerpos distintos y consumen el mismo marco. El catálogo dispone de estilos locales explícitos y ya no depende de clases privadas de sections ni de importar LandingHero. No cambia el grafo de paquetes ni el layout de Juanjo.

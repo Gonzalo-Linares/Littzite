@@ -1,6 +1,6 @@
 # Littzite — reglas de trabajo para Codex y otros asistentes
 
-Leer `README.md`, `docs/01-vision-scope.md`, `docs/02-architecture.md`, `docs/09-open-decisions.md`, `docs/13-booking-specification.md`, `docs/15-ip-license-policy.md` y ADR relevantes antes de proponer cualquier implementación. La documentación v0.5 describe acuerdos, propuestas y decisiones pendientes; **no** asumir que lo pendiente fue aprobado.
+Leer `README.md`, `docs/01-vision-scope.md`, `docs/02-architecture.md`, `docs/09-open-decisions.md`, `docs/13-booking-specification.md`, `docs/15-ip-license-policy.md` y ADR relevantes antes de proponer cualquier implementación. La documentación incluye decisiones vigentes y diagramas futuros: confirmar el árbol real antes de implementar; no asumir que lo pendiente fue aprobado. Consultar la matriz de estado en `docs/18-implementation-status.md` y decisiones en `docs/09-open-decisions.md`.
 
 ## Invariantes
 
@@ -36,7 +36,7 @@ El grafo implementado inicialmente es `apps/{estetica,tattoo} -> packages/{conte
 
 ## Contratos PR-02
 
-`siteContentSchema` valida los datos de una app y sus referencias internas. Las configuraciones demo no contienen datos comerciales ni targets externos. Antes de publicar reservas o WhatsApp se requieren el proveedor/host aprobado, duración verificada donde corresponda y D-04B; un fixture de test no autoriza un CTA público. `packages/ui` consume el tema tipado y no conoce el negocio. Ejecutar también `pnpm check:boundaries` y `pnpm test:contracts`; la CI aplica ambos junto a los gates de cada app. El checker de límites cubre manifests e imports literales; revisar manualmente nuevas convenciones de importación si se introducen.
+`siteContentSchema` valida los datos de una app y sus referencias internas. Las configuraciones demo no contienen datos comerciales ni targets externos. Antes de publicar reservas o WhatsApp se requieren el proveedor/host aprobado, duración verificada donde corresponda y D-04B; un fixture de test no autoriza un CTA público. `packages/ui` consume el tema tipado y no conoce el negocio. Ejecutar `pnpm check:boundaries` y `pnpm test:contracts` localmente junto con los gates de ambas apps; la CI sigue desactivada por decisión del titular. El checker de límites cubre manifests e imports literales; revisar manualmente nuevas convenciones de importación si se introducen.
 
 ## Prototipos visuales PR-03
 
@@ -60,7 +60,10 @@ Las cuatro fichas de `apps/estetica/src/site.config.ts` son la unica fuente de t
 
 El titular eligió Cal.com Individual Gratis para probar una única agenda profesional y autorizó cuatro duraciones iniciales independientes de 60 minutos. Son placeholders configurables, pendientes de revisión profesional —especialmente depilación según zona—. Mantener `actions: []`, `bookingTargets: []`, `noindex` y ninguna UI de reserva hasta disponer de cuatro URLs públicas verificadas de la cuenta real, disponibilidad aprobada, consentimiento/privacidad y resultados de reserva de prueba. No inventar usuario, event slugs, teléfono, domicilio, pagos, API keys ni proveedores para Juanjo. La propietaria de la cuenta controla horarios y citas en Cal.com. CI continúa desactivada por decisión del titular. Ver issue #15 y ADR-012.
 
-
 ## Layout local de VIORA (PR-07)
 
 `VioraSiteLayout.astro` en `apps/estetica` concentra cabecera, navegación `/` y `/#...`, logos, pie, `viora.css`, locale y `noindex`, componiendo solamente los componentes públicos de `packages/ui`. Portada y detalles deben conservar sus cuerpos propios y consumir ese layout sin repetir marco de marca. No mover branding a paquetes compartidos ni modificar Juanjo. Los servicios conservan defaults Cal.com independientes de 60 minutos como configuración provisional, `actions: []` y `bookingTargets: []`; no mostrar esas duraciones ni activar reservas antes de URLs y aprobaciones reales. CI sigue desactivada; registrar los seis gates locales.
+
+## Auditoría AUDIT-01 — invariantes adicionales
+
+El catálogo VIORA debe poseer estilos locales explícitos y no depender de efectos de importar LandingHero ni hojas internas de sections. Las clases visuales entre aplicaciones no son API pública implícita. SEO, booking, Content Collections y hosting definitivo siguen siendo objetivos hasta que exista código real. El test de enlaces posterior al build comprueba rutas y fragmentos internos; no sustituye pruebas de teclado, accesibilidad y navegador. Registrar los seis gates locales sobre el HEAD final antes de cada merge. No activar CI.
