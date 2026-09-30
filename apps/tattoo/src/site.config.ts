@@ -20,7 +20,10 @@ const parsedContent = siteContentSchema.parse({
   quoteTargets: [],
   pages: [{
     slug: '',
-    title: 'Juanjo Tattoos · San Juan | Vista previa',
+    seo: {
+      title: 'Juanjo Tattoos · San Juan | Vista previa',
+      description: 'Conocé la vista previa del universo visual de Juanjo Tattoos en San Juan mientras preparamos su portfolio web.',
+    },
     sections: [
       {
         id: 'intro',

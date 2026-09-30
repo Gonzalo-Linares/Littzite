@@ -32,7 +32,7 @@ PR-00: documentación y aprobación; PR-01: scaffold mínimo pnpm + Astro + Type
 
 ## Scaffold PR-01
 
-El grafo implementado inicialmente es `apps/{estetica,tattoo} -> packages/{content-schema,ui}` y `packages/ui -> packages/content-schema`. PR-01 validó solo `SiteConfig.defaultLocale` y compartió un layout mínimo; PR-02 amplía ambos paquetes. PR-03 incorpora `sections` con `LandingHero` y `FeatureGrid`, ambos consumidos por las dos apps. `sections` depende de APIs públicas de `ui` y `content-schema`. Los paquetes `seo` y `booking` siguen pendientes de requisitos reales. Ejecutar `pnpm check`, `pnpm build` y `pnpm test` para verificar ambas apps; los comandos por app están en cada `package.json`.
+El grafo implementado inicialmente es `apps/{estetica,tattoo} -> packages/{content-schema,ui}` y `packages/ui -> packages/content-schema`. PR-01 validó solo `SiteConfig.defaultLocale` y compartió un layout mínimo; PR-02 amplía ambos paquetes. PR-03 incorpora `sections` con `LandingHero` y `FeatureGrid`, ambos consumidos por las dos apps. `sections` depende de APIs públicas de `ui` y `content-schema`. `booking` existe como fundación headless; metadata de preview vive en `content-schema` y se renderiza en `ui`, sin paquete `seo`. El SEO de lanzamiento sigue pendiente. Ejecutar `pnpm check`, `pnpm build` y `pnpm test` para verificar ambas apps; los comandos por app están en cada `package.json`.
 
 ## Contratos PR-02
 
@@ -66,7 +66,7 @@ El titular eligió Cal.com Individual Gratis para probar una única agenda profe
 
 ## Auditoría AUDIT-01 — invariantes adicionales
 
-El catálogo VIORA debe poseer estilos locales explícitos y no depender de efectos de importar LandingHero ni hojas internas de sections. Las clases visuales entre aplicaciones no son API pública implícita. SEO, Content Collections y hosting definitivo siguen siendo objetivos hasta que exista código real. La fundación headless de `booking` existe desde PR-09, pero no hay integración de agenda activa. El test de enlaces posterior al build comprueba rutas y fragmentos internos; no sustituye pruebas de teclado, accesibilidad y navegador. Registrar los seis gates locales sobre el HEAD final antes de cada merge. No activar CI.
+El catálogo VIORA debe poseer estilos locales explícitos y no depender de efectos de importar LandingHero ni hojas internas de sections. Las clases visuales entre aplicaciones no son API pública implícita. Canonical, sitemap, `robots.txt` de producción, JSON-LD, Open Graph, Content Collections y hosting definitivo siguen pendientes. La fundación headless de `booking` existe desde PR-09, pero no hay integración de agenda activa. El test de enlaces posterior al build comprueba rutas y fragmentos internos; no sustituye pruebas de teclado, accesibilidad y navegador. Registrar los seis gates locales sobre el HEAD final antes de cada merge. No activar CI.
 
 ## Fundación de reservas (PR-09)
 

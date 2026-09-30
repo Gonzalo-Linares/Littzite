@@ -13,7 +13,7 @@ export function getStaticPaths() {
 const { service } = Astro.props;
 ---
 
-<VioraSiteLayout title={`${service.displayName} | VIORA \u00b7 Vista previa`}>
+<VioraSiteLayout seo={{ title: `${service.displayName} | VIORA · Vista previa`, description: service.description }}>
 
   <section class="viora-service-detail" aria-labelledby="viora-service-title">
     <Container>

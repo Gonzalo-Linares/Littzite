@@ -4,6 +4,8 @@ import {
   bookingTargetSchema,
   contrastRatio,
   pageSectionSchema,
+  pageSchema,
+  seoMetadataSchema,
   serviceActionSchema,
   siteContentSchema,
   siteConfigSchema,
@@ -27,7 +29,7 @@ function fixture() {
       ],
     }],
     pages: [{
-      slug: '', title: 'Fixture',
+      slug: '', seo: { title: 'Fixture', description: 'Descripción de prueba' },
       sections: [{ id: 'services', type: 'service-list', serviceIds: ['sample'] }],
     }],
     bookingTargets: [{ id: 'calendar', providerKey: 'fixture-provider', fallbackUrl: 'https://booking.example.test/' }],
@@ -41,6 +43,7 @@ test('both demo apps validate independently and use different themes', () => {
   assert.equal(estetica.site.defaultLocale, 'es-AR');
   assert.equal(tattoo.site.defaultLocale, 'es-AR');
   assert.notDeepEqual(estetica.site.theme, tattoo.site.theme);
+  assert.notDeepEqual(estetica.pages[0].seo, tattoo.pages[0].seo);
   for (const content of [estetica, tattoo]) {
     const { surface, text, accent, accentText, focus } = content.site.theme;
     assert.ok(contrastRatio(surface, text) >= 4.5);
@@ -49,6 +52,20 @@ test('both demo apps validate independently and use different themes', () => {
   }
   assert.deepEqual(estetica.bookingTargets, []);
   assert.deepEqual(tattoo.quoteTargets, []);
+});
+
+test('SEO metadata is strict, trimmed, non-empty and required by Page', () => {
+  const valid = { title: ' Título ', description: ' Descripción ' };
+  assert.deepEqual(seoMetadataSchema.parse(valid), { title: 'Título', description: 'Descripción' });
+  assert.equal(seoMetadataSchema.safeParse({ ...valid, title: '' }).success, false);
+  assert.equal(seoMetadataSchema.safeParse({ ...valid, description: '' }).success, false);
+  assert.equal(seoMetadataSchema.safeParse({ ...valid, description: '  ' }).success, false);
+  assert.equal(seoMetadataSchema.safeParse({ ...valid, keywords: ['x'] }).success, false);
+  assert.equal(pageSchema.safeParse({ slug: '', seo: valid, sections: [] }).success, true);
+  assert.equal(pageSchema.safeParse({ slug: '', sections: [] }).success, false);
+  assert.equal(pageSchema.safeParse({ slug: '', seo: { ...valid, description: '' }, sections: [] }).success, false);
+  assert.equal(pageSchema.safeParse({ slug: '', title: 'Legacy', sections: [] }).success, false);
+  assert.equal('title' in pageSchema.parse({ slug: '', seo: valid, sections: [] }), false);
 });
 
 test('only es-AR and valid theme tokens are accepted', () => {

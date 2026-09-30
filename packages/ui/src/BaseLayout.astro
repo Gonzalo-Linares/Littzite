@@ -1,16 +1,16 @@
 ---
-import type { SiteConfig } from '@littzite/content-schema';
+import type { SeoMetadata, SiteConfig } from '@littzite/content-schema';
 import './styles.css';
 
 interface Props {
   locale: SiteConfig['defaultLocale'];
   theme: SiteConfig['theme'];
-  title: string;
+  seo: SeoMetadata;
   noindex: boolean;
   bodyClass?: string;
 }
 
-const { locale, theme, title, noindex, bodyClass } = Astro.props;
+const { locale, theme, seo, noindex, bodyClass } = Astro.props;
 const themeStyle = {
   '--color-surface': theme.surface,
   '--color-text': theme.text,
@@ -27,7 +27,8 @@ const themeStyle = {
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     {noindex && <meta name="robots" content="noindex, nofollow" />}
-    <title>{title}</title>
+    <title>{seo.title}</title>
+    <meta name="description" content={seo.description} />
   </head>
   <body id="inicio" class={bodyClass}>
     <a class="skip-link" href="#contenido">Ir al contenido</a>

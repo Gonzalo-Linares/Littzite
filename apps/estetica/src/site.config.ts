@@ -30,7 +30,10 @@ const parsedContent = siteContentSchema.parse({
   quoteTargets: [],
   pages: [{
     slug: '',
-    title: 'VIORA · Estética integral | Vista previa',
+    seo: {
+      title: 'VIORA · Estética integral | Vista previa',
+      description: 'Tu momento, tu bienestar. Conocé la vista previa de VIORA, un espacio de estética integral y cuidado personal.',
+    },
     sections: [
       {
         id: 'intro',

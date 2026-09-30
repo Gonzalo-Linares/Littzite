@@ -4,7 +4,7 @@
 **Producto:** plataforma de creación de sitios comerciales modulares; primeros casos: estética integral y estudio de tatuajes en San Juan, Argentina.  
 **Propósito:** captación orgánica local, diferenciación visual, contacto y reservas/solicitudes mediante proveedores externos.
 
-> El repositorio incluye dos aplicaciones Astro, contratos Zod, secciones compartidas y prototipos visuales. La app de estética incorpora el manual de marca y los tres logos oficiales autorizados de VIORA. La arquitectura restante describe el objetivo previsto: todavía **no** hay sitios comerciales terminados, contenido real, SEO productivo ni integraciones de reservas. Las decisiones pendientes requieren validación antes de implementarse.
+> El repositorio incluye dos aplicaciones Astro, cuatro paquetes compartidos, contratos Zod, secciones compartidas y prototipos visuales. Ambas apps tienen `title` y `description` tipados en sus páginas y conservan `noindex, nofollow`. La app de estética incorpora el manual de marca y los tres logos oficiales autorizados de VIORA. Todavía **no** hay sitios comerciales terminados, SEO de lanzamiento ni integraciones de reservas. Las decisiones pendientes requieren validación antes de implementarse.
 
 ## Acuerdos de alcance
 

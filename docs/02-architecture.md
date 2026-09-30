@@ -2,7 +2,7 @@
 
 ## Monorepo objetivo (arquitectura conceptual)
 
-El árbol combina componentes implementados con **módulos conceptuales**. `apps/{estetica,tattoo}` consume contratos de `content-schema`, `ui`, `sections` y la fundación headless `booking`; solamente `seo` permanece previsto para cuando haya requisitos concretos.
+El árbol combina componentes implementados con **módulos conceptuales**. `apps/{estetica,tattoo}` consume contratos de `content-schema`, `ui`, `sections` y la fundación headless `booking`. El contrato editorial de metadata pertenece a `content-schema`; `ui` renderiza el head común y cada app define sus valores. No se crea un paquete SEO mientras esta responsabilidad sea solo validación y render común.
 
 ```text
 Littzite/
@@ -13,7 +13,6 @@ Littzite/
 │   ├── content-schema/         # Zod/types: sitio, páginas, secciones y servicios
 │   ├── ui/                     # Primitivos accesibles y tokens semánticos
 │   ├── sections/               # Hero, galerías, catálogo, testimonios, FAQ, CTA
-│   ├── seo/                    # Head, canonical, JSON-LD, sitemap/utilidades
 │   └── booking/                # Contrato y adaptadores de proveedores
 ├── docs/                       # Esta documentación + ADRs
 ├── .github/workflows/          # Workflows presentes, CI desactivada por el propietario
@@ -69,7 +68,7 @@ Los negocios controlan las cuentas de sus proveedores y validan la exactitud de 
 flowchart TB
     V[Visitante desde Google / Maps / redes]
     Repo[(Monorepo GitHub)]
-    Core[Paquetes compartidos: UI, secciones, SEO, esquema, reservas]
+    Core[Paquetes compartidos: UI, secciones, esquema y reservas]
     ES[Astro: estética + contenido/configuración]
     TA[Astro: tatuador + contenido/configuración]
     CI[Verificacion local de ambas apps; workflow de GitHub desactivado]
@@ -103,7 +102,6 @@ Cal.com fue seleccionado **solo para un piloto futuro de VIORA**, hoy en standby
 | `content-schema` | Tipos y validaciones de configuración/contenido | Renderizado, HTTP, credenciales |
 | `ui` | Botones, controles, patrones accesibles, tokens | Decisiones de negocio o llamadas a proveedores |
 | `sections` | Composición de bloques reutilizables con props tipadas | Consultar contenido global de una app |
-| `seo` | Metadatos, URL canonical, schema, sitemap helpers | Inventar reseñas o localidades no verificadas |
 | `booking` | Registro cerrado de proveedores y validación fail-closed de URLs `BookingTarget` | Resolver `ServiceAction`, crear agenda local, decidir política de señas o fingir una API de reserva universal |
 | `content-schema` | Validar `ServiceAction[]` y relaciones con destinos de reserva/presupuesto; WhatsApp obtiene el único número de `ContactConfig` | Hardcodear flujos por identidad de app ni duplicar números comerciales |
 | `apps/*` | Identidad, contenido, orden de páginas, proveedores y deploy | Reimplementar lógica compartida |
@@ -114,8 +112,8 @@ Cal.com fue seleccionado **solo para un piloto futuro de VIORA**, hoy en standby
 flowchart LR
   A[Archivos config y contenido de una app] --> V[Validación Zod + integridad de referencias]
   V --> P[Generación de rutas estáticas Astro]
-  P --> SEO[Metadatos y JSON-LD por página]
-  SEO --> HTML[HTML optimizado + assets]
+  P --> HEAD[Title y description tipados por página]
+  HEAD --> HTML[HTML estático noindex + assets]
   HTML --> CDN[Proyecto de hosting de esa app]
 ```
 
@@ -123,6 +121,7 @@ flowchart LR
 
 - Cada aplicación **deberá definir** dominio/canonical, sitemap, iconos, imágenes sociales, cuenta de reservas y analítica independientes antes del lanzamiento; todavía no hay despliegue productivo ni esas integraciones.
 - D-09: ambas apps publican contenido en `es-AR`, sin prefijo idiomático; el contrato `SiteConfig.defaultLocale` es la fuente de verdad para el idioma del documento, metadatos y formatos. Los paquetes compartidos no implementan un router de idiomas ni catálogos de traducción en v1.
+- El preview implementa `title` y `description` tipados en `content-schema`, renderizados por `ui` y provistos por cada app. Canonical, sitemap, robots de producción, JSON-LD, Open Graph, dominios y Search Console siguen pendientes; ambas apps conservan `noindex`.
 - Comparten librerias, no sesiones ni secretos. Los workflows de GitHub Actions permanecen desactivados por decision del propietario; los seis gates deben ejecutarse localmente antes de integrar cambios. Los despliegues independientes y selectivos por rutas siguen sin implementarse.
 - No se almacena un registro local de reservas en v1; la fuente de verdad es el proveedor elegido.
 - Cada integración externa incluye fallback a enlace externo y una política ante indisponibilidad.

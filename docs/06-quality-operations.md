@@ -1,6 +1,10 @@
 # Calidad, SEO, seguridad y operaciones — implementado y pendiente
 
-## SEO local — criterios de lanzamiento todavía no implementados
+## Metadata del preview implementada; SEO local de lanzamiento pendiente
+
+`content-schema` valida `Page.seo` mediante `SeoMetadata` (`title` y `description`, strings recortados y no vacíos, objeto estricto). `ui/BaseLayout.astro` renderiza ambos una vez. Las apps son dueñas de los valores; VIORA deriva la metadata de sus cuatro fichas desde `Service.displayName` y `Service.description`. Las páginas permanecen `noindex, nofollow`.
+
+Pendiente para lanzamiento: canonical, sitemap, `robots.txt` productivo, JSON-LD, Open Graph, dominios, Search Console y SEO de publicación. No se declara completo el SEO.
 
 - `canonicalOrigin` específico por sitio, canonical absoluta por página; sitemap solo con URLs indexables válidas; `robots.txt` independiente.
 - D-09: usar `SiteConfig.defaultLocale = 'es-AR'` como única fuente de verdad para `<html lang>`, idioma de metadatos y formatos regionales por `Intl` cuando corresponda. Una sola versión de URL sin prefijo `/es/`; no emitir `hreflang` ficticio ni páginas traducidas. Slugs legibles en español y metadatos únicos por servicio.
@@ -18,7 +22,7 @@
 | --- | --- | --- |
 | `pnpm lint` / format | convenciones y código no usado | PR |
 | `pnpm typecheck` | TypeScript estricto, Astro y contratos | PR |
-| Validación de contenido | Zod, referencias, URLs, slugs, locale `es-AR` y campos SEO | PR/build |
+| Validación de contenido | Zod, referencias, URLs, slugs, locale `es-AR` y `Page.seo` | PR/build |
 | Vitest | uniones discriminadas de `ServiceAction`, referencias a `BookingTarget`/`QuoteTarget`, fallback, URLs, SEO y secciones lógicas | PR |
 | Build ambas apps | ausencia de imports cruzados, errores de SSR/build y assets | PR común |
 | Playwright | menú móvil, reserva directa de estética, doble CTA tatuador, fallback, contacto, rutas y sitemap | PR/release |
