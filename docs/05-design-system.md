@@ -20,6 +20,10 @@ La estructura usa componentes Astro estáticos, puntos de ruptura responsivos, e
 
 La estética adopta el manual de marca aportado por su titular: marfil, ciruela, rosa, rosa suave y tinta; salvia es opcional. El tema semántico común de seis colores sigue estable; paleta extendida, tipografía y composición viven en `apps/estetica/src/styles/viora.css`. `VioraSiteLayout` local de la app compone los componentes públicos compartidos y centraliza logos, navegación, pie y CSS sin trasladar marca a `packages/ui`. Cuatro líneas editoriales tienen fichas; sus 60 minutos son valores provisionales del piloto, no duraciones técnicas publicadas, y no hay acciones ni reservas activas. Ver [guía de implementación](16-viora-brand.md), ADR-010 y ADR-012.
 
+## Interacción y responsive de VIORA (PR-11)
+
+La navegación compartida mantiene enlaces MPA reales y zonas táctiles de al menos 44px. El catálogo VIORA da feedback discreto en hover, foco y pressed sin esconder contenido ni hacer clickeable el artículo completo. CSS habilita View Transitions entre documentos del mismo origen de forma progresiva; los navegadores sin soporte navegan normalmente y no hay router cliente ni JavaScript de animación. `prefers-reduced-motion` reduce transiciones y scroll suave. `SiteConfig.iconHref` es opcional y acepta solo una ruta local root-relative; VIORA referencia el logo principal autorizado y Juanjo lo omite. La 404 estática usa el layout VIORA, metadata propia, `noindex` y enlaces de regreso; no cambia la identidad de Juanjo.
+
 ## Tokens semánticos
 
 | Nivel | Ejemplos | Responsable |

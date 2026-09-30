@@ -81,6 +81,19 @@ test('only es-AR and valid theme tokens are accepted', () => {
   assert.equal(siteConfigSchema.safeParse({ defaultLocale: 'es-AR', theme: { ...theme, accent: 'red' } }).success, false);
 });
 
+test('SiteConfig accepts an optional root-relative local browser icon only', () => {
+  const base = { defaultLocale: 'es-AR', theme };
+  assert.equal(siteConfigSchema.safeParse(base).success, true);
+  assert.equal(siteConfigSchema.safeParse({ ...base, iconHref: '/brand/viora-principal.png' }).success, true);
+  assert.equal(siteConfigSchema.safeParse({ ...base, iconHref: '' }).success, false);
+  assert.equal(siteConfigSchema.safeParse({ ...base, iconHref: 'https://example.test/icon.png' }).success, false);
+  assert.equal(siteConfigSchema.safeParse({ ...base, iconHref: 'javascript:alert(1)' }).success, false);
+  assert.equal(siteConfigSchema.safeParse({ ...base, iconHref: '//example.test/icon.png' }).success, false);
+  assert.equal(siteConfigSchema.safeParse({ ...base, iconHref: '/../icon.png' }).success, false);
+  assert.equal(estetica.site.iconHref, '/brand/viora-principal.png');
+  assert.equal('iconHref' in tattoo.site, false);
+});
+
 test("all future brand themes enforce semantic contrast, not just today's two apps", () => {
   const base = { defaultLocale: 'es-AR', theme };
   assert.equal(siteConfigSchema.safeParse(base).success, true);

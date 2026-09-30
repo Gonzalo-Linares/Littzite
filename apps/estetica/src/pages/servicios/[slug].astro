@@ -20,7 +20,7 @@ const { service } = Astro.props;
       <a class="viora-service-detail__back" href="/#alcance">← Volver a servicios</a>
       <article>
         <p class="viora-service-detail__eyebrow">VIORA / servicios</p>
-        <h1 id="viora-service-title">{service.displayName}</h1>
+        <h1 id="viora-service-title" style={`view-transition-name: viora-service-${service.slug}`}>{service.displayName}</h1>
         <p class="viora-service-detail__description">{service.description}</p>
         <p class="viora-service-detail__note">Esta información es orientativa. Los detalles del servicio y su disponibilidad se confirmarán antes de ofrecer turnos.</p>
       </article>

@@ -16,17 +16,27 @@ assert.equal(siteConfigSchema.safeParse({ defaultLocale: 'es' }).success, false)
 
 const { siteContent } = await import(`../apps/${app}/src/site.config.ts`);
 const html = await readFile(new URL(`../apps/${app}/dist/index.html`, import.meta.url), 'utf8');
+const assertBrowserIcon = (markup, href, label) => {
+  const icons = markup.match(/<link\b(?=[^>]*\brel="icon")[^>]*>/g) ?? [];
+  assert.equal(icons.length, href ? 1 : 0, `${label}: unexpected browser icon count`);
+  if (href) assert.ok(icons[0].includes(`href="${href}"`), `${label}: wrong browser icon`);
+};
 assert.equal((html.match(/<header class="site-header">/g) ?? []).length, 1, `${app}: expected one header`);
 assert.equal((html.match(/<footer class="site-footer">/g) ?? []).length, 1, `${app}: expected one footer`);
 assert.match(html, /<html lang="es-AR"(?:\s|>)/);
 assert.match(html, /<meta name="robots" content="noindex, nofollow">/);
 assertMetadata(html, siteContent.pages.find((page) => page.slug === '').seo, app);
+assertBrowserIcon(html, siteContent.site.iconHref, `${app} home`);
 assert.ok(html.includes(`>${app === 'estetica' ? 'Regalate una pausa.' : 'De la idea a la piel.'}</h1>`), 'Expected editorial heading');
 assert.ok(html.includes('class="site-header"'), 'Shared header missing');
 assert.ok(html.includes('class="site-footer"'), 'Shared footer missing');
 if (app === 'estetica') {
   assert.equal(siteContent.bookingTargets.length, 0, 'VIORA must not have live booking targets');
   assert.ok(siteContent.services.every(({ actions }) => actions.length === 0), 'VIORA services must not have booking CTAs');
+  assert.doesNotMatch(html, /<script\b/i, 'VIORA interaction polish must not add browser JavaScript');
+  const vioraStyles = await readFile(new URL('../apps/estetica/src/styles/viora.css', import.meta.url), 'utf8');
+  assert.match(vioraStyles, /@view-transition\s*\{\s*navigation:\s*auto;/, 'VIORA should opt into progressive cross-document transitions');
+  assert.match(vioraStyles, /@media\s*\(prefers-reduced-motion:\s*reduce\)/, 'VIORA must respect reduced motion');
   const assertVioraFrame = (markup, page) => {
     assert.equal((markup.match(/<header class="site-header">/g) ?? []).length, 1, `${page}: expected one VIORA header`);
     assert.equal((markup.match(/<footer class="site-footer">/g) ?? []).length, 1, `${page}: expected one VIORA footer`);
@@ -36,6 +46,7 @@ if (app === 'estetica') {
     assert.match(markup, /<a href="\/#esencia">Nuestra esencia<\/a>/, `${page}: Nuestra esencia link must target /#esencia`);
     assert.ok(markup.includes('/brand/viora-horizontal.png'), `${page}: horizontal logo missing`);
     assert.ok(markup.includes('/brand/viora-palabra.png'), `${page}: wordmark missing`);
+    assertBrowserIcon(markup, siteContent.site.iconHref, page);
   };
   assertVioraFrame(html, 'home');
   assert.ok(html.includes('class="viora-site"'), 'VIORA-only body style missing');
@@ -50,6 +61,11 @@ if (app === 'estetica') {
     await access(new URL(`../apps/estetica/dist/brand/${asset}`, import.meta.url));
   }
   assert.equal((html.match(/class="viora-catalog__card"/g) ?? []).length, 4, 'Expected four VIORA service cards');
+  assert.deepEqual(
+    Array.from(html.matchAll(/view-transition-name: (viora-service-[a-z0-9-]+)/g), ([, name]) => name),
+    siteContent.services.map(({ slug }) => `viora-service-${slug}`),
+    'VIORA card transition names must be unique and derived from service slugs',
+  );
   for (const service of siteContent.services) {
     assert.ok(html.includes(`>${service.displayName}</a>`), `${service.slug}: card title missing`);
     assert.ok(html.includes(service.description), `${service.slug}: card description missing`);
@@ -58,9 +74,10 @@ if (app === 'estetica') {
     const detail = await readFile(route, 'utf8');
     const detailSeo = { title: `${service.displayName} | VIORA · Vista previa`, description: service.description };
     assertMetadata(detail, detailSeo, service.slug);
+    assert.ok(detail.includes(`view-transition-name: viora-service-${service.slug}`), `${service.slug}: shared transition name missing from detail`);
     assert.notEqual(detailSeo.title, siteContent.pages[0].seo.title, `${service.slug}: detail title must differ from home`);
     assertVioraFrame(detail, service.slug);
-    assert.ok(detail.includes(`<h1 id="viora-service-title">${service.displayName}</h1>`), `${service.slug}: title missing`);
+    assert.match(detail, new RegExp(`<h1 id="viora-service-title"[^>]*>${service.displayName}</h1>`), `${service.slug}: title missing`);
     assert.ok(detail.includes(service.description), `${service.slug}: canonical description missing`);
     assert.ok(detail.includes('<html lang="es-AR"'), `${service.slug}: locale missing`);
     assert.ok(detail.includes('<meta name="robots" content="noindex, nofollow">'), `${service.slug}: noindex missing`);
@@ -71,6 +88,18 @@ if (app === 'estetica') {
     assert.ok(!/60\s*(?:minutos|min\b)/i.test(detail), `${service.slug}: pilot duration must not be presented as a technical duration`);
     assert.ok(!/(?:cal\.com|booking\.example|wa\.me|api\.whatsapp)/i.test(detail), `${service.slug}: fictitious commercial URL`);
   }
+  const notFound = await readFile(new URL('../apps/estetica/dist/404.html', import.meta.url), 'utf8');
+  assertMetadata(notFound, {
+    title: 'Página no encontrada | VIORA · Vista previa',
+    description: 'La página que buscás no existe en esta vista previa de VIORA. Podés volver al inicio o explorar las experiencias.',
+  }, 'VIORA 404');
+  assertBrowserIcon(notFound, siteContent.site.iconHref, 'VIORA 404');
+  assertVioraFrame(notFound, '404');
+  assert.match(notFound, /<html lang="es-AR"/);
+  assert.match(notFound, /<meta name="robots" content="noindex, nofollow">/);
+  assert.match(notFound, /<h1 id="viora-not-found-title">Esta página no existe\.<\/h1>/);
+  assert.ok(notFound.includes('href="/"') && notFound.includes('href="/#alcance"'), 'VIORA 404 must provide real return links');
+  assert.ok(!/(?:cal\.com|wa\.me|api\.whatsapp|Reservar|Agendar)/i.test(notFound), 'VIORA 404 must not publish a commercial action');
   await assert.rejects(access(new URL('../apps/estetica/dist/servicios/no-existe/index.html', import.meta.url)));
  } else {
   assert.equal(siteContent.bookingTargets.length, 0, 'Juanjo must not have provider targets');

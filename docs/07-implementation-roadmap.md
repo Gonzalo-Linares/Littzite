@@ -1,6 +1,6 @@
 # Plan de implementación y Definition of Done — estado vigente
 
-**Corte 30/09/2026:** dos apps Astro estáticas no indexadas; cuatro paquetes compartidos (`content-schema`, `ui`, `sections`, `booking`); identidad VIORA, catálogo de cuatro servicios, layout local y cuatro defaults Cal.com de prueba; identidad editorial Juanjo con galería fotográfica aún vacía. El preview implementa `title` y `description` tipados por página, incluido cada servicio VIORA. Sin reservas activas, SEO de lanzamiento, deploy final, SDK externo ni CMS. GitHub Actions está desactivado por decisión del titular.
+**Corte 30/09/2026:** dos apps Astro estáticas no indexadas; cuatro paquetes compartidos (`content-schema`, `ui`, `sections`, `booking`); VIORA con catálogo de cuatro servicios, interacciones responsive, browser icon configurable y 404; identidad editorial Juanjo con galería fotográfica aún vacía. El preview implementa `title` y `description` tipados por página, incluido cada servicio VIORA. Sin reservas activas, SEO de lanzamiento, deploy final, SDK externo ni CMS. GitHub Actions está desactivado por decisión del titular.
 
 ## Fase 0 — Documentación y decisiones
 

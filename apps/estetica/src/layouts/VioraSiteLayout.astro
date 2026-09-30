@@ -14,7 +14,7 @@ const { seo } = Astro.props;
 const { site } = siteContent;
 ---
 
-<BaseLayout locale={site.defaultLocale} theme={site.theme} seo={seo} noindex={true} bodyClass="viora-site">
+<BaseLayout locale={site.defaultLocale} theme={site.theme} seo={seo} noindex={true} iconHref={site.iconHref} bodyClass="viora-site">
   <SiteHeader slot="header" brand={'VIORA, est\u00e9tica integral'} descriptor="Tu momento, tu bienestar"
     links={[
       { label: 'Inicio', href: '/' },

@@ -14,6 +14,8 @@
   font-family: "DejaVu Sans", Arial, sans-serif;
 }
 
+@view-transition { navigation: auto; }
+
 .viora-site .site-header { background: var(--viora-ivory); }
 .viora-site .site-header__inner { min-height: 7.1rem; }
 .viora-site .site-mark { display: inline-flex; width: min(13.5rem, 38vw); min-height: 3.5rem; }
@@ -40,7 +42,7 @@
 }
 .viora-site .landing-hero__eyebrow { color: var(--viora-plum); }
 .viora-site .landing-hero__eyebrow-line { width: 2.25rem; background: var(--viora-rose); }
-.viora-site .landing-hero__body { max-width: 31rem; line-height: 1.85; }
+.viora-site .landing-hero__body { width: min(100%, 31rem); max-width: 31rem; line-height: 1.85; }
 .viora-site .landing-hero__index { display: none; }
 .viora-site .action-link { background: var(--viora-plum); color: var(--viora-ivory); border: 1px solid var(--viora-plum); border-radius: 2px; }
 .viora-site .landing-hero--serene .landing-hero__art {
@@ -88,7 +90,7 @@
 .viora-site .viora-catalog__card {
   position: relative; display: flex; flex-direction: column; align-items: start;
   min-height: 16.5rem; padding: clamp(1.65rem, 3vw, 3rem);
-  background: var(--viora-ivory); transition: background .2s ease;
+  background: var(--viora-ivory); transition: background-color .2s ease, box-shadow .2s ease;
 }
 .viora-site .viora-catalog__card:nth-child(2),
 .viora-site .viora-catalog__card:nth-child(3) { background: #F9ECEB; }
@@ -104,8 +106,23 @@
 .viora-site .viora-catalog__card p {
   margin: 0; max-width: 27rem; font-size: .9rem; line-height: 1.8; opacity: 1;
 }
-.viora-service-card__link { color: inherit; text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: .2em; }
-.viora-service-card__link:hover { text-decoration-thickness: 2px; }
+.viora-service-card__link {
+  display: inline-flex; align-items: center; min-height: 2.75rem;
+  color: inherit; text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: .2em;
+  transition: color .18s ease, text-decoration-thickness .18s ease;
+}
+.viora-service-card__link:hover { color: color-mix(in srgb, var(--viora-plum) 78%, black); text-decoration-thickness: 2px; }
+.viora-service-card__link:active { transform: translateY(1px); }
+.viora-site .viora-catalog__card:focus-within { background-color: #F9ECEB; }
+.viora-site .viora-catalog__card-number { transition: transform .2s ease; }
+.viora-site .viora-catalog__card:focus-within .viora-catalog__card-number { transform: translateY(-2px); }
+@media (hover: hover) {
+  .viora-site .viora-catalog__card:hover {
+    position: relative; z-index: 1; background-color: #F9ECEB;
+    box-shadow: 0 .55rem 1.5rem rgb(57 37 45 / 8%);
+  }
+  .viora-site .viora-catalog__card:hover .viora-catalog__card-number { transform: translateY(-2px); }
+}
 .viora-service-card__link:focus-visible,
 .viora-service-detail__back:focus-visible {
   outline: 3px solid var(--color-focus);
@@ -117,7 +134,7 @@
   padding-block: clamp(3rem, 8vw, 7rem);
   background: color-mix(in srgb, var(--viora-ivory) 83%, white);
 }
-.viora-service-detail__back { color: var(--viora-plum); font-weight: 600; }
+.viora-service-detail__back { display: inline-flex; align-items: center; min-height: 2.75rem; color: var(--viora-plum); font-weight: 600; }
 .viora-service-detail article { max-width: 52rem; margin: clamp(3rem, 8vw, 6rem) auto 0; }
 .viora-service-detail h1 {
   margin: 1rem 0 1.5rem;
@@ -146,6 +163,12 @@
 .viora-site .site-footer { background: var(--viora-ivory); }
 .viora-site .site-footer__inner { padding-block: 3.5rem; }
 .viora-footer-logo { width: min(13rem,60vw); height: auto; display: block; margin-bottom: 1rem; }
+.viora-not-found { min-height: 55vh; padding-block: clamp(4rem, 10vw, 8rem); background: color-mix(in srgb, var(--viora-ivory) 83%, white); }
+.viora-not-found__eyebrow { margin: 0; color: var(--viora-plum); font-size: .75rem; font-weight: 800; letter-spacing: .18em; }
+.viora-not-found h1 { max-width: 12ch; margin: 1rem 0; color: var(--viora-plum); font: 400 clamp(2.8rem, 7vw, 5rem)/1.06 "Nimbus Roman", "Times New Roman", Georgia, serif; letter-spacing: -.04em; }
+.viora-not-found > .container > p:not(.viora-not-found__eyebrow) { max-width: 38rem; line-height: 1.8; }
+.viora-not-found__actions { display: flex; flex-wrap: wrap; align-items: center; gap: 1rem 1.5rem; margin-top: 2rem; }
+.viora-not-found__catalog-link { display: inline-flex; align-items: center; min-height: 2.75rem; color: var(--viora-plum); font-weight: 650; }
 
 @media (max-width: 900px) {
   .viora-site .landing-hero__grid { grid-template-columns: 1fr 1fr; gap: 1.5rem; }
@@ -157,9 +180,10 @@
   .viora-site .site-mark { width: 10rem; }
   .viora-site .landing-hero__grid,
   .viora-essence__inner { grid-template-columns: 1fr; }
-  .viora-site .landing-hero__grid { padding-block: 3.25rem 4.5rem; gap: 2.25rem; }
+  .viora-site .landing-hero__grid { grid-template-columns: minmax(0, 1fr); padding-block: 3.25rem 4.5rem; gap: 2.25rem; }
+  .viora-site .landing-hero__copy { min-width: 0; }
   .viora-site .landing-hero__heading { font-size: clamp(3.9rem,12vw,6rem); }
-  .viora-site .landing-hero--serene .landing-hero__art { min-height: clamp(26rem,92vw,37rem); }
+  .viora-site .landing-hero--serene .landing-hero__art { min-height: clamp(22rem,95vw,34rem); }
   .viora-hero-logo { width: min(85%,26rem); max-height: 68%; }
   .viora-site .viora-catalog__grid { grid-template-columns: 1fr; }
   .viora-site .viora-catalog__card { min-height: 12rem; }
@@ -169,9 +193,13 @@
 }
 @media (max-width: 410px) {
   .viora-site .site-header__badge { font-size: .64rem; }
-  .viora-site .landing-hero__heading { font-size: 3.6rem; }
+  .viora-site .landing-hero__heading { font-size: clamp(3rem,14vw,3.6rem); }
   .viora-site .landing-hero__art-top { font-size: .54rem; }
 }
 @media (prefers-reduced-motion: reduce) {
-  .viora-site .viora-catalog__card { transition: none; }
+  .viora-site *,
+  .viora-site *::before,
+  .viora-site *::after { scroll-behavior: auto !important; transition-duration: .01ms !important; animation-duration: .01ms !important; }
+  ::view-transition-old(root), ::view-transition-new(root),
+  ::view-transition-old(*), ::view-transition-new(*) { animation-duration: .01ms !important; }
 }

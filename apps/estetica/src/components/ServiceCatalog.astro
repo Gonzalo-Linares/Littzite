@@ -29,7 +29,8 @@ const listedServices = section.serviceIds.map((id) => {
       {listedServices.map((service, index) => (
         <article class="viora-catalog__card">
           <span class="viora-catalog__card-number" aria-hidden="true">{String(index + 1).padStart(2, '0')}</span>
-          <h3><a class="viora-service-card__link" href={`/servicios/${service.slug}/`}>{service.displayName}</a></h3>
+          <h3><a class="viora-service-card__link" href={`/servicios/${service.slug}/`}
+            style={`view-transition-name: viora-service-${service.slug}`}>{service.displayName}</a></h3>
           <p>{service.description}</p>
         </article>
       ))}
