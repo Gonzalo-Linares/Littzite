@@ -38,7 +38,7 @@ flowchart LR
   UI --> C
 ```
 
-`content-schema` contiene los contratos Zod de sitio, páginas, servicios, secciones y destinos, más validación de referencias dentro de `SiteContent`. `ui` expone layout, cabecera, pie, contenedor, enlaces y tokens CSS; `sections` expone `LandingHero` y `FeatureGrid`, usados por ambas apps y dependientes únicamente de APIs públicas de `ui` y `content-schema`. El árbol conceptual aún incluye `seo` y `booking`, **no creados** hasta necesitar contratos implementados. No hay ciclos entre paquetes ni imports entre aplicaciones. `scripts/check-boundaries.mjs` comprueba manifests e imports literales en CI.
+`content-schema` contiene los contratos Zod de sitio, páginas, servicios, secciones y destinos, más validación de referencias dentro de `SiteContent`. `ui` expone layout, cabecera, pie, contenedor, enlaces y tokens CSS; `sections` expone `LandingHero` y `FeatureGrid`, usados por ambas apps y dependientes únicamente de APIs públicas de `ui` y `content-schema`. El árbol conceptual aún incluye `seo` y `booking`, **no creados** hasta necesitar contratos implementados. No hay ciclos entre paquetes ni imports entre aplicaciones. `scripts/check-boundaries.mjs` comprueba manifests, imports con AST de TypeScript (incluido frontmatter Astro), CSS @import y ciclos **localmente**; GitHub Actions está desactivado por decisión del propietario.
 
 ## Diagrama de contexto (C4 nivel 1, simplificado)
 

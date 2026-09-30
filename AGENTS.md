@@ -36,7 +36,7 @@ El grafo implementado inicialmente es `apps/{estetica,tattoo} -> packages/{conte
 
 ## Contratos PR-02
 
-`siteContentSchema` valida los datos de una app y sus referencias internas. Las configuraciones demo no contienen datos comerciales ni targets externos. Antes de publicar reservas o WhatsApp se requieren el proveedor/host aprobado, duración verificada donde corresponda y D-04B; un fixture de test no autoriza un CTA público. `packages/ui` consume el tema tipado y no conoce el negocio. Ejecutar `pnpm check:boundaries` y `pnpm test:contracts` localmente junto con los gates de ambas apps; la CI sigue desactivada por decisión del titular. El checker de límites cubre manifests e imports literales; revisar manualmente nuevas convenciones de importación si se introducen.
+`siteContentSchema` valida los datos de una app y sus referencias internas. Las configuraciones demo no contienen datos comerciales ni targets externos. Antes de publicar reservas o WhatsApp se requieren el proveedor/host aprobado, duración verificada donde corresponda y D-04B; un fixture de test no autoriza un CTA público. `packages/ui` consume el tema tipado y no conoce el negocio. Ejecutar `pnpm check:boundaries` y `pnpm test:contracts` localmente junto con los gates de ambas apps; la CI sigue desactivada por decisión del titular. El checker de límites utiliza el AST de TypeScript sobre fuentes de apps y paquetes y comprueba manifests y ciclos; los imports dinámicos con expresiones no literales se rechazan para exigir revisión explícita. CSS usa análisis acotado de @import; nuevas convenciones requieren pruebas.
 
 ## Prototipos visuales PR-03
 

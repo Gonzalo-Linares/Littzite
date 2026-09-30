@@ -1,6 +1,6 @@
 # Littzite — arquitectura fundacional
 
-**Estado de implementación (30/09/2026):** dos prototipos estáticos `noindex`; PR-01/02/03, VIORA, catálogo PR-06, Juanjo PR-05 y configuración del piloto Cal.com PR-08a integrados; layout local de VIORA y limpieza de arquitectura en revisión mediante PR #18.
+**Estado de implementación (30/09/2026):** dos prototipos estáticos `noindex`; PR-01/02/03, VIORA, catálogo PR-06, Juanjo PR-05 y configuración del piloto Cal.com PR-08a integrados; layout local VIORA y mejoras de arquitectura trabajadas en PR #18.
 **Producto:** plataforma de creación de sitios comerciales modulares; primeros casos: estética integral y estudio de tatuajes en San Juan, Argentina.  
 **Propósito:** captación orgánica local, diferenciación visual, contacto y reservas/solicitudes mediante proveedores externos.
 

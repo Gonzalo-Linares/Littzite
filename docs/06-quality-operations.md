@@ -12,7 +12,7 @@
 
 ## Calidad automatizada
 
-**Gates existentes:** pnpm check:boundaries revisa manifiestos, imports y ciclos; pnpm test:contracts usa node:test para contratos; pnpm check, build y test verifican ambas apps y su HTML estático. El smoke posterior al build comprueba enlaces y anclas internas. GitHub Actions **está desactivado por decisión del propietario**: cada PR debe registrar los seis controles ejecutados localmente en su último HEAD. Lint/format, Vitest, Playwright, axe y Lighthouse todavía no están configurados; la tabla detalla objetivos futuros.
+**Gates existentes:** pnpm check:boundaries revisa manifiestos, imports AST de TypeScript (y CSS @import) y ciclos; rechaza imports dinámicos no literales; pnpm test:contracts usa node:test para contratos; pnpm check, build y test verifican ambas apps y su HTML estático. El smoke posterior al build comprueba enlaces y anclas internas. GitHub Actions **está desactivado por decisión del propietario**: cada PR debe registrar los seis controles ejecutados localmente en su último HEAD. Lint/format, Vitest, Playwright, axe y Lighthouse todavía no están configurados; la tabla detalla objetivos futuros.
 
 | Gate | Qué comprueba | Cuándo |
 | --- | --- | --- |
