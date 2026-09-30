@@ -1,4 +1,5 @@
 import assert from 'node:assert/strict';
+import { fileURLToPath } from 'node:url';
 import { readFile } from 'node:fs/promises';
 import { siteConfigSchema } from '../packages/content-schema/src/index.ts';
 import { verifyInternalLinks } from './verify-site-links.mjs';
@@ -93,5 +94,5 @@ for (const [otherApp, otherTitle] of Object.entries(expectedTitles)) {
   if (otherApp !== app) assert.ok(!html.includes(otherTitle), `${app} contains ${otherApp} content`);
 }
 
-const links = await verifyInternalLinks(new URL(`../apps/${app}/dist/`, import.meta.url).pathname);
+const links = await verifyInternalLinks(fileURLToPath(new URL(`../apps/${app}/dist/`, import.meta.url)));
 console.log(`${app}: static prototype, locale, noindex, content isolation and ${links.checked} internal links across ${links.pages} pages verified`);
