@@ -41,3 +41,7 @@ Los tres PNG originales ya se incorporaron bajo `apps/estetica/public/brand/`, s
 ## Cómo verificar localmente
 
 Con los tres logos ya incorporados: ejecutar desde la raíz `corepack pnpm install --frozen-lockfile`, `corepack pnpm check:boundaries`, `corepack pnpm test:contracts`, `corepack pnpm check`, `corepack pnpm build` y `corepack pnpm test`. Los smoke tests aseguran logos disponibles, ausencia de contaminación a la app de tatuajes, cuatro tarjetas en VIORA y tres en el prototipo del tatuador. La CI está desactivada deliberadamente por el titular y no debe activarse sin su autorización.
+
+## Catalogo informativo (PR-06)
+
+Las cuatro lineas ahora tienen fichas editoriales en el catalogo local de VIORA y paginas estaticas de detalle enlazadas desde la portada. Titulos, slugs y descripciones salen unicamente de `Service`; la portada referencia IDs mediante `service-list`. Las fichas no contienen duracion, precio, acciones ni destinos de contacto/reserva. Reiki se presenta como experiencia de bienestar, sin atribuciones medicas. Las paginas mantienen `es-AR` y `noindex`. La publicacion de turnos requiere cerrar D-02A y D-01C y se implementara en un cambio posterior.

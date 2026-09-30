@@ -279,3 +279,9 @@ Los tipos son **ilustrativos**, no código productivo ni licencia para asumir qu
 5. Para tatuajes, no imponer automáticamente un umbral en centímetros, precio o duración para separar pequeños y grandes hasta que el artista lo defina. La clasificación puede ser editorial y la acción se presenta con una nota de elegibilidad aprobada.
 6. `canonicalOrigin`, datos estructurados, contacto y assets corresponden al sitio correcto; derechos de imagen verificados fuera del simple booleano de configuración.
 7. Las cuentas, secretos, citas, datos personales de consultas y pagos no forman parte del modelo de contenido público. Un cambio que requiera almacenamiento privado dispara nueva ADR y revisión de seguridad.
+
+## Implementacion de catalogo VIORA (PR-06)
+
+`apps/estetica/src/site.config.ts` ahora define las cuatro fichas informativas de VIORA con `Service` y `actions: []`; `durationMinutes` se omite mientras D-02A siga pendiente. La portada declara un `service-list` por IDs, cuya integridad valida `siteContentSchema`. `ServiceCatalog.astro` resuelve y muestra las mismas fichas sin duplicar titulos, slugs ni descripciones. `[slug].astro` usa `getStaticPaths()` sobre `siteContent.services` para generar `/servicios/<slug>/` y compartir el layout, locale y estado `noindex`.
+
+La presencia de una ficha informativa no habilita su reserva. Un PR posterior necesitara duracion positiva validada, disponibilidad y proveedor aprobados (D-02A/D-01C), una accion tipada y su destino aprobado. No cambian los contratos compartidos ni se crea backend, paquete de catalogo o integracion de reservas.

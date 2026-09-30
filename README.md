@@ -1,6 +1,6 @@
 # Littzite — arquitectura fundacional
 
-**Estado:** arquitectura documental v0.8; PR-01/02/03 y VIORA integrados; identidad editorial y galería de Juanjo en PR-05. **Fecha:** 2026-09-28/29.
+**Estado:** arquitectura documental v0.8; PR-01/02/03, identidad VIORA y catálogo informativo PR-06; identidad editorial y galería de Juanjo en PR-05. **Fecha:** 2026-09-28/29.
 **Producto:** plataforma de creación de sitios comerciales modulares; primeros casos: estética integral y estudio de tatuajes en San Juan, Argentina.  
 **Propósito:** captación orgánica local, diferenciación visual, contacto y reservas/solicitudes mediante proveedores externos.
 
