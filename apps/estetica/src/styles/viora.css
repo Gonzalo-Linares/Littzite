@@ -25,10 +25,40 @@
 .viora-site .site-header__badge:hover { background: var(--viora-soft-rose); }
 
 .viora-site .landing-hero__grid {
-  grid-template-columns: minmax(0,1.05fr) minmax(0,.95fr);
-  padding-block: clamp(4rem,8vw,8rem) clamp(5rem,8vw,8rem);
-  gap: clamp(2rem,4.5vw,5rem);
+  grid-template-columns: minmax(0,.92fr) minmax(0,1.08fr);
+  min-height: clamp(35rem, calc(100svh - 8rem), 45rem);
+  padding-block: 1.5rem clamp(3.5rem,6vw,5.5rem);
+  gap: clamp(2.2rem,5vw,5.5rem);
+  align-items: center;
 }
+.viora-site .landing-hero__copy { justify-content: flex-start; padding-block: clamp(1.5rem,5vh,3.5rem) 0; }
+.viora-site .landing-hero__eyebrow { animation: viora-enter .62s cubic-bezier(.2,.7,.2,1) .04s both; }
+.viora-site .landing-hero__heading { animation: viora-enter .66s cubic-bezier(.2,.7,.2,1) .12s both; }
+.viora-site .landing-hero__body { animation: viora-enter .66s cubic-bezier(.2,.7,.2,1) .2s both; }
+.viora-site .landing-hero__actions { animation: viora-enter .66s cubic-bezier(.2,.7,.2,1) .28s both; }
+.viora-site .landing-hero .landing-hero__art {
+  min-height: clamp(32rem,58vw,43rem); padding: 0; overflow: visible;
+  color: var(--viora-ivory); background: transparent; isolation: isolate;
+  animation: viora-art-enter .9s cubic-bezier(.2,.7,.2,1) .12s both;
+}
+.viora-site .landing-hero__art-top,
+.viora-site .landing-hero__art-bottom { position: relative; z-index: 3; padding-inline: .25rem; }
+.viora-site .landing-hero__art-top { color: var(--viora-plum); }
+.viora-site .landing-hero__art-bottom { color: var(--viora-ivory); padding: 0 1.4rem 1.3rem; }
+.viora-hero-photo-frame { position: absolute; inset: 1.25rem 0 0 1rem; display: block; overflow: hidden; border-radius: 48% 48% 1.5rem 1.5rem / 23% 23% 1.5rem 1.5rem; }
+.viora-hero-photo-frame::after {
+  position: absolute; inset: 35% 0 0; content: ""; pointer-events: none;
+  background: linear-gradient(180deg, transparent 45%, rgb(57 37 45 / 32%) 100%);
+}
+.viora-hero-photo { display: block; width: 100%; height: 100%; object-fit: cover; object-position: 63% 48%; }
+.viora-site .landing-hero__art::before {
+  position: absolute; z-index: -1; right: -1.25rem; bottom: .75rem; width: 42%; height: 38%;
+  content: ""; border-radius: 50% 50% 1.5rem 1.5rem;
+  background: color-mix(in srgb, var(--viora-soft-rose) 70%, transparent);
+  transform: rotate(8deg);
+}
+@keyframes viora-enter { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: translateY(0); } }
+@keyframes viora-art-enter { from { opacity: 0; transform: translateY(8px) scale(.985); } to { opacity: 1; transform: translateY(0) scale(1); } }
 .viora-site .landing-hero__heading,
 .viora-site .viora-catalog__intro h2,
 .viora-essence h2 {
@@ -37,7 +67,7 @@
   letter-spacing: -.04em;
 }
 .viora-site .landing-hero__heading {
-  max-width: 11ch; font-size: clamp(3.8rem,6.7vw,7.4rem); line-height: 1.03;
+  max-width: 10ch; font-size: clamp(3.6rem,6.45vw,7.2rem); line-height: 1.01;
   margin-block: 2rem 1.65rem;
 }
 .viora-site .landing-hero__eyebrow { color: var(--viora-plum); }
@@ -45,17 +75,6 @@
 .viora-site .landing-hero__body { width: min(100%, 31rem); max-width: 31rem; line-height: 1.85; }
 .viora-site .landing-hero__index { display: none; }
 .viora-site .action-link { background: var(--viora-plum); color: var(--viora-ivory); border: 1px solid var(--viora-plum); border-radius: 2px; }
-.viora-site .landing-hero--serene .landing-hero__art {
-  min-height: clamp(34rem,48vw,43rem);
-  padding: clamp(1.2rem,2vw,2rem);
-  background: var(--viora-soft-rose);
-  color: var(--viora-plum);
-  border-radius: 0;
-}
-.viora-site .landing-hero__art-top { color: var(--viora-plum); font-size: .64rem; letter-spacing: .17em; }
-.viora-site .landing-hero__art-bottom { color: var(--viora-plum); font-size: .65rem; letter-spacing: .15em; }
-.viora-site .landing-hero__canvas { display: flex; align-items: center; justify-content: center; }
-.viora-hero-logo { display: block; width: min(66%, 24rem); max-height: 69%; object-fit: contain; }
 .viora-site .landing-hero__disclaimer { display: none; }
 
 /* Self-contained local catalog; no implicit dependency on @littzite/sections CSS. */
@@ -130,11 +149,9 @@
   }
   .viora-site .viora-catalog__card:hover .viora-catalog__card-number { transform: translateY(-2px); }
   .viora-site .viora-catalog__card:hover .viora-service-visual__reveal,
-  .viora-site .viora-catalog__card:focus-within .viora-service-visual__reveal {
-    clip-path: polygon(34% 0, 100% 0, 100% 100%, 0 100%);
-  }
+  .viora-site .viora-catalog__card:focus-within .viora-service-visual__reveal { opacity: 1; transform: scale(1); }
   .viora-site .viora-catalog__card:hover .viora-service-visual__primary,
-  .viora-site .viora-catalog__card:focus-within .viora-service-visual__primary { transform: scale(1.035); }
+  .viora-site .viora-catalog__card:focus-within .viora-service-visual__primary { opacity: 0; transform: scale(1.025); }
   .viora-service-card__link:hover .viora-service-card__explore > span,
   .viora-service-card__link:focus-visible .viora-service-card__explore > span { transform: translate(3px, -2px); }
 }
@@ -150,8 +167,7 @@
 }
 .viora-site .viora-catalog__card--visual::before {
   position: absolute; z-index: 1; inset: 0; content: ""; pointer-events: none;
-  background: linear-gradient(180deg, rgb(25 18 21 / 3%) 16%, rgb(25 18 21 / 28%) 48%, rgb(25 18 21 / 88%) 100%);
-  transition: background-color .5s ease;
+  background: linear-gradient(180deg, rgb(25 18 21 / 4%) 12%, rgb(25 18 21 / 24%) 45%, rgb(25 18 21 / 74%) 100%);
 }
 .viora-site .viora-catalog__card--visual .viora-catalog__card-number {
   position: absolute; z-index: 2; top: clamp(1.5rem, 3vw, 2.6rem); left: clamp(1.5rem, 3vw, 2.6rem);
@@ -168,11 +184,14 @@
   background: color-mix(in srgb, var(--viora-plum) 18%, var(--viora-ivory));
 }
 .viora-service-visual--card { position: absolute; z-index: 0; inset: 0; aspect-ratio: auto; }
-.viora-service-visual--detail { aspect-ratio: 4 / 5; }
+.viora-service-visual--detail-primary { aspect-ratio: 4 / 5; }
+.viora-service-visual--detail-secondary { aspect-ratio: 16 / 10; }
 .viora-service-visual__layer { position: absolute; inset: 0; display: block; width: 100%; height: 100%; object-fit: cover; }
-.viora-service-visual__primary { transition: transform .9s cubic-bezier(.2,.7,.2,1); }
-.viora-service-visual__reveal { z-index: 1; clip-path: polygon(100% 0, 100% 0, 100% 100%, 100% 100%); transition: clip-path .75s cubic-bezier(.2,.7,.2,1); }
-.viora-service-visual--detail .viora-service-visual__reveal { clip-path: polygon(66% 0, 100% 0, 100% 100%, 32% 100%); }
+.viora-service-visual__primary { transition: opacity .65s ease, transform .9s cubic-bezier(.2,.7,.2,1); }
+.viora-service-visual__reveal { z-index: 1; opacity: 0; transform: scale(1.035); transition: opacity .65s ease, transform .9s cubic-bezier(.2,.7,.2,1); }
+.viora-service-visual--has-reveal .viora-service-visual__primary { transform: scale(1); }
+.viora-service-detail__secondary-scene { max-width: 60rem; margin: clamp(4rem, 10vw, 9rem) auto 0; }
+.viora-service-visual--detail-secondary { aspect-ratio: 16 / 9; }
 .viora-service-card__link:focus-visible,
 .viora-service-detail__back:focus-visible {
   outline: 3px solid var(--color-focus);
@@ -204,8 +223,10 @@
 .viora-service-detail__note { margin-top: 2rem; color: color-mix(in srgb, var(--viora-ink) 76%, transparent); line-height: 1.7; }
 .viora-service-detail__visual-note { margin-top: 1.4rem; color: color-mix(in srgb, var(--viora-ink) 68%, transparent); font-size: .8rem; line-height: 1.6; }
 
-.viora-essence { background: var(--viora-plum); color: var(--viora-ivory); scroll-margin-top: 2rem; }
+.viora-essence { position: relative; overflow: hidden; background: var(--viora-plum); color: var(--viora-ivory); scroll-margin-top: 2rem; }
+.viora-essence__watermark { position: absolute; right: -3vw; top: 50%; color: rgb(250 245 240 / 5%); font: 400 clamp(9rem, 24vw, 25rem)/.8 "Nimbus Roman", Georgia, serif; letter-spacing: -.09em; pointer-events: none; user-select: none; transform: translateY(-50%); }
 .viora-essence__inner {
+  position: relative; z-index: 1;
   display: grid; grid-template-columns: minmax(0,1fr) minmax(0,.8fr);
   gap: clamp(2rem,8vw,8rem);
   align-items: center;
@@ -229,7 +250,7 @@
 @media (max-width: 900px) {
   .viora-site .landing-hero__grid { grid-template-columns: 1fr 1fr; gap: 1.5rem; }
   .viora-site .landing-hero__heading { font-size: clamp(3.3rem,6.7vw,5.3rem); }
-  .viora-site .landing-hero--serene .landing-hero__art { min-height: 33rem; }
+  .viora-site .landing-hero .landing-hero__art { min-height: 33rem; }
 }
 @media (max-width: 740px) {
   .viora-site .site-header__inner { gap: .7rem; }
@@ -238,16 +259,17 @@
   .viora-essence__inner { grid-template-columns: 1fr; }
   .viora-site .landing-hero__grid { grid-template-columns: minmax(0, 1fr); padding-block: 3.25rem 4.5rem; gap: 2.25rem; }
   .viora-site .landing-hero__copy { min-width: 0; }
-  .viora-site .landing-hero__heading { font-size: clamp(3.9rem,12vw,6rem); }
-  .viora-site .landing-hero--serene .landing-hero__art { min-height: clamp(22rem,95vw,34rem); }
-  .viora-hero-logo { width: min(85%,26rem); max-height: 68%; }
+  .viora-site .landing-hero__heading { font-size: clamp(3.25rem,12vw,5.5rem); }
+  .viora-site .landing-hero .landing-hero__art { min-height: clamp(22rem,95vw,34rem); }
   .viora-site .viora-catalog__grid { grid-template-columns: 1fr; }
   .viora-site .viora-catalog__card { min-height: 12rem; }
   .viora-site .viora-catalog__card--visual { min-height: clamp(27rem, 100vw, 34rem); }
   .viora-site .viora-catalog__card h3 { margin-top: 1rem; }
   .viora-site .viora-catalog__card--visual h3 { margin-top: 0; }
   .viora-service-detail article.viora-service-detail__article--visual { grid-template-columns: minmax(0, 1fr); gap: 2rem; }
-  .viora-service-visual--detail { aspect-ratio: 5 / 4; }
+  .viora-service-visual--detail-primary { aspect-ratio: 5 / 4; }
+  .viora-service-visual--detail-secondary { aspect-ratio: 4 / 3; }
+  .viora-service-detail__secondary-scene { margin-top: 4rem; }
   .viora-essence__inner { padding-block: 4.5rem; }
   .viora-essence h2 { font-size: clamp(3.2rem,11vw,5rem); }
 }
@@ -262,9 +284,28 @@
   .viora-site *::after { scroll-behavior: auto !important; transition-duration: .01ms !important; animation-duration: .01ms !important; }
   ::view-transition-old(root), ::view-transition-new(root),
   ::view-transition-old(*), ::view-transition-new(*) { animation-duration: .01ms !important; }
+  .viora-site .landing-hero__eyebrow,
+  .viora-site .landing-hero__heading,
+  .viora-site .landing-hero__body,
+  .viora-site .landing-hero__actions,
+  .viora-site .landing-hero__art,
+  .viora-service-visual__layer,
+  .viora-essence__watermark,
+  .viora-essence__lead,
+  .viora-essence__text,
+  .viora-service-detail__secondary-scene { animation: none !important; opacity: 1 !important; transform: none !important; }
   .viora-service-visual__primary,
   .viora-service-visual__reveal { transition: none; }
-  .viora-service-visual--has-reveal .viora-service-visual__reveal {
-    clip-path: polygon(38% 0, 100% 0, 100% 100%, 0 100%);
-  }
+  .viora-service-visual__reveal { opacity: 0; }
 }
+
+@supports (animation-timeline: view()) {
+  .viora-service-visual--card,
+  .viora-service-detail__secondary-scene,
+  .viora-essence__lead,
+  .viora-essence__text { animation: viora-enter both; animation-timeline: view(); animation-range: entry 0% entry 35%; }
+  .viora-site .landing-hero-photo-frame { animation: viora-hero-drift both; animation-timeline: view(); animation-range: exit 0% exit 100%; }
+  .viora-essence__watermark { animation: viora-watermark-drift both; animation-timeline: view(); animation-range: entry 0% exit 100%; }
+}
+@keyframes viora-hero-drift { from { transform: translateY(-8px) scale(1.025); } to { transform: translateY(8px) scale(1.025); } }
+@keyframes viora-watermark-drift { from { transform: translate(0,-50%); } to { transform: translate(-3vw,-50%); } }

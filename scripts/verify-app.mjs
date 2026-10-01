@@ -37,6 +37,8 @@ if (app === 'estetica') {
   const vioraStyles = await readFile(new URL('../apps/estetica/src/styles/viora.css', import.meta.url), 'utf8');
   assert.match(vioraStyles, /@view-transition\s*\{\s*navigation:\s*auto;/, 'VIORA should opt into progressive cross-document transitions');
   assert.match(vioraStyles, /@media\s*\(prefers-reduced-motion:\s*reduce\)/, 'VIORA must respect reduced motion');
+  assert.match(vioraStyles, /animation-timeline:\s*view\(\)/, 'VIORA scroll reveals should use CSS view timelines progressively');
+  assert.doesNotMatch(vioraStyles, /clip-path:\s*polygon\(/, 'VIORA imagery must not use a diagonal reveal');
   const assertVioraFrame = (markup, page) => {
     assert.equal((markup.match(/<header class="site-header">/g) ?? []).length, 1, `${page}: expected one VIORA header`);
     assert.equal((markup.match(/<footer class="site-footer">/g) ?? []).length, 1, `${page}: expected one VIORA footer`);
@@ -51,7 +53,10 @@ if (app === 'estetica') {
   assertVioraFrame(html, 'home');
   assert.ok(html.includes('class="viora-site"'), 'VIORA-only body style missing');
   assert.ok(html.includes('/brand/viora-horizontal.png'), 'VIORA header asset missing');
-  assert.ok(html.includes('/brand/viora-principal.png'), 'VIORA hero asset missing');
+  assert.match(html, /class="viora-hero-photo-frame"/, 'VIORA editorial hero photograph missing');
+  assert.doesNotMatch(html, /class="viora-hero-logo"/, 'VIORA hero should not be a giant logo poster');
+  const heroImageTag = html.match(/<img\b(?=[^>]*class="viora-hero-photo")[^>]*>/)?.[0];
+  assert.ok(heroImageTag, 'VIORA hero photo image missing');
   assert.ok(html.includes('/brand/viora-palabra.png'), 'VIORA footer asset missing');
   assert.ok(html.includes('id="esencia"'), 'VIORA essence section missing');
   assert.ok(!/(?:cal\.com|booking\.example|wa\.me|api\.whatsapp)/i.test(html), 'No commercial destination may be published');
@@ -71,9 +76,11 @@ if (app === 'estetica') {
     assert.notEqual(candidates[0].split(' ')[0], candidates[1].split(' ')[0], `${label}: srcset candidates must use distinct files`);
     assert.match(tag, /\bsizes="[^"]+"/, `${label}: srcset must declare rendered size hints`);
   };
+  assertResponsiveImage(heroImageTag, 'VIORA hero image');
   for (const [index, tag] of homeVisualImages.entries()) {
     assert.match(tag, /\bsrc="\/_astro\/[^"]+\.jpg"/, `VIORA catalog image ${index + 1}: expected a bundled local source`);
-    assert.match(tag, /\balt="[^"]+"/, `VIORA catalog image ${index + 1}: expected descriptive alt text`);
+    if (index % 2 === 0) assert.match(tag, /\balt="[^"]+"/, `VIORA catalog primary image ${index / 2 + 1}: expected descriptive alt text`);
+    else assert.match(tag, /\balt=""/, `VIORA catalog crossfade layer ${index + 1}: should be decorative for assistive technology`);
     assert.match(tag, /\bwidth="\d+"[^>]*\bheight="\d+"|\bheight="\d+"[^>]*\bwidth="\d+"/, `VIORA catalog image ${index + 1}: expected intrinsic dimensions`);
     assertResponsiveImage(tag, `VIORA catalog image ${index + 1}`);
   }
@@ -96,7 +103,11 @@ if (app === 'estetica') {
     assert.notEqual(detailSeo.title, siteContent.pages[0].seo.title, `${service.slug}: detail title must differ from home`);
     assertVioraFrame(detail, service.slug);
     const detailVisualImages = Array.from(detail.matchAll(/<img\b(?=[^>]*class="viora-service-visual__layer viora-service-visual__(?:primary|reveal)")[^>]*>/g), ([tag]) => tag);
-    assert.equal(detailVisualImages.length, 2, `${service.slug}: expected primary and reveal images`);
+    assert.equal(detailVisualImages.length, 2, `${service.slug}: expected primary and separate secondary image`);
+    assert.match(detail, /<figure[^>]*viora-service-visual--detail-primary/);
+    assert.match(detail, /<figure[^>]*viora-service-visual--detail-secondary/);
+    assert.doesNotMatch(detail, /viora-service-visual__reveal/, `${service.slug}: detail must not contain a split/reveal layer`);
+    assert.match(detail, /class="viora-service-detail__secondary-scene"/, `${service.slug}: second scene must be separate from the primary`);
     detailVisualImages.forEach((tag, index) => assertResponsiveImage(tag, `${service.slug} detail image ${index + 1}`));
     assert.match(detailVisualImages[0], /\bloading="eager"/i, `${service.slug}: detail primary image should load eagerly`);
     assert.match(detailVisualImages[1], /\bloading="lazy"/i, `${service.slug}: reveal image should stay lazy`);

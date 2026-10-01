@@ -12,5 +12,6 @@ Consulta de páginas y licencia: 2026-09-30. Los JPEG base se descargaron de la 
 | `masajes-reveal.jpg` / `masajes-reveal-small.jpg` | Tima Miroshnichenko | [Pexels photo 6187262](https://www.pexels.com/photo/a-masseuse-doing-a-massage-6187262/) | [Pexels License](https://www.pexels.com/license/) |
 | `reiki-primary.jpg` / `reiki-primary-small.jpg` | Arina Krasnikova | [Pexels photo 6998275](https://www.pexels.com/photo/woman-lying-on-the-floor-having-therapy-6998275/) | [Pexels License](https://www.pexels.com/license/) |
 | `reiki-reveal.jpg` / `reiki-reveal-small.jpg` | Mikhail Nilov | [Pexels photo 6931832](https://www.pexels.com/photo/woman-hand-relaxation-connection-6931832/) | [Pexels License](https://www.pexels.com/license/) |
+| `../viora-hero.jpg` / `../viora-hero-small.jpg` | Andrea Piacquadio | [Pexels photo 3855607](https://www.pexels.com/photo/cheerful-young-woman-resting-in-spa-3855607/) | [Pexels License](https://www.pexels.com/license/) |
 
 Pexels attribution is not required by its license; this ledger is voluntary provenance documentation for Littzite's third-party asset policy. The source photos and their generated derivatives must not be reused as endorsements or offered as standalone stock content.

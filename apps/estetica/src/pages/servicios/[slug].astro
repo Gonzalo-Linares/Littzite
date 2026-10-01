@@ -30,8 +30,13 @@ const visual = resolveServiceVisual(serviceVisuals, service.id);
           <p class="viora-service-detail__note">Esta información es orientativa. Los detalles del servicio y su disponibilidad se confirmarán antes de ofrecer turnos.</p>
           {visual && <p class="viora-service-detail__visual-note">Fotografía ilustrativa; no representa al equipo, el espacio ni las técnicas de VIORA.</p>}
         </div>
-        {visual && <ServiceVisual visual={visual} context="detail" transitionName={`viora-service-image-${service.slug}`} />}
+        {visual && <ServiceVisual visual={visual} context="detail-primary" transitionName={`viora-service-image-${service.slug}`} />}
       </article>
+      {visual?.reveal && (
+        <div class="viora-service-detail__secondary-scene" aria-label="Imagen complementaria del servicio">
+          <ServiceVisual visual={visual} context="detail-secondary" />
+        </div>
+      )}
     </Container>
   </section>
 
