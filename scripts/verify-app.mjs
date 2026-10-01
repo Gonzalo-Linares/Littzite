@@ -114,7 +114,7 @@ if (app === 'estetica') {
     assert.match(detail, /class="viora-service-detail__secondary-scene"/, `${service.slug}: second scene must be separate from the primary`);
     detailVisualImages.forEach((tag, index) => assertResponsiveImage(tag, `${service.slug} detail image ${index + 1}`));
     assert.match(detailVisualImages[0], /\bloading="eager"/i, `${service.slug}: detail primary image should load eagerly`);
-    assert.match(detailVisualImages[1], /\bloading="lazy"/i, `${service.slug}: reveal image should stay lazy`);
+    assert.match(detailVisualImages[1], /\bloading="lazy"/i, `${service.slug}: secondary scene image should stay lazy`);
     assert.match(detail, new RegExp(`<h1 id="viora-service-title"[^>]*>${service.displayName}</h1>`), `${service.slug}: title missing`);
     assert.ok(detail.includes(service.description), `${service.slug}: canonical description missing`);
     assert.ok(detail.includes('<html lang="es-AR"'), `${service.slug}: locale missing`);

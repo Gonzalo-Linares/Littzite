@@ -213,8 +213,8 @@ test('VIORA theme, voice and four named services match its brand manual', () => 
 test('VIORA focal positions stay within supported horizontal and vertical values', () => {
   const services = [{ id: 'sample' }];
   const image = { src: '/sample.jpg', width: 1400, height: 900, format: 'jpg' };
-  const validPositions = ['0% 0%', '50% 52%', '100% 100%', 'left top', 'center center', 'right bottom'];
-  const invalidPositions = ['101% 50%', '50% 101%', '999% 999%', '-1% 50%', '50px 50%'];
+  const validPositions = ['0% 0%', '50% 52%', '100% 100%', 'left top', 'center center', 'right bottom', 'right 35%'];
+  const invalidPositions = ['101% 50%', '50% 101%', '999% 999%', '-1% 50%', '50px 50%', '50'];
 
   for (const focalPosition of validPositions) {
     assert.doesNotThrow(() => validateServiceVisuals(services, [{
