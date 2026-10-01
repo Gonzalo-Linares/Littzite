@@ -14,7 +14,7 @@ Si una página de tatuajes ofrece ambas alternativas, la misma página referenci
 
 ## Contratos comunes
 
-- `Service`: identidad del servicio, slug, descripción, medios, duración/precio opcionales y acciones ordenadas.
+- `Service`: identidad del servicio, slug, descripción, medios, precio opcional y acciones ordenadas. La duración operacional la mantiene el proveedor de agenda.
 - `ServiceAction`: unión tipada con `direct-booking`, `quote-request`, `contact`; `label` editorial, `targetId` solo cuando corresponda, nota de elegibilidad aprobada si hace falta.
 - `BookingTarget`: proveedor identificado mediante configuración por sitio; URL externa HTTPS y fallback validado; embed solo si hay adaptador específico habilitado.
 - `QuoteTarget` v1: `channel: 'whatsapp'` y `prefillTemplate?` editorial; obtiene el teléfono E.164 único desde `ContactConfig`. El resolver común produce un enlace `https://wa.me/<dígitos>?text=<texto-codificado>` con `encodeURIComponent`. Nunca duplicar el número en fichas ni incluir datos personales en el texto prellenado. Sin archivos ni almacenamiento propios; CTA real bloqueado hasta verificar D-04B.
@@ -33,7 +33,7 @@ Si una página de tatuajes ofrece ambas alternativas, la misma página referenci
 
 | Caso | Resultado esperado |
 | --- | --- |
-| Estética: tratamiento con `durationMinutes > 0`, target externo aprobado | Resolver acción de reserva y URL válida sin duplicar lógica visual |
+| Acción `direct-booking` con target aprobado | Resolver la acción y obtener una URL validada sin duplicar lógica visual |
 | Estética: servicio publicable con duración ausente | Fallo de validación antes de compilar el sitio público o acción de reserva no habilitada |
 | Tatuador: ficha con dos acciones distintas | Renderizar ambas, en orden, y resolver una al calendario y otra al canal de presupuesto |
 | Tatuador: presupuesto sin número comercial real o texto aprobado (D-04B) | No generar enlaces ficticios ni formulario propio; CTA de producción bloqueado |
@@ -69,13 +69,13 @@ Véanse [registro de decisiones](09-open-decisions.md), [modelo de dominio](03-d
 
 `packages/booking` es una librería ESM/TypeScript headless que depende solo de `content-schema`. `siteContentSchema` conserva la validación de formas, referencias y unicidad; `booking` agrega el registro cerrado de proveedores y la política de URL por proveedor. Las dos apps validan sus colecciones completas de `bookingTargets` después del parseo, incluso si están vacías: son consumidores del policy gate de configuración, no del flujo de reservas.
 
-El único proveedor admitido en esta fundación es `cal-com`: URL HTTPS con origen exacto `https://cal.com`, sin credenciales y con ruta distinta de `/`. Se aceptan query y fragmento; no se impone un patrón de usuario/evento ni se reescribe la URL. Proveedores desconocidos fallan al validar con diagnóstico de `targetId` y `providerKey`. PR-09 no implementa resolución de `ServiceAction`; esa responsabilidad se añadirá cuando exista una acción directa con target auténtico. La librería no contiene SDK, secretos, API, interfaz, modal, iframe ni estado mutable. El piloto VIORA sigue sin acciones ni targets y no muestra enlaces comerciales.
+El único proveedor admitido es `cal-com`: URL HTTPS con origen exacto `https://cal.com`, sin credenciales y con ruta distinta de `/`. Se aceptan query y fragmento; no se impone un patrón de usuario/evento ni se reescribe la URL. Proveedores desconocidos fallan con diagnóstico de `targetId` y `providerKey`. PR-13 agrega `resolveDirectBookingAction`, una primitiva genérica, pura y síncrona; no requiere que las apps configuren acciones o targets reales. La librería no contiene SDK, secretos, API, interfaz, modal, iframe ni estado mutable. El piloto VIORA sigue sin acciones ni targets y no muestra enlaces comerciales.
 
 Juanjo consume la misma validación general de destinos, pero no configura proveedor ni target. La regla de agenda directa para trabajos pequeños sigue sin activarse hasta aprobar proveedor y URLs reales. Véase [ADR-013](adr/013-booking-provider-foundation.md).
 
-El titular eligió **Cal.com Individual Gratis** para probar los turnos de una profesional de VIORA, con un volumen estimado de alrededor de **15 citas mensuales**, sujeto a variación. La configuración inicial del sitio contiene cuatro `Service.durationMinutes: 60` independientes, **solo valores provisionales editables**. Ni los 60 minutos ni la agenda están aprobados todavía como reglas técnicas o comerciales para el público. La profesional debe revisar especialmente los tiempos de depilación según zona antes de habilitar clientes reales.
+El titular eligió **Cal.com Individual Gratis** para probar los turnos de una profesional de VIORA, con un volumen estimado de alrededor de **15 citas mensuales**, sujeto a variación. La configuración prevista para el piloto asigna provisionalmente 60 minutos a cada uno de los cuatro event types de Cal.com. Esos valores requieren revisión profesional y no son reglas técnicas ni comerciales aprobadas para el público. La duración operacional será propiedad de cada event type del proveedor, no de `Service`; la profesional debe revisar especialmente los tiempos de depilación según zona antes de habilitar clientes reales.
 
-La profesional es titular de la cuenta y gestiona sus cuatro tipos de evento, disponibilidad efectiva, calendario de conflictos y mensajes; Cal.com es la fuente de verdad de citas. No almacenar datos de clientes ni credenciales de proveedor en Littzite. Durante la preparación, `Service.actions=[]` y `bookingTargets=[]`: ninguna ficha ofrece aún reserva, por mucho que tenga duración.
+La profesional es titular de la cuenta y gestiona sus cuatro tipos de evento, disponibilidad efectiva, calendario de conflictos y mensajes; Cal.com es la fuente de verdad de citas. No almacenar datos de clientes ni credenciales de proveedor en Littzite. Durante la preparación, `Service.actions=[]` y `bookingTargets=[]`: ninguna ficha ofrece aún reserva.
 
 Luego de crear los cuatro eventos, pedir únicamente sus cuatro URLs públicas HTTPS de Cal.com, una por servicio. Verificar la pertenencia a la cuenta real de VIORA, el host legítimo, la duración revisada y la disponibilidad común de la profesional; rechazar URLs o datos ficticios. Evaluar enlace externo como primer fallback estable y embed solo tras comprobar consentimiento/privacidad, experiencia móvil y carga diferida. Ni un clic ni callbacks visuales del embed constituyen confirmación verificable de la cita.
 

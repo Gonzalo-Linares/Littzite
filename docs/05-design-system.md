@@ -18,7 +18,7 @@ La estructura usa componentes Astro estáticos, puntos de ruptura responsivos, e
 
 ## Identidad aprobada de VIORA (PR-04)
 
-La estética adopta el manual de marca aportado por su titular: marfil, ciruela, rosa, rosa suave y tinta; salvia es opcional. El tema semántico común de seis colores sigue estable; paleta extendida, tipografía y composición viven en `apps/estetica/src/styles/viora.css`. `VioraSiteLayout` local de la app compone los componentes públicos compartidos y centraliza logos, navegación, pie y CSS sin trasladar marca a `packages/ui`. Cuatro líneas editoriales tienen fichas; sus 60 minutos son valores provisionales del piloto, no duraciones técnicas publicadas, y no hay acciones ni reservas activas. Ver [guía de implementación](16-viora-brand.md), ADR-010 y ADR-012.
+La estética adopta el manual de marca aportado por su titular: marfil, ciruela, rosa, rosa suave y tinta; salvia es opcional. El tema semántico común de seis colores sigue estable; paleta extendida, tipografía y composición viven en `apps/estetica/src/styles/viora.css`. `VioraSiteLayout` local de la app compone los componentes públicos compartidos y centraliza logos, navegación, pie y CSS sin trasladar marca a `packages/ui`. Cuatro líneas editoriales tienen fichas; el piloto prevé 60 minutos provisionales por event type de Cal.com, no como dato de servicio publicado, y no hay acciones ni reservas activas. Ver [guía de implementación](16-viora-brand.md), ADR-010 y ADR-012.
 
 ## Interacción y responsive de VIORA (PR-11)
 
@@ -47,7 +47,7 @@ No usar strings de nombres de clientes para decidir estilos dentro de componente
 1. Un único componente `Header` y `Footer` por patrón reutilizable, con variantes explícitas si son necesarias; navegación y contacto proceden del `SiteConfig` de la app.
 2. Ningún paquete compartido importa imágenes, contenido o configuración de una app.
 3. Configurar en datos el orden de secciones cuando la composición sea convencional; usar una página Astro específica cuando el diseño artístico necesite libertad real.
-4. Los componentes de servicio no asumen que todos publican precio/duración: campos opcionales tipados. Un mismo servicio puede mostrar varios CTA; reserva y presupuesto consumen un único contrato de `ServiceAction`, con variantes accesibles y semántica propia.
+4. Los componentes de servicio no asumen que todos publican precio; la duración operacional corresponde al proveedor de agenda. Un mismo servicio puede mostrar varios CTA; reserva y presupuesto consumen un único contrato de `ServiceAction`, con variantes accesibles y semántica propia.
 5. Animaciones discretas, desactivables por preferencia de reducción de movimiento.
 6. Las galerías usan imágenes con derechos verificados, dimensiones adaptativas, texto alternativo pertinente y carga diferida salvo imagen hero crítica.
 7. Añadir Storybook **solo si** la cantidad de componentes/variantes lo justifica; inicialmente, una ruta `__ui` no indexable en entorno de desarrollo basta para revisar variantes visuales.

@@ -40,7 +40,7 @@ flowchart LR
   UI --> C
 ```
 
-`content-schema` contiene los contratos Zod de sitio, páginas, servicios, secciones y destinos, más validación de referencias dentro de `SiteContent`. `ui` expone layout, cabecera, pie, contenedor, enlaces y tokens CSS; `sections` expone `LandingHero` y `FeatureGrid`, usados por ambas apps y dependientes únicamente de APIs públicas de `ui` y `content-schema`. `booking` depende solo de `content-schema`; valida proveedores soportados y sus URLs bajo política fail-closed, sin Astro, DOM, red ni estado. Su registro soporta solo `cal-com`. PR-09 no resuelve acciones `ServiceAction`; las dos apps son consumidores del gate de validación de configuración, no del flujo de reservas. No hay ciclos entre paquetes ni imports entre aplicaciones. `scripts/check-boundaries.mjs` comprueba manifests, imports con AST de TypeScript (incluido frontmatter Astro), CSS @import y ciclos **localmente**; GitHub Actions está desactivado por decisión del propietario.
+`content-schema` contiene los contratos Zod de sitio, páginas, servicios, secciones y destinos, más validación de referencias dentro de `SiteContent`. `ui` expone layout, cabecera, pie, contenedor, enlaces y tokens CSS; `sections` expone `LandingHero` y `FeatureGrid`, usados por ambas apps y dependientes únicamente de APIs públicas de `ui` y `content-schema`. `booking` depende solo de `content-schema`; valida proveedores soportados y resuelve acciones `direct-booking` mediante una policy compartida, sin Astro, DOM, red ni estado. Su registry cerrado soporta solo `cal-com`. Las apps configuran; la UI presenta; el proveedor controla duración operacional, disponibilidad y citas. Ninguna app llama aún al resolver. No hay ciclos entre paquetes ni imports entre aplicaciones. `scripts/check-boundaries.mjs` comprueba manifests, imports con AST de TypeScript (incluido frontmatter Astro), CSS @import y ciclos **localmente**; GitHub Actions está desactivado por decisión del propietario.
 
 ## Diagrama de contexto (C4 nivel 1, simplificado)
 
@@ -102,7 +102,7 @@ Cal.com fue seleccionado **solo para un piloto futuro de VIORA**, hoy en standby
 | `content-schema` | Tipos y validaciones de configuración/contenido | Renderizado, HTTP, credenciales |
 | `ui` | Botones, controles, patrones accesibles, tokens | Decisiones de negocio o llamadas a proveedores |
 | `sections` | Composición de bloques reutilizables con props tipadas | Consultar contenido global de una app |
-| `booking` | Registro cerrado de proveedores y validación fail-closed de URLs `BookingTarget` | Resolver `ServiceAction`, crear agenda local, decidir política de señas o fingir una API de reserva universal |
+| `booking` | Registry cerrado, política fail-closed de URLs `BookingTarget` y resolución pura de una acción `direct-booking` | Resolver otras acciones, crear agenda local, decidir política de señas o fingir una API de reserva universal |
 | `content-schema` | Validar `ServiceAction[]` y relaciones con destinos de reserva/presupuesto; WhatsApp obtiene el único número de `ContactConfig` | Hardcodear flujos por identidad de app ni duplicar números comerciales |
 | `apps/*` | Identidad, contenido, orden de páginas, proveedores y deploy | Reimplementar lógica compartida |
 

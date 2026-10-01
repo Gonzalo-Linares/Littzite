@@ -1,6 +1,6 @@
 # Littzite — arquitectura fundacional
 
-**Estado de implementación (30/09/2026):** dos prototipos estáticos `noindex`; PR-01/02/03, VIORA, catálogo PR-06, Juanjo PR-05, configuración de piloto en standby y fundación de validación de targets integrados. PR-11 pule interacciones responsive de VIORA, agrega browser icon configurable y una 404 estática. No implementa resolución de acciones, activa reservas ni publica URLs comerciales. Ver [ADR-013](docs/adr/013-booking-provider-foundation.md).
+**Estado de implementación (01/10/2026):** dos prototipos estáticos `noindex`; PR-13 agrega resolución headless de acciones directas sobre la fundación de validación de proveedores. No activa reservas ni publica URLs comerciales. Ver [ADR-014](docs/adr/014-generic-direct-booking-resolution.md).
 **Producto:** plataforma de creación de sitios comerciales modulares; primeros casos: estética integral y estudio de tatuajes en San Juan, Argentina.  
 **Propósito:** captación orgánica local, diferenciación visual, contacto y reservas/solicitudes mediante proveedores externos.
 
@@ -53,7 +53,7 @@ corepack pnpm quality
 
 Para iniciar cada sitio en desarrollo, ejecutar `corepack pnpm dev:estetica` (puerto 4321) o `corepack pnpm dev:tattoo` (puerto 4322). `corepack pnpm format` aplica Prettier al código y configuración del workspace; los documentos Markdown quedan fuera del formateo automático.
 
-Para trabajar en una sola aplicación, usar `corepack pnpm --filter @littzite/estetica <check|build|test>` o `@littzite/tattoo`. Las pruebas de salida requieren ejecutar antes el build de la app. Ambas páginas siguen siendo prototipos `noindex` con componentes compartidos. VIORA usa identidad aprobada, catálogo de cuatro servicios y cuatro duraciones provisionales de 60 minutos; Cal.com está elegido únicamente para un piloto en standby, sin cuenta, enlaces ni reservas activas. Juanjo tiene identidad editorial provisional sin fotografías ni logo gráfico originales. Faltan dominios y datos comerciales de producción. Los targets y acciones de reserva/presupuesto solo aparecen en fixtures de test. VIORA conserva sus tres logotipos originales autorizados en `apps/estetica/public/brand/`. Las instrucciones y limitaciones están en [la guía de marca](docs/16-viora-brand.md).
+Para trabajar en una sola aplicación, usar `corepack pnpm --filter @littzite/estetica <check|build|test>` o `@littzite/tattoo`. Las pruebas de salida requieren ejecutar antes el build de la app. Ambas páginas siguen siendo prototipos `noindex` con componentes compartidos. VIORA usa identidad aprobada y catálogo de cuatro servicios; Cal.com está elegido únicamente para un piloto en standby, sin cuenta, enlaces ni reservas activas. La configuración provisional de 60 minutos corresponde a cada event type futuro del proveedor y debe revisarla la profesional. Juanjo tiene identidad editorial provisional sin fotografías ni logo gráfico originales. Faltan dominios y datos comerciales de producción. Los targets y acciones de reserva/presupuesto solo aparecen en fixtures de test. VIORA conserva sus tres logotipos originales autorizados en `apps/estetica/public/brand/`. Las instrucciones y limitaciones están en [la guía de marca](docs/16-viora-brand.md).
 
 ## Condiciones de uso del repositorio
 
@@ -65,4 +65,4 @@ Para trabajar en una sola aplicación, usar `corepack pnpm --filter @littzite/es
 - **Propuesta**: planteada técnicamente, pendiente de ratificación, prueba o validación de costes.
 - **Pendiente**: no seleccionar proveedor, política comercial, flujo o integración sin información del negocio.
 
-**Próximos pasos:** completar el portfolio de Juanjo cuando lleguen originales autorizados; revisar con la profesional las duraciones provisionales de 60 minutos y las zonas de depilación; después configurar y probar los cuatro eventos y URLs reales de Cal.com, disponibilidad, ubicación y textos antes de activar reservas. Resolver SEO y publicación productiva por separado.
+**Próximos pasos:** completar el portfolio de Juanjo cuando lleguen originales autorizados; revisar con la profesional la configuración provisional de 60 minutos por event type y las zonas de depilación; después configurar y probar los cuatro eventos y URLs reales de Cal.com, disponibilidad, ubicación y textos antes de activar reservas. El proveedor será la fuente operacional de duración y agenda. Resolver SEO y publicación productiva por separado.
