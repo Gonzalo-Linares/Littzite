@@ -21,20 +21,31 @@ const { section, variant, ctaLabel, ctaHref, disclaimer, artLabel, artIndex } = 
   <Container>
     <div class="landing-hero__grid">
       <div class="landing-hero__copy">
-        {section.eyebrow && <p class="landing-hero__eyebrow">
-          <span class="landing-hero__eyebrow-line" aria-hidden="true"></span>
-          {section.eyebrow}
-        </p>}
-        <h1 id="titulo-principal" class="landing-hero__heading">{section.heading}</h1>
+        {section.eyebrow && (
+          <p class="landing-hero__eyebrow">
+            <span class="landing-hero__eyebrow-line" aria-hidden="true"></span>
+            {section.eyebrow}
+          </p>
+        )}
+        <h1 id="titulo-principal" class="landing-hero__heading">
+          {section.heading}
+        </h1>
         <p class="landing-hero__body">{section.body}</p>
         <div class="landing-hero__actions">
           <Link href={ctaHref}>{ctaLabel}</Link>
           {disclaimer && <span class="landing-hero__disclaimer">{disclaimer}</span>}
         </div>
-        <div class="landing-hero__index" aria-hidden="true"><span>01</span><span class="landing-hero__index-line"></span><span>02</span></div>
+        <div class="landing-hero__index" aria-hidden="true">
+          <span>01</span>
+          <span class="landing-hero__index-line"></span>
+          <span>02</span>
+        </div>
       </div>
       <div class="landing-hero__art" aria-hidden="true">
-        <div class="landing-hero__art-top"><span>{artLabel}</span><span>{artIndex}</span></div>
+        <div class="landing-hero__art-top">
+          <span>{artLabel}</span>
+          <span>{artIndex}</span>
+        </div>
         <div class="landing-hero__canvas">
           <slot name="artwork">
             <div class="landing-hero__shape landing-hero__shape--outer"></div>
@@ -44,7 +55,10 @@ const { section, variant, ctaLabel, ctaHref, disclaimer, artLabel, artIndex } = 
             <div class="landing-hero__cross landing-hero__cross--two">+</div>
           </slot>
         </div>
-        <div class="landing-hero__art-bottom"><span>{section.visualCaption}</span><span aria-hidden="true">↗</span></div>
+        <div class="landing-hero__art-bottom">
+          <span>{section.visualCaption}</span>
+          <span aria-hidden="true">↗</span>
+        </div>
       </div>
     </div>
   </Container>

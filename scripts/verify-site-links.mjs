@@ -14,8 +14,12 @@ export async function verifyInternalLinks(distDirectory) {
       if (entry.isDirectory()) await visit(absolute);
       else if (entry.isFile() && entry.name.endsWith('.html')) {
         const relative = path.relative(distDirectory, absolute).split(path.sep).join('/');
-        const route = relative === 'index.html' ? '/' :
-          relative.endsWith('/index.html') ? '/' + relative.slice(0, -'index.html'.length) : '/' + relative;
+        const route =
+          relative === 'index.html'
+            ? '/'
+            : relative.endsWith('/index.html')
+              ? '/' + relative.slice(0, -'index.html'.length)
+              : '/' + relative;
         const html = await readFile(absolute, 'utf8');
         const ids = [...html.matchAll(/\bid="([^"]+)"/g)].map((match) => match[1]);
         assert.equal(ids.length, new Set(ids).size, `${route}: duplicate HTML id`);
@@ -33,13 +37,19 @@ export async function verifyInternalLinks(distDirectory) {
       if (!href || href.startsWith('mailto:') || href.startsWith('tel:')) continue;
       const url = new URL(href, base + route);
       if (url.origin !== base) continue;
-      const normalized = url.pathname.endsWith('/') ? url.pathname :
-        url.pathname.endsWith('.html') ? url.pathname : url.pathname + '/';
+      const normalized = url.pathname.endsWith('/')
+        ? url.pathname
+        : url.pathname.endsWith('.html')
+          ? url.pathname
+          : url.pathname + '/';
       const target = pages.get(normalized);
       assert.ok(target, `${route}: broken internal href ${href} (missing ${normalized})`);
       if (url.hash) {
         const fragment = decodeURIComponent(url.hash.slice(1));
-        assert.ok(target.ids.has(fragment), `${route}: href ${href} points to missing #${fragment}`);
+        assert.ok(
+          target.ids.has(fragment),
+          `${route}: href ${href} points to missing #${fragment}`,
+        );
       }
       checked++;
     }

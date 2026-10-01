@@ -21,7 +21,7 @@
 - `ui`: tokens, buttons, layout, accesibilidad y responsive.
 - SEO de lanzamiento pendiente: canonical, sitemap, `robots.txt` productivo, JSON-LD, Open Graph, dominios y Search Console. `title` y `description` tipados y renderizados en el preview ya están implementados sin paquete `seo`.
 - `booking` implementado: registro cerrado de providers y validación fail-closed de `BookingTarget`; inicialmente admite `cal-com` y depende solo de `content-schema`. No resuelve `ServiceAction`. La resolución de `direct-booking` queda futura, cuando exista un target auténtico aprobado, una acción real y un caller productivo.
-- CI: formato, lint, typecheck y compilación de ambas apps.
+- Baseline local PR-12: ESLint, Prettier, typecheck/Astro check, tests de contratos, builds de ambas apps y validación HTML del output. GitHub Actions sigue desactivado por decisión del propietario.
 
 **Estado:** dos prototipos diferentes con componentes compartidos y validación local; CI actualmente desactivada. El contrato y render de metadata básico forman parte del preview; el SEO de lanzamiento y la activación de reservas siguen pendientes.
 
@@ -61,4 +61,4 @@
 
 ## Gates locales obligatorios
 
-Ejecutar los seis controles indicados en README sobre el último HEAD y adjuntar resultados. No activar GitHub Actions ni afirmar que está verde. Antes de publicación productiva se exigirán gates adicionales de SEO, privacidad, proveedor real, accesibilidad y rendimiento medido.
+Ejecutar `corepack pnpm quality` sobre el último HEAD y adjuntar resultados. El comando incluye límites, lint, formato, contratos, Astro check, builds, HTML generado y tests de ambas apps. No activar GitHub Actions ni afirmar que está verde. Antes de publicación productiva se exigirán gates adicionales de SEO, privacidad, proveedor real, accesibilidad y rendimiento medido.

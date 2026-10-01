@@ -4,6 +4,7 @@
   "private": true,
   "type": "module",
   "scripts": {
+    "dev": "astro dev",
     "check": "astro check",
     "build": "astro build",
     "test": "node ../../scripts/verify-app.mjs tattoo"

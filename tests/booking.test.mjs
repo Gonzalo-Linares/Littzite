@@ -35,9 +35,12 @@ for (const [label, url] of [
 test('rejects unknown provider keys closed', () => {
   assert.throws(
     () => validateBookingTargets([{ ...target(), id: 'unknown-calendar', providerKey: 'other' }]),
-    (error) => error instanceof UnsupportedBookingProviderError &&
-      error.message.includes('"other"') && error.message.includes('"unknown-calendar"') &&
-      error.providerKey === 'other' && error.targetId === 'unknown-calendar',
+    (error) =>
+      error instanceof UnsupportedBookingProviderError &&
+      error.message.includes('"other"') &&
+      error.message.includes('"unknown-calendar"') &&
+      error.providerKey === 'other' &&
+      error.targetId === 'unknown-calendar',
   );
 });
 

@@ -14,11 +14,29 @@ async function workspace() {
   const root = await mkdtemp(path.join(tmpdir(), 'littzite-boundaries-'));
   roots.push(root);
   for (const [unit, manifest] of Object.entries({
-    'apps/one': { name: '@littzite/one', dependencies: { '@littzite/ui': 'workspace:*', '@littzite/booking': 'workspace:*' } },
-    'apps/two': { name: '@littzite/two', dependencies: { '@littzite/ui': 'workspace:*', '@littzite/booking': 'workspace:*' } },
-    'packages/booking': { name: '@littzite/booking', exports: { '.': './src/index.ts' }, dependencies: { '@littzite/schema': 'workspace:*' } },
-    'packages/ui': { name: '@littzite/ui', exports: { '.': './src/index.ts' }, dependencies: { '@littzite/schema': 'workspace:*' } },
-    'packages/sections': { name: '@littzite/sections', exports: { '.': './src/index.ts' }, dependencies: { '@littzite/ui': 'workspace:*', '@littzite/schema': 'workspace:*' } },
+    'apps/one': {
+      name: '@littzite/one',
+      dependencies: { '@littzite/ui': 'workspace:*', '@littzite/booking': 'workspace:*' },
+    },
+    'apps/two': {
+      name: '@littzite/two',
+      dependencies: { '@littzite/ui': 'workspace:*', '@littzite/booking': 'workspace:*' },
+    },
+    'packages/booking': {
+      name: '@littzite/booking',
+      exports: { '.': './src/index.ts' },
+      dependencies: { '@littzite/schema': 'workspace:*' },
+    },
+    'packages/ui': {
+      name: '@littzite/ui',
+      exports: { '.': './src/index.ts' },
+      dependencies: { '@littzite/schema': 'workspace:*' },
+    },
+    'packages/sections': {
+      name: '@littzite/sections',
+      exports: { '.': './src/index.ts' },
+      dependencies: { '@littzite/ui': 'workspace:*', '@littzite/schema': 'workspace:*' },
+    },
     'packages/content-schema': { name: '@littzite/schema', exports: { '.': './src/index.ts' } },
   })) {
     await mkdir(path.join(root, unit, 'src'), { recursive: true });
@@ -30,7 +48,10 @@ async function workspace() {
 
 test('valid app to public package imports pass', async () => {
   const root = await workspace();
-  await writeFile(path.join(root, 'apps/one/src/index.ts'), "import { value } from '@littzite/ui';");
+  await writeFile(
+    path.join(root, 'apps/one/src/index.ts'),
+    "import { value } from '@littzite/ui';",
+  );
   assert.deepEqual(await inspectWorkspace(root), []);
 });
 
@@ -45,29 +66,39 @@ test('booking allowlist rejects UI, sections, applications, and any other worksp
   const root = await workspace();
   const seoPath = path.join(root, 'packages/seo');
   await mkdir(path.join(seoPath, 'src'), { recursive: true });
-  await writeFile(path.join(seoPath, 'package.json'), JSON.stringify({
-    name: '@littzite/seo', exports: { '.': './src/index.ts' },
-  }));
+  await writeFile(
+    path.join(seoPath, 'package.json'),
+    JSON.stringify({
+      name: '@littzite/seo',
+      exports: { '.': './src/index.ts' },
+    }),
+  );
   await writeFile(path.join(seoPath, 'src/index.ts'), 'export const value = 1;');
   const manifestPath = path.join(root, 'packages/booking/package.json');
-  await writeFile(manifestPath, JSON.stringify({
-    name: '@littzite/booking',
-    exports: { '.': './src/index.ts' },
-    dependencies: {
-      '@littzite/schema': 'workspace:*',
-      '@littzite/ui': 'workspace:*',
-      '@littzite/sections': 'workspace:*',
-      '@littzite/seo': 'workspace:*',
-      '@littzite/one': 'workspace:*',
-    },
-  }));
-  await writeFile(path.join(root, 'packages/booking/src/index.ts'), [
-    "import '@littzite/ui';",
-    "import '@littzite/sections';",
-    "import '@littzite/seo';",
-    "import '@littzite/one';",
-    "import '@littzite/booking/src/private.ts';",
-  ].join('\n'));
+  await writeFile(
+    manifestPath,
+    JSON.stringify({
+      name: '@littzite/booking',
+      exports: { '.': './src/index.ts' },
+      dependencies: {
+        '@littzite/schema': 'workspace:*',
+        '@littzite/ui': 'workspace:*',
+        '@littzite/sections': 'workspace:*',
+        '@littzite/seo': 'workspace:*',
+        '@littzite/one': 'workspace:*',
+      },
+    }),
+  );
+  await writeFile(
+    path.join(root, 'packages/booking/src/index.ts'),
+    [
+      "import '@littzite/ui';",
+      "import '@littzite/sections';",
+      "import '@littzite/seo';",
+      "import '@littzite/one';",
+      "import '@littzite/booking/src/private.ts';",
+    ].join('\n'),
+  );
   const errors = await inspectWorkspace(root);
   assert.ok(errors.some((error) => error.includes('disallowed packages/ui')));
   assert.ok(errors.some((error) => error.includes('disallowed packages/sections')));
@@ -83,7 +114,11 @@ test('app cross imports and package to app dependencies fail', async () => {
   const root = await workspace();
   await writeFile(path.join(root, 'apps/one/src/index.ts'), "import '../../two/src/index.ts';");
   const manifestPath = path.join(root, 'packages/ui/package.json');
-  const manifest = { name: '@littzite/ui', exports: { '.': './src/index.ts' }, dependencies: { '@littzite/one': 'workspace:*' } };
+  const manifest = {
+    name: '@littzite/ui',
+    exports: { '.': './src/index.ts' },
+    dependencies: { '@littzite/one': 'workspace:*' },
+  };
   await writeFile(manifestPath, JSON.stringify(manifest));
   const errors = await inspectWorkspace(root);
   assert.ok(errors.some((error) => error.includes('imports apps/two')));
@@ -92,10 +127,18 @@ test('app cross imports and package to app dependencies fail', async () => {
 
 test('private package imports and package cycles fail', async () => {
   const root = await workspace();
-  await writeFile(path.join(root, 'apps/one/src/index.ts'), "import '@littzite/ui/src/internal.ts';");
-  await writeFile(path.join(root, 'packages/content-schema/package.json'), JSON.stringify({
-    name: '@littzite/schema', exports: { '.': './src/index.ts' }, dependencies: { '@littzite/ui': 'workspace:*' },
-  }));
+  await writeFile(
+    path.join(root, 'apps/one/src/index.ts'),
+    "import '@littzite/ui/src/internal.ts';",
+  );
+  await writeFile(
+    path.join(root, 'packages/content-schema/package.json'),
+    JSON.stringify({
+      name: '@littzite/schema',
+      exports: { '.': './src/index.ts' },
+      dependencies: { '@littzite/ui': 'workspace:*' },
+    }),
+  );
   const errors = await inspectWorkspace(root);
   assert.ok(errors.some((error) => error.includes('imports private')));
   assert.ok(errors.some((error) => error.includes('package cycle')));
@@ -103,7 +146,10 @@ test('private package imports and package cycles fail', async () => {
 
 test('dynamic imports and relative paths outside a unit fail', async () => {
   const root = await workspace();
-  await writeFile(path.join(root, 'apps/one/src/index.ts'), "await import('@littzite/two'); import '../../../../outside.ts';");
+  await writeFile(
+    path.join(root, 'apps/one/src/index.ts'),
+    "await import('@littzite/two'); import '../../../../outside.ts';",
+  );
   const errors = await inspectWorkspace(root);
   assert.ok(errors.some((error) => error.includes('imports apps/two')));
   assert.ok(errors.some((error) => error.includes('outside workspace')));
@@ -112,10 +158,10 @@ test('dynamic imports and relative paths outside a unit fail', async () => {
 test('ignores misleading source comments and scans Astro frontmatter and scripts', async () => {
   const root = await workspace();
   const content = [
-    "---",
+    '---',
     "// import '@littzite/fake';",
     "import { value } from '@littzite/ui';",
-    "---",
+    '---',
     "<section>import '@littzite/fake'</section>",
     "<script>import { value } from '@littzite/schema';</script>",
   ].join('\n');
@@ -129,19 +175,22 @@ test('ignores misleading source comments and scans Astro frontmatter and scripts
 
 test('rejects dynamic module specifiers instead of silently bypassing the checker', async () => {
   const root = await workspace();
-  await writeFile(path.join(root, 'apps/one/src/index.ts'), [
-    "const target = '@littzite/two';",
-    "await import(target);",
-    "const x = require(target);",
-  ].join('\n'));
+  await writeFile(
+    path.join(root, 'apps/one/src/index.ts'),
+    ["const target = '@littzite/two';", 'await import(target);', 'const x = require(target);'].join(
+      '\n',
+    ),
+  );
   const errors = await inspectWorkspace(root);
   assert.equal(errors.filter((error) => error.includes('Non-literal')).length, 2);
 });
 
 test('parses CSS imports but ignores imports in CSS comments', async () => {
   const root = await workspace();
-  await writeFile(path.join(root, 'apps/one/src/design.css'),
-    "/* @import '@littzite/fake'; */\n@import '@littzite/ui/src/hidden.css';");
+  await writeFile(
+    path.join(root, 'apps/one/src/design.css'),
+    "/* @import '@littzite/fake'; */\n@import '@littzite/ui/src/hidden.css';",
+  );
   const errors = await inspectWorkspace(root);
   assert.ok(errors.some((error) => error.includes('imports private')));
   assert.ok(!errors.some((error) => error.includes('fake')));

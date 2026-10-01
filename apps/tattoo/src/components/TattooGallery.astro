@@ -14,16 +14,23 @@ const { items } = Astro.props;
   <div class="container">
     <div class="juanjo-gallery__heading">
       <div>
-        <p class="juanjo-kicker"><span aria-hidden="true">/</span> 01 — PORTFOLIO</p>
+        <p class="juanjo-kicker">
+          <span aria-hidden="true">/</span> 01 — PORTFOLIO
+        </p>
         <h2 id="portfolio-heading">El trabajo habla.</h2>
       </div>
-      <p>En esta sección vas a encontrar las piezas originales del artista. Hasta completar la selección, podés ver sus publicaciones actuales en Instagram.</p>
+      <p>
+        En esta sección vas a encontrar las piezas originales del artista. Hasta completar la
+        selección, podés ver sus publicaciones actuales en Instagram.
+      </p>
     </div>
 
     {items.length > 0 ? (
       <div class="juanjo-gallery__grid">
         {items.map((item, index) => (
-          <figure class:list={['juanjo-gallery__item', { 'juanjo-gallery__item--lead': index === 0 }]}>
+          <figure
+            class:list={['juanjo-gallery__item', { 'juanjo-gallery__item--lead': index === 0 }]}
+          >
             <Image
               src={item.image}
               alt={item.alt}
@@ -32,7 +39,10 @@ const { items } = Astro.props;
               format="webp"
               loading={index === 0 ? 'eager' : 'lazy'}
             />
-            <figcaption><span>{String(index + 1).padStart(2, '0')}</span>{item.title}</figcaption>
+            <figcaption>
+              <span>{String(index + 1).padStart(2, '0')}</span>
+              {item.title}
+            </figcaption>
           </figure>
         ))}
       </div>
@@ -46,10 +56,20 @@ const { items } = Astro.props;
         </div>
         <div class="juanjo-gallery__placeholder-copy">
           <p class="juanjo-kicker">LA COLECCIÓN ESTÁ EN PREPARACIÓN</p>
-          <h3>Obras reales.<br />Sin imágenes de relleno.</h3>
-          <p>Estamos seleccionando las fotografías originales de Juanjo para mostrarlas con el detalle que merecen. El trabajo publicado hasta hoy se puede consultar en su cuenta oficial.</p>
+          <h3>
+            Obras reales.
+            <br />
+            Sin imágenes de relleno.
+          </h3>
+          <p>
+            Estamos seleccionando las fotografías originales de Juanjo para mostrarlas con el
+            detalle que merecen. El trabajo publicado hasta hoy se puede consultar en su cuenta
+            oficial.
+          </p>
           <Link href="https://www.instagram.com/juanjo.tattoos/">Ver trabajos en Instagram</Link>
-          <p class="juanjo-gallery__third-party">Este enlace abre Instagram, un servicio externo.</p>
+          <p class="juanjo-gallery__third-party">
+            Este enlace abre Instagram, un servicio externo.
+          </p>
         </div>
       </div>
     )}
