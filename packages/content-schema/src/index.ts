@@ -104,7 +104,6 @@ export const serviceSchema = z
     slug: idSchema,
     displayName: textSchema,
     description: textSchema,
-    durationMinutes: z.int().positive().optional(),
     actions: z.array(serviceActionSchema),
   })
   .strict();
