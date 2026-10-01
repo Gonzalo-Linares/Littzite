@@ -18,18 +18,17 @@ Pendiente para lanzamiento: canonical, sitemap, `robots.txt` productivo, JSON-LD
 
 ## Calidad automatizada
 
-**Gates existentes:** pnpm check:boundaries revisa manifiestos, imports AST de TypeScript (y CSS @import) y ciclos; rechaza imports dinámicos no literales; pnpm test:contracts usa node:test para contratos; pnpm check, build y test verifican ambas apps y su HTML estático. El smoke posterior al build comprueba enlaces y anclas internas. GitHub Actions **está desactivado por decisión del propietario**: cada PR debe registrar los seis controles ejecutados localmente en su último HEAD. Lint/format, Vitest, Playwright, axe y Lighthouse todavía no están configurados; la tabla detalla objetivos futuros.
+`corepack pnpm quality` ejecuta los gates locales en este orden: `check:boundaries`, `lint` (ESLint flat config para JavaScript, TypeScript y Astro), `format:check` (Prettier), `test:contracts` (node:test), `check` (Astro check en ambas apps), `build` (ambas apps), `validate:html` (html-validate sobre cada HTML generado) y `test` (smokes y enlaces internos de ambas apps). El validador exige que los dos directorios dist existan y contengan HTML; nunca convierte un build ausente en un pase vacío. GitHub Actions **está desactivado por decisión del propietario**: registrar resultados locales sobre el último HEAD y no declarar un workflow verde.
 
 | Gate | Qué comprueba | Cuándo |
 | --- | --- | --- |
-| `pnpm lint` / format | convenciones y código no usado | PR |
-| `pnpm typecheck` | TypeScript estricto, Astro y contratos | PR |
-| Validación de contenido | Zod, referencias, URLs, slugs, locale `es-AR` y `Page.seo` | PR/build |
-| Vitest | uniones discriminadas de `ServiceAction`, referencias a `BookingTarget`/`QuoteTarget`, fallback, URLs, SEO y secciones lógicas | PR |
-| Build ambas apps | ausencia de imports cruzados, errores de SSR/build y assets | PR común |
-| Playwright | menú móvil, reserva directa de estética, doble CTA tatuador, fallback, contacto, rutas y sitemap | PR/release |
-| axe / Lighthouse | accesibilidad y performance móvil, umbrales progresivos | PR/release |
-| Link check | enlaces internos, políticas y enlaces externos críticos | programado/release |
+| `check:boundaries` | Manifiestos, imports AST, ciclos y límites entre apps/packages | PR local |
+| `lint` / `format:check` | Errores JS/TS/Astro, imports/variables sin usar y formato | PR local |
+| `test:contracts` | Contratos, booking, enlaces, portfolio, fronteras y guardia de HTML | PR local |
+| `check` / `build` | Astro check y build estático de las dos apps | PR local |
+| `validate:html` | HTML generado, IDs duplicados y reglas semánticas recomendadas | Después de build |
+| `test` | Smokes de ambas apps y enlaces/anclas internas | Después de build |
+| Playwright / axe / Lighthouse | Navegador, accesibilidad y rendimiento medido | Futuro; no configurado |
 
 Testear adaptadores con stubs; E2E de widget externo solo como smoke test no determinista, para evitar flakiness por depender de un tercero. Cobertura útil en contratos y flujos, no porcentajes arbitrarios.
 

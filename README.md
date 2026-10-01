@@ -46,14 +46,12 @@ Requiere Node.js 24 y pnpm 12.6.0 (disponible mediante Corepack). Desde la raíz
 
 ```sh
 corepack pnpm install --frozen-lockfile
-corepack pnpm check:boundaries
-corepack pnpm test:contracts
-corepack pnpm check
-corepack pnpm build
-corepack pnpm test
+corepack pnpm quality
 ```
 
-GitHub Actions continúa desactivado por decisión del propietario: registrar los resultados de los seis controles locales sobre el último HEAD antes de fusionar cualquier PR. Los tests de navegador, lint/format y las pruebas externas reales de reservas todavía están pendientes.
+`quality` ejecuta, en orden: `check:boundaries`, `lint`, `format:check`, `test:contracts`, `check`, `build`, `validate:html` y `test`. `validate:html` requiere builds recientes de las dos apps; `quality` los genera antes de validar. GitHub Actions continúa desactivado por decisión del propietario: registrar resultados locales del último HEAD y no declarar un workflow verde.
+
+Para iniciar cada sitio en desarrollo, ejecutar `corepack pnpm dev:estetica` (puerto 4321) o `corepack pnpm dev:tattoo` (puerto 4322). `corepack pnpm format` aplica Prettier al código y configuración del workspace; los documentos Markdown quedan fuera del formateo automático.
 
 Para trabajar en una sola aplicación, usar `corepack pnpm --filter @littzite/estetica <check|build|test>` o `@littzite/tattoo`. Las pruebas de salida requieren ejecutar antes el build de la app. Ambas páginas siguen siendo prototipos `noindex` con componentes compartidos. VIORA usa identidad aprobada, catálogo de cuatro servicios y cuatro duraciones provisionales de 60 minutos; Cal.com está elegido únicamente para un piloto en standby, sin cuenta, enlaces ni reservas activas. Juanjo tiene identidad editorial provisional sin fotografías ni logo gráfico originales. Faltan dominios y datos comerciales de producción. Los targets y acciones de reserva/presupuesto solo aparecen en fixtures de test. VIORA conserva sus tres logotipos originales autorizados en `apps/estetica/public/brand/`. Las instrucciones y limitaciones están en [la guía de marca](docs/16-viora-brand.md).
 
