@@ -4,6 +4,8 @@
 
 `content-schema` valida `Page.seo` mediante `SeoMetadata` (`title` y `description`, strings recortados y no vacíos, objeto estricto). `ui/BaseLayout.astro` renderiza ambos una vez. Las apps son dueñas de los valores; VIORA deriva la metadata de sus cuatro fichas desde `Service.displayName` y `Service.description`. Las páginas permanecen `noindex, nofollow`.
 
+PR-11 valida que el browser icon opcional sea una ruta local root-relative; el HTML generado comprueba el icono, la 404 de VIORA, ausencia de canonical y aislamiento del preview. Motion nativo entre documentos se degrada a navegación MPA normal y respeta `prefers-reduced-motion`.
+
 Pendiente para lanzamiento: canonical, sitemap, `robots.txt` productivo, JSON-LD, Open Graph, dominios, Search Console y SEO de publicación. No se declara completo el SEO.
 
 - `canonicalOrigin` específico por sitio, canonical absoluta por página; sitemap solo con URLs indexables válidas; `robots.txt` independiente.

@@ -7,10 +7,11 @@ interface Props {
   theme: SiteConfig['theme'];
   seo: SeoMetadata;
   noindex: boolean;
+  iconHref?: SiteConfig['iconHref'];
   bodyClass?: string;
 }
 
-const { locale, theme, seo, noindex, bodyClass } = Astro.props;
+const { locale, theme, seo, noindex, iconHref, bodyClass } = Astro.props;
 const themeStyle = {
   '--color-surface': theme.surface,
   '--color-text': theme.text,
@@ -27,6 +28,7 @@ const themeStyle = {
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     {noindex && <meta name="robots" content="noindex, nofollow" />}
+    {iconHref && <link rel="icon" href={iconHref} />}
     <title>{seo.title}</title>
     <meta name="description" content={seo.description} />
   </head>

@@ -1,18 +1,21 @@
 ---
 import type { Service, PageSection } from '@littzite/content-schema';
 import Container from '@littzite/ui/Container.astro';
+import ServiceVisual from './ServiceVisual.astro';
+import { resolveServiceVisual, type VioraServiceVisual } from '../service-visuals.validation';
 
 interface Props {
   section: Extract<PageSection, { type: 'service-list' }>;
   services: Service[];
+  visuals: readonly VioraServiceVisual[];
 }
 
-const { section, services } = Astro.props;
+const { section, services, visuals } = Astro.props;
 const servicesById = new Map(services.map((service) => [service.id, service]));
 const listedServices = section.serviceIds.map((id) => {
   const service = servicesById.get(id);
   if (!service) throw new Error(`Missing service ${id} in VIORA catalog`);
-  return service;
+  return { service, visual: resolveServiceVisual(visuals, service.id) };
 });
 ---
 
@@ -24,12 +27,20 @@ const listedServices = section.serviceIds.map((id) => {
         <h2 id={`${section.id}-titulo`}>Cada cuidado tiene su momento.</h2>
       </div>
       <p>Conocé las líneas de VIORA. La información sobre técnicas, duración y disponibilidad se confirmará antes de ofrecer turnos.</p>
+      <p class="viora-catalog__visual-note">Las fotos son referencias ilustrativas; no identifican al equipo, el espacio ni las técnicas de VIORA.</p>
     </div>
     <div class="viora-catalog__grid">
-      {listedServices.map((service, index) => (
-        <article class="viora-catalog__card">
+      {listedServices.map(({ service, visual }, index) => (
+        <article class:list={['viora-catalog__card', { 'viora-catalog__card--visual': visual !== undefined }]}>
+          {visual && <ServiceVisual visual={visual} context="card" transitionName={`viora-service-image-${service.slug}`} />}
           <span class="viora-catalog__card-number" aria-hidden="true">{String(index + 1).padStart(2, '0')}</span>
-          <h3><a class="viora-service-card__link" href={`/servicios/${service.slug}/`}>{service.displayName}</a></h3>
+          <h3>
+            <a class="viora-service-card__link" href={`/servicios/${service.slug}/`}
+              style={`view-transition-name: viora-service-${service.slug}`}>
+              <span>{service.displayName}</span>
+              <span class="viora-service-card__explore">Explorar experiencia <span aria-hidden="true">↗</span></span>
+            </a>
+          </h3>
           <p>{service.description}</p>
         </article>
       ))}

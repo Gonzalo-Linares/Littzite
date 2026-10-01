@@ -11,6 +11,7 @@ import { validateBookingTargets } from '@littzite/booking';
 const parsedContent = siteContentSchema.parse({
   site: {
     defaultLocale: 'es-AR',
+    iconHref: '/brand/viora-principal.png',
     theme: {
       surface: '#FAF5F0', // Marfil
       text: '#39252D', // Tinta

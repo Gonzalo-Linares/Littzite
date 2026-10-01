@@ -3,6 +3,9 @@ import LandingHero from '@littzite/sections/LandingHero.astro';
 import ServiceCatalog from '../components/ServiceCatalog.astro';
 import VioraSiteLayout from '../layouts/VioraSiteLayout.astro';
 import { siteContent } from '../site.config';
+import { serviceVisuals } from '../service-visuals';
+import heroImage from '../assets/viora-hero.jpg';
+import heroImageSmall from '../assets/viora-hero-small.jpg';
 
 const { pages } = siteContent;
 const home = pages.find((page) => page.slug === '');
@@ -14,14 +17,19 @@ if (!home || !intro || !catalog) throw new Error('Incomplete VIORA preview conte
 <VioraSiteLayout seo={home.seo}>
 
   <LandingHero section={intro} variant="serene" ctaLabel="Conocé nuestras experiencias" ctaHref="#alcance"
-    artLabel="UN ESPACIO PARA VOS" artIndex="VIORA / 01">
-    <img slot="artwork" class="viora-hero-logo" src="/brand/viora-principal.png" width="1335" height="1700"
-      alt="" decoding="async" fetchpriority="high" />
+    artLabel="UN RESPIRO PARA VOS" artIndex="VIORA / 01">
+    <picture slot="artwork" class="viora-hero-photo-frame">
+      <img class="viora-hero-photo" src={heroImage.src}
+        srcset={`${heroImageSmall.src} ${heroImageSmall.width}w, ${heroImage.src} ${heroImage.width}w`}
+        sizes="(min-width: 1180px) 48vw, (min-width: 741px) 45vw, calc(100vw - 2rem)"
+        width={heroImage.width} height={heroImage.height} alt="" decoding="async" fetchpriority="high" />
+    </picture>
   </LandingHero>
 
-  <ServiceCatalog section={catalog} services={siteContent.services} />
+  <ServiceCatalog section={catalog} services={siteContent.services} visuals={serviceVisuals} />
 
   <section id="esencia" class="viora-essence" aria-labelledby="viora-essence-heading">
+    <span class="viora-essence__watermark" aria-hidden="true">VIORA</span>
     <div class="container viora-essence__inner">
       <div class="viora-essence__lead">
         <span class="viora-essence__eyebrow">La esencia de VIORA</span>

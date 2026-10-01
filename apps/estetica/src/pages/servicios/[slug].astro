@@ -1,7 +1,10 @@
 ---
 import Container from '@littzite/ui/Container.astro';
 import VioraSiteLayout from '../../layouts/VioraSiteLayout.astro';
+import ServiceVisual from '../../components/ServiceVisual.astro';
 import { siteContent } from '../../site.config';
+import { serviceVisuals } from '../../service-visuals';
+import { resolveServiceVisual } from '../../service-visuals.validation';
 
 export function getStaticPaths() {
   return siteContent.services.map((service) => ({
@@ -11,6 +14,7 @@ export function getStaticPaths() {
 }
 
 const { service } = Astro.props;
+const visual = resolveServiceVisual(serviceVisuals, service.id);
 ---
 
 <VioraSiteLayout seo={{ title: `${service.displayName} | VIORA · Vista previa`, description: service.description }}>
@@ -18,12 +22,21 @@ const { service } = Astro.props;
   <section class="viora-service-detail" aria-labelledby="viora-service-title">
     <Container>
       <a class="viora-service-detail__back" href="/#alcance">← Volver a servicios</a>
-      <article>
-        <p class="viora-service-detail__eyebrow">VIORA / servicios</p>
-        <h1 id="viora-service-title">{service.displayName}</h1>
-        <p class="viora-service-detail__description">{service.description}</p>
-        <p class="viora-service-detail__note">Esta información es orientativa. Los detalles del servicio y su disponibilidad se confirmarán antes de ofrecer turnos.</p>
+      <article class:list={{ 'viora-service-detail__article--visual': visual !== undefined }}>
+        <div class="viora-service-detail__copy">
+          <p class="viora-service-detail__eyebrow">VIORA / servicios</p>
+          <h1 id="viora-service-title" style={`view-transition-name: viora-service-${service.slug}`}>{service.displayName}</h1>
+          <p class="viora-service-detail__description">{service.description}</p>
+          <p class="viora-service-detail__note">Esta información es orientativa. Los detalles del servicio y su disponibilidad se confirmarán antes de ofrecer turnos.</p>
+          {visual && <p class="viora-service-detail__visual-note">Fotografía ilustrativa; no representa al equipo, el espacio ni las técnicas de VIORA.</p>}
+        </div>
+        {visual && <ServiceVisual visual={visual} context="detail-primary" transitionName={`viora-service-image-${service.slug}`} />}
       </article>
+      {visual?.reveal && (
+        <div class="viora-service-detail__secondary-scene" aria-label="Imagen complementaria del servicio">
+          <ServiceVisual visual={visual} context="detail-secondary" />
+        </div>
+      )}
     </Container>
   </section>
 

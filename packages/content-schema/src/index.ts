@@ -3,6 +3,7 @@ import { z } from 'zod';
 const idSchema = z.string().regex(/^[a-z0-9]+(?:-[a-z0-9]+)*$/);
 const textSchema = z.string().trim().min(1);
 const colorSchema = z.string().regex(/^#[0-9a-fA-F]{6}$/);
+const localIconHrefSchema = z.string().regex(/^\/(?:[A-Za-z0-9_-]+\/)*[A-Za-z0-9][A-Za-z0-9._-]*$/);
 const e164Schema = z.string().regex(/^\+[1-9]\d{1,14}$/);
 const httpsUrlSchema = z.url().refine((value) => {
   const url = new URL(value);
@@ -57,6 +58,7 @@ export type Location = z.infer<typeof locationSchema>;
 export const siteConfigSchema = z.object({
   defaultLocale: z.literal('es-AR'),
   theme: themeConfigSchema,
+  iconHref: localIconHrefSchema.optional(),
   contact: contactConfigSchema.optional(),
   locations: z.array(locationSchema).default([]),
   canonicalOrigin: httpsUrlSchema.refine((value) => new URL(value).origin === value).optional(),
