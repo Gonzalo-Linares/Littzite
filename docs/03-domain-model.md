@@ -66,7 +66,6 @@ classDiagram
     +string slug
     +string displayName
     +string description
-    +int optionalDurationMinutes
     +Money optionalPublicPrice
     +ServiceAction[] actions
   }
@@ -179,7 +178,6 @@ erDiagram
   SERVICE {
     string serviceId PK
     string slug UK
-    int optionalDurationMinutes
   }
   SERVICE_ACTION {
     string actionId PK
@@ -280,4 +278,4 @@ Los tipos son **ilustrativos**, no código productivo ni licencia para asumir qu
 
 `apps/estetica/src/site.config.ts` define las cuatro fichas informativas de VIORA con `actions: []`; no contiene duración operacional ni targets. La configuración piloto de 60 minutos corresponde a cada event type futuro de Cal.com y requiere revisión profesional. La portada declara un `service-list` por IDs, cuya integridad valida `siteContentSchema`. `ServiceCatalog.astro` resuelve y muestra las mismas fichas sin duplicar títulos, slugs ni descripciones. `[slug].astro` usa `getStaticPaths()` sobre `siteContent.services` para generar `/servicios/<slug>/` y compartir el layout, locale y estado `noindex`.
 
-La presencia de una ficha informativa no habilita su reserva. Un PR posterior necesitar? disponibilidad y proveedor aprobados (D-02A/D-01C), una acci?n tipada y su destino aprobado. No cambian los contratos compartidos ni se crea backend, paquete de catalogo o integracion de reservas.
+La presencia de una ficha informativa no habilita su reserva. Un PR posterior necesitará disponibilidad y proveedor aprobados (D-02A/D-01C), una acción tipada y su destino aprobado. No cambian los contratos compartidos ni se crea backend, paquete de catálogo o integración de reservas.
