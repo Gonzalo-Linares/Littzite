@@ -5,8 +5,10 @@ export interface VioraServiceVisual {
   serviceId: string;
   primary: ImageMetadata;
   primaryAlt: string;
+  primarySmall?: ImageMetadata;
   reveal?: ImageMetadata;
   revealAlt?: string;
+  revealSmall?: ImageMetadata;
   focalPosition?: string;
 }
 
@@ -28,6 +30,13 @@ const isImageMetadata = (value: ImageMetadata | undefined): value is ImageMetada
   && value.width > 0
   && Number.isInteger(value.height)
   && value.height > 0;
+
+const isSmallerVariant = (small: ImageMetadata | undefined, large: ImageMetadata): boolean =>
+  small === undefined || (
+    isImageMetadata(small)
+    && small.src !== large.src
+    && small.width < large.width
+  );
 
 const focalPositionPattern = /^(?:left|center|right|\d{1,3}%)\s+(?:top|center|bottom|\d{1,3}%)$/;
 
@@ -53,6 +62,9 @@ export function validateServiceVisuals(
     if (!isUsefulAlt(visual.primaryAlt)) {
       throw new Error(`Primary image alt is required for VIORA service: ${visual.serviceId}`);
     }
+    if (!isSmallerVariant(visual.primarySmall, visual.primary)) {
+      throw new Error(`Invalid responsive primary image for VIORA service: ${visual.serviceId}`);
+    }
     if (visual.reveal !== undefined) {
       if (!isImageMetadata(visual.reveal)) {
         throw new Error(`Invalid reveal image for VIORA service: ${visual.serviceId}`);
@@ -60,8 +72,13 @@ export function validateServiceVisuals(
       if (!isUsefulAlt(visual.revealAlt)) {
         throw new Error(`Reveal image alt is required for VIORA service: ${visual.serviceId}`);
       }
+      if (!isSmallerVariant(visual.revealSmall, visual.reveal)) {
+        throw new Error(`Invalid responsive reveal image for VIORA service: ${visual.serviceId}`);
+      }
     } else if (visual.revealAlt !== undefined) {
       throw new Error(`Reveal alt requires a reveal image for VIORA service: ${visual.serviceId}`);
+    } else if (visual.revealSmall !== undefined) {
+      throw new Error(`Reveal variant requires a reveal image for VIORA service: ${visual.serviceId}`);
     }
     if (visual.focalPosition !== undefined && !focalPositionPattern.test(visual.focalPosition)) {
       throw new Error(`Invalid focal position for VIORA service: ${visual.serviceId}`);

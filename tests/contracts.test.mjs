@@ -98,6 +98,7 @@ test('SiteConfig accepts an optional root-relative local browser icon only', () 
 test('VIORA visuals validate optional service references and image alternatives independently', () => {
   const services = [{ id: 'sample' }, { id: 'future-service' }];
   const image = { src: '/sample.jpg', width: 1400, height: 900, format: 'jpg' };
+  const smallImage = { src: '/sample-small.jpg', width: 640, height: 411, format: 'jpg' };
   const primaryOnly = { serviceId: 'sample', primary: image, primaryAlt: 'Una imagen editorial de prueba.' };
 
   assert.doesNotThrow(() => validateServiceVisuals(services, []));
@@ -105,6 +106,7 @@ test('VIORA visuals validate optional service references and image alternatives 
   assert.equal(resolveServiceVisual([primaryOnly], 'future-service'), undefined);
   assert.equal(resolveServiceVisual([primaryOnly], 'sample'), primaryOnly);
   assert.doesNotThrow(() => validateServiceVisuals(services, [primaryOnly]));
+  assert.doesNotThrow(() => validateServiceVisuals(services, [{ ...primaryOnly, primarySmall: smallImage }]));
   assert.doesNotThrow(() => validateServiceVisuals(services, [
     { ...primaryOnly, reveal: image, revealAlt: 'Una segunda imagen editorial.' },
   ]));
@@ -114,6 +116,8 @@ test('VIORA visuals validate optional service references and image alternatives 
   assert.throws(() => validateServiceVisuals(services, [{ ...primaryOnly, reveal: image }]), /Reveal image alt is required/);
   assert.throws(() => validateServiceVisuals(services, [{ ...primaryOnly, revealAlt: 'Alt sin imagen.' }]), /Reveal alt requires/);
   assert.throws(() => validateServiceVisuals(services, [{ ...primaryOnly, primary: { ...image, width: 0 } }]), /Invalid primary image/);
+  assert.throws(() => validateServiceVisuals(services, [{ ...primaryOnly, primarySmall: image }]), /Invalid responsive primary image/);
+  assert.throws(() => validateServiceVisuals(services, [{ ...primaryOnly, revealSmall: smallImage }]), /Reveal variant requires a reveal image/);
 });
 
 test("all future brand themes enforce semantic contrast, not just today's two apps", () => {

@@ -8,6 +8,11 @@ interface Props {
 }
 
 const { visual, context, transitionName } = Astro.props;
+const sizes = context === 'card'
+  ? '(min-width: 1180px) 520px, (min-width: 741px) calc(50vw - 2rem), calc(100vw - 2.5rem)'
+  : '(min-width: 1180px) 620px, (min-width: 741px) 48vw, calc(100vw - 2.5rem)';
+const srcset = (small: typeof visual.primarySmall, large: typeof visual.primary) =>
+  small ? `${small.src} ${small.width}w, ${large.src} ${large.width}w` : undefined;
 const imageStyle = [
   `object-position: ${visual.focalPosition ?? '50% 50%'}`,
   ...(transitionName ? [`view-transition-name: ${transitionName}`] : []),
@@ -22,6 +27,8 @@ const imageStyle = [
   <img
     class="viora-service-visual__layer viora-service-visual__primary"
     src={visual.primary.src}
+    srcset={srcset(visual.primarySmall, visual.primary)}
+    sizes={visual.primarySmall ? sizes : undefined}
     alt={visual.primaryAlt}
     width={visual.primary.width}
     height={visual.primary.height}
@@ -34,6 +41,8 @@ const imageStyle = [
     <img
       class="viora-service-visual__layer viora-service-visual__reveal"
       src={visual.reveal.src}
+      srcset={srcset(visual.revealSmall, visual.reveal)}
+      sizes={visual.revealSmall ? sizes : undefined}
       alt={visual.revealAlt ?? ''}
       width={visual.reveal.width}
       height={visual.reveal.height}

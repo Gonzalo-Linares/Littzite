@@ -63,11 +63,19 @@ if (app === 'estetica') {
   assert.equal((html.match(/class="viora-catalog__card(?:\s[^"]*)?"/g) ?? []).length, 4, 'Expected four VIORA service cards');
   const homeVisualImages = Array.from(html.matchAll(/<img\b(?=[^>]*class="viora-service-visual__layer viora-service-visual__(?:primary|reveal)")[^>]*>/g), ([tag]) => tag);
   assert.equal(homeVisualImages.length, 8, 'Expected primary and reveal images for each configured VIORA service');
+  const assertResponsiveImage = (tag, label) => {
+    const candidates = tag.match(/\bsrcset="([^"]+)"/)?.[1].split(', ') ?? [];
+    assert.equal(candidates.length, 2, `${label}: expected small and large local image candidates`);
+    assert.match(candidates[0], /\/_astro\/[^ ]+\s640w$/, `${label}: small candidate must advertise its real width`);
+    assert.match(candidates[1], /\/_astro\/[^ ]+\s1400w$/, `${label}: large candidate must advertise its real width`);
+    assert.notEqual(candidates[0].split(' ')[0], candidates[1].split(' ')[0], `${label}: srcset candidates must use distinct files`);
+    assert.match(tag, /\bsizes="[^"]+"/, `${label}: srcset must declare rendered size hints`);
+  };
   for (const [index, tag] of homeVisualImages.entries()) {
     assert.match(tag, /\bsrc="\/_astro\/[^"]+\.jpg"/, `VIORA catalog image ${index + 1}: expected a bundled local source`);
     assert.match(tag, /\balt="[^"]+"/, `VIORA catalog image ${index + 1}: expected descriptive alt text`);
     assert.match(tag, /\bwidth="\d+"[^>]*\bheight="\d+"|\bheight="\d+"[^>]*\bwidth="\d+"/, `VIORA catalog image ${index + 1}: expected intrinsic dimensions`);
-    assert.doesNotMatch(tag, /\bsrcset=/, `VIORA catalog image ${index + 1}: do not publish fabricated responsive candidates`);
+    assertResponsiveImage(tag, `VIORA catalog image ${index + 1}`);
   }
   assert.deepEqual(
     Array.from(html.matchAll(/view-transition-name: (viora-service-(?!image-)[a-z0-9-]+)/g), ([, name]) => name),
@@ -89,6 +97,7 @@ if (app === 'estetica') {
     assertVioraFrame(detail, service.slug);
     const detailVisualImages = Array.from(detail.matchAll(/<img\b(?=[^>]*class="viora-service-visual__layer viora-service-visual__(?:primary|reveal)")[^>]*>/g), ([tag]) => tag);
     assert.equal(detailVisualImages.length, 2, `${service.slug}: expected primary and reveal images`);
+    detailVisualImages.forEach((tag, index) => assertResponsiveImage(tag, `${service.slug} detail image ${index + 1}`));
     assert.match(detailVisualImages[0], /\bloading="eager"/i, `${service.slug}: detail primary image should load eagerly`);
     assert.match(detailVisualImages[1], /\bloading="lazy"/i, `${service.slug}: reveal image should stay lazy`);
     assert.match(detail, new RegExp(`<h1 id="viora-service-title"[^>]*>${service.displayName}</h1>`), `${service.slug}: title missing`);
