@@ -20,8 +20,8 @@
     "quality": "corepack pnpm check:boundaries && corepack pnpm lint && corepack pnpm format:check && corepack pnpm test:contracts && corepack pnpm check && corepack pnpm build && corepack pnpm validate:html && corepack pnpm test"
   },
   "devDependencies": {
-    "@eslint/js": "9.39.5",
-    "eslint": "9.39.5",
+    "@eslint/js": "10.0.1",
+    "eslint": "10.11.0",
     "eslint-plugin-astro": "1.7.0",
     "globals": "16.5.0",
     "html-validate": "10.17.0",
