@@ -33,9 +33,13 @@ const themeStyle = {
     <meta name="description" content={seo.description} />
   </head>
   <body id="inicio" class={bodyClass}>
-    <a class="skip-link" href="#contenido">Ir al contenido</a>
+    <a class="skip-link" href="#contenido">
+      Ir al contenido
+    </a>
     <slot name="header" />
-    <main id="contenido"><slot /></main>
+    <main id="contenido">
+      <slot />
+    </main>
     <slot name="footer" />
   </body>
 </html>

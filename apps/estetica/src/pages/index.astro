@@ -15,31 +15,50 @@ if (!home || !intro || !catalog) throw new Error('Incomplete VIORA preview conte
 ---
 
 <VioraSiteLayout seo={home.seo}>
-
-  <LandingHero section={intro} variant="serene" ctaLabel="Conocé nuestras experiencias" ctaHref="#alcance"
-    artLabel="UN RESPIRO PARA VOS" artIndex="VIORA / 01">
+  <LandingHero
+    section={intro}
+    variant="serene"
+    ctaLabel="Conocé nuestras experiencias"
+    ctaHref="#alcance"
+    artLabel="UN RESPIRO PARA VOS"
+    artIndex="VIORA / 01"
+  >
     <picture slot="artwork" class="viora-hero-photo-frame">
-      <img class="viora-hero-photo" src={heroImage.src}
+      <img
+        class="viora-hero-photo"
+        src={heroImage.src}
         srcset={`${heroImageSmall.src} ${heroImageSmall.width}w, ${heroImage.src} ${heroImage.width}w`}
         sizes="(min-width: 1180px) 48vw, (min-width: 741px) 45vw, calc(100vw - 2rem)"
-        width={heroImage.width} height={heroImage.height} alt="" decoding="async" fetchpriority="high" />
+        width={heroImage.width}
+        height={heroImage.height}
+        alt=""
+        decoding="async"
+        fetchpriority="high"
+      />
     </picture>
   </LandingHero>
 
   <ServiceCatalog section={catalog} services={siteContent.services} visuals={serviceVisuals} />
 
   <section id="esencia" class="viora-essence" aria-labelledby="viora-essence-heading">
-    <span class="viora-essence__watermark" aria-hidden="true">VIORA</span>
+    <span class="viora-essence__watermark" aria-hidden="true">
+      VIORA
+    </span>
     <div class="container viora-essence__inner">
       <div class="viora-essence__lead">
         <span class="viora-essence__eyebrow">La esencia de VIORA</span>
         <h2 id="viora-essence-heading">Una identidad para cuidar.</h2>
       </div>
       <div class="viora-essence__text">
-        <p>VIORA nace de una idea simple: hacer del cuidado personal una experiencia amable, con atención, escucha y una comunicación honesta.</p>
-        <p>Este sitio todavía es una vista previa. Los horarios, la disponibilidad y las formas de reservar se publicarán después de confirmarlos.</p>
+        <p>
+          VIORA nace de una idea simple: hacer del cuidado personal una experiencia amable, con
+          atención, escucha y una comunicación honesta.
+        </p>
+        <p>
+          Este sitio todavía es una vista previa. Los horarios, la disponibilidad y las formas de
+          reservar se publicarán después de confirmarlos.
+        </p>
       </div>
     </div>
   </section>
-
 </VioraSiteLayout>

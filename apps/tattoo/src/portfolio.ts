@@ -9,7 +9,9 @@ export interface TattooPortfolioItem {
   image: ImageMetadata;
 }
 
-export function validatePortfolio(items: readonly TattooPortfolioItem[]): readonly TattooPortfolioItem[] {
+export function validatePortfolio(
+  items: readonly TattooPortfolioItem[],
+): readonly TattooPortfolioItem[] {
   const ids = new Set<string>();
   for (const work of items) {
     if (!/^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(work.id) || ids.has(work.id)) {
@@ -18,8 +20,13 @@ export function validatePortfolio(items: readonly TattooPortfolioItem[]): readon
     if (work.title.trim().length === 0 || work.alt.trim().length < 12) {
       throw new Error(`A portfolio item needs a title and descriptive alt text: ${work.id}`);
     }
-    if (!work.image || !Number.isFinite(work.image.width) || !Number.isFinite(work.image.height)
-      || work.image.width < 640 || work.image.height < 640) {
+    if (
+      !work.image ||
+      !Number.isFinite(work.image.width) ||
+      !Number.isFinite(work.image.height) ||
+      work.image.width < 640 ||
+      work.image.height < 640
+    ) {
       throw new Error(`The original portfolio image is missing or too small: ${work.id}`);
     }
     ids.add(work.id);

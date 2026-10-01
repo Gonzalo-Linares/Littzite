@@ -11,8 +11,12 @@ const packageDependencyAllowlist = Object.freeze({
 
 function hasDisallowedPackageDependency(unit, target) {
   const allowedPackages = packageDependencyAllowlist[unit];
-  return unit.startsWith('packages/') && target.startsWith('packages/') &&
-    allowedPackages !== undefined && !allowedPackages.includes(target);
+  return (
+    unit.startsWith('packages/') &&
+    target.startsWith('packages/') &&
+    allowedPackages !== undefined &&
+    !allowedPackages.includes(target)
+  );
 }
 
 async function sourceFiles(directory) {
@@ -20,7 +24,7 @@ async function sourceFiles(directory) {
   for (const entry of await readdir(directory, { withFileTypes: true })) {
     if (['node_modules', 'dist', '.astro'].includes(entry.name)) continue;
     const fullPath = path.join(directory, entry.name);
-    if (entry.isDirectory()) files.push(...await sourceFiles(fullPath));
+    if (entry.isDirectory()) files.push(...(await sourceFiles(fullPath)));
     else if (sourceExtensions.has(path.extname(entry.name))) files.push(fullPath);
   }
   return files;
@@ -38,7 +42,8 @@ function importSpecifiers(source, filename) {
   const extension = path.extname(filename);
   const cssImports = (styles) => {
     const withoutComments = styles.replace(/\/\*[\s\S]*?\*\//g, '');
-    for (const match of withoutComments.matchAll(/@import\s+(?:url\(\s*)?['"]([^'"]+)['"]\s*\)?/g)) imports.push(match[1]);
+    for (const match of withoutComments.matchAll(/@import\s+(?:url\(\s*)?['"]([^'"]+)['"]\s*\)?/g))
+      imports.push(match[1]);
   };
   if (extension === '.css') {
     cssImports(source);
@@ -48,12 +53,20 @@ function importSpecifiers(source, filename) {
   if (extension === '.astro') {
     const frontmatter = source.match(/^\uFEFF?---\s*\r?\n([\s\S]*?)\r?\n---/);
     if (frontmatter) sources.push(frontmatter[1]);
-    for (const match of source.matchAll(/<script\b[^>]*>([\s\S]*?)<\/script>/gi)) sources.push(match[1]);
-    for (const match of source.matchAll(/<style\b[^>]*>([\s\S]*?)<\/style>/gi)) cssImports(match[1]);
+    for (const match of source.matchAll(/<script\b[^>]*>([\s\S]*?)<\/script>/gi))
+      sources.push(match[1]);
+    for (const match of source.matchAll(/<style\b[^>]*>([\s\S]*?)<\/style>/gi))
+      cssImports(match[1]);
   } else sources.push(source);
   for (const [index, code] of sources.entries()) {
     const kind = ['.tsx', '.jsx'].includes(extension) ? ts.ScriptKind.TSX : ts.ScriptKind.TS;
-    const ast = ts.createSourceFile(`${filename}:${index}`, code, ts.ScriptTarget.Latest, true, kind);
+    const ast = ts.createSourceFile(
+      `${filename}:${index}`,
+      code,
+      ts.ScriptTarget.Latest,
+      true,
+      kind,
+    );
     function add(literal, kindName) {
       if (literal && ts.isStringLiteralLike(literal)) imports.push(literal.text);
       else errors.push(`Non-literal ${kindName} in ${filename}`);
@@ -61,13 +74,18 @@ function importSpecifiers(source, filename) {
     function visit(node) {
       if (ts.isImportDeclaration(node) || ts.isExportDeclaration(node)) {
         if (node.moduleSpecifier) add(node.moduleSpecifier, 'module specifier');
-      } else if (ts.isImportEqualsDeclaration(node) && ts.isExternalModuleReference(node.moduleReference)) {
+      } else if (
+        ts.isImportEqualsDeclaration(node) &&
+        ts.isExternalModuleReference(node.moduleReference)
+      ) {
         add(node.moduleReference.expression, 'import-equals');
       } else if (ts.isImportTypeNode(node) && ts.isLiteralTypeNode(node.argument)) {
         add(node.argument.literal, 'import-type');
-      } else if (ts.isCallExpression(node) &&
+      } else if (
+        ts.isCallExpression(node) &&
         (node.expression.kind === ts.SyntaxKind.ImportKeyword ||
-          (ts.isIdentifier(node.expression) && node.expression.text === 'require'))) {
+          (ts.isIdentifier(node.expression) && node.expression.text === 'require'))
+      ) {
         add(node.arguments.length === 1 ? node.arguments[0] : null, 'dynamic import/require');
       }
       ts.forEachChild(node, visit);
@@ -102,9 +120,12 @@ export async function inspectWorkspace(root) {
     for (const name of Object.keys(dependencies)) {
       const target = names.get(name);
       if (!target) continue;
-      if (unit.startsWith('packages/') && target.startsWith('apps/')) violations.push(`${unit} depends on ${target}`);
-      if (hasDisallowedPackageDependency(unit, target)) violations.push(`${unit} depends on disallowed ${target}`);
-      if (unit.startsWith('apps/') && target.startsWith('apps/') && unit !== target) violations.push(`${unit} depends on ${target}`);
+      if (unit.startsWith('packages/') && target.startsWith('apps/'))
+        violations.push(`${unit} depends on ${target}`);
+      if (hasDisallowedPackageDependency(unit, target))
+        violations.push(`${unit} depends on disallowed ${target}`);
+      if (unit.startsWith('apps/') && target.startsWith('apps/') && unit !== target)
+        violations.push(`${unit} depends on ${target}`);
       if (target.startsWith('packages/') && unit.startsWith('packages/')) neighbors.push(target);
     }
     if (unit.startsWith('packages/')) packageGraph.set(unit, neighbors);
@@ -122,7 +143,8 @@ export async function inspectWorkspace(root) {
             continue;
           }
           const target = ownerOf(path.relative(root, resolved));
-          if (target && target !== unit) violations.push(`${path.relative(root, file)} imports ${target} by path`);
+          if (target && target !== unit)
+            violations.push(`${path.relative(root, file)} imports ${target} by path`);
           continue;
         }
         if (!specifier.startsWith('@littzite/')) continue;
@@ -133,12 +155,17 @@ export async function inspectWorkspace(root) {
           violations.push(`${path.relative(root, file)} imports unknown ${name}`);
           continue;
         }
-        if (unit.startsWith('packages/') && target.startsWith('apps/')) violations.push(`${path.relative(root, file)} imports ${target}`);
-        if (hasDisallowedPackageDependency(unit, target)) violations.push(`${path.relative(root, file)} imports disallowed ${target}`);
-        if (unit.startsWith('apps/') && target.startsWith('apps/') && unit !== target) violations.push(`${path.relative(root, file)} imports ${target}`);
-        if (unit !== target && !Object.hasOwn(dependencies, name)) violations.push(`${unit} imports undeclared ${name}`);
+        if (unit.startsWith('packages/') && target.startsWith('apps/'))
+          violations.push(`${path.relative(root, file)} imports ${target}`);
+        if (hasDisallowedPackageDependency(unit, target))
+          violations.push(`${path.relative(root, file)} imports disallowed ${target}`);
+        if (unit.startsWith('apps/') && target.startsWith('apps/') && unit !== target)
+          violations.push(`${path.relative(root, file)} imports ${target}`);
+        if (unit !== target && !Object.hasOwn(dependencies, name))
+          violations.push(`${unit} imports undeclared ${name}`);
         const exportKey = specifier === name ? '.' : `./${parts.slice(2).join('/')}`;
-        if (!Object.hasOwn(units.get(target).exports ?? {}, exportKey)) violations.push(`${path.relative(root, file)} imports private ${specifier}`);
+        if (!Object.hasOwn(units.get(target).exports ?? {}, exportKey))
+          violations.push(`${path.relative(root, file)} imports private ${specifier}`);
       }
     }
   }

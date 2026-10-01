@@ -23,30 +23,28 @@ const isUsefulAlt = (value: string | undefined): value is string =>
   typeof value === 'string' && value.trim().length > 0;
 
 const isImageMetadata = (value: ImageMetadata | undefined): value is ImageMetadata =>
-  value !== undefined
-  && typeof value.src === 'string'
-  && value.src.length > 0
-  && Number.isInteger(value.width)
-  && value.width > 0
-  && Number.isInteger(value.height)
-  && value.height > 0;
+  value !== undefined &&
+  typeof value.src === 'string' &&
+  value.src.length > 0 &&
+  Number.isInteger(value.width) &&
+  value.width > 0 &&
+  Number.isInteger(value.height) &&
+  value.height > 0;
 
 const isSmallerVariant = (small: ImageMetadata | undefined, large: ImageMetadata): boolean =>
-  small === undefined || (
-    isImageMetadata(small)
-    && small.src !== large.src
-    && small.width < large.width
-  );
+  small === undefined ||
+  (isImageMetadata(small) && small.src !== large.src && small.width < large.width);
 
 const isPositionCoordinate = (value: string, words: readonly string[]): boolean =>
-  words.includes(value)
-  || (/^\d{1,3}%$/.test(value) && Number.parseInt(value, 10) <= 100);
+  words.includes(value) || (/^\d{1,3}%$/.test(value) && Number.parseInt(value, 10) <= 100);
 
 const isValidFocalPosition = (value: string): boolean => {
   const coordinates = value.trim().split(/\s+/);
-  return coordinates.length === 2
-    && isPositionCoordinate(coordinates[0], ['left', 'center', 'right'])
-    && isPositionCoordinate(coordinates[1], ['top', 'center', 'bottom']);
+  return (
+    coordinates.length === 2 &&
+    isPositionCoordinate(coordinates[0], ['left', 'center', 'right']) &&
+    isPositionCoordinate(coordinates[1], ['top', 'center', 'bottom'])
+  );
 };
 
 export function validateServiceVisuals(
@@ -87,7 +85,9 @@ export function validateServiceVisuals(
     } else if (visual.revealAlt !== undefined) {
       throw new Error(`Reveal alt requires a reveal image for VIORA service: ${visual.serviceId}`);
     } else if (visual.revealSmall !== undefined) {
-      throw new Error(`Reveal variant requires a reveal image for VIORA service: ${visual.serviceId}`);
+      throw new Error(
+        `Reveal variant requires a reveal image for VIORA service: ${visual.serviceId}`,
+      );
     }
     if (visual.focalPosition !== undefined && !isValidFocalPosition(visual.focalPosition)) {
       throw new Error(`Invalid focal position for VIORA service: ${visual.serviceId}`);

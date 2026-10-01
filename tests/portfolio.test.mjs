@@ -20,6 +20,12 @@ test('authorized originals require valid IDs, titles, alt text and resolution', 
   assert.throws(() => validatePortfolio([{ ...work, id: 'Invalid ID' }]), /Invalid or duplicate/);
   assert.throws(() => validatePortfolio([{ ...work, title: ' ' }]), /title and descriptive alt/);
   assert.throws(() => validatePortfolio([{ ...work, alt: 'foto' }]), /title and descriptive alt/);
-  assert.throws(() => validatePortfolio([{ ...work, image: { ...work.image, width: 300 } }]), /too small/);
-  assert.throws(() => validatePortfolio([{ ...work, image: { ...work.image, height: 0 } }]), /too small/);
+  assert.throws(
+    () => validatePortfolio([{ ...work, image: { ...work.image, width: 300 } }]),
+    /too small/,
+  );
+  assert.throws(
+    () => validatePortfolio([{ ...work, image: { ...work.image, height: 0 } }]),
+    /too small/,
+  );
 });

@@ -20,7 +20,19 @@ export function assertMetadata(markup, seo, label) {
 
   const title = titles[0].match(/^<title>([\s\S]*)<\/title>$/)?.[1];
   const description = descriptions[0].match(/^<meta name="description" content="([^"]*)">$/)?.[1];
-  assert.equal(decodeHtmlEntities(title), seo.title, `${label}: title does not match validated metadata`);
-  assert.equal(decodeHtmlEntities(description), seo.description, `${label}: description does not match validated metadata`);
-  assert.doesNotMatch(markup, /<link\b[^>]*\brel=["']canonical["']/i, `${label}: canonical must not be emitted`);
+  assert.equal(
+    decodeHtmlEntities(title),
+    seo.title,
+    `${label}: title does not match validated metadata`,
+  );
+  assert.equal(
+    decodeHtmlEntities(description),
+    seo.description,
+    `${label}: description does not match validated metadata`,
+  );
+  assert.doesNotMatch(
+    markup,
+    /<link\b[^>]*\brel=["']canonical["']/i,
+    `${label}: canonical must not be emitted`,
+  );
 }

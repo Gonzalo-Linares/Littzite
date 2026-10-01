@@ -11,26 +11,30 @@ const { visual, context, transitionName } = Astro.props;
 const secondary = context === 'detail-secondary';
 const image = secondary ? visual.reveal : visual.primary;
 const small = secondary ? visual.revealSmall : visual.primarySmall;
-const alt = secondary ? visual.revealAlt ?? '' : visual.primaryAlt;
+const alt = secondary ? (visual.revealAlt ?? '') : visual.primaryAlt;
 if (!image) throw new Error(`Missing ${context} image for VIORA service ${visual.serviceId}`);
-const sizes = context === 'card'
-  ? '(min-width: 1180px) 520px, (min-width: 741px) calc(50vw - 2rem), calc(100vw - 2.5rem)'
-  : '(min-width: 1180px) 620px, (min-width: 741px) 48vw, calc(100vw - 2.5rem)';
+const sizes =
+  context === 'card'
+    ? '(min-width: 1180px) 520px, (min-width: 741px) calc(50vw - 2rem), calc(100vw - 2.5rem)'
+    : '(min-width: 1180px) 620px, (min-width: 741px) 48vw, calc(100vw - 2.5rem)';
 const srcset = small ? `${small.src} ${small.width}w, ${image.src} ${image.width}w` : undefined;
-const revealSrcset = visual.revealSmall && visual.reveal
-  ? `${visual.revealSmall.src} ${visual.revealSmall.width}w, ${visual.reveal.src} ${visual.reveal.width}w`
-  : undefined;
+const revealSrcset =
+  visual.revealSmall && visual.reveal
+    ? `${visual.revealSmall.src} ${visual.revealSmall.width}w, ${visual.reveal.src} ${visual.reveal.width}w`
+    : undefined;
 const imageStyle = [
   `object-position: ${visual.focalPosition ?? '50% 50%'}`,
   ...(transitionName ? [`view-transition-name: ${transitionName}`] : []),
 ].join('; ');
 ---
 
-<figure class:list={[
-  'viora-service-visual',
-  `viora-service-visual--${context}`,
-  { 'viora-service-visual--has-reveal': context === 'card' && visual.reveal !== undefined },
-]}>
+<figure
+  class:list={[
+    'viora-service-visual',
+    `viora-service-visual--${context}`,
+    { 'viora-service-visual--has-reveal': context === 'card' && visual.reveal !== undefined },
+  ]}
+>
   <img
     class="viora-service-visual__layer viora-service-visual__image"
     src={image.src}

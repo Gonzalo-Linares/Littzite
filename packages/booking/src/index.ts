@@ -8,11 +8,22 @@ const providerPolicies = {
     } catch {
       throw new InvalidBookingTargetError(target.id, 'fallbackUrl must be a valid URL');
     }
-    if (url.protocol !== 'https:' || url.origin !== 'https://cal.com' || url.username || url.password) {
-      throw new InvalidBookingTargetError(target.id, 'cal-com targets must use the exact HTTPS origin https://cal.com without credentials');
+    if (
+      url.protocol !== 'https:' ||
+      url.origin !== 'https://cal.com' ||
+      url.username ||
+      url.password
+    ) {
+      throw new InvalidBookingTargetError(
+        target.id,
+        'cal-com targets must use the exact HTTPS origin https://cal.com without credentials',
+      );
     }
     if (url.pathname === '/') {
-      throw new InvalidBookingTargetError(target.id, 'cal-com targets must include a non-root path');
+      throw new InvalidBookingTargetError(
+        target.id,
+        'cal-com targets must include a non-root path',
+      );
     }
   },
 } satisfies Record<string, (target: BookingTarget) => void>;
@@ -38,7 +49,9 @@ export class InvalidBookingTargetError extends Error {
 
 type SupportedBookingProviderKey = keyof typeof providerPolicies;
 
-function isSupportedBookingProviderKey(providerKey: string): providerKey is SupportedBookingProviderKey {
+function isSupportedBookingProviderKey(
+  providerKey: string,
+): providerKey is SupportedBookingProviderKey {
   return Object.hasOwn(providerPolicies, providerKey);
 }
 

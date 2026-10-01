@@ -14,23 +14,55 @@ const { seo } = Astro.props;
 const { site } = siteContent;
 ---
 
-<BaseLayout locale={site.defaultLocale} theme={site.theme} seo={seo} noindex={true} iconHref={site.iconHref} bodyClass="viora-site">
-  <SiteHeader slot="header" brand={'VIORA, est\u00e9tica integral'} descriptor="Tu momento, tu bienestar"
+<BaseLayout
+  locale={site.defaultLocale}
+  theme={site.theme}
+  seo={seo}
+  noindex={true}
+  iconHref={site.iconHref}
+  bodyClass="viora-site"
+>
+  <SiteHeader
+    slot="header"
+    brand={'VIORA, est\u00e9tica integral'}
+    descriptor="Tu momento, tu bienestar"
     links={[
       { label: 'Inicio', href: '/' },
       { label: 'Experiencias', href: '/#alcance' },
       { label: 'Nuestra esencia', href: '/#esencia' },
     ]}
-    badge={{ label: 'Vista previa', href: '/#alcance' }}>
-    <img slot="brand" class="viora-header-logo" src="/brand/viora-horizontal.png" width="1600" height="480"
-      alt="" decoding="async" />
+    badge={{ label: 'Vista previa', href: '/#alcance' }}
+  >
+    <img
+      slot="brand"
+      class="viora-header-logo"
+      src="/brand/viora-horizontal.png"
+      width="1600"
+      height="480"
+      alt=""
+      decoding="async"
+    />
   </SiteHeader>
 
   <slot />
 
-  <SiteFooter slot="footer" brand="VIORA" note={'Tu momento, tu bienestar. Datos comerciales y agenda pendientes de confirmaci\u00f3n.'}
-    meta={["Vista previa \u00b7 No admite reservas todav\u00eda", "VIORA \u00b7 Est\u00e9tica integral"]}>
-    <img slot="brand" class="viora-footer-logo" src="/brand/viora-palabra.png" width="1310" height="275"
-      alt="VIORA" loading="lazy" />
+  <SiteFooter
+    slot="footer"
+    brand="VIORA"
+    note={'Tu momento, tu bienestar. Datos comerciales y agenda pendientes de confirmaci\u00f3n.'}
+    meta={[
+      'Vista previa \u00b7 No admite reservas todav\u00eda',
+      'VIORA \u00b7 Est\u00e9tica integral',
+    ]}
+  >
+    <img
+      slot="brand"
+      class="viora-footer-logo"
+      src="/brand/viora-palabra.png"
+      width="1310"
+      height="275"
+      alt="VIORA"
+      loading="lazy"
+    />
   </SiteFooter>
 </BaseLayout>

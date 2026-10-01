@@ -5,7 +5,8 @@ import VioraSiteLayout from '../layouts/VioraSiteLayout.astro';
 
 const seo = seoMetadataSchema.parse({
   title: 'Página no encontrada | VIORA · Vista previa',
-  description: 'La página que buscás no existe en esta vista previa de VIORA. Podés volver al inicio o explorar las experiencias.',
+  description:
+    'La página que buscás no existe en esta vista previa de VIORA. Podés volver al inicio o explorar las experiencias.',
 });
 ---
 
@@ -16,8 +17,12 @@ const seo = seoMetadataSchema.parse({
       <h1 id="viora-not-found-title">Esta página no existe.</h1>
       <p>El enlace puede haber cambiado o no estar disponible en esta vista previa.</p>
       <div class="viora-not-found__actions">
-        <a class="action-link" href="/">Volver al inicio</a>
-        <a class="viora-not-found__catalog-link" href="/#alcance">Ver experiencias</a>
+        <a class="action-link" href="/">
+          Volver al inicio
+        </a>
+        <a class="viora-not-found__catalog-link" href="/#alcance">
+          Ver experiencias
+        </a>
       </div>
     </Container>
   </section>
