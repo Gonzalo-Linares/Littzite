@@ -22,7 +22,7 @@ Si una página de tatuajes ofrece ambas alternativas, la misma página referenci
 
 ## Invariantes de negocio
 
-1. La estética ofrece una **única** agenda profesional mientras D-02A no indique lo contrario. La duración por tratamiento es obligatoria **para publicar un servicio con reserva directa**, no necesariamente para una página informativa de servicio.
+1. La estética ofrece una **única** agenda profesional mientras D-02A no indique lo contrario. Para publicar un tratamiento con reserva directa, el event type del proveedor debe tener una duración revisada por el negocio y disponibilidad real; Littzite no replica esa duración en `Service` ni la valida desde el resolver local.
 2. Los trabajos pequeños del tatuador **pueden** reservarse directamente; la duración, las categorías concretas y el número de artistas son pendientes. No usar reglas automáticas de centímetros/precio no aprobadas.
 3. Los trabajos grandes llevan a presupuesto previo; una consulta de presupuesto **no constituye** cita ni pago ni obliga a ofrecer un turno automático tras su aceptación.
 4. Una página puede tener 0, 1 o más acciones. Las páginas sin target real de reserva/presupuesto muestran contacto **solo si** el negocio aprobó ese destino.
@@ -34,7 +34,7 @@ Si una página de tatuajes ofrece ambas alternativas, la misma página referenci
 | Caso | Resultado esperado |
 | --- | --- |
 | Acción `direct-booking` con target aprobado | Resolver la acción y obtener una URL validada sin duplicar lógica visual |
-| Estética: servicio publicable con duración ausente | Fallo de validación antes de compilar el sitio público o acción de reserva no habilitada |
+| Estética: event type, duración o disponibilidad aún no verificados | Gate operativo de publicación pendiente; no activar el CTA aunque la acción y la URL resuelvan localmente |
 | Tatuador: ficha con dos acciones distintas | Renderizar ambas, en orden, y resolver una al calendario y otra al canal de presupuesto |
 | Tatuador: presupuesto sin número comercial real o texto aprobado (D-04B) | No generar enlaces ficticios ni formulario propio; CTA de producción bloqueado |
 | Widget no soportado/caído | Enlace HTTPS externo permitido y accesible |
