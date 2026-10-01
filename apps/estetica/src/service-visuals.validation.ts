@@ -38,7 +38,16 @@ const isSmallerVariant = (small: ImageMetadata | undefined, large: ImageMetadata
     && small.width < large.width
   );
 
-const focalPositionPattern = /^(?:left|center|right|\d{1,3}%)\s+(?:top|center|bottom|\d{1,3}%)$/;
+const isPositionCoordinate = (value: string, words: readonly string[]): boolean =>
+  words.includes(value)
+  || (/^\d{1,3}%$/.test(value) && Number.parseInt(value, 10) <= 100);
+
+const isValidFocalPosition = (value: string): boolean => {
+  const coordinates = value.trim().split(/\s+/);
+  return coordinates.length === 2
+    && isPositionCoordinate(coordinates[0], ['left', 'center', 'right'])
+    && isPositionCoordinate(coordinates[1], ['top', 'center', 'bottom']);
+};
 
 export function validateServiceVisuals(
   services: readonly Pick<Service, 'id'>[],
@@ -80,7 +89,7 @@ export function validateServiceVisuals(
     } else if (visual.revealSmall !== undefined) {
       throw new Error(`Reveal variant requires a reveal image for VIORA service: ${visual.serviceId}`);
     }
-    if (visual.focalPosition !== undefined && !focalPositionPattern.test(visual.focalPosition)) {
+    if (visual.focalPosition !== undefined && !isValidFocalPosition(visual.focalPosition)) {
       throw new Error(`Invalid focal position for VIORA service: ${visual.serviceId}`);
     }
   }

@@ -193,6 +193,7 @@ test('VIORA theme, voice and four named services match its brand manual', () => 
     surface: '#FAF5F0', text: '#39252D', accent: '#7B4655', accentText: '#FAF5F0',
     border: '#D7BEC4', focus: '#39252D',
   });
+
   const home = estetica.pages.find((page) => page.slug === '');
   const intro = home.sections.find((section) => section.type === 'intro');
   const serviceList = home.sections.find((section) => section.type === 'service-list');
@@ -207,6 +208,24 @@ test('VIORA theme, voice and four named services match its brand manual', () => 
   assert.ok(estetica.services.every((service) => service.actions.length === 0 && service.durationMinutes === 60));
   assert.deepEqual(estetica.bookingTargets, []);
   assert.deepEqual(estetica.quoteTargets, []);
+});
+
+test('VIORA focal positions stay within supported horizontal and vertical values', () => {
+  const services = [{ id: 'sample' }];
+  const image = { src: '/sample.jpg', width: 1400, height: 900, format: 'jpg' };
+  const validPositions = ['0% 0%', '50% 52%', '100% 100%', 'left top', 'center center', 'right bottom'];
+  const invalidPositions = ['101% 50%', '50% 101%', '999% 999%', '-1% 50%', '50px 50%'];
+
+  for (const focalPosition of validPositions) {
+    assert.doesNotThrow(() => validateServiceVisuals(services, [{
+      serviceId: 'sample', primary: image, primaryAlt: 'Una imagen editorial.', focalPosition,
+    }]), focalPosition);
+  }
+  for (const focalPosition of invalidPositions) {
+    assert.throws(() => validateServiceVisuals(services, [{
+      serviceId: 'sample', primary: image, primaryAlt: 'Una imagen editorial.', focalPosition,
+    }]), /Invalid focal position/, focalPosition);
+  }
 });
 
 test('VIORA service slugs are unique, URL-safe and referenced by the catalog', () => {

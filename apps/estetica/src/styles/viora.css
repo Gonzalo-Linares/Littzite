@@ -150,8 +150,8 @@
   .viora-site .viora-catalog__card:hover .viora-catalog__card-number { transform: translateY(-2px); }
   .viora-site .viora-catalog__card:hover .viora-service-visual__reveal,
   .viora-site .viora-catalog__card:focus-within .viora-service-visual__reveal { opacity: 1; transform: scale(1); }
-  .viora-site .viora-catalog__card:hover .viora-service-visual__primary,
-  .viora-site .viora-catalog__card:focus-within .viora-service-visual__primary { opacity: 0; transform: scale(1.025); }
+.viora-site .viora-catalog__card:hover .viora-service-visual__image,
+  .viora-site .viora-catalog__card:focus-within .viora-service-visual__image { opacity: 0; transform: scale(1.025); }
   .viora-service-card__link:hover .viora-service-card__explore > span,
   .viora-service-card__link:focus-visible .viora-service-card__explore > span { transform: translate(3px, -2px); }
 }
@@ -185,19 +185,12 @@
 }
 .viora-service-visual--card { position: absolute; z-index: 0; inset: 0; aspect-ratio: auto; }
 .viora-service-visual--detail-primary { aspect-ratio: 4 / 5; }
-.viora-service-visual--detail-secondary { aspect-ratio: 16 / 10; }
 .viora-service-visual__layer { position: absolute; inset: 0; display: block; width: 100%; height: 100%; object-fit: cover; }
-.viora-service-visual__primary { transition: opacity .65s ease, transform .9s cubic-bezier(.2,.7,.2,1); }
+.viora-service-visual__image { transition: opacity .65s ease, transform .9s cubic-bezier(.2,.7,.2,1); }
 .viora-service-visual__reveal { z-index: 1; opacity: 0; transform: scale(1.035); transition: opacity .65s ease, transform .9s cubic-bezier(.2,.7,.2,1); }
-.viora-service-visual--has-reveal .viora-service-visual__primary { transform: scale(1); }
+.viora-service-visual--has-reveal .viora-service-visual__image { transform: scale(1); }
 .viora-service-detail__secondary-scene { max-width: 60rem; margin: clamp(4rem, 10vw, 9rem) auto 0; }
 .viora-service-visual--detail-secondary { aspect-ratio: 16 / 9; }
-.viora-service-card__link:focus-visible,
-.viora-service-detail__back:focus-visible {
-  outline: 3px solid var(--color-focus);
-  outline-offset: 4px;
-}
-
 .viora-service-detail {
   min-height: min(62vh, 48rem);
   padding-block: clamp(3rem, 8vw, 7rem);
@@ -294,7 +287,7 @@
   .viora-essence__lead,
   .viora-essence__text,
   .viora-service-detail__secondary-scene { animation: none !important; opacity: 1 !important; transform: none !important; }
-  .viora-service-visual__primary,
+  .viora-service-visual__image,
   .viora-service-visual__reveal { transition: none; }
   .viora-service-visual__reveal { opacity: 0; }
 }
