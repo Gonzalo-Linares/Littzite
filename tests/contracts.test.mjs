@@ -6,6 +6,7 @@ import {
   pageSectionSchema,
   pageSchema,
   seoMetadataSchema,
+  serviceSchema,
   serviceActionSchema,
   siteContentSchema,
   siteConfigSchema,
@@ -340,11 +341,7 @@ test('VIORA theme, voice and four named services match its brand manual', () => 
       ['Reiki', 'reiki'],
     ],
   );
-  assert.ok(
-    estetica.services.every(
-      (service) => service.actions.length === 0 && service.durationMinutes === 60,
-    ),
-  );
+  assert.ok(estetica.services.every((service) => service.actions.length === 0));
   assert.deepEqual(estetica.bookingTargets, []);
   assert.deepEqual(estetica.quoteTargets, []);
 });
@@ -428,22 +425,14 @@ test('Juanjo brand stays independent and its commercial targets remain inactive'
   assert.equal(tattoo.site.contact, undefined);
 });
 
-test('VIORA trial durations are independently editable without enabling booking', () => {
-  const trial = structuredClone(estetica);
-  assert.equal(trial.services.length, 4);
-  assert.deepEqual(
-    trial.services.map(({ durationMinutes }) => durationMinutes),
-    [60, 60, 60, 60],
-  );
-  trial.services[0].durationMinutes = 45;
-  const parsed = siteContentSchema.parse(trial);
-  assert.deepEqual(
-    parsed.services.map(({ durationMinutes }) => durationMinutes),
-    [45, 60, 60, 60],
-  );
-  assert.ok(parsed.services.every((service) => service.actions.length === 0));
-  assert.deepEqual(parsed.bookingTargets, []);
-
-  trial.services[0].durationMinutes = 0;
-  assert.equal(siteContentSchema.safeParse(trial).success, false);
+test('Service rejects the former durationMinutes field strictly', () => {
+  const validService = {
+    id: 'service-a',
+    slug: 'service-a',
+    displayName: 'Service A',
+    description: 'A generic service for testing.',
+    actions: [],
+  };
+  assert.equal(serviceSchema.safeParse(validService).success, true);
+  assert.equal(serviceSchema.safeParse({ ...validService, durationMinutes: 60 }).success, false);
 });

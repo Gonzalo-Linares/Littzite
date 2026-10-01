@@ -20,7 +20,7 @@
 - `content-schema`: Zod `SiteConfig`, `Service`, `ServiceAction[]`, `BookingTarget`, `QuoteTarget`, `PageSection` y `SeoMetadata`; integridad de referencias cruzadas.
 - `ui`: tokens, buttons, layout, accesibilidad y responsive.
 - SEO de lanzamiento pendiente: canonical, sitemap, `robots.txt` productivo, JSON-LD, Open Graph, dominios y Search Console. `title` y `description` tipados y renderizados en el preview ya están implementados sin paquete `seo`.
-- `booking` implementado: registro cerrado de providers y validación fail-closed de `BookingTarget`; inicialmente admite `cal-com` y depende solo de `content-schema`. No resuelve `ServiceAction`. La resolución de `direct-booking` queda futura, cuando exista un target auténtico aprobado, una acción real y un caller productivo.
+- `booking` implementado: registry cerrado de providers y política fail-closed de `BookingTarget`; admite `cal-com`, depende solo de `content-schema` y resuelve una acción `direct-booking` explícita con API pura y síncrona. Las apps aún no llaman al resolver ni activan reservas; los targets reales siguen pendientes.
 - Baseline local PR-12: ESLint, Prettier, typecheck/Astro check, tests de contratos, builds de ambas apps y validación HTML del output. GitHub Actions sigue desactivado por decisión del propietario.
 
 **Estado:** dos prototipos diferentes con componentes compartidos y validación local; CI actualmente desactivada. El contrato y render de metadata básico forman parte del preview; el SEO de lanzamiento y la activación de reservas siguen pendientes.
