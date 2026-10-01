@@ -32,24 +32,35 @@ export async function collectHtmlFiles(buildDirs) {
   return files.sort();
 }
 
+export function formatValidationMessages(validationResults) {
+  return validationResults.flatMap((validationResult) =>
+    validationResult.results.flatMap((documentResult) =>
+      documentResult.messages.map(
+        (message) =>
+          `${documentResult.filePath}:${message.line}:${message.column} ${message.ruleId}: ${message.message}`,
+      ),
+    ),
+  );
+}
+
+export async function validateHtmlFiles(files, validator = new HtmlValidate(config)) {
+  const results = await Promise.all(files.map((file) => validator.validateFile(file)));
+  const valid = results.every((result) => result.valid);
+
+  return {
+    valid,
+    exitCode: valid ? 0 : 1,
+    diagnostics: formatValidationMessages(results),
+  };
+}
+
 if (process.argv[1] && resolve(process.argv[1]) === fileURLToPath(import.meta.url)) {
   const buildDirs = ['apps/estetica/dist', 'apps/tattoo/dist'];
   const files = await collectHtmlFiles(buildDirs);
-  const validator = new HtmlValidate(config);
-  const results = await Promise.all(files.map((file) => validator.validateFile(file)));
-  let invalid = false;
+  const validation = await validateHtmlFiles(files);
 
-  for (const result of results) {
-    if (!result.valid) {
-      invalid = true;
-      for (const message of result.results.flatMap(({ messages }) => messages)) {
-        process.stderr.write(
-          `${message.filePath}:${message.line}:${message.column} ${message.ruleId}: ${message.message}\n`,
-        );
-      }
-    }
-  }
-
-  if (invalid) process.exitCode = 1;
-  else process.stdout.write(`Validated ${files.length} built HTML files.\n`);
+  if (!validation.valid) {
+    process.stderr.write(`${validation.diagnostics.join('\n')}\n`);
+    process.exitCode = validation.exitCode;
+  } else process.stdout.write(`Validated ${files.length} built HTML files.\n`);
 }

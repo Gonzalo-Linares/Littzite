@@ -15,10 +15,6 @@ export default tseslint.config(
     languageOptions: {
       globals: globals.node,
     },
-    rules: {
-      // Control-character checks are intentional in URL/content validation.
-      'no-control-regex': 'off',
-    },
   },
   {
     files: ['**/*.{ts,astro}'],
@@ -28,6 +24,12 @@ export default tseslint.config(
         'error',
         { argsIgnorePattern: '^_', caughtErrorsIgnorePattern: '^_', varsIgnorePattern: '^_' },
       ],
+    },
+  },
+  {
+    files: ['packages/ui/src/link-utils.ts'],
+    rules: {
+      'no-control-regex': 'off',
     },
   },
 );
