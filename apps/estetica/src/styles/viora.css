@@ -304,7 +304,7 @@
   .viora-service-detail__secondary-scene,
   .viora-essence__lead,
   .viora-essence__text { animation: viora-enter both; animation-timeline: view(); animation-range: entry 0% entry 35%; }
-  .viora-site .landing-hero-photo-frame { animation: viora-hero-drift both; animation-timeline: view(); animation-range: exit 0% exit 100%; }
+  .viora-site .viora-hero-photo-frame { animation: viora-hero-drift both; animation-timeline: view(); animation-range: exit 0% exit 100%; }
   .viora-essence__watermark { animation: viora-watermark-drift both; animation-timeline: view(); animation-range: entry 0% exit 100%; }
 }
 @keyframes viora-hero-drift { from { transform: translateY(-8px) scale(1.025); } to { transform: translateY(8px) scale(1.025); } }
