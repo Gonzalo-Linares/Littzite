@@ -3,12 +3,14 @@ import { isAllowedHref } from './link-utils';
 
 interface Props {
   href: string;
+  className?: string;
+  describedBy?: string;
 }
 
-const { href } = Astro.props;
+const { href, className = 'action-link', describedBy } = Astro.props;
 if (!isAllowedHref(href)) throw new Error('Unsupported link URL');
 ---
 
-<a class="action-link" href={href}>
+<a class={className} href={href} aria-describedby={describedBy}>
   <slot />
 </a>

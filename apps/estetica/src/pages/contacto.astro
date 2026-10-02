@@ -1,0 +1,23 @@
+---
+import VioraContact from '../components/VioraContact.astro';
+import VioraSiteLayout from '../layouts/VioraSiteLayout.astro';
+import { siteContent } from '../site.config';
+import VioraPageIntro from '../components/VioraPageIntro.astro';
+---
+
+<VioraSiteLayout
+  seo={{
+    title: 'Contacto y ubicación | VIORA · Vista previa',
+    description: 'Información de contacto y ubicación de VIORA, pendiente de confirmación.',
+  }}
+>
+  <div class="viora-contact-page">
+    <VioraPageIntro
+      eyebrow="VIORA / contacto"
+      title="Contacto y ubicación"
+      titleId="viora-contact-page-title"
+      lead="Estamos preparando la información para que puedas encontrarnos y comunicarte con VIORA."
+    />
+    <VioraContact contact={siteContent.site.contact} location={siteContent.site.locations[0]} />
+  </div>
+</VioraSiteLayout>

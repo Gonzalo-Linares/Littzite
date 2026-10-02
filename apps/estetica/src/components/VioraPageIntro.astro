@@ -1,0 +1,41 @@
+---
+import Container from '@littzite/ui/Container.astro';
+import ButtonLink from '@littzite/ui/ButtonLink.astro';
+
+interface Props {
+  eyebrow: string;
+  title: string;
+  lead?: string;
+  backHref?: string;
+  backLabel?: string;
+  className?: string;
+  titleId?: string;
+  titleStyle?: string;
+}
+
+const {
+  eyebrow,
+  title,
+  lead,
+  backHref,
+  backLabel = 'Volver',
+  className = '',
+  titleId,
+  titleStyle,
+} = Astro.props;
+---
+
+<header class:list={['viora-page-intro', className]}>
+  <Container>
+    {backHref && (
+      <ButtonLink href={backHref} variant="quiet" size="compact">
+        ← {backLabel}
+      </ButtonLink>
+    )}
+    <p class="viora-page-intro__eyebrow">{eyebrow}</p>
+    <h1 id={titleId} style={titleStyle}>
+      {title}
+    </h1>
+    {lead && <p class="viora-page-intro__lead">{lead}</p>}
+  </Container>
+</header>

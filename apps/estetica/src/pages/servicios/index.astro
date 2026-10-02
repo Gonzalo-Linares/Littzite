@@ -1,0 +1,15 @@
+---
+import ServiceCatalog from '../../components/ServiceCatalog.astro';
+import VioraSiteLayout from '../../layouts/VioraSiteLayout.astro';
+import { siteContent } from '../../site.config';
+import { serviceVisuals } from '../../service-visuals';
+---
+
+<VioraSiteLayout
+  seo={{
+    title: 'Experiencias de cuidado | VIORA · Vista previa',
+    description: 'Explorá las experiencias de cuidado y bienestar de VIORA en esta vista previa.',
+  }}
+>
+  <ServiceCatalog variant="catalog" services={siteContent.services} visuals={serviceVisuals} />
+</VioraSiteLayout>

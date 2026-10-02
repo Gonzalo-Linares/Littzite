@@ -1,0 +1,49 @@
+---
+import ButtonLink from './ButtonLink.astro';
+
+interface ActionItem {
+  id: string;
+  label: string;
+  href: string;
+  note?: string;
+}
+
+interface Props {
+  idPrefix: string;
+  actions: ActionItem[];
+}
+
+const { idPrefix, actions } = Astro.props;
+const safeHtmlId = /^[A-Za-z0-9][A-Za-z0-9_-]*$/;
+if (actions.length > 0 && !safeHtmlId.test(idPrefix)) {
+  throw new Error('ActionList idPrefix must be a safe HTML ID prefix');
+}
+if (actions.some(({ id }) => !safeHtmlId.test(id))) {
+  throw new Error('ActionList action IDs must be safe HTML ID parts');
+}
+if (new Set(actions.map(({ id }) => id)).size !== actions.length) {
+  throw new Error('ActionList action IDs must be unique within the list');
+}
+---
+
+{actions.length > 0 && (
+  <ul class="action-list">
+    {actions.map((action) => (
+      <li class="action-list__item">
+        <ButtonLink
+          href={action.href}
+          variant="primary"
+          size="compact"
+          describedBy={action.note ? `${idPrefix}-action-note-${action.id}` : undefined}
+        >
+          {action.label}
+        </ButtonLink>
+        {action.note && (
+          <p class="action-list__note" id={`${idPrefix}-action-note-${action.id}`}>
+            {action.note}
+          </p>
+        )}
+      </li>
+    ))}
+  </ul>
+)}
