@@ -9,10 +9,21 @@ interface ActionItem {
 }
 
 interface Props {
+  idPrefix: string;
   actions: ActionItem[];
 }
 
-const { actions } = Astro.props;
+const { idPrefix, actions } = Astro.props;
+const safeHtmlId = /^[A-Za-z0-9][A-Za-z0-9_-]*$/;
+if (actions.length > 0 && !safeHtmlId.test(idPrefix)) {
+  throw new Error('ActionList idPrefix must be a safe HTML ID prefix');
+}
+if (actions.some(({ id }) => !safeHtmlId.test(id))) {
+  throw new Error('ActionList action IDs must be safe HTML ID parts');
+}
+if (new Set(actions.map(({ id }) => id)).size !== actions.length) {
+  throw new Error('ActionList action IDs must be unique within the list');
+}
 ---
 
 {actions.length > 0 && (
@@ -22,12 +33,12 @@ const { actions } = Astro.props;
         <Link
           href={action.href}
           className="action-list__link"
-          describedBy={action.note ? `action-note-${action.id}` : undefined}
+          describedBy={action.note ? `${idPrefix}-action-note-${action.id}` : undefined}
         >
           {action.label}
         </Link>
         {action.note && (
-          <p class="action-list__note" id={`action-note-${action.id}`}>
+          <p class="action-list__note" id={`${idPrefix}-action-note-${action.id}`}>
             {action.note}
           </p>
         )}

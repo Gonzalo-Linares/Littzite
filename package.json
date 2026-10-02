@@ -9,7 +9,7 @@
     "dev:estetica": "corepack pnpm --filter @littzite/estetica dev --port 4321",
     "dev:tattoo": "corepack pnpm --filter @littzite/tattoo dev --port 4322",
     "check:boundaries": "node scripts/check-boundaries.mjs",
-    "test:contracts": "node --test tests/contracts.test.mjs tests/boundaries.test.mjs tests/booking.test.mjs tests/link-utils.test.mjs tests/portfolio.test.mjs tests/site-links.test.mjs tests/validate-html.test.mjs",
+    "test:contracts": "node --test tests/contracts.test.mjs tests/boundaries.test.mjs tests/booking.test.mjs tests/link-utils.test.mjs tests/portfolio.test.mjs tests/site-links.test.mjs tests/validate-html.test.mjs tests/action-list.test.mjs",
     "lint": "eslint --max-warnings=0 apps packages scripts tests *.mjs",
     "format": "prettier --write apps packages scripts tests *.mjs *.json *.yaml",
     "format:check": "prettier --check apps packages scripts tests *.mjs *.json *.yaml",
