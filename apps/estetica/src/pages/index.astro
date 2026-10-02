@@ -6,6 +6,8 @@ import { siteContent } from '../site.config';
 import { serviceVisuals } from '../service-visuals';
 import heroImage from '../assets/viora-hero.jpg';
 import heroImageSmall from '../assets/viora-hero-small.jpg';
+import VioraMoment from '../components/VioraMoment.astro';
+import VioraContact from '../components/VioraContact.astro';
 
 const { pages } = siteContent;
 const home = pages.find((page) => page.slug === '');
@@ -61,4 +63,7 @@ if (!home || !intro || !catalog) throw new Error('Incomplete VIORA preview conte
       </div>
     </div>
   </section>
+
+  <VioraMoment />
+  <VioraContact contact={siteContent.site.contact} location={siteContent.site.locations[0]} />
 </VioraSiteLayout>

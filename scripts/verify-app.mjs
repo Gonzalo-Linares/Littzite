@@ -119,6 +119,16 @@ if (app === 'estetica') {
   assert.ok(heroImageTag, 'VIORA hero photo image missing');
   assert.ok(html.includes('/brand/viora-palabra.png'), 'VIORA footer asset missing');
   assert.ok(html.includes('id="esencia"'), 'VIORA essence section missing');
+  assert.ok(html.includes('class="viora-moment"'), 'VIORA moment section missing');
+  assert.ok(html.includes('class="viora-contact"'), 'VIORA contact section missing');
+  assert.ok(html.includes('aria-label="Navegación del pie de página"'));
+  assert.ok(html.includes('href="/#contacto">Contacto</a>'));
+  assert.ok(
+    html.includes('La ubicación y el mapa se incorporarán cuando la dirección esté confirmada.'),
+    'Contact preview must be honest and avoid a fabricated location',
+  );
+  assert.ok(!/<iframe\b/i.test(html), 'VIORA preview must not embed a map');
+  assert.ok(!/instagram\.com\//i.test(html), 'VIORA must not publish an unconfirmed social link');
   assert.ok(
     !/(?:cal\.com|booking\.example|wa\.me|api\.whatsapp)/i.test(html),
     'No commercial destination may be published',
@@ -300,6 +310,10 @@ if (app === 'estetica') {
     assert.ok(
       !/<a[^>]*>[^<]*(Reservar|Agendar|Consultar)[^<]*<\/a>/i.test(detail),
       `${service.slug}: unapproved conversion CTA`,
+    );
+    assert.ok(
+      !detail.includes('class="viora-service-actions"'),
+      `${service.slug}: empty service actions must not render a section`,
     );
     assert.ok(
       !/(?:\$\s?\d|ARS\s?\d|\d+\s?(?:minutos|min))/i.test(detail),

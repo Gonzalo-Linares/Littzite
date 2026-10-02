@@ -1,0 +1,37 @@
+---
+import Link from './Link.astro';
+
+interface ActionItem {
+  id: string;
+  label: string;
+  href: string;
+  note?: string;
+}
+
+interface Props {
+  actions: ActionItem[];
+}
+
+const { actions } = Astro.props;
+---
+
+{actions.length > 0 && (
+  <ul class="action-list">
+    {actions.map((action) => (
+      <li class="action-list__item">
+        <Link
+          href={action.href}
+          className="action-list__link"
+          describedBy={action.note ? `action-note-${action.id}` : undefined}
+        >
+          {action.label}
+        </Link>
+        {action.note && (
+          <p class="action-list__note" id={`action-note-${action.id}`}>
+            {action.note}
+          </p>
+        )}
+      </li>
+    ))}
+  </ul>
+)}

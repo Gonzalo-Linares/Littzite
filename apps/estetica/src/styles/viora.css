@@ -541,6 +541,143 @@
   margin: 0 0 1.5rem;
 }
 
+.viora-moment {
+  padding-block: clamp(4.5rem, 8vw, 7rem);
+  background: var(--viora-ivory);
+  scroll-margin-top: 2rem;
+}
+.viora-moment__intro {
+  max-width: 48rem;
+  margin-bottom: clamp(2.5rem, 5vw, 4rem);
+}
+.viora-moment__intro h2,
+.viora-contact h2,
+.viora-service-actions h2 {
+  margin: 0.8rem 0 0;
+  color: var(--viora-plum);
+  font-family: 'Nimbus Roman', 'Times New Roman', Georgia, serif;
+  font-size: clamp(2.8rem, 5vw, 4.8rem);
+  font-weight: 400;
+  letter-spacing: -0.045em;
+  line-height: 1.08;
+}
+.viora-moment__steps {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1.25rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.viora-moment__steps li {
+  min-width: 0;
+  padding: 1.5rem 1.4rem;
+  border-top: 1px solid color-mix(in srgb, var(--viora-plum) 38%, transparent);
+}
+.viora-moment__number {
+  color: var(--viora-plum);
+  font-size: 0.75rem;
+  font-weight: 750;
+  letter-spacing: 0.15em;
+}
+.viora-moment__steps h3 {
+  margin: 1.75rem 0 0.5rem;
+  color: var(--viora-plum);
+  font-family: 'Nimbus Roman', 'Times New Roman', Georgia, serif;
+  font-size: 1.8rem;
+  font-weight: 400;
+}
+.viora-moment__steps p,
+.viora-contact__details p {
+  max-width: 32rem;
+  margin: 0;
+  line-height: 1.75;
+}
+.viora-contact {
+  padding-block: clamp(4.5rem, 8vw, 7rem);
+  background: color-mix(in srgb, var(--viora-ivory) 82%, white);
+  scroll-margin-top: 2rem;
+}
+.viora-contact__grid {
+  display: grid;
+  grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.2fr);
+  gap: clamp(2rem, 6vw, 6rem);
+  align-items: stretch;
+}
+.viora-contact__eyebrow {
+  margin: 0;
+  color: var(--viora-plum);
+  font-size: 0.73rem;
+  font-weight: 800;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+}
+.viora-contact h2 {
+  margin-bottom: 1.4rem;
+}
+.viora-contact__details a {
+  color: var(--viora-plum);
+  overflow-wrap: anywhere;
+}
+.viora-contact__city {
+  margin-top: 0.35rem !important;
+}
+.viora-contact__pending {
+  color: color-mix(in srgb, var(--viora-ink) 74%, transparent);
+}
+.viora-contact__map {
+  display: flex;
+  min-height: 18rem;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+  border: 1px solid color-mix(in srgb, var(--viora-plum) 24%, transparent);
+  background: color-mix(in srgb, var(--viora-soft-rose) 23%, var(--viora-ivory));
+  text-align: center;
+}
+.viora-contact__map p {
+  max-width: 24rem;
+  margin: 1rem 0 0;
+  color: color-mix(in srgb, var(--viora-ink) 76%, transparent);
+  line-height: 1.7;
+}
+.viora-contact__map-mark {
+  display: grid;
+  width: 2.5rem;
+  aspect-ratio: 1;
+  place-items: center;
+  border: 1px solid var(--viora-plum);
+  border-radius: 50%;
+  color: var(--viora-plum);
+  font-size: 1.5rem;
+}
+.viora-footer-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem 1.25rem;
+}
+.viora-footer-links a {
+  display: inline-flex;
+  align-items: center;
+  min-height: 2.75rem;
+  color: var(--viora-plum);
+  font-size: 0.85rem;
+  font-weight: 650;
+}
+.viora-service-actions {
+  margin: clamp(4rem, 8vw, 7rem) auto 0;
+  max-width: 76rem;
+  padding: clamp(2rem, 5vw, 4rem);
+  background: var(--viora-ivory);
+  border-top: 1px solid color-mix(in srgb, var(--viora-plum) 28%, transparent);
+}
+.viora-service-actions .action-list__link {
+  background: var(--viora-plum);
+  color: var(--viora-ivory);
+  text-decoration: none;
+}
+
 .viora-site .site-footer {
   background: var(--viora-ivory);
 }
@@ -615,7 +752,8 @@
     width: 10rem;
   }
   .viora-site .landing-hero__grid,
-  .viora-essence__inner {
+  .viora-essence__inner,
+  .viora-contact__grid {
     grid-template-columns: 1fr;
   }
   .viora-site .landing-hero__grid {
@@ -660,6 +798,24 @@
   .viora-service-detail__secondary-scene {
     margin-top: 4rem;
   }
+  .viora-moment__steps {
+    grid-template-columns: 1fr;
+    gap: 0.35rem;
+  }
+  .viora-moment__steps li {
+    padding-inline: 0;
+  }
+  .viora-moment__steps h3 {
+    margin-top: 1rem;
+  }
+  .viora-contact__map {
+    min-height: 14rem;
+  }
+  .viora-service-actions .action-list,
+  .viora-service-actions .action-list__item,
+  .viora-service-actions .action-list__link {
+    width: 100%;
+  }
   .viora-essence__inner {
     padding-block: 4.5rem;
   }
@@ -699,6 +855,9 @@
   .viora-site .landing-hero__art,
   .viora-service-visual__layer,
   .viora-essence__watermark,
+  .viora-moment__intro,
+  .viora-moment__steps,
+  .viora-contact__grid,
   .viora-essence__lead,
   .viora-essence__text,
   .viora-service-detail__secondary-scene {

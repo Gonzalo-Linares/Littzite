@@ -1,0 +1,50 @@
+---
+import Container from '@littzite/ui/Container.astro';
+import type { ContactConfig, Location } from '@littzite/content-schema';
+
+interface Props {
+  contact?: ContactConfig;
+  location?: Location;
+}
+
+const { contact, location } = Astro.props;
+---
+
+<section id="contacto" class="viora-contact" aria-labelledby="viora-contact-title">
+  <Container>
+    <div class="viora-contact__grid">
+      <div class="viora-contact__details">
+        <p class="viora-contact__eyebrow">Contacto y ubicación</p>
+        <h2 id="viora-contact-title">Encontranos</h2>
+        {location?.address && <p class="viora-contact__address">{location.address}</p>}
+        {location?.city && <p class="viora-contact__city">{location.city}</p>}
+        {contact?.phone && (
+          <p>
+            <a href={`tel:${contact.phone}`}>{contact.phone}</a>
+          </p>
+        )}
+        {contact?.email && (
+          <p>
+            <a href={`mailto:${contact.email}`}>{contact.email}</a>
+          </p>
+        )}
+        {!location && !contact && (
+          <p class="viora-contact__pending">
+            La dirección, los horarios y los canales de contacto se publicarán cuando estén
+            confirmados.
+          </p>
+        )}
+      </div>
+      <div class="viora-contact__map" role="group" aria-label="Información del mapa">
+        <span class="viora-contact__map-mark" aria-hidden="true">
+          +
+        </span>
+        <p>
+          {location
+            ? 'La ubicación en el mapa se incorporará cuando esté verificada.'
+            : 'La ubicación y el mapa se incorporarán cuando la dirección esté confirmada.'}
+        </p>
+      </div>
+    </div>
+  </Container>
+</section>

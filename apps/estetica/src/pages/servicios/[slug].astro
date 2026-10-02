@@ -5,6 +5,8 @@ import ServiceVisual from '../../components/ServiceVisual.astro';
 import { siteContent } from '../../site.config';
 import { serviceVisuals } from '../../service-visuals';
 import { resolveServiceVisual } from '../../service-visuals.validation';
+import { resolveDirectBookingAction } from '@littzite/booking';
+import ActionList from '@littzite/ui/ActionList.astro';
 
 export function getStaticPaths() {
   return siteContent.services.map((service) => ({
@@ -15,6 +17,17 @@ export function getStaticPaths() {
 
 const { service } = Astro.props;
 const visual = resolveServiceVisual(serviceVisuals, service.id);
+const actions = service.actions
+  .filter((action) => action.type === 'direct-booking')
+  .map((action) => {
+    const resolved = resolveDirectBookingAction(action, siteContent.bookingTargets);
+    return {
+      id: resolved.actionId,
+      label: resolved.label,
+      href: resolved.href,
+      note: resolved.eligibilityNote,
+    };
+  });
 ---
 
 <VioraSiteLayout
@@ -61,6 +74,13 @@ const visual = resolveServiceVisual(serviceVisuals, service.id);
         >
           <ServiceVisual visual={visual} context="detail-secondary" />
         </div>
+      )}
+      {actions.length > 0 && (
+        <section class="viora-service-actions" aria-labelledby="viora-service-actions-title">
+          <p class="viora-service-detail__eyebrow">El próximo paso</p>
+          <h2 id="viora-service-actions-title">Elegí cómo continuar.</h2>
+          <ActionList actions={actions} />
+        </section>
       )}
     </Container>
   </section>
