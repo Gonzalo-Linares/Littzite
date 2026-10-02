@@ -7,6 +7,7 @@
     "./BaseLayout.astro": "./src/BaseLayout.astro",
     "./Container.astro": "./src/Container.astro",
     "./Link.astro": "./src/Link.astro",
+    "./ButtonLink.astro": "./src/ButtonLink.astro",
     "./ActionList.astro": "./src/ActionList.astro",
     "./SiteHeader.astro": "./src/SiteHeader.astro",
     "./SiteFooter.astro": "./src/SiteFooter.astro"

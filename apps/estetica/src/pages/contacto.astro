@@ -2,6 +2,7 @@
 import VioraContact from '../components/VioraContact.astro';
 import VioraSiteLayout from '../layouts/VioraSiteLayout.astro';
 import { siteContent } from '../site.config';
+import VioraPageIntro from '../components/VioraPageIntro.astro';
 ---
 
 <VioraSiteLayout
@@ -11,14 +12,12 @@ import { siteContent } from '../site.config';
   }}
 >
   <div class="viora-contact-page">
-    <div class="container viora-contact-page__intro">
-      <p class="viora-contact__eyebrow">VIORA / contacto</p>
-      <h1>Contacto y ubicación</h1>
-      <p>
-        Estamos preparando la información necesaria para que puedas encontrarnos y comunicarte con
-        VIORA.
-      </p>
-    </div>
+    <VioraPageIntro
+      eyebrow="VIORA / contacto"
+      title="Contacto y ubicación"
+      titleId="viora-contact-page-title"
+      lead="Estamos preparando la información para que puedas encontrarnos y comunicarte con VIORA."
+    />
     <VioraContact contact={siteContent.site.contact} location={siteContent.site.locations[0]} />
   </div>
 </VioraSiteLayout>

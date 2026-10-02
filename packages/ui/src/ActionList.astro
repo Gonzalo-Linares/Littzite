@@ -1,5 +1,5 @@
 ---
-import Link from './Link.astro';
+import ButtonLink from './ButtonLink.astro';
 
 interface ActionItem {
   id: string;
@@ -30,13 +30,14 @@ if (new Set(actions.map(({ id }) => id)).size !== actions.length) {
   <ul class="action-list">
     {actions.map((action) => (
       <li class="action-list__item">
-        <Link
+        <ButtonLink
           href={action.href}
-          className="action-list__link"
+          variant="primary"
+          size="compact"
           describedBy={action.note ? `${idPrefix}-action-note-${action.id}` : undefined}
         >
           {action.label}
-        </Link>
+        </ButtonLink>
         {action.note && (
           <p class="action-list__note" id={`${idPrefix}-action-note-${action.id}`}>
             {action.note}

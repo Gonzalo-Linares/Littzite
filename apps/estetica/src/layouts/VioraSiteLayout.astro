@@ -2,6 +2,7 @@
 import BaseLayout from '@littzite/ui/BaseLayout.astro';
 import SiteHeader from '@littzite/ui/SiteHeader.astro';
 import SiteFooter from '@littzite/ui/SiteFooter.astro';
+import ButtonLink from '@littzite/ui/ButtonLink.astro';
 import type { SeoMetadata } from '@littzite/content-schema';
 import { siteContent } from '../site.config';
 import '../styles/viora.css';
@@ -32,6 +33,7 @@ const { site } = siteContent;
       { label: 'VIORA', href: '/viora/' },
       { label: 'Contacto', href: '/contacto/' },
     ]}
+    badge={{ label: 'Turnos', href: '/reservar/' }}
   >
     <img
       slot="brand"
@@ -49,11 +51,8 @@ const { site } = siteContent;
   <SiteFooter
     slot="footer"
     brand="VIORA"
-    note={'Tu momento, tu bienestar. Datos comerciales y agenda pendientes de confirmaci\u00f3n.'}
-    meta={[
-      'Vista previa \u00b7 No admite reservas todav\u00eda',
-      'VIORA \u00b7 Est\u00e9tica integral',
-    ]}
+    note="Tu momento, tu bienestar."
+    meta={['Vista previa \u00b7 No indexable', 'VIORA \u00b7 Est\u00e9tica integral']}
   >
     <img
       slot="brand"
@@ -65,9 +64,18 @@ const { site } = siteContent;
       loading="lazy"
     />
     <nav slot="links" class="viora-footer-links" aria-label="Navegación del pie de página">
-      <a href="/servicios/">Servicios</a>
-      <a href="/viora/">VIORA</a>
-      <a href="/contacto/">Contacto</a>
+      <ButtonLink href="/servicios/" variant="quiet" size="compact">
+        Servicios
+      </ButtonLink>
+      <ButtonLink href="/viora/" variant="quiet" size="compact">
+        VIORA
+      </ButtonLink>
+      <ButtonLink href="/contacto/" variant="quiet" size="compact">
+        Contacto
+      </ButtonLink>
+      <ButtonLink href="/reservar/" variant="quiet" size="compact">
+        Turnos
+      </ButtonLink>
     </nav>
   </SiteFooter>
 </BaseLayout>

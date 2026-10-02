@@ -42,7 +42,7 @@ test('ActionList renders empty, single and ordered multiple actions with scoped 
   const single = caseMarkup(html, 'one');
   assert.match(
     single,
-    /<a class="action-list__link" href="https:\/\/example\.test\/action-a" aria-describedby="single-list-action-note-book">Action A<\/a>/,
+    /<a class="button-link button-link--primary button-link--compact" href="https:\/\/example\.test\/action-a" aria-describedby="single-list-action-note-book">Action A<\/a>/,
   );
   assert.match(
     single,
@@ -51,7 +51,11 @@ test('ActionList renders empty, single and ordered multiple actions with scoped 
 
   const multiple = caseMarkup(html, 'many');
   assert.ok(multiple.indexOf('First action') < multiple.indexOf('Second action'));
-  assert.equal((multiple.match(/<a class="action-list__link"/g) ?? []).length, 2);
+  assert.equal(
+    (multiple.match(/<a class="button-link button-link--primary button-link--compact"/g) ?? [])
+      .length,
+    2,
+  );
 
   const firstNoteId = 'service-a-action-note-book';
   const secondNoteId = 'service-b-action-note-book';

@@ -2,6 +2,7 @@
 import Container from '@littzite/ui/Container.astro';
 import { seoMetadataSchema } from '@littzite/content-schema';
 import VioraSiteLayout from '../layouts/VioraSiteLayout.astro';
+import ButtonLink from '@littzite/ui/ButtonLink.astro';
 
 const seo = seoMetadataSchema.parse({
   title: 'Página no encontrada | VIORA · Vista previa',
@@ -17,12 +18,12 @@ const seo = seoMetadataSchema.parse({
       <h1 id="viora-not-found-title">Esta página no existe.</h1>
       <p>El enlace puede haber cambiado o no estar disponible en esta vista previa.</p>
       <div class="viora-not-found__actions">
-        <a class="action-link" href="/">
+        <ButtonLink href="/" variant="primary">
           Volver al inicio
-        </a>
-        <a class="viora-not-found__catalog-link" href="/servicios/">
+        </ButtonLink>
+        <ButtonLink href="/servicios/" variant="secondary">
           Ver servicios
-        </a>
+        </ButtonLink>
       </div>
     </Container>
   </section>

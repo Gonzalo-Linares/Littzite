@@ -1,0 +1,21 @@
+---
+import Link from './Link.astro';
+
+interface Props {
+  href: string;
+  variant?: 'primary' | 'secondary' | 'quiet';
+  size?: 'default' | 'compact';
+  describedBy?: string;
+  className?: string;
+}
+
+const { href, variant = 'primary', size = 'default', describedBy, className } = Astro.props;
+---
+
+<Link
+  href={href}
+  className={`button-link button-link--${variant} button-link--${size}${className ? ` ${className}` : ''}`}
+  describedBy={describedBy}
+>
+  <slot />
+</Link>

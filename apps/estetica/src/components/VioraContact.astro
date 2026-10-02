@@ -1,18 +1,22 @@
 ---
 import Container from '@littzite/ui/Container.astro';
 import type { ContactConfig, Location } from '@littzite/content-schema';
+import VioraMap from './VioraMap.astro';
 
 interface Props {
   contact?: ContactConfig;
   location?: Location;
+  map?: { embedUrl?: string; directionsHref?: string; locationLabel?: string };
 }
 
-const { contact, location } = Astro.props;
+const { contact, location, map } = Astro.props;
 ---
 
 <section id="contacto" class="viora-contact" aria-labelledby="viora-contact-title">
   <Container>
-    <div class="viora-contact__grid">
+    <div
+      class:list={['viora-contact__grid', { 'viora-contact__grid--map': Boolean(map?.embedUrl) }]}
+    >
       <div class="viora-contact__details">
         <p class="viora-contact__eyebrow">Contacto y ubicación</p>
         <h2 id="viora-contact-title">Encontranos</h2>
@@ -28,23 +32,16 @@ const { contact, location } = Astro.props;
             <a href={`mailto:${contact.email}`}>{contact.email}</a>
           </p>
         )}
-        {!location && !contact && (
+        {!location && !contact && !map?.embedUrl && (
           <p class="viora-contact__pending">
-            La dirección, los horarios y los canales de contacto se publicarán cuando estén
-            confirmados.
+            Los datos de contacto estarán disponibles cuando queden confirmados.
           </p>
         )}
       </div>
-      <div class="viora-contact__map">
-        <span class="viora-contact__map-mark" aria-hidden="true">
-          +
-        </span>
-        <p>
-          {location
-            ? 'La ubicación en el mapa se incorporará cuando esté verificada.'
-            : 'La ubicación y el mapa se incorporarán cuando la dirección esté confirmada.'}
-        </p>
-      </div>
+      <VioraMap
+        {...map}
+        locationLabel={map?.locationLabel ?? location?.address ?? 'Ubicación de VIORA'}
+      />
     </div>
   </Container>
 </section>

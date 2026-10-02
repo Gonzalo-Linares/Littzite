@@ -1,6 +1,6 @@
 ---
 import LandingHero from '@littzite/sections/LandingHero.astro';
-import Link from '@littzite/ui/Link.astro';
+import ButtonLink from '@littzite/ui/ButtonLink.astro';
 import ServiceCatalog from '../components/ServiceCatalog.astro';
 import VioraSiteLayout from '../layouts/VioraSiteLayout.astro';
 import { siteContent } from '../site.config';
@@ -22,7 +22,6 @@ if (!home || !intro || !catalog) throw new Error('Incomplete VIORA preview conte
     ctaLabel="Conocé nuestras experiencias"
     ctaHref="/servicios/"
     artLabel="UN RESPIRO PARA VOS"
-    artIndex="VIORA / 01"
   >
     <picture slot="artwork" class="viora-hero-photo-frame">
       <img
@@ -56,9 +55,9 @@ if (!home || !intro || !catalog) throw new Error('Incomplete VIORA preview conte
         <h2 id="viora-home-story-title">Una identidad para cuidar.</h2>
         <p>Una propuesta cercana, atenta y honesta para acompañar tus momentos de bienestar.</p>
       </div>
-      <Link href="/viora/" className="viora-home-teaser__link">
+      <ButtonLink href="/viora/" variant="secondary">
         Conocé VIORA <span aria-hidden="true">→</span>
-      </Link>
+      </ButtonLink>
     </div>
   </section>
 
@@ -69,9 +68,9 @@ if (!home || !intro || !catalog) throw new Error('Incomplete VIORA preview conte
         Conocé las experiencias, elegí la que te acompañe y coordiná cuando la agenda esté
         habilitada.
       </p>
-      <Link href="/viora/#momento" className="viora-moment-teaser__link">
+      <ButtonLink href="/viora/#momento" variant="secondary" size="compact">
         Conocé el recorrido <span aria-hidden="true">→</span>
-      </Link>
+      </ButtonLink>
     </div>
   </section>
 
@@ -82,9 +81,9 @@ if (!home || !intro || !catalog) throw new Error('Incomplete VIORA preview conte
         <h2 id="viora-contact-teaser-title">Un espacio para tu bienestar.</h2>
         <p>Los datos de ubicación y contacto estarán disponibles cuando queden confirmados.</p>
       </div>
-      <Link href="/contacto/" className="viora-home-teaser__link">
+      <ButtonLink href="/contacto/" variant="secondary">
         Ver contacto <span aria-hidden="true">→</span>
-      </Link>
+      </ButtonLink>
     </div>
   </section>
 </VioraSiteLayout>

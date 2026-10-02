@@ -1,7 +1,7 @@
 ---
 import type { Service } from '@littzite/content-schema';
 import Container from '@littzite/ui/Container.astro';
-import Link from '@littzite/ui/Link.astro';
+import ButtonLink from '@littzite/ui/ButtonLink.astro';
 import ServiceVisual from './ServiceVisual.astro';
 import { resolveServiceVisual, type VioraServiceVisual } from '../service-visuals.validation';
 
@@ -46,13 +46,9 @@ const sectionId = variant === 'preview' ? 'alcance' : 'catalogo-servicios';
           ? 'Conocé las líneas de VIORA y explorá cada experiencia.'
           : 'Cuidado pensado para distintos momentos. Conocé las propuestas de VIORA.'}
       </p>
-      <p class="viora-catalog__visual-note">
-        Las fotos son referencias ilustrativas; no identifican al equipo, el espacio ni las técnicas
-        de VIORA.
-      </p>
     </div>
     <div class="viora-catalog__grid">
-      {listedServices.map(({ service, visual }, index) => (
+      {listedServices.map(({ service, visual }) => (
         <article
           class:list={[
             'viora-catalog__card',
@@ -66,9 +62,6 @@ const sectionId = variant === 'preview' ? 'alcance' : 'catalogo-servicios';
               transitionName={`viora-service-image-${service.slug}`}
             />
           )}
-          <span class="viora-catalog__card-number" aria-hidden="true">
-            {String(index + 1).padStart(2, '0')}
-          </span>
           <h3>
             <a
               class="viora-service-card__link"
@@ -77,7 +70,7 @@ const sectionId = variant === 'preview' ? 'alcance' : 'catalogo-servicios';
             >
               <span>{service.displayName}</span>
               <span class="viora-service-card__explore">
-                Explorar experiencia <span aria-hidden="true">↗</span>
+                <span>Explorar experiencia</span> <span aria-hidden="true">↗</span>
               </span>
             </a>
           </h3>
@@ -86,9 +79,9 @@ const sectionId = variant === 'preview' ? 'alcance' : 'catalogo-servicios';
       ))}
     </div>
     {variant === 'preview' && (
-      <Link href="/servicios/" className="viora-catalog__all-link">
+      <ButtonLink href="/servicios/" variant="secondary">
         Ver todos los servicios <span aria-hidden="true">→</span>
-      </Link>
+      </ButtonLink>
     )}
   </Container>
 </section>

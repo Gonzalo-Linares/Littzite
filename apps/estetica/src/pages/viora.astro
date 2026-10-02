@@ -1,7 +1,13 @@
 ---
-import Container from '@littzite/ui/Container.astro';
 import VioraMoment from '../components/VioraMoment.astro';
 import VioraSiteLayout from '../layouts/VioraSiteLayout.astro';
+import VioraPageIntro from '../components/VioraPageIntro.astro';
+import ServiceVisual from '../components/ServiceVisual.astro';
+import { serviceVisuals } from '../service-visuals';
+import heroImage from '../assets/viora-hero.jpg';
+import heroImageSmall from '../assets/viora-hero-small.jpg';
+
+const visuals = serviceVisuals.slice(0, 2);
 ---
 
 <VioraSiteLayout
@@ -11,32 +17,59 @@ import VioraSiteLayout from '../layouts/VioraSiteLayout.astro';
   }}
 >
   <section class="viora-story" aria-labelledby="viora-story-title">
-    <Container>
-      <p class="viora-story__eyebrow">VIORA / nuestra esencia</p>
-      <h1 id="viora-story-title">Tu momento, tu bienestar.</h1>
-      <p class="viora-story__lead">
-        Un espacio para hacer una pausa y encontrarte con una forma de cuidado cercana, serena y
-        profesional.
-      </p>
-      <div class="viora-story__body">
-        <h2>Nuestra forma de cuidar</h2>
+    <VioraPageIntro
+      eyebrow="VIORA / nuestra esencia"
+      title="Tu momento, tu bienestar."
+      titleId="viora-story-title"
+      lead="Un espacio para hacer una pausa y encontrarte con una forma de cuidado cercana, serena y profesional."
+      className="viora-story__intro"
+    />
+    <div class="container viora-story__hero-visual">
+      <img
+        src={heroImage.src}
+        srcset={`${heroImageSmall.src} ${heroImageSmall.width}w, ${heroImage.src} ${heroImage.width}w`}
+        sizes="(min-width: 741px) 55vw, 100vw"
+        width={heroImage.width}
+        height={heroImage.height}
+        alt=""
+        loading="lazy"
+        decoding="async"
+      />
+      <span aria-hidden="true">Una pausa, a tu manera</span>
+    </div>
+    <div class="container viora-story__sections">
+      <section class="viora-story-block viora-story-block--text">
+        <div>
+          <p class="viora-story__eyebrow">Nuestra mirada</p>
+          <h2>Nuestra forma de cuidar</h2>
+          <p>
+            VIORA nace de una idea simple: hacer del cuidado personal una experiencia amable, con
+            atención, escucha y una comunicación honesta.
+          </p>
+        </div>
+        {visuals[0] && <ServiceVisual visual={visuals[0]} context="detail-secondary" />}
+      </section>
+      <section class="viora-story-block viora-story-block--reverse">
+        {visuals[1] && <ServiceVisual visual={visuals[1]} context="detail-secondary" />}
+        <div>
+          <p class="viora-story__eyebrow">La esencia</p>
+          <h2>Un cuidado atento a tus tiempos</h2>
+          <p>
+            Cada experiencia parte del respeto por tus tiempos y de una conversación clara sobre lo
+            que propone. Las prácticas de bienestar se presentan como tales, sin prometer resultados
+            ni atribuir efectos médicos.
+          </p>
+        </div>
+      </section>
+      <section class="viora-story__closing">
+        <p class="viora-story__eyebrow">La experiencia</p>
+        <h2>Encontrá tu momento.</h2>
         <p>
-          VIORA nace de una idea simple: hacer del cuidado personal una experiencia amable, con
-          atención, escucha y una comunicación honesta.
+          Explorá las líneas de cuidado de VIORA y elegí la propuesta que acompañe lo que necesitás
+          hoy.
         </p>
-        <h2>La esencia de VIORA</h2>
-        <p>
-          Cada experiencia parte del respeto por tus tiempos y de una conversación clara sobre lo
-          que propone. Las prácticas de bienestar se presentan como tales, sin prometer resultados
-          ni atribuir efectos médicos.
-        </p>
-        <h2>La experiencia</h2>
-        <p>
-          Esta vista previa reúne las líneas de cuidado de VIORA. La información de cada servicio y
-          su disponibilidad se confirmarán antes de habilitar la agenda.
-        </p>
-      </div>
-    </Container>
+      </section>
+    </div>
   </section>
   <VioraMoment />
 </VioraSiteLayout>

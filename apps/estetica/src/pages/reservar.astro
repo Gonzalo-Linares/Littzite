@@ -1,0 +1,70 @@
+---
+import { resolveDirectBookingAction } from '@littzite/booking';
+import ButtonLink from '@littzite/ui/ButtonLink.astro';
+import ActionList from '@littzite/ui/ActionList.astro';
+import ServiceVisual from '../components/ServiceVisual.astro';
+import VioraPageIntro from '../components/VioraPageIntro.astro';
+import VioraSiteLayout from '../layouts/VioraSiteLayout.astro';
+import { siteContent } from '../site.config';
+import { serviceVisuals } from '../service-visuals';
+import { resolveServiceVisual } from '../service-visuals.validation';
+
+const services = siteContent.services.map((service) => {
+  const visual = resolveServiceVisual(serviceVisuals, service.id);
+  if (!visual) throw new Error(`Missing visual for VIORA service ${service.id}`);
+  const actions = service.actions
+    .filter((action) => action.type === 'direct-booking')
+    .map((action) => {
+      const resolved = resolveDirectBookingAction(action, siteContent.bookingTargets);
+      return {
+        id: resolved.actionId,
+        label: resolved.label || 'Elegir turno',
+        href: resolved.href,
+        note: resolved.eligibilityNote,
+      };
+    });
+  return { service, visual, actions };
+});
+---
+
+<VioraSiteLayout
+  seo={{
+    title: 'Reservá tu momento | VIORA · Vista previa',
+    description: 'Elegí una experiencia de VIORA para coordinar tu momento.',
+  }}
+>
+  <section class="viora-booking-page" aria-labelledby="viora-booking-title">
+    <VioraPageIntro
+      eyebrow="VIORA / turnos"
+      title="Reservá tu momento."
+      titleId="viora-booking-title"
+      lead="Elegí la experiencia que querés coordinar."
+      className="viora-booking-intro"
+    />
+    <section class="viora-booking" aria-label="Experiencias disponibles">
+      <div class="container viora-booking__grid">
+        {services.map(({ service, visual, actions }) => (
+          <article class="viora-booking-card">
+            <ServiceVisual visual={visual} context="card" />
+            <div class="viora-booking-card__body">
+              <p class="viora-booking-card__eyebrow">Experiencia VIORA</p>
+              <h2>{service.displayName}</h2>
+              <p>{service.description}</p>
+              {actions.length ? (
+                <ActionList idPrefix={`booking-${service.slug}`} actions={actions} />
+              ) : (
+                <span class="viora-booking-card__status">Agenda próximamente</span>
+              )}
+              <ButtonLink href={`/servicios/${service.slug}/`} variant="quiet" size="compact">
+                Conocer experiencia
+              </ButtonLink>
+            </div>
+          </article>
+        ))}
+      </div>
+      <p class="viora-booking__note">
+        Estamos terminando de configurar los horarios para habilitar la reserva online.
+      </p>
+    </section>
+  </section>
+</VioraSiteLayout>
