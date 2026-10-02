@@ -1,0 +1,42 @@
+---
+import Container from '@littzite/ui/Container.astro';
+import VioraMoment from '../components/VioraMoment.astro';
+import VioraSiteLayout from '../layouts/VioraSiteLayout.astro';
+---
+
+<VioraSiteLayout
+  seo={{
+    title: 'VIORA · Nuestra forma de cuidar | Vista previa',
+    description: 'Conocé la identidad, la filosofía y la experiencia de bienestar de VIORA.',
+  }}
+>
+  <section class="viora-story" aria-labelledby="viora-story-title">
+    <Container>
+      <p class="viora-story__eyebrow">VIORA / nuestra esencia</p>
+      <h1 id="viora-story-title">Tu momento, tu bienestar.</h1>
+      <p class="viora-story__lead">
+        Un espacio para hacer una pausa y encontrarte con una forma de cuidado cercana, serena y
+        profesional.
+      </p>
+      <div class="viora-story__body">
+        <h2>Nuestra forma de cuidar</h2>
+        <p>
+          VIORA nace de una idea simple: hacer del cuidado personal una experiencia amable, con
+          atención, escucha y una comunicación honesta.
+        </p>
+        <h2>La esencia de VIORA</h2>
+        <p>
+          Cada experiencia parte del respeto por tus tiempos y de una conversación clara sobre lo
+          que propone. Las prácticas de bienestar se presentan como tales, sin prometer resultados
+          ni atribuir efectos médicos.
+        </p>
+        <h2>La experiencia</h2>
+        <p>
+          Esta vista previa reúne las líneas de cuidado de VIORA. La información de cada servicio y
+          su disponibilidad se confirmarán antes de habilitar la agenda.
+        </p>
+      </div>
+    </Container>
+  </section>
+  <VioraMoment />
+</VioraSiteLayout>

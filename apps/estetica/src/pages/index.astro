@@ -1,13 +1,12 @@
 ---
 import LandingHero from '@littzite/sections/LandingHero.astro';
+import Link from '@littzite/ui/Link.astro';
 import ServiceCatalog from '../components/ServiceCatalog.astro';
 import VioraSiteLayout from '../layouts/VioraSiteLayout.astro';
 import { siteContent } from '../site.config';
 import { serviceVisuals } from '../service-visuals';
 import heroImage from '../assets/viora-hero.jpg';
 import heroImageSmall from '../assets/viora-hero-small.jpg';
-import VioraMoment from '../components/VioraMoment.astro';
-import VioraContact from '../components/VioraContact.astro';
 
 const { pages } = siteContent;
 const home = pages.find((page) => page.slug === '');
@@ -21,7 +20,7 @@ if (!home || !intro || !catalog) throw new Error('Incomplete VIORA preview conte
     section={intro}
     variant="serene"
     ctaLabel="Conocé nuestras experiencias"
-    ctaHref="#alcance"
+    ctaHref="/servicios/"
     artLabel="UN RESPIRO PARA VOS"
     artIndex="VIORA / 01"
   >
@@ -40,30 +39,52 @@ if (!home || !intro || !catalog) throw new Error('Incomplete VIORA preview conte
     </picture>
   </LandingHero>
 
-  <ServiceCatalog section={catalog} services={siteContent.services} visuals={serviceVisuals} />
+  <ServiceCatalog
+    variant="preview"
+    serviceIds={catalog.serviceIds}
+    services={siteContent.services}
+    visuals={serviceVisuals}
+  />
 
-  <section id="esencia" class="viora-essence" aria-labelledby="viora-essence-heading">
-    <span class="viora-essence__watermark" aria-hidden="true">
-      VIORA
-    </span>
-    <div class="container viora-essence__inner">
-      <div class="viora-essence__lead">
-        <span class="viora-essence__eyebrow">La esencia de VIORA</span>
-        <h2 id="viora-essence-heading">Una identidad para cuidar.</h2>
+  <section
+    class="viora-home-teaser viora-home-teaser--story"
+    aria-labelledby="viora-home-story-title"
+  >
+    <div class="container viora-home-teaser__inner">
+      <div>
+        <p class="viora-home-teaser__eyebrow">Una forma de cuidar</p>
+        <h2 id="viora-home-story-title">Una identidad para cuidar.</h2>
+        <p>Una propuesta cercana, atenta y honesta para acompañar tus momentos de bienestar.</p>
       </div>
-      <div class="viora-essence__text">
-        <p>
-          VIORA nace de una idea simple: hacer del cuidado personal una experiencia amable, con
-          atención, escucha y una comunicación honesta.
-        </p>
-        <p>
-          Este sitio todavía es una vista previa. Los horarios, la disponibilidad y las formas de
-          reservar se publicarán después de confirmarlos.
-        </p>
-      </div>
+      <Link href="/viora/" className="viora-home-teaser__link">
+        Conocé VIORA <span aria-hidden="true">→</span>
+      </Link>
     </div>
   </section>
 
-  <VioraMoment />
-  <VioraContact contact={siteContent.site.contact} location={siteContent.site.locations[0]} />
+  <section class="viora-moment-teaser" aria-label="Tu momento en VIORA">
+    <div class="container viora-moment-teaser__inner">
+      <span>Tu momento</span>
+      <p>
+        Conocé las experiencias, elegí la que te acompañe y coordiná cuando la agenda esté
+        habilitada.
+      </p>
+      <Link href="/viora/#momento" className="viora-moment-teaser__link">
+        Conocé el recorrido <span aria-hidden="true">→</span>
+      </Link>
+    </div>
+  </section>
+
+  <section class="viora-contact-teaser" aria-labelledby="viora-contact-teaser-title">
+    <div class="container viora-contact-teaser__inner">
+      <div>
+        <p class="viora-home-teaser__eyebrow">Encontranos</p>
+        <h2 id="viora-contact-teaser-title">Un espacio para tu bienestar.</h2>
+        <p>Los datos de ubicación y contacto estarán disponibles cuando queden confirmados.</p>
+      </div>
+      <Link href="/contacto/" className="viora-home-teaser__link">
+        Ver contacto <span aria-hidden="true">→</span>
+      </Link>
+    </div>
+  </section>
 </VioraSiteLayout>

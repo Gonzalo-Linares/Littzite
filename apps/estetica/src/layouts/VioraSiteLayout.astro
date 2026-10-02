@@ -28,12 +28,10 @@ const { site } = siteContent;
     descriptor="Tu momento, tu bienestar"
     links={[
       { label: 'Inicio', href: '/' },
-      { label: 'Experiencias', href: '/#alcance' },
-      { label: 'Nuestra esencia', href: '/#esencia' },
-      { label: 'Tu momento', href: '/#viora-moment-title' },
-      { label: 'Contacto', href: '/#contacto' },
+      { label: 'Servicios', href: '/servicios/' },
+      { label: 'VIORA', href: '/viora/' },
+      { label: 'Contacto', href: '/contacto/' },
     ]}
-    badge={{ label: 'Vista previa', href: '/#alcance' }}
   >
     <img
       slot="brand"
@@ -67,8 +65,9 @@ const { site } = siteContent;
       loading="lazy"
     />
     <nav slot="links" class="viora-footer-links" aria-label="Navegación del pie de página">
-      <a href="/#alcance">Servicios</a>
-      <a href="/#contacto">Contacto</a>
+      <a href="/servicios/">Servicios</a>
+      <a href="/viora/">VIORA</a>
+      <a href="/contacto/">Contacto</a>
     </nav>
   </SiteFooter>
 </BaseLayout>

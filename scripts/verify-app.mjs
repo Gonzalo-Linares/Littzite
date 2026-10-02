@@ -94,14 +94,19 @@ if (app === 'estetica') {
     assert.match(markup, /<a href="\/">Inicio<\/a>/, `${page}: Inicio link must target /`);
     assert.match(
       markup,
-      /<a href="\/#alcance">Experiencias<\/a>/,
-      `${page}: Experiencias link must target /#alcance`,
+      /<a href="\/servicios\/">Servicios<\/a>/,
+      `${page}: Services route missing`,
     );
-    assert.match(
-      markup,
-      /<a href="\/#esencia">Nuestra esencia<\/a>/,
-      `${page}: Nuestra esencia link must target /#esencia`,
-    );
+    assert.match(markup, /<a href="\/viora\/">VIORA<\/a>/, `${page}: VIORA route missing`);
+    assert.match(markup, /<a href="\/contacto\/">Contacto<\/a>/, `${page}: Contact route missing`);
+    assert.doesNotMatch(markup, /<a[^>]*>Reservar<\/a>/, `${page}: booking is not active`);
+    const footerNav = markup.match(
+      /<nav class="viora-footer-links" aria-label="Navegación del pie de página">(.*?)<\/nav>/s,
+    )?.[1];
+    assert.ok(footerNav, `${page}: VIORA footer navigation missing`);
+    assert.match(footerNav, /<a href="\/servicios\/">Servicios<\/a>/);
+    assert.match(footerNav, /<a href="\/viora\/">VIORA<\/a>/);
+    assert.match(footerNav, /<a href="\/contacto\/">Contacto<\/a>/);
     assert.ok(markup.includes('/brand/viora-horizontal.png'), `${page}: horizontal logo missing`);
     assert.ok(markup.includes('/brand/viora-palabra.png'), `${page}: wordmark missing`);
     assertBrowserIcon(markup, siteContent.site.iconHref, page);
@@ -118,15 +123,21 @@ if (app === 'estetica') {
   const heroImageTag = html.match(/<img\b(?=[^>]*class="viora-hero-photo")[^>]*>/)?.[0];
   assert.ok(heroImageTag, 'VIORA hero photo image missing');
   assert.ok(html.includes('/brand/viora-palabra.png'), 'VIORA footer asset missing');
-  assert.ok(html.includes('id="esencia"'), 'VIORA essence section missing');
-  assert.ok(html.includes('class="viora-moment"'), 'VIORA moment section missing');
-  assert.ok(html.includes('class="viora-contact"'), 'VIORA contact section missing');
+  assert.ok(html.includes('class="viora-home-teaser viora-home-teaser--story"'));
+  assert.ok(html.includes('class="viora-moment-teaser"'));
+  assert.ok(html.includes('class="viora-contact-teaser"'));
+  assert.doesNotMatch(html, /class="viora-moment"/, 'Full moment narrative belongs on /viora/');
+  assert.doesNotMatch(html, /class="viora-contact__map"/, 'The map panel belongs on /contacto/');
   assert.ok(html.includes('aria-label="Navegación del pie de página"'));
-  assert.ok(html.includes('href="/#contacto">Contacto</a>'));
-  assert.ok(
-    html.includes('La ubicación y el mapa se incorporarán cuando la dirección esté confirmada.'),
-    'Contact preview must be honest and avoid a fabricated location',
+  assert.ok(html.includes('href="/contacto/">Contacto</a>'));
+  assert.match(
+    html,
+    /class="viora-catalog__all-link" href="\/servicios\/">\s*Ver todos los servicios/,
   );
+  assert.match(html, /class="viora-home-teaser__link" href="\/viora\/">\s*Conocé VIORA/);
+  assert.match(html, /class="viora-home-teaser__link" href="\/contacto\/">\s*Ver contacto/);
+  assert.match(html, /class="action-link" href="\/servicios\/"/);
+  assert.doesNotMatch(html, /href="\/(?:#alcance|#esencia|#contacto|#viora-moment-title)"/);
   assert.ok(!/<iframe\b/i.test(html), 'VIORA preview must not embed a map');
   assert.ok(!/instagram\.com\//i.test(html), 'VIORA must not publish an unconfirmed social link');
   assert.ok(
@@ -306,7 +317,7 @@ if (app === 'estetica') {
         detail.includes('aria-labelledby="viora-service-title"'),
       `${service.slug}: accessible landmarks missing`,
     );
-    assert.ok(detail.includes('href="/#alcance"'), `${service.slug}: return link missing`);
+    assert.ok(detail.includes('href="/servicios/"'), `${service.slug}: return link missing`);
     assert.ok(
       !/<a[^>]*>[^<]*(Reservar|Agendar|Consultar)[^<]*<\/a>/i.test(detail),
       `${service.slug}: unapproved conversion CTA`,
@@ -328,6 +339,73 @@ if (app === 'estetica') {
       `${service.slug}: fictitious commercial URL`,
     );
   }
+  const catalog = await readFile(
+    new URL('../apps/estetica/dist/servicios/index.html', import.meta.url),
+    'utf8',
+  );
+  assertVioraFrame(catalog, 'services catalog');
+  assertMetadata(
+    catalog,
+    {
+      title: 'Experiencias de cuidado | VIORA · Vista previa',
+      description: 'Explorá las experiencias de cuidado y bienestar de VIORA en esta vista previa.',
+    },
+    'VIORA services',
+  );
+  assert.match(catalog, /<h1 id="catalogo-servicios-titulo">Nuestras experiencias\.<\/h1>/);
+  assert.equal((catalog.match(/class="viora-catalog__card(?:\s[^"]*)?"/g) ?? []).length, 4);
+  for (const service of siteContent.services) {
+    assert.ok(catalog.includes(`href="/servicios/${service.slug}/"`));
+    assert.ok(catalog.includes(service.displayName));
+  }
+  assert.doesNotMatch(catalog, /cal\.com|Reservar|Agendar/);
+
+  const story = await readFile(
+    new URL('../apps/estetica/dist/viora/index.html', import.meta.url),
+    'utf8',
+  );
+  assertVioraFrame(story, 'VIORA story');
+  assertMetadata(
+    story,
+    {
+      title: 'VIORA · Nuestra forma de cuidar | Vista previa',
+      description: 'Conocé la identidad, la filosofía y la experiencia de bienestar de VIORA.',
+    },
+    'VIORA story',
+  );
+  assert.match(story, /<h1 id="viora-story-title">Tu momento, tu bienestar\.<\/h1>/);
+  assert.match(story, /Nuestra forma de cuidar/);
+  assert.match(story, /La esencia de VIORA/);
+  assert.match(story, /id="momento"[^>]*aria-labelledby="viora-moment-title"/);
+  assert.match(story, /class="viora-moment__eyebrow"/);
+  for (const step of ['Conocé', 'Elegí', 'Coordiná']) assert.ok(story.includes(step));
+  assert.doesNotMatch(story, /cal\.com|Reservar ahora|turnos disponibles/);
+
+  const contact = await readFile(
+    new URL('../apps/estetica/dist/contacto/index.html', import.meta.url),
+    'utf8',
+  );
+  assertVioraFrame(contact, 'contact');
+  assertMetadata(
+    contact,
+    {
+      title: 'Contacto y ubicación | VIORA · Vista previa',
+      description: 'Información de contacto y ubicación de VIORA, pendiente de confirmación.',
+    },
+    'VIORA contact',
+  );
+  assert.match(contact, /<h1>Contacto y ubicación<\/h1>/);
+  assert.match(
+    contact,
+    /dirección, los horarios y los canales de contacto se publicarán cuando estén confirmados/,
+  );
+  assert.match(contact, /class="viora-contact__map"/);
+  assert.doesNotMatch(
+    contact,
+    /<iframe\b|google\.com\/maps|instagram\.com\/|href="(?:tel:|mailto:)/i,
+  );
+  assert.doesNotMatch(contact, /cal\.com|Reservar|Agendar/);
+
   const notFound = await readFile(
     new URL('../apps/estetica/dist/404.html', import.meta.url),
     'utf8',
@@ -347,12 +425,21 @@ if (app === 'estetica') {
   assert.match(notFound, /<meta name="robots" content="noindex, nofollow">/);
   assert.match(notFound, /<h1 id="viora-not-found-title">Esta página no existe\.<\/h1>/);
   assert.ok(
-    notFound.includes('href="/"') && notFound.includes('href="/#alcance"'),
+    notFound.includes('href="/"') && notFound.includes('href="/servicios/"'),
     'VIORA 404 must provide real return links',
   );
   assert.ok(
     !/(?:cal\.com|wa\.me|api\.whatsapp|Reservar|Agendar)/i.test(notFound),
     'VIORA 404 must not publish a commercial action',
+  );
+  assert.doesNotMatch(
+    catalog + story + contact,
+    /(?:cal\.com|wa\.me|api\.whatsapp|Reservar|Agendar)/i,
+    'VIORA routes must not publish unapproved commercial actions',
+  );
+  await assert.rejects(
+    access(new URL('../apps/estetica/dist/reservar/index.html', import.meta.url)),
+    'The booking route must remain absent until PR-15 activates real destinations',
   );
   await assert.rejects(
     access(new URL('../apps/estetica/dist/servicios/no-existe/index.html', import.meta.url)),
@@ -390,6 +477,8 @@ if (app === 'estetica') {
     !html.includes('juanjo-gallery__item--lead'),
     'No real artwork should appear before originals arrive',
   );
+  assert.ok(!html.includes('href="/servicios/"'), 'VIORA navigation must not leak into Juanjo');
+  assert.ok(!html.includes('aria-label="Navegación del pie de página"'));
 }
 assert.ok(html.includes('class="landing-hero landing-hero--'), 'Shared hero missing');
 if (app === 'tattoo')
@@ -405,7 +494,7 @@ assert.ok(
 );
 assert.ok(html.includes('class="skip-link" href="#contenido"'));
 assert.ok(html.includes('class="container"'));
-const expectedHeroHref = app === 'tattoo' ? '#portfolio' : '#alcance';
+const expectedHeroHref = app === 'tattoo' ? '#portfolio' : '/servicios/';
 assert.ok(
   html.includes(`class="action-link" href="${expectedHeroHref}"`),
   `${app}: hero CTA must point to ${expectedHeroHref}`,

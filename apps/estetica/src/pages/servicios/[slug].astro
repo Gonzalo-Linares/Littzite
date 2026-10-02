@@ -35,7 +35,7 @@ const actions = service.actions
 >
   <section class="viora-service-detail" aria-labelledby="viora-service-title">
     <Container>
-      <a class="viora-service-detail__back" href="/#alcance">
+      <a class="viora-service-detail__back" href="/servicios/">
         ← Volver a servicios
       </a>
       <article class:list={{ 'viora-service-detail__article--visual': visual !== undefined }}>
@@ -79,7 +79,7 @@ const actions = service.actions
         <section class="viora-service-actions" aria-labelledby="viora-service-actions-title">
           <p class="viora-service-detail__eyebrow">El próximo paso</p>
           <h2 id="viora-service-actions-title">Elegí cómo continuar.</h2>
-          <ActionList actions={actions} />
+          <ActionList idPrefix={service.slug} actions={actions} />
         </section>
       )}
     </Container>

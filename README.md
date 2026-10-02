@@ -1,6 +1,6 @@
 # Littzite — arquitectura fundacional
 
-**Estado de implementación (01/10/2026):** dos prototipos estáticos `noindex`; PR-13 agrega resolución headless de acciones directas y PR-14 prepara su presentación visual y amplía la home comercial de VIORA. PR-14 no activa reservas ni publica datos comerciales pendientes.
+**Estado de implementación (01/10/2026):** dos prototipos estáticos `noindex`; PR-13 agrega resolución headless de acciones directas y PR-14 prepara `ActionList` y la arquitectura multipágina comercial de VIORA. PR-14 no activa reservas ni publica datos comerciales pendientes.
 **Producto:** plataforma de creación de sitios comerciales modulares; primeros casos: estética integral y estudio de tatuajes en San Juan, Argentina.  
 **Propósito:** captación orgánica local, diferenciación visual, contacto y reservas/solicitudes mediante proveedores externos.
 
@@ -65,4 +65,4 @@ Para trabajar en una sola aplicación, usar `corepack pnpm --filter @littzite/es
 - **Propuesta**: planteada técnicamente, pendiente de ratificación, prueba o validación de costes.
 - **Pendiente**: no seleccionar proveedor, política comercial, flujo o integración sin información del negocio.
 
-**Próximos pasos:** PR-15 confirmar dirección, contacto y redes de VIORA; revisar los cuatro event types, configurar y probar sus URLs reales de Cal.com y disponibilidad antes de activar reservas. El proveedor será la fuente operacional de duración y agenda. Resolver SEO, legales, rendimiento y deploy por separado.
+**Próximos pasos:** PR-15 confirmar dirección, contacto y redes de VIORA; revisar los cuatro event types, configurar y probar sus URLs reales de Cal.com y disponibilidad antes de activar reservas. Recién entonces agregar acciones, CTAs y `/reservar/`. El proveedor será la fuente operacional de duración y agenda. Resolver SEO, legales, rendimiento y deploy por separado.

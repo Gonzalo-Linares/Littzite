@@ -147,7 +147,8 @@
 }
 .viora-site .landing-hero__heading,
 .viora-site .viora-catalog__intro h2,
-.viora-essence h2 {
+.viora-story h1,
+.viora-story h2 {
   font-family: 'Nimbus Roman', 'Times New Roman', Georgia, serif;
   font-weight: 400;
   letter-spacing: -0.04em;
@@ -207,6 +208,7 @@
   text-transform: uppercase;
   line-height: 1.4;
 }
+.viora-site .viora-catalog__intro h1,
 .viora-site .viora-catalog__intro h2 {
   margin: 0.9rem 0 0;
   font-size: clamp(2.9rem, 4.8vw, 5.2rem);
@@ -226,6 +228,21 @@
   font-size: 0.78rem;
   line-height: 1.55;
   opacity: 0.68;
+}
+.viora-catalog__all-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.55rem;
+  min-height: 2.75rem;
+  margin-top: 1.5rem;
+  color: var(--viora-plum);
+  font-weight: 750;
+}
+.viora-site .viora-catalog--preview {
+  padding-block: clamp(3.5rem, 6vw, 5rem);
+}
+.viora-site .viora-catalog--preview .viora-catalog__card--visual {
+  min-height: 21rem;
 }
 .viora-site .viora-catalog__grid {
   display: grid;
@@ -490,61 +507,18 @@
   line-height: 1.6;
 }
 
-.viora-essence {
-  position: relative;
-  overflow: hidden;
-  background: var(--viora-plum);
-  color: var(--viora-ivory);
-  scroll-margin-top: 2rem;
-}
-.viora-essence__watermark {
-  position: absolute;
-  right: -3vw;
-  top: 50%;
-  color: rgb(250 245 240 / 5%);
-  font:
-    400 clamp(9rem, 24vw, 25rem)/0.8 'Nimbus Roman',
-    Georgia,
-    serif;
-  letter-spacing: -0.09em;
-  pointer-events: none;
-  user-select: none;
-  transform: translateY(-50%);
-}
-.viora-essence__inner {
-  position: relative;
-  z-index: 1;
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(0, 0.8fr);
-  gap: clamp(2rem, 8vw, 8rem);
-  align-items: center;
-  padding-block: clamp(5rem, 9vw, 9rem);
-}
-.viora-essence__eyebrow {
-  font-size: 0.72rem;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.17em;
-  color: var(--viora-soft-rose);
-}
-.viora-essence h2 {
-  margin: 1.3rem 0 0;
-  font-size: clamp(3.6rem, 5.5vw, 6.3rem);
-  line-height: 1.06;
-  max-width: 13ch;
-}
-.viora-essence__text {
-  font-size: 1.03rem;
-  line-height: 1.9;
-}
-.viora-essence__text p {
-  margin: 0 0 1.5rem;
-}
-
 .viora-moment {
   padding-block: clamp(4.5rem, 8vw, 7rem);
   background: var(--viora-ivory);
   scroll-margin-top: 2rem;
+}
+.viora-moment__eyebrow {
+  margin: 0;
+  color: var(--viora-plum);
+  font-size: 0.73rem;
+  font-weight: 800;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
 }
 .viora-moment__intro {
   max-width: 48rem;
@@ -652,6 +626,147 @@
   color: var(--viora-plum);
   font-size: 1.5rem;
 }
+.viora-story {
+  padding-block: clamp(4rem, 8vw, 7rem);
+  background: color-mix(in srgb, var(--viora-ivory) 83%, white);
+}
+.viora-story__eyebrow {
+  margin: 0;
+  color: var(--viora-plum);
+  font-size: 0.73rem;
+  font-weight: 800;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+}
+.viora-story h1,
+.viora-contact-page__intro h1 {
+  max-width: 13ch;
+  margin: 1rem 0 1.5rem;
+  color: var(--viora-plum);
+  font-size: clamp(3.4rem, 7vw, 6.4rem);
+  line-height: 1.02;
+}
+.viora-story__lead {
+  max-width: 42rem;
+  font-size: clamp(1.15rem, 2vw, 1.4rem);
+  line-height: 1.8;
+}
+.viora-story__body {
+  max-width: 46rem;
+  margin: clamp(4rem, 9vw, 7rem) 0 0 auto;
+}
+.viora-story__body h2 {
+  margin: 2.5rem 0 0.6rem;
+  color: var(--viora-plum);
+  font-size: clamp(2rem, 4vw, 3rem);
+  line-height: 1.12;
+}
+.viora-story__body p {
+  margin: 0;
+  line-height: 1.85;
+}
+.viora-contact-page__intro {
+  padding-block: clamp(3.5rem, 7vw, 6rem) 1rem;
+}
+.viora-contact-page__intro h1 {
+  font-weight: 400;
+}
+.viora-contact-page__intro > p:last-child {
+  max-width: 38rem;
+  line-height: 1.8;
+}
+.viora-contact-page .viora-contact {
+  padding-top: 1rem;
+}
+.viora-home-teaser,
+.viora-contact-teaser {
+  padding-block: clamp(3.5rem, 7vw, 6rem);
+  background: var(--viora-plum);
+  color: var(--viora-ivory);
+}
+.viora-contact-teaser {
+  background: color-mix(in srgb, var(--viora-soft-rose) 40%, var(--viora-ivory));
+  color: var(--viora-ink);
+}
+.viora-home-teaser__inner,
+.viora-contact-teaser__inner {
+  display: flex;
+  align-items: end;
+  justify-content: space-between;
+  gap: 2rem;
+}
+.viora-home-teaser__eyebrow {
+  margin: 0;
+  color: var(--viora-soft-rose);
+  font-size: 0.72rem;
+  font-weight: 750;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+}
+.viora-contact-teaser .viora-home-teaser__eyebrow {
+  color: var(--viora-plum);
+}
+.viora-home-teaser h2,
+.viora-contact-teaser h2 {
+  max-width: 14ch;
+  margin: 0.8rem 0;
+  font-family: 'Nimbus Roman', 'Times New Roman', Georgia, serif;
+  font-size: clamp(2.5rem, 4.4vw, 4.5rem);
+  font-weight: 400;
+  letter-spacing: -0.04em;
+  line-height: 1.08;
+}
+.viora-home-teaser__inner > div > p:last-child,
+.viora-contact-teaser__inner > div > p:last-child {
+  max-width: 34rem;
+  margin: 0;
+  line-height: 1.75;
+}
+.viora-home-teaser__link,
+.viora-moment-teaser__link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  min-height: 2.75rem;
+  color: var(--viora-ivory);
+  font-weight: 700;
+  white-space: nowrap;
+}
+.viora-contact-teaser .viora-home-teaser__link {
+  color: var(--viora-plum);
+}
+.viora-moment-teaser {
+  padding-block: 1.6rem;
+  background: color-mix(in srgb, var(--viora-soft-rose) 44%, var(--viora-ivory));
+}
+.viora-moment-teaser__inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem 2rem;
+}
+.viora-moment-teaser__inner > span {
+  color: var(--viora-plum);
+  font-size: 0.73rem;
+  font-weight: 800;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+}
+.viora-moment-teaser__inner p {
+  max-width: 38rem;
+  margin: 0;
+  font-size: 0.92rem;
+  line-height: 1.6;
+}
+.viora-moment-teaser__link {
+  color: var(--viora-plum);
+  flex-shrink: 0;
+}
+.viora-home-teaser__link:focus-visible,
+.viora-moment-teaser__link:focus-visible {
+  outline: 3px solid var(--color-focus);
+  outline-offset: 4px;
+}
 .viora-footer-links {
   display: flex;
   flex-wrap: wrap;
@@ -752,7 +867,6 @@
     width: 10rem;
   }
   .viora-site .landing-hero__grid,
-  .viora-essence__inner,
   .viora-contact__grid {
     grid-template-columns: 1fr;
   }
@@ -773,11 +887,19 @@
   .viora-site .viora-catalog__grid {
     grid-template-columns: 1fr;
   }
+  .viora-site .viora-catalog__intro {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 1.15rem;
+  }
   .viora-site .viora-catalog__card {
     min-height: 12rem;
   }
   .viora-site .viora-catalog__card--visual {
     min-height: clamp(27rem, 100vw, 34rem);
+  }
+  .viora-site .viora-catalog--preview .viora-catalog__card--visual {
+    min-height: clamp(17rem, 62vw, 21rem);
   }
   .viora-site .viora-catalog__card h3 {
     margin-top: 1rem;
@@ -816,17 +938,18 @@
   .viora-service-actions .action-list__link {
     width: 100%;
   }
-  .viora-essence__inner {
-    padding-block: 4.5rem;
+  .viora-home-teaser__inner,
+  .viora-contact-teaser__inner {
+    align-items: flex-start;
+    flex-direction: column;
   }
-  .viora-essence h2 {
-    font-size: clamp(3.2rem, 11vw, 5rem);
+  .viora-moment-teaser__inner {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 0.4rem;
   }
 }
 @media (max-width: 410px) {
-  .viora-site .site-header__badge {
-    font-size: 0.64rem;
-  }
   .viora-site .landing-hero__heading {
     font-size: clamp(3rem, 14vw, 3.6rem);
   }
@@ -854,12 +977,10 @@
   .viora-site .landing-hero__actions,
   .viora-site .landing-hero__art,
   .viora-service-visual__layer,
-  .viora-essence__watermark,
   .viora-moment__intro,
   .viora-moment__steps,
   .viora-contact__grid,
-  .viora-essence__lead,
-  .viora-essence__text,
+  .viora-story,
   .viora-service-detail__secondary-scene {
     animation: none !important;
     opacity: 1 !important;
@@ -877,8 +998,9 @@
 @supports (animation-timeline: view()) {
   .viora-service-visual--card,
   .viora-service-detail__secondary-scene,
-  .viora-essence__lead,
-  .viora-essence__text {
+  .viora-moment__intro,
+  .viora-moment__steps,
+  .viora-story__body {
     animation: viora-enter both;
     animation-timeline: view();
     animation-range: entry 0% entry 35%;
@@ -888,11 +1010,6 @@
     animation-timeline: view();
     animation-range: exit 0% exit 100%;
   }
-  .viora-essence__watermark {
-    animation: viora-watermark-drift both;
-    animation-timeline: view();
-    animation-range: entry 0% exit 100%;
-  }
 }
 @keyframes viora-hero-drift {
   from {
@@ -900,13 +1017,5 @@
   }
   to {
     transform: translateY(8px) scale(1.025);
-  }
-}
-@keyframes viora-watermark-drift {
-  from {
-    transform: translate(0, -50%);
-  }
-  to {
-    transform: translate(-3vw, -50%);
   }
 }
