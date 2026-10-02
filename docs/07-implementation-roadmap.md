@@ -2,6 +2,14 @@
 
 **Corte 30/09/2026:** dos apps Astro estáticas no indexadas; cuatro paquetes compartidos (`content-schema`, `ui`, `sections`, `booking`); VIORA con catálogo de cuatro servicios, interacciones responsive, browser icon configurable y 404; identidad editorial Juanjo con galería fotográfica aún vacía. El preview implementa `title` y `description` tipados por página, incluido cada servicio VIORA. Sin reservas activas, SEO de lanzamiento, deploy final, SDK externo ni CMS. GitHub Actions está desactivado por decisión del titular.
 
+### PR-14 — frontend comercial de VIORA (preparación)
+
+`ActionList` presenta acciones resueltas mediante datos neutrales y enlaces validados por `Link`; VIORA compone la resolución localmente. La home agrega narrativa de recorrido y contacto/ubicación en estado de vista previa. No hay redes, dirección, horarios, mapa embebido ni reserva ficticios. VIORA mantiene `actions: []` y `bookingTargets: []`.
+
+### PR-15 — configuración comercial real de VIORA
+
+Requiere validar dirección, contacto/red social, URLs públicas de los cuatro eventos Cal.com, duraciones revisadas, disponibilidad, privacidad y UAT. No activar ninguna acción antes de esas validaciones. SEO, legales, performance y deploy quedan para un PR posterior.
+
 ## Fase 0 — Documentación y decisiones
 
 - Aprobar objetivo, dos recorridos comerciales y exclusiones explícitas de v1.
