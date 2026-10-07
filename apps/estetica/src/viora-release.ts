@@ -46,21 +46,39 @@ export interface ReleaseReadiness {
   publicSiteUrl?: string;
   legal: Record<string, string>;
   booking: BookingReadiness;
-  commercialPhoneRequired?: boolean;
 }
 
-const isPlaceholder = (value: string) => value.includes('[PENDIENTE');
+const isPlaceholder = (value: string) => !value.trim() || value.includes('[PENDIENTE');
+
+export function normalizeCuit(value: string): string | undefined {
+  if (/^\d{11}$/.test(value)) return value;
+  if (/^\d{2}-\d{8}-\d$/.test(value)) return value.replaceAll('-', '');
+  return undefined;
+}
+
+export function isValidCuit(value: string): boolean {
+  const normalized = normalizeCuit(value);
+  if (!normalized) return false;
+  const weights = [5, 4, 3, 2, 7, 6, 5, 4, 3, 2];
+  const sum = [...normalized.slice(0, 10)].reduce(
+    (total, digit, index) => total + Number(digit) * weights[index],
+    0,
+  );
+  const remainder = sum % 11;
+  const checkDigit = remainder === 0 ? 0 : remainder === 1 ? 9 : 11 - remainder;
+  return checkDigit === Number(normalized[10]);
+}
 
 export function releaseBlockers(readiness: ReleaseReadiness): string[] {
   if (!readiness.enabled) return [];
   const blockers: string[] = [];
   for (const [field, value] of Object.entries(readiness.legal)) {
-    if (field === 'phone' && !readiness.commercialPhoneRequired) continue;
     if (isPlaceholder(value)) blockers.push(`legal.${field}`);
   }
   if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(readiness.legal.contactEmail))
     blockers.push('legal.email.invalid');
-  if (!/^\d{2}-?\d{8}-?\d$/.test(readiness.legal.taxId)) blockers.push('legal.taxId.invalid');
+  if (!isValidCuit(readiness.legal.taxId)) blockers.push('legal.taxId.invalid');
+  if (!/^\+[1-9]\d{1,14}$/.test(readiness.legal.phone)) blockers.push('legal.phone.invalid');
   if (!readiness.publicSiteUrl) blockers.push('PUBLIC_SITE_URL.missing');
   else {
     try {

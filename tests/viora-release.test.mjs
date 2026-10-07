@@ -4,7 +4,7 @@ import { readFileSync } from 'node:fs';
 import path from 'node:path';
 import test from 'node:test';
 import { fileURLToPath } from 'node:url';
-import { releaseBlockers } from '../apps/estetica/src/viora-release.ts';
+import { isValidCuit, normalizeCuit, releaseBlockers } from '../apps/estetica/src/viora-release.ts';
 
 const root = fileURLToPath(new URL('../', import.meta.url));
 
@@ -13,7 +13,8 @@ const validFixture = {
   publicSiteUrl: 'https://viora.example',
   legal: {
     providerName: 'Prestador Real',
-    taxId: '20-12345678-9',
+    // Synthetic checksum-valid fixture; it is not assigned to a real person or business.
+    taxId: '30-10000000-4',
     contactEmail: 'legal@viora.example',
     phone: '+5492641234567',
     legalDomicile: 'Domicilio confirmado',
@@ -39,6 +40,16 @@ test('complete approved release fixture passes', () => {
   assert.deepEqual(releaseBlockers(validFixture), []);
 });
 
+test('normalizes CUIT formats and validates the Argentine check digit', () => {
+  assert.equal(normalizeCuit('30-10000000-4'), '30100000004');
+  assert.equal(normalizeCuit('30100000004'), '30100000004');
+  assert.equal(normalizeCuit('30 10000000 4'), undefined);
+  assert.equal(isValidCuit('30-10000000-4'), true);
+  assert.equal(isValidCuit('30100000004'), true);
+  assert.equal(isValidCuit('30-10000000-5'), false);
+  assert.equal(isValidCuit('20-12345678-9'), false);
+});
+
 test('release fails closed for legal placeholders and the UAT booking URL', () => {
   const blockers = releaseBlockers({
     ...validFixture,
@@ -50,6 +61,25 @@ test('release fails closed for legal placeholders and the UAT booking URL', () =
   });
   assert.ok(blockers.includes('legal.providerName'));
   assert.ok(blockers.includes('booking.uat-url'));
+});
+
+test('release fails closed for missing, placeholder or invalid commercial phone', () => {
+  for (const phone of ['', '[PENDIENTE — TELÉFONO / WHATSAPP COMERCIAL]', '264 123 4567']) {
+    const blockers = releaseBlockers({
+      ...validFixture,
+      legal: { ...validFixture.legal, phone },
+    });
+    assert.ok(blockers.includes('legal.phone.invalid'), phone);
+    if (!phone || phone.includes('[PENDIENTE')) assert.ok(blockers.includes('legal.phone'));
+  }
+});
+
+test('release fails closed for a CUIT with an invalid check digit', () => {
+  const blockers = releaseBlockers({
+    ...validFixture,
+    legal: { ...validFixture.legal, taxId: '30-10000000-5' },
+  });
+  assert.ok(blockers.includes('legal.taxId.invalid'));
 });
 
 test('release fails closed for missing or non-HTTPS canonical origins', () => {
@@ -80,8 +110,9 @@ test('release fixture build emits canonical, social metadata and truthful non-me
     VIORA_PUBLIC_RELEASE: 'true',
     PUBLIC_SITE_URL: 'https://viora.fixture.test',
     VIORA_LEGAL_NAME: 'Prestador Fixture',
-    VIORA_LEGAL_CUIT: '20-12345678-9',
+    VIORA_LEGAL_CUIT: '30-10000000-4',
     VIORA_LEGAL_EMAIL: 'legal@viora.fixture.test',
+    VIORA_LEGAL_PHONE: '+5492641234567',
     VIORA_LEGAL_DOMICILE: 'Domicilio fixture',
     VIORA_BOOKING_URL: 'https://cal.com/viora/consulta',
     VIORA_BOOKING_APPROVED: 'true',
@@ -112,7 +143,23 @@ test('release fixture build emits canonical, social metadata and truthful non-me
   assert.match(html, /<meta name="twitter:card" content="summary">/);
   assert.match(html, /<script type="application\/ld\+json">.*?"@type":"BeautySalon"/);
   assert.doesNotMatch(html, /MedicalBusiness|Physician|medicalSpecialty|fixture\.test.*PENDIENTE/);
+  assert.doesNotMatch(html, /\[PENDIENTE/);
   assert.doesNotMatch(html, /<meta name="robots" content="noindex/);
+  const regret = readFileSync(
+    path.join(root, 'apps/estetica/tests/viora-release-fixture/dist/arrepentimiento/index.html'),
+    'utf8',
+  );
+  assert.match(regret, /<meta name="robots" content="index, follow">/);
+  assert.match(
+    regret,
+    /<link rel="canonical" href="https:\/\/viora\.fixture\.test\/arrepentimiento\/">/,
+  );
+  assert.match(
+    regret,
+    /href="mailto:legal@viora\.fixture\.test\?subject=Solicitud%20de%20arrepentimiento"/,
+  );
+  assert.match(regret, /BOTÓN DE ARREPENTIMIENTO/);
+  assert.doesNotMatch(regret, /\[PENDIENTE/);
   const robots = readFileSync(
     path.join(root, 'apps/estetica/tests/viora-release-fixture/dist/robots.txt'),
     'utf8',
