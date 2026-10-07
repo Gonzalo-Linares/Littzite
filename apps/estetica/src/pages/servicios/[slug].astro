@@ -40,34 +40,40 @@ const actions = service.actions
 >
   <section class="viora-service-detail" aria-labelledby="viora-service-title">
     <Container>
-      <VioraPageIntro
-        eyebrow="VIORA / servicios"
-        title={service.displayName}
-        titleId="viora-service-title"
-        titleStyle={`view-transition-name: viora-service-${service.slug}`}
-        lead={service.description}
-        backHref="/servicios/"
-        backLabel="Servicios"
-        className="viora-service-detail__intro"
-      />
-      {actions.length > 0 && (
-        <section class="viora-service-actions" aria-label="Reservar esta experiencia">
-          <ActionList idPrefix={service.slug} actions={actions} />
-        </section>
-      )}
-      <article class:list={{ 'viora-service-detail__article--visual': visual !== undefined }}>
-        <div class="viora-service-detail__copy">
+      <article
+        class:list={[
+          'viora-service-detail__hero',
+          { 'viora-service-detail__article--visual': visual !== undefined },
+        ]}
+      >
+        <VioraPageIntro
+          eyebrow="VIORA / servicios"
+          title={service.displayName}
+          titleId="viora-service-title"
+          titleStyle={`view-transition-name: viora-service-${service.slug}`}
+          lead={service.description}
+          backHref="/servicios/"
+          backLabel="Servicios"
+          className="viora-service-detail__intro"
+        >
+          {actions.length > 0 && (
+            <div class="viora-service-actions">
+              <ActionList idPrefix={service.slug} actions={actions} />
+            </div>
+          )}
           <p class="viora-service-detail__note">
             Esta información es orientativa. Los detalles del servicio y su disponibilidad se
             confirmarán antes de ofrecer turnos.
           </p>
-        </div>
+        </VioraPageIntro>
         {visual && (
-          <ServiceVisual
-            visual={visual}
-            context="detail-primary"
-            transitionName={`viora-service-image-${service.slug}`}
-          />
+          <div class="viora-service-detail__media">
+            <ServiceVisual
+              visual={visual}
+              context="detail-primary"
+              transitionName={`viora-service-image-${service.slug}`}
+            />
+          </div>
         )}
       </article>
       {visual?.reveal && (

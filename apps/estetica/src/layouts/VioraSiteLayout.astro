@@ -3,6 +3,7 @@ import BaseLayout from '@littzite/ui/BaseLayout.astro';
 import SiteHeader from '@littzite/ui/SiteHeader.astro';
 import SiteFooter from '@littzite/ui/SiteFooter.astro';
 import Link from '@littzite/ui/Link.astro';
+import ButtonLink from '@littzite/ui/ButtonLink.astro';
 import type { SeoMetadata } from '@littzite/content-schema';
 import VioraInstagramLink from '../components/VioraInstagramLink.astro';
 import { siteContent } from '../site.config';
@@ -44,7 +45,6 @@ const { site } = siteContent;
       { label: 'VIORA', href: '/viora/' },
       { label: 'Contacto', href: '/contacto/' },
     ]}
-    badge={{ label: 'Turnos', href: '/reservar/' }}
   >
     <img
       slot="brand"
@@ -55,7 +55,12 @@ const { site } = siteContent;
       alt=""
       decoding="async"
     />
-    <VioraInstagramLink slot="actions" className="viora-header-instagram" />
+    <div slot="actions" class="viora-header-actions">
+      <VioraInstagramLink className="viora-header-instagram" />
+      <ButtonLink href="/reservar/" variant="primary" size="compact" className="site-header__badge">
+        Turnos
+      </ButtonLink>
+    </div>
   </SiteHeader>
 
   <slot />
@@ -93,7 +98,6 @@ const { site } = siteContent;
           Turnos
         </Link>
       </nav>
-      <VioraInstagramLink showHandle className="viora-footer-social" />
       <nav class="viora-footer-legal" aria-label="Información legal">
         <Link href="/privacidad/" className="viora-footer-link">
           Privacidad

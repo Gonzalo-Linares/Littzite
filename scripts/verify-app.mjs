@@ -140,7 +140,7 @@ if (app === 'estetica') {
     );
     assert.match(
       markup,
-      /class="button-link button-link--primary button-link--compact site-header__badge" href="\/reservar\/">Turnos/,
+      /class="button-link button-link--primary button-link--compact site-header__badge" href="\/reservar\/">\s*Turnos/,
     );
     const footerNav = markup.match(
       /<nav class="viora-footer-links" aria-label="Navegación del pie de página">(.*?)<\/nav>/s,
@@ -150,10 +150,12 @@ if (app === 'estetica') {
     assert.match(footerNav, /href="\/viora\/"[^>]*>\s*VIORA/);
     assert.match(footerNav, /href="\/contacto\/"[^>]*>\s*Contacto/);
     assert.match(footerNav, /href="\/reservar\/"[^>]*>\s*Turnos/);
-    assert.match(
-      markup,
-      /<a class="viora-instagram-link viora-footer-social" href="https:\/\/www\.instagram\.com\/vioramasajes\.ok\/" aria-label="VIORA en Instagram">[\s\S]*?@vioramasajes\.ok/,
-      `${page}: Instagram footer link missing`,
+    const footer = markup.match(/<footer class="site-footer">([\s\S]*?)<\/footer>/)?.[1];
+    assert.ok(footer, `${page}: footer missing`);
+    assert.doesNotMatch(
+      footer,
+      /instagram|vioramasajes/i,
+      `${page}: footer must not contain Instagram`,
     );
     const legalFooter = markup.match(
       /<nav class="viora-footer-legal" aria-label="Información legal">([\s\S]*?)<\/nav>/,
@@ -202,7 +204,7 @@ if (app === 'estetica') {
   assert.match(html, /<span class="viora-service-rail__affordance">Ver experiencia<\/span>/);
   assert.doesNotMatch(html, /href="\/(?:#alcance|#esencia|#contacto|#viora-moment-title)"/);
   assert.ok(!/<iframe\b/i.test(html), 'VIORA home must not embed a map');
-  assert.equal((html.match(/instagram\.com\/vioramasajes\.ok\//g) ?? []).length, 2);
+  assert.equal((html.match(/instagram\.com\/vioramasajes\.ok\//g) ?? []).length, 1);
   assert.ok(
     !/(?:cal\.com|booking\.example|wa\.me|api\.whatsapp)/i.test(html),
     'No commercial destination may be published',
@@ -383,9 +385,7 @@ if (app === 'estetica') {
         detail,
         /class="button-link button-link--primary button-link--compact" href="https:\/\/cal\.com\/gonzalo-linares-rfbhnf\/prueba">\s*Sacar turno/,
       );
-      assert.ok(
-        detail.indexOf('Sacar turno') < detail.indexOf('viora-service-detail__article--visual'),
-      );
+      assert.ok(detail.indexOf('Sacar turno') < detail.indexOf('viora-service-detail__media'));
       assert.equal((detail.match(/Sacar turno/g) ?? []).length, 1);
       assert.equal((detail.match(/gonzalo-linares-rfbhnf\/prueba/g) ?? []).length, 1);
     } else {
@@ -463,12 +463,12 @@ if (app === 'estetica') {
   assertMetadata(
     contactPage,
     {
-      title: 'Contacto y ubicación | VIORA · Estética integral',
+      title: 'Contacto | VIORA · Estética integral',
       description: 'Ubicación e Instagram oficial de VIORA en Rivadavia, San Juan.',
     },
     'VIORA contact',
   );
-  assert.match(contactPage, /<h1 id="[^"]+">Contacto y ubicación<\/h1>/);
+  assert.match(contactPage, /<h1 id="[^"]+">Contacto<\/h1>/);
   assert.match(contactPage, /Rivadavia, San Juan, Argentina/);
   assert.doesNotMatch(contactPage, /más adelante|próximamente|se confirmarán/);
   assert.match(
