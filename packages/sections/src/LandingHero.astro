@@ -1,7 +1,7 @@
 ---
 import type { PageSection } from '@littzite/content-schema';
 import Container from '@littzite/ui/Container.astro';
-import Link from '@littzite/ui/Link.astro';
+import ButtonLink from '@littzite/ui/ButtonLink.astro';
 import './styles.css';
 
 interface Props {
@@ -32,7 +32,9 @@ const { section, variant, ctaLabel, ctaHref, disclaimer, artLabel, artIndex } = 
         </h1>
         <p class="landing-hero__body">{section.body}</p>
         <div class="landing-hero__actions">
-          <Link href={ctaHref}>{ctaLabel}</Link>
+          <ButtonLink href={ctaHref} variant="primary">
+            {ctaLabel}
+          </ButtonLink>
           {disclaimer && <span class="landing-hero__disclaimer">{disclaimer}</span>}
         </div>
         <div class="landing-hero__index" aria-hidden="true">
@@ -42,10 +44,12 @@ const { section, variant, ctaLabel, ctaHref, disclaimer, artLabel, artIndex } = 
         </div>
       </div>
       <div class="landing-hero__art" aria-hidden="true">
-        <div class="landing-hero__art-top">
-          <span>{artLabel}</span>
-          <span>{artIndex}</span>
-        </div>
+        {(artLabel || artIndex) && (
+          <div class="landing-hero__art-top">
+            {artLabel && <span>{artLabel}</span>}
+            {artIndex && <span>{artIndex}</span>}
+          </div>
+        )}
         <div class="landing-hero__canvas">
           <slot name="artwork">
             <div class="landing-hero__shape landing-hero__shape--outer"></div>

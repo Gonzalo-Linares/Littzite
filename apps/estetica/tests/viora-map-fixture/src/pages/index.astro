@@ -1,0 +1,21 @@
+---
+import VioraMap from '../../../../src/components/VioraMap.astro';
+---
+
+<html lang="es-AR">
+  <body>
+    <div data-case="empty">
+      <VioraMap />
+    </div>
+    <div data-case="directions-only">
+      <VioraMap directionsHref="https://maps.app.goo.gl/H4jmqTGKicDse2iS7" />
+    </div>
+    <div data-case="configured">
+      <VioraMap
+        embedUrl="https://www.google.com/maps/embed?pb=verified-fixture"
+        directionsHref="https://www.google.com/maps/dir/?api=1"
+        locationLabel="Ubicación de prueba"
+      />
+    </div>
+  </body>
+</html>

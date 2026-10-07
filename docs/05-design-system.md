@@ -39,6 +39,7 @@ No usar strings de nombres de clientes para decidir estilos dentro de componente
 ## Componentes existentes y catálogo potencial (no todo está implementado)
 
 - **Implementados:** BaseLayout, SiteHeader, SiteFooter, Container y Link en ui; LandingHero y FeatureGrid en sections. ServiceCatalog y TattooGallery son específicos de sus apps. **Potenciales:** Button, SectionHeading, ResponsiveImage, Badge, Accordion, Dialog y FormField, solo si hay consumidores reales.
+- PR-14 incorpora `ActionList` en `ui`: recibe `idPrefix` y acciones presentables (`id`, `label`, `href`, `note?`); compone IDs de nota deterministas y delega cada href al `Link` seguro. El caller garantiza que cada prefijo sea único en el documento. No importa `booking` ni conoce proveedores. VIORA resuelve acciones antes de renderizar; las páginas y secciones que las rodean son locales de VIORA.
 - **Futuros, todavía no compartidos:** ServiceActions, BookingCTA, QuoteCTA, FAQSection, ContactSection y Testimonials; deberán usar contratos tipados sin conocer marcas.
 - Tipos y contratos de sección documentados; `Header` debe consumir el mismo menú tipado y contacto que el `Footer`, sin copiar links.
 

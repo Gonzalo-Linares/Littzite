@@ -1,0 +1,29 @@
+---
+import VioraContact from '../components/VioraContact.astro';
+import VioraSiteLayout from '../layouts/VioraSiteLayout.astro';
+import { siteContent } from '../site.config';
+import VioraPageIntro from '../components/VioraPageIntro.astro';
+import { vioraLocation } from '../viora-location';
+---
+
+<VioraSiteLayout
+  seo={{
+    title: 'Contacto y ubicación | VIORA · Vista previa',
+    description:
+      'Abrí la ubicación de VIORA en Google Maps. Otros datos de contacto se confirmarán más adelante.',
+  }}
+>
+  <div class="viora-contact-page">
+    <VioraPageIntro
+      eyebrow="VIORA / contacto"
+      title="Contacto y ubicación"
+      titleId="viora-contact-page-title"
+      lead="Ya podés abrir la ubicación de VIORA en Google Maps. Los demás datos de contacto se incorporarán cuando estén confirmados."
+    />
+    <VioraContact
+      contact={siteContent.site.contact}
+      location={siteContent.site.locations[0]}
+      map={vioraLocation}
+    />
+  </div>
+</VioraSiteLayout>

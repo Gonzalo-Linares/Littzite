@@ -1,4 +1,6 @@
 ---
+import ButtonLink from './ButtonLink.astro';
+
 interface Props {
   brand: string;
   note: string;
@@ -16,9 +18,10 @@ const { brand, note, meta } = Astro.props;
       </slot>
       <p class="site-footer__note">{note}</p>
     </div>
-    <a href="#inicio" class="site-footer__back">
+    <slot name="links" />
+    <ButtonLink href="#inicio" variant="quiet" size="compact">
       Volver arriba <span aria-hidden="true">↑</span>
-    </a>
+    </ButtonLink>
   </div>
   {meta && (
     <div class="container site-footer__meta">

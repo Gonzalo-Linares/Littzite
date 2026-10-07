@@ -1,5 +1,6 @@
 ---
 import { isAllowedHref } from './link-utils';
+import ButtonLink from './ButtonLink.astro';
 
 interface NavItem {
   label: string;
@@ -35,9 +36,9 @@ if (![...links, ...(badge ? [badge] : [])].every((link) => isAllowedHref(link.hr
       ))}
     </nav>
     {badge && (
-      <a class="site-header__badge" href={badge.href}>
+      <ButtonLink variant="primary" size="compact" href={badge.href} className="site-header__badge">
         {badge.label} <span aria-hidden="true">↗</span>
-      </a>
+      </ButtonLink>
     )}
   </div>
 </header>

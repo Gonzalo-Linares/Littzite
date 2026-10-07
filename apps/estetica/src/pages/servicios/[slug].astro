@@ -5,6 +5,9 @@ import ServiceVisual from '../../components/ServiceVisual.astro';
 import { siteContent } from '../../site.config';
 import { serviceVisuals } from '../../service-visuals';
 import { resolveServiceVisual } from '../../service-visuals.validation';
+import { resolveDirectBookingAction } from '@littzite/booking';
+import ActionList from '@littzite/ui/ActionList.astro';
+import VioraPageIntro from '../../components/VioraPageIntro.astro';
 
 export function getStaticPaths() {
   return siteContent.services.map((service) => ({
@@ -15,6 +18,17 @@ export function getStaticPaths() {
 
 const { service } = Astro.props;
 const visual = resolveServiceVisual(serviceVisuals, service.id);
+const actions = service.actions
+  .filter((action) => action.type === 'direct-booking')
+  .map((action) => {
+    const resolved = resolveDirectBookingAction(action, siteContent.bookingTargets);
+    return {
+      id: resolved.actionId,
+      label: resolved.label,
+      href: resolved.href,
+      note: resolved.eligibilityNote,
+    };
+  });
 ---
 
 <VioraSiteLayout
@@ -22,28 +36,22 @@ const visual = resolveServiceVisual(serviceVisuals, service.id);
 >
   <section class="viora-service-detail" aria-labelledby="viora-service-title">
     <Container>
-      <a class="viora-service-detail__back" href="/#alcance">
-        ← Volver a servicios
-      </a>
+      <VioraPageIntro
+        eyebrow="VIORA / servicios"
+        title={service.displayName}
+        titleId="viora-service-title"
+        titleStyle={`view-transition-name: viora-service-${service.slug}`}
+        backHref="/servicios/"
+        backLabel="Servicios"
+        className="viora-service-detail__intro"
+      />
       <article class:list={{ 'viora-service-detail__article--visual': visual !== undefined }}>
         <div class="viora-service-detail__copy">
-          <p class="viora-service-detail__eyebrow">VIORA / servicios</p>
-          <h1
-            id="viora-service-title"
-            style={`view-transition-name: viora-service-${service.slug}`}
-          >
-            {service.displayName}
-          </h1>
           <p class="viora-service-detail__description">{service.description}</p>
           <p class="viora-service-detail__note">
             Esta información es orientativa. Los detalles del servicio y su disponibilidad se
             confirmarán antes de ofrecer turnos.
           </p>
-          {visual && (
-            <p class="viora-service-detail__visual-note">
-              Fotografía ilustrativa; no representa al equipo, el espacio ni las técnicas de VIORA.
-            </p>
-          )}
         </div>
         {visual && (
           <ServiceVisual
@@ -61,6 +69,13 @@ const visual = resolveServiceVisual(serviceVisuals, service.id);
         >
           <ServiceVisual visual={visual} context="detail-secondary" />
         </div>
+      )}
+      {actions.length > 0 && (
+        <section class="viora-service-actions" aria-labelledby="viora-service-actions-title">
+          <p class="viora-service-detail__eyebrow">El próximo paso</p>
+          <h2 id="viora-service-actions-title">Reservá tu momento.</h2>
+          <ActionList idPrefix={service.slug} actions={actions} />
+        </section>
       )}
     </Container>
   </section>

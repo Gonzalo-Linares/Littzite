@@ -1,0 +1,60 @@
+---
+import Container from '@littzite/ui/Container.astro';
+import ButtonLink from '@littzite/ui/ButtonLink.astro';
+import type { ContactConfig, Location } from '@littzite/content-schema';
+import VioraMap from './VioraMap.astro';
+
+interface Props {
+  contact?: ContactConfig;
+  location?: Location;
+  map?: { embedUrl?: string; directionsHref?: string; locationLabel?: string };
+}
+
+const { contact, location, map } = Astro.props;
+---
+
+<section id="contacto" class="viora-contact" aria-labelledby="viora-contact-title">
+  <Container>
+    <div
+      class:list={['viora-contact__grid', { 'viora-contact__grid--map': Boolean(map?.embedUrl) }]}
+    >
+      <div class="viora-contact__details">
+        <p class="viora-contact__eyebrow">Contacto y ubicación</p>
+        <h2 id="viora-contact-title">Encontranos</h2>
+        {location?.address && <p class="viora-contact__address">{location.address}</p>}
+        {location?.city && <p class="viora-contact__city">{location.city}</p>}
+        {contact?.phone && (
+          <p>
+            <a href={`tel:${contact.phone}`}>{contact.phone}</a>
+          </p>
+        )}
+        {contact?.email && (
+          <p>
+            <a href={`mailto:${contact.email}`}>{contact.email}</a>
+          </p>
+        )}
+        {!location && !contact && !map?.directionsHref && !map?.embedUrl && (
+          <p class="viora-contact__pending">
+            Los demás datos de contacto se incorporarán cuando estén confirmados.
+          </p>
+        )}
+        {map?.directionsHref && (
+          <ButtonLink
+            href={map.directionsHref}
+            variant="secondary"
+            size="compact"
+            className="viora-map__directions"
+          >
+            Cómo llegar <span aria-hidden="true">↗</span>
+          </ButtonLink>
+        )}
+      </div>
+      {map?.embedUrl && (
+        <VioraMap
+          embedUrl={map.embedUrl}
+          locationLabel={map.locationLabel ?? location?.address ?? 'Ubicación de VIORA'}
+        />
+      )}
+    </div>
+  </Container>
+</section>

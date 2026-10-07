@@ -1,0 +1,10 @@
+---
+import VioraMap from '../../../../src/components/VioraMap.astro';
+const invalidEmbedUrl = import.meta.env.VIORA_MAP_INVALID_URL;
+---
+
+<html lang="es-AR">
+  <body>
+    <VioraMap embedUrl={invalidEmbedUrl} />
+  </body>
+</html>

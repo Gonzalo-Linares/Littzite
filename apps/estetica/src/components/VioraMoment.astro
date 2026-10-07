@@ -1,0 +1,43 @@
+---
+import Container from '@littzite/ui/Container.astro';
+import ServiceVisual from './ServiceVisual.astro';
+import { serviceVisuals } from '../service-visuals';
+
+const moments = [
+  {
+    title: 'Conocé',
+    text: 'Explorá las experiencias de VIORA y lo que cada una propone.',
+    visual: serviceVisuals[0],
+  },
+  {
+    title: 'Elegí',
+    text: 'Encontrá la propuesta que mejor acompañe tu momento.',
+    visual: serviceVisuals[2],
+  },
+  {
+    title: 'Coordiná',
+    text: 'Cuando la agenda esté habilitada, vas a poder elegir un horario desde cada servicio.',
+    visual: serviceVisuals[3],
+  },
+];
+---
+
+<section id="momento" class="viora-moment" aria-labelledby="viora-moment-title">
+  <Container>
+    <div class="viora-moment__intro">
+      <p class="viora-moment__eyebrow">Tu momento en VIORA</p>
+      <h2 id="viora-moment-title">Un recorrido pensado para vos.</h2>
+    </div>
+    <ol class="viora-moment__steps">
+      {moments.map(({ title, text, visual }) => (
+        <li>
+          {visual && <ServiceVisual visual={visual} context="detail-secondary" />}
+          <div class="viora-moment__step-copy">
+            <h3>{title}</h3>
+            <p>{text}</p>
+          </div>
+        </li>
+      ))}
+    </ol>
+  </Container>
+</section>

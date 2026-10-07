@@ -1,0 +1,44 @@
+---
+import ButtonLink from '@littzite/ui/ButtonLink.astro';
+
+interface Props {
+  embedUrl?: string;
+  directionsHref?: string;
+  locationLabel?: string;
+}
+
+const { embedUrl, directionsHref, locationLabel = 'Ubicación de VIORA' } = Astro.props;
+const validEmbed = (value?: string) => {
+  if (!value) return false;
+  try {
+    const url = new URL(value);
+    return (
+      url.protocol === 'https:' &&
+      url.hostname === 'www.google.com' &&
+      url.pathname === '/maps/embed'
+    );
+  } catch {
+    return false;
+  }
+};
+if (embedUrl && !validEmbed(embedUrl))
+  throw new Error('VioraMap requires a valid Google Maps embed URL');
+---
+
+{(embedUrl || directionsHref) && (
+  <div class="viora-map">
+    {embedUrl && (
+      <iframe
+        src={embedUrl}
+        title={`Mapa interactivo: ${locationLabel}`}
+        loading="lazy"
+        referrerpolicy="no-referrer-when-downgrade"
+      />
+    )}
+    {directionsHref && (
+      <ButtonLink href={directionsHref} variant="secondary" size="compact">
+        Cómo llegar <span aria-hidden="true">↗</span>
+      </ButtonLink>
+    )}
+  </div>
+)}
