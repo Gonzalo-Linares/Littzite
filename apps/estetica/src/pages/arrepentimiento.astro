@@ -1,0 +1,48 @@
+---
+import VioraSiteLayout from '../layouts/VioraSiteLayout.astro';
+import VioraPageIntro from '../components/VioraPageIntro.astro';
+import ButtonLink from '@littzite/ui/ButtonLink.astro';
+import { vioraLegal } from '../viora-release.ts';
+
+const emailAvailable = !vioraLegal.contactEmail.includes('[PENDIENTE');
+const mailto = emailAvailable
+  ? `mailto:${vioraLegal.contactEmail}?subject=${encodeURIComponent('Solicitud de arrepentimiento')}`
+  : undefined;
+---
+
+<VioraSiteLayout
+  seo={{
+    title: 'BOTÓN DE ARREPENTIMIENTO | VIORA · Estética integral',
+    description:
+      'Información para ejercer el derecho de arrepentimiento en contrataciones a distancia.',
+  }}
+>
+  <VioraPageIntro eyebrow="VIORA / derechos del consumidor" title="BOTÓN DE ARREPENTIMIENTO" />
+  <article class="container viora-legal viora-regret">
+    <p>
+      Si realizaste una contratación a distancia con VIORA, podés comunicar que revocás su
+      aceptación dentro del plazo y en las condiciones previstas por la normativa de defensa del
+      consumidor. El ejercicio de este derecho no tiene costo y no requiere crear una cuenta.
+    </p>
+    <p>
+      Esta solicitud es distinta de cancelar o reprogramar un turno en Cal.com. Si todavía no hubo
+      contratación, la agenda de prueba no crea una reserva comercial.
+    </p>
+    {mailto ? (
+      <ButtonLink href={mailto} variant="primary">
+        Iniciar solicitud de arrepentimiento
+      </ButtonLink>
+    ) : (
+      <p role="status">
+        El canal directo de contacto legal todavía debe ser confirmado por VIORA. El sitio no tiene
+        un formulario propio. Este dato pendiente impide habilitar la contratación pública.
+      </p>
+    )}
+    <p>
+      La normativa permite al proveedor pedir únicamente verificaciones razonables de identidad y
+      seguridad por medios habituales. No se requiere registración previa para acceder a este
+      derecho. Conservá una constancia de la comunicación enviada.
+    </p>
+    <p>Consultas legales: {vioraLegal.contactEmail}.</p>
+  </article>
+</VioraSiteLayout>

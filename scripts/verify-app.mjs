@@ -6,7 +6,7 @@ import { assertMetadata } from './html-metadata.mjs';
 import { verifyInternalLinks } from './verify-site-links.mjs';
 
 const expectedTitles = {
-  estetica: 'VIORA · Estética integral | Vista previa',
+  estetica: 'VIORA · Estética integral',
   tattoo: 'Juanjo Tattoos · San Juan | Vista previa',
 };
 
@@ -33,6 +33,12 @@ assert.equal(
 );
 assert.match(html, /<html lang="es-AR"(?:\s|>)/);
 assert.match(html, /<meta name="robots" content="noindex, nofollow">/);
+assert.match(html, /<meta property="og:type" content="website">/);
+assert.match(html, /<meta property="og:title" content=/);
+assert.match(html, /<meta property="og:description" content=/);
+assert.match(html, /<meta name="twitter:card" content="summary">/);
+assert.match(html, /<meta name="twitter:title" content=/);
+assert.match(html, /<meta name="twitter:description" content=/);
 assertMetadata(html, siteContent.pages.find((page) => page.slug === '').seo, app);
 assertBrowserIcon(html, siteContent.site.iconHref, `${app} home`);
 assert.ok(
@@ -281,7 +287,7 @@ if (app === 'estetica') {
     );
     const detail = await readFile(route, 'utf8');
     const detailSeo = {
-      title: `${service.displayName} | VIORA · Vista previa`,
+      title: `${service.displayName} | VIORA · Estética integral`,
       description: service.description,
     };
     assertMetadata(detail, detailSeo, service.slug);
@@ -397,8 +403,8 @@ if (app === 'estetica') {
   assertMetadata(
     catalog,
     {
-      title: 'Experiencias de cuidado | VIORA · Vista previa',
-      description: 'Explorá las experiencias de cuidado y bienestar de VIORA en esta vista previa.',
+      title: 'Servicios de estética integral | VIORA',
+      description: 'Explorá las experiencias de cuidado y bienestar de VIORA.',
     },
     'VIORA services',
   );
@@ -422,7 +428,7 @@ if (app === 'estetica') {
   assertMetadata(
     story,
     {
-      title: 'VIORA · Nuestra forma de cuidar | Vista previa',
+      title: 'VIORA · Nuestra forma de cuidar',
       description: 'Conocé la identidad, la filosofía y la experiencia de bienestar de VIORA.',
     },
     'VIORA story',
@@ -435,35 +441,36 @@ if (app === 'estetica') {
   for (const step of ['Conocé', 'Elegí', 'Coordiná']) assert.ok(story.includes(step));
   assert.doesNotMatch(story, /cal\.com|Reservar ahora|turnos disponibles/);
 
-  const contact = await readFile(
+  const contactPage = await readFile(
     new URL('../apps/estetica/dist/contacto/index.html', import.meta.url),
     'utf8',
   );
-  assertVioraFrame(contact, 'contact');
+  assertVioraFrame(contactPage, 'contact');
   assertMetadata(
-    contact,
+    contactPage,
     {
-      title: 'Contacto y ubicación | VIORA · Vista previa',
+      title: 'Contacto y ubicación | VIORA · Estética integral',
       description:
         'Abrí la ubicación de VIORA en Google Maps. Otros datos de contacto se confirmarán más adelante.',
     },
     'VIORA contact',
   );
-  assert.match(contact, /<h1 id="[^"]+">Contacto y ubicación<\/h1>/);
-  assert.match(contact, /Ya podés abrir la ubicación de VIORA en Google Maps/);
+  assert.match(contactPage, /<h1 id="[^"]+">Contacto y ubicación<\/h1>/);
+  assert.match(contactPage, /Ya podés abrir la ubicación de VIORA en Google Maps/);
   assert.match(
-    contact,
+    contactPage,
     /class="button-link button-link--secondary button-link--compact viora-map__directions" href="https:\/\/maps\.app\.goo\.gl\/H4jmqTGKicDse2iS7">/,
   );
-  assert.ok(contact.includes('Cómo llegar'));
+  assert.ok(contactPage.includes('Cómo llegar'));
   assert.match(
-    contact,
-    /<iframe src="https:\/\/www\.google\.com\/maps\/embed\?pb=!1m17!1m12!1m3!1d3401\.297756485471!2d-68\.567944!3d-31\.515980999999996[^"]*" title="Mapa interactivo: Ubicación de VIORA" loading="lazy" referrerpolicy="strict-origin-when-cross-origin"><\/iframe>/,
+    contactPage,
+    /<iframe src="https:\/\/www\.google\.com\/maps\/embed\?pb=!1m17!1m12!1m3!1d3401\.297756485471!2d-68\.567944!3d-31\.515980999999996[^"]*" title="Mapa interactivo: Ubicación de VIORA" loading="lazy" referrerpolicy="no-referrer-when-downgrade"><\/iframe>/,
   );
-  assert.doesNotMatch(contact, /instagram\.com\/|href="(?:tel:|mailto:)/i);
-  assert.equal((contact.match(/H4jmqTGKicDse2iS7/g) ?? []).length, 1);
-  assert.equal((contact.match(/<iframe\b/g) ?? []).length, 1);
-  assert.doesNotMatch(contact, /cal\.com|<a[^>]*>[^<]*(?:Reservar|Agendar)[^<]*<\/a>/i);
+  assert.match(contactPage, /href="https:\/\/www\.instagram\.com\/vioramasajes\.ok\/"/);
+  assert.doesNotMatch(contactPage, /href="(?:tel:|mailto:)/i);
+  assert.equal((contactPage.match(/H4jmqTGKicDse2iS7/g) ?? []).length, 1);
+  assert.equal((contactPage.match(/<iframe\b/g) ?? []).length, 1);
+  assert.doesNotMatch(contactPage, /cal\.com|<a[^>]*>[^<]*(?:Reservar|Agendar)[^<]*<\/a>/i);
 
   const notFound = await readFile(
     new URL('../apps/estetica/dist/404.html', import.meta.url),
@@ -493,7 +500,7 @@ if (app === 'estetica') {
     'VIORA 404 must not publish a commercial action',
   );
   assert.doesNotMatch(
-    catalog + story + contact,
+    catalog + story + contactPage,
     /(?:cal\.com|wa\.me|api\.whatsapp)/i,
     'VIORA routes must not publish unapproved commercial actions',
   );
@@ -509,6 +516,49 @@ if (app === 'estetica') {
     3,
   );
   assert.match(booking, /Estamos terminando de configurar los horarios/);
+  const contactBuildCheck = await readFile(
+    new URL('../apps/estetica/dist/contacto/index.html', import.meta.url),
+    'utf8',
+  );
+  assert.match(contactBuildCheck, /Rivadavia, San Juan, Argentina/);
+  assert.match(contactBuildCheck, /href="https:\/\/www\.instagram\.com\/vioramasajes\.ok\/"/);
+  assert.match(
+    contactBuildCheck,
+    /href="https:\/\/maps\.app\.goo\.gl\/H4jmqTGKicDse2iS7">\s*Cómo llegar/,
+  );
+  assert.match(contactBuildCheck, /<iframe[^>]*title="Mapa interactivo:[^>]*loading="lazy"/);
+  assert.match(contactBuildCheck, /referrerpolicy="no-referrer-when-downgrade"/);
+  const robots = await readFile(
+    new URL('../apps/estetica/dist/robots.txt', import.meta.url),
+    'utf8',
+  );
+  assert.equal(robots, 'User-agent: *\nDisallow: /\n');
+  const sitemap = await readFile(
+    new URL('../apps/estetica/dist/sitemap.xml', import.meta.url),
+    'utf8',
+  );
+  assert.match(sitemap, /<urlset/);
+  assert.doesNotMatch(sitemap, /<url>/);
+  assert.doesNotMatch(sitemap, /localhost|pages\.dev|preview|404|example/i);
+  const releaseHeaders = await readFile(
+    new URL('../apps/estetica/dist/_headers', import.meta.url),
+    'utf8',
+  );
+  assert.match(releaseHeaders, /Content-Security-Policy:/);
+  for (const route of ['terminos-y-condiciones', 'privacidad', 'arrepentimiento']) {
+    const legalPage = await readFile(
+      new URL(`../apps/estetica/dist/${route}/index.html`, import.meta.url),
+      'utf8',
+    );
+    assert.match(legalPage, /<meta name="robots" content="noindex, nofollow">/);
+    assert.match(
+      legalPage,
+      /Términos y condiciones|Política de privacidad|BOTÓN DE ARREPENTIMIENTO/,
+    );
+    assert.match(legalPage, /href="\/arrepentimiento\/"/);
+  }
+  assert.match(html, /href="\/arrepentimiento\/"[^>]*>\s*BOTÓN DE ARREPENTIMIENTO/);
+  assert.doesNotMatch(contactBuildCheck, /example\.com|John Doe|11-11111111-1/);
   assert.doesNotMatch(booking, /booking\.example|href="#"/);
   const bookingCards = Array.from(
     booking.matchAll(/<article class="viora-booking-card">.*?<\/article>/gs),
@@ -555,6 +605,7 @@ if (app === 'estetica') {
     'VIORA assets leaked into tattoo',
   );
   assert.ok(!html.includes('H4jmqTGKicDse2iS7'), 'VIORA directions leaked into tattoo');
+  assert.ok(!html.includes('vioramasajes.ok'), 'VIORA Instagram leaked into tattoo');
   assert.ok(html.includes('class="juanjo-site"'), 'Juanjo body style missing');
   assert.ok(html.includes('class="juanjo-gallery"'), 'Juanjo portfolio region missing');
   assert.ok(html.includes('class="juanjo-gallery__empty"'), 'Honest portfolio empty state missing');

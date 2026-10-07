@@ -1,0 +1,95 @@
+---
+import VioraSiteLayout from '../layouts/VioraSiteLayout.astro';
+import VioraPageIntro from '../components/VioraPageIntro.astro';
+import { vioraLegal, vioraCommercial } from '../viora-release.ts';
+---
+
+<VioraSiteLayout
+  seo={{
+    title: 'Política de privacidad | VIORA · Estética integral',
+    description:
+      'Cómo se trata la información al navegar el sitio de VIORA y usar servicios externos.',
+  }}
+>
+  <VioraPageIntro eyebrow="VIORA / información legal" title="Política de privacidad" />
+  <article class="container viora-legal">
+    <p>
+      <strong>Última actualización: 7 de octubre de 2026.</strong>
+    </p>
+    <h2>Responsable y contacto</h2>
+    <p>
+      La identidad de la persona o entidad responsable del tratamiento debe completarse:{' '}
+      {vioraLegal.providerName}. Contacto para privacidad: {vioraLegal.contactEmail}. La ubicación
+      comercial pública es {vioraCommercial.publicLocation}; no debe interpretarse como domicilio
+      legal.
+    </p>
+    <h2>Qué información trata este sitio</h2>
+    <p>
+      VIORA se publica como un sitio estático. Littzite no incorpora base de datos propia, cuentas,
+      autenticación, formularios, newsletter ni herramientas propias de analítica o publicidad. No
+      recibe directamente datos de salud ni registra solicitudes de turnos. El proveedor de
+      alojamiento y la infraestructura de red pueden tratar datos técnicos de conexión necesarios
+      para entregar, proteger y diagnosticar el sitio, de acuerdo con sus condiciones vigentes; no
+      se afirma una ubicación específica de sus servidores.
+    </p>
+    <h2>Reservas en Cal.com</h2>
+    <p>
+      Al elegir un turno, salís del sitio hacia Cal.com, que solicita y trata la información
+      necesaria según el evento y su propia política. El sitio de VIORA no recibe ni almacena los
+      datos de reserva. Evitá compartir información de salud o sensible en preguntas, títulos o
+      notas de la reserva. Si una necesidad futura exigiera esos datos, se requiere una revisión
+      legal y de seguridad específica antes de solicitarlos.
+    </p>
+    <h2>Mapa y enlaces externos</h2>
+    <p>
+      La página de contacto incluye un mapa interactivo de Google Maps que se carga de forma
+      diferida. Al cargarse, Google puede recibir datos técnicos del navegador y de la conexión y
+      aplicar sus propias tecnologías de almacenamiento, de acuerdo con su política de privacidad.
+      También podés abrir las indicaciones directamente en Google Maps. El perfil de Instagram es un
+      enlace externo; no se incrusta contenido de Instagram. La navegación a esos servicios queda
+      sujeta a las políticas de sus proveedores.
+    </p>
+    <h2>Finalidad, destinatarios y transferencias</h2>
+    <p>
+      La navegación permite mostrar el contenido, el mapa y la información de agenda mediante las
+      plataformas indicadas. Los proveedores externos reciben los datos técnicos o de reserva que
+      sean necesarios para prestar sus propios servicios. Sus operaciones pueden implicar
+      tratamiento fuera de Argentina; no se afirma una jurisdicción concreta para todos los datos ni
+      una calificación jurídica uniforme de sus roles. Consultá directamente sus avisos vigentes.
+    </p>
+    <h2>Conservación y seguridad</h2>
+    <p>
+      VIORA no conserva datos de reserva en Littzite. Los proveedores externos determinan sus
+      propios plazos conforme a sus políticas. La entrega estática reduce la información que este
+      sitio recopila, pero ningún sistema de transmisión puede garantizar seguridad absoluta. Si
+      escribís a un canal externo, la conversación se conserva según las reglas de ese servicio y
+      del destinatario.
+    </p>
+    <h2>Tus derechos</h2>
+    <p>
+      Podés solicitar acceso a tus datos personales y pedir su rectificación, actualización o
+      supresión cuando corresponda, además de revocar el consentimiento cuando ese sea el fundamento
+      aplicable. Para dirigir una solicitud a VIORA: {vioraLegal.contactEmail}. La Ley 25.326
+      establece los derechos y plazos aplicables; la información oficial de la AAIP indica diez días
+      corridos para responder una solicitud de acceso y cinco días hábiles para rectificación,
+      actualización o supresión. También podés presentar un reclamo ante la Agencia de Acceso a la
+      Información Pública, autoridad de control.
+    </p>
+    <h2>Menores y cambios</h2>
+    <p>
+      Este sitio no solicita deliberadamente datos de menores ni contiene un flujo de contratación
+      diseñado para ellos. La política se actualizará si cambia el funcionamiento real del sitio; la
+      fecha de la versión vigente aparece al comienzo.
+    </p>
+    <p>
+      <a
+        href="https://www.argentina.gob.ar/aaip/datospersonales/derechos"
+        target="_blank"
+        rel="noreferrer"
+      >
+        AAIP: derechos de titulares de datos personales
+      </a>
+      .
+    </p>
+  </article>
+</VioraSiteLayout>

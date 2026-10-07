@@ -16,6 +16,14 @@ if (!home || !intro || !catalog) throw new Error('Incomplete VIORA preview conte
 ---
 
 <VioraSiteLayout seo={home.seo}>
+  <section class="viora-regret-access" aria-label="Derechos del consumidor">
+    <div class="container viora-regret-access__inner">
+      <p>Si contrataste a distancia, conocé cómo ejercer tus derechos.</p>
+      <ButtonLink href="/arrepentimiento/" variant="secondary" size="compact">
+        BOTÓN DE ARREPENTIMIENTO
+      </ButtonLink>
+    </div>
+  </section>
   <LandingHero
     section={intro}
     variant="serene"

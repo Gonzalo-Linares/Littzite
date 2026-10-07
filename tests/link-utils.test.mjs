@@ -14,6 +14,15 @@ test('accepts same-page anchors, site-relative paths and HTTPS links', () => {
   }
 });
 
+test('accepts one email recipient with an optional safely encoded subject', () => {
+  for (const href of [
+    'mailto:legal@example.com',
+    'mailto:legal@example.com?subject=Solicitud%20de%20arrepentimiento',
+  ]) {
+    assert.equal(isAllowedHref(href), true, href);
+  }
+});
+
 test('rejects protocol-relative, unsafe and malformed destinations', () => {
   for (const href of [
     '',
@@ -29,6 +38,16 @@ test('rejects protocol-relative, unsafe and malformed destinations', () => {
     'https://user:secret@example.com/',
     ' https://example.com',
     'https://example.com\n',
+    'mailto:',
+    'mailto:not-an-email',
+    'mailto:a..b@example.com',
+    'mailto:a@example.com,b@example.com',
+    'mailto:a@example.com?subject=',
+    'mailto:a@example.com?subject=x&Bcc:evil@example.com',
+    'mailto:a@example.com?subject=x%0D%0ABcc%3Aevil%40example.com',
+    'mailto:a@example.com?subject=x%250D%250ABcc%253Aevil',
+    'mailto:a@example.com?cc=evil@example.com',
+    'mailto:a@example.com#fragment',
   ]) {
     assert.equal(isAllowedHref(href), false, JSON.stringify(href));
   }

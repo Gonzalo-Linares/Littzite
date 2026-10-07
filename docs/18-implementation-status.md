@@ -14,3 +14,6 @@ Esta matriz diferencia código implementado, decisiones explícitas para pruebas
 | Publicación | Páginas no indexables y precauciones ante terceros | Legal, privacidad, despliegue y tests móviles reales aún pendientes |
 
 Los diagramas de [arquitectura](02-architecture.md) y [dominio](03-domain-model.md) distinguen el objetivo conceptual. Las decisiones comerciales figuran en [el registro](09-open-decisions.md). Los hallazgos y tareas de calidad están en [AUDIT-01 #17](https://github.com/Gonzalo-Linares/Littzite/issues/17).
+# PR-17 — estado del candidato VIORA
+
+Rutas legales, privacidad, datos comerciales confirmados, metadata social, sitemap/robots, JSON-LD condicionado y guard explícito están implementados en la rama de PR-17. El sitio sigue noindex mientras `VIORA_PUBLIC_RELEASE` no sea `true`; no hay dominio, deploy ni Search Console configurados. La fecha de este estado no implica aprobación legal ni comercial. Ver [docs/19](19-viora-release-readiness.md) para blockers y pruebas.

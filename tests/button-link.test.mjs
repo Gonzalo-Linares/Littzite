@@ -54,11 +54,21 @@ test('ButtonLink exposes three visual variants and describedBy through the safe 
     html,
     /<a class="button-link button-link--primary button-link--default" href="\/servicios\/"><svg class="button-link__icon"[^>]*aria-hidden="true"[^>]*>.*?<\/svg>\s*Volver a servicios\s*<\/a>/s,
   );
+  assert.match(
+    html,
+    /<a class="button-link button-link--primary button-link--default" href="mailto:legal@example\.com\?subject=Solicitud%20de%20arrepentimiento">\s*Contacto legal\s*<\/a>/,
+  );
   assert.equal((html.match(/class="button-link__icon"/g) ?? []).length, 2);
 });
 
 test('ButtonLink rejects an unsafe href through Link', () => {
   const result = build('button-link-invalid');
+  assert.notEqual(result.status, 0);
+  assert.match(result.output, /Unsupported link URL/);
+});
+
+test('ButtonLink rejects mailto header injection through Link', () => {
+  const result = build('button-link-invalid-mailto');
   assert.notEqual(result.status, 0);
   assert.match(result.output, /Unsupported link URL/);
 });

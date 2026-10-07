@@ -5,13 +5,20 @@ import SiteFooter from '@littzite/ui/SiteFooter.astro';
 import ButtonLink from '@littzite/ui/ButtonLink.astro';
 import type { SeoMetadata } from '@littzite/content-schema';
 import { siteContent } from '../site.config';
+import {
+  canonicalFor,
+  vioraCommercial,
+  vioraPublicRelease,
+  vioraStructuredData,
+} from '../viora-release.ts';
 import '../styles/viora.css';
 
 interface Props {
   seo: SeoMetadata;
+  indexable?: boolean;
 }
 
-const { seo } = Astro.props;
+const { seo, indexable = true } = Astro.props;
 const { site } = siteContent;
 ---
 
@@ -19,9 +26,12 @@ const { site } = siteContent;
   locale={site.defaultLocale}
   theme={site.theme}
   seo={seo}
-  noindex={true}
+  noindex={!vioraPublicRelease || !indexable}
   iconHref={site.iconHref}
   bodyClass="viora-site"
+  canonicalUrl={indexable ? canonicalFor(Astro.url.pathname) : undefined}
+  siteName="VIORA · Estética integral"
+  structuredData={indexable ? vioraStructuredData() : undefined}
 >
   <SiteHeader
     slot="header"
@@ -52,7 +62,10 @@ const { site } = siteContent;
     slot="footer"
     brand="VIORA"
     note="Tu momento, tu bienestar."
-    meta={['Vista previa \u00b7 No indexable', 'VIORA \u00b7 Est\u00e9tica integral']}
+    meta={[
+      vioraPublicRelease ? 'VIORA · Estética integral' : 'Vista previa · No indexable',
+      vioraCommercial.publicLocation,
+    ]}
   >
     <img
       slot="brand"
@@ -75,6 +88,15 @@ const { site } = siteContent;
       </ButtonLink>
       <ButtonLink href="/reservar/" variant="quiet" size="compact">
         Turnos
+      </ButtonLink>
+      <ButtonLink href="/terminos-y-condiciones/" variant="quiet" size="compact">
+        Términos y condiciones
+      </ButtonLink>
+      <ButtonLink href="/privacidad/" variant="quiet" size="compact">
+        Privacidad
+      </ButtonLink>
+      <ButtonLink href="/arrepentimiento/" variant="secondary" size="compact">
+        BOTÓN DE ARREPENTIMIENTO
       </ButtonLink>
     </nav>
   </SiteFooter>
