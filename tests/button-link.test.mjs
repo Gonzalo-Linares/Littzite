@@ -58,6 +58,10 @@ test('ButtonLink exposes three visual variants and describedBy through the safe 
     html,
     /<a class="button-link button-link--primary button-link--default" href="mailto:legal@example\.com\?subject=Solicitud%20de%20arrepentimiento">\s*Contacto legal\s*<\/a>/,
   );
+  assert.match(
+    html,
+    /<a class="action-link" href="https:\/\/www\.instagram\.com\/vioramasajes\.ok\/" aria-label="VIORA en Instagram">\s*Icono social accesible\s*<\/a>/,
+  );
   assert.equal((html.match(/class="button-link__icon"/g) ?? []).length, 2);
 });
 

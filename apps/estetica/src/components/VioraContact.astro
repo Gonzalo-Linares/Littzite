@@ -33,11 +33,6 @@ const { contact, location, map } = Astro.props;
             <a href={`mailto:${contact.email}`}>{contact.email}</a>
           </p>
         )}
-        {!location && !contact && !map?.directionsHref && !map?.embedUrl && (
-          <p class="viora-contact__pending">
-            Los demás datos de contacto se incorporarán cuando estén confirmados.
-          </p>
-        )}
         {map?.directionsHref && (
           <ButtonLink
             href={map.directionsHref}
@@ -46,7 +41,7 @@ const { contact, location, map } = Astro.props;
             icon="external"
             className="viora-map__directions"
           >
-            Cómo llegar
+            Ver en Google Maps
           </ButtonLink>
         )}
       </div>

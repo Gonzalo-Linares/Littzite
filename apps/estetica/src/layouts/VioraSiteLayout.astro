@@ -2,8 +2,12 @@
 import BaseLayout from '@littzite/ui/BaseLayout.astro';
 import SiteHeader from '@littzite/ui/SiteHeader.astro';
 import SiteFooter from '@littzite/ui/SiteFooter.astro';
+import SiteAttribution from '@littzite/ui/SiteAttribution.astro';
+import { vioraAttribution } from '../site-attribution';
+import Link from '@littzite/ui/Link.astro';
 import ButtonLink from '@littzite/ui/ButtonLink.astro';
 import type { SeoMetadata } from '@littzite/content-schema';
+import VioraInstagramLink from '../components/VioraInstagramLink.astro';
 import { siteContent } from '../site.config';
 import {
   canonicalFor,
@@ -43,7 +47,6 @@ const { site } = siteContent;
       { label: 'VIORA', href: '/viora/' },
       { label: 'Contacto', href: '/contacto/' },
     ]}
-    badge={{ label: 'Turnos', href: '/reservar/' }}
   >
     <img
       slot="brand"
@@ -54,6 +57,12 @@ const { site } = siteContent;
       alt=""
       decoding="async"
     />
+    <div slot="actions" class="viora-header-actions">
+      <VioraInstagramLink className="viora-header-instagram" />
+      <ButtonLink href="/reservar/" variant="primary" size="compact" className="site-header__badge">
+        Turnos
+      </ButtonLink>
+    </div>
   </SiteHeader>
 
   <slot />
@@ -76,28 +85,43 @@ const { site } = siteContent;
       alt="VIORA"
       loading="lazy"
     />
-    <nav slot="links" class="viora-footer-links" aria-label="Navegación del pie de página">
-      <ButtonLink href="/servicios/" variant="quiet" size="compact">
-        Servicios
-      </ButtonLink>
-      <ButtonLink href="/viora/" variant="quiet" size="compact">
-        VIORA
-      </ButtonLink>
-      <ButtonLink href="/contacto/" variant="quiet" size="compact">
-        Contacto
-      </ButtonLink>
-      <ButtonLink href="/reservar/" variant="quiet" size="compact">
-        Turnos
-      </ButtonLink>
-      <ButtonLink href="/terminos-y-condiciones/" variant="quiet" size="compact">
-        Términos y condiciones
-      </ButtonLink>
-      <ButtonLink href="/privacidad/" variant="quiet" size="compact">
-        Privacidad
-      </ButtonLink>
-      <ButtonLink href="/arrepentimiento/" variant="secondary" size="compact">
-        BOTÓN DE ARREPENTIMIENTO
-      </ButtonLink>
-    </nav>
+    <SiteAttribution
+      slot="attribution"
+      {...vioraAttribution}
+      className="viora-footer-attribution"
+    />
+    <div slot="secondary-links" class="viora-footer-groups">
+      <nav class="viora-footer-links" aria-label="Navegación del pie de página">
+        <Link href="/servicios/" className="viora-footer-link">
+          Servicios
+        </Link>
+        <span aria-hidden="true">·</span>
+        <Link href="/viora/" className="viora-footer-link">
+          VIORA
+        </Link>
+        <span aria-hidden="true">·</span>
+        <Link href="/contacto/" className="viora-footer-link">
+          Contacto
+        </Link>
+        <span aria-hidden="true">·</span>
+        <Link href="/reservar/" className="viora-footer-link">
+          Turnos
+        </Link>
+      </nav>
+      <span aria-hidden="true">·</span>
+      <nav class="viora-footer-legal" aria-label="Información legal">
+        <Link href="/privacidad/" className="viora-footer-link">
+          Privacidad
+        </Link>
+        <span aria-hidden="true">·</span>
+        <Link href="/terminos-y-condiciones/" className="viora-footer-link">
+          Términos
+        </Link>
+        <span aria-hidden="true">·</span>
+        <Link href="/arrepentimiento/" className="viora-footer-link">
+          BOTÓN DE ARREPENTIMIENTO
+        </Link>
+      </nav>
+    </div>
   </SiteFooter>
 </BaseLayout>

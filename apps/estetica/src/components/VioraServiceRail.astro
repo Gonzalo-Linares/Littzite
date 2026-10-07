@@ -1,0 +1,147 @@
+---
+import type { Service } from '@littzite/content-schema';
+import Container from '@littzite/ui/Container.astro';
+import ServiceVisual from './ServiceVisual.astro';
+import { resolveServiceVisual, type VioraServiceVisual } from '../service-visuals.validation';
+
+interface Props {
+  id: string;
+  eyebrow: string;
+  title: string;
+  description: string;
+  services: readonly Service[];
+  visuals: readonly VioraServiceVisual[];
+}
+
+const { id, eyebrow, title, description, services, visuals } = Astro.props;
+const pageSize = 4;
+const pageCount = Math.ceil(services.length / pageSize);
+---
+
+<section
+  class="viora-service-rail"
+  id={id}
+  aria-labelledby={`${id}-title`}
+  data-service-rail
+  data-page-size={pageSize}
+  data-page-count={pageCount}
+>
+  <Container>
+    <div class="viora-service-rail__heading">
+      <div class="viora-service-rail__intro">
+        <p class="viora-service-rail__eyebrow">{eyebrow}</p>
+        <h2 id={`${id}-title`}>{title}</h2>
+        <p>{description}</p>
+      </div>
+      {pageCount > 1 && (
+        <div class="viora-service-rail__controls" data-service-rail-controls hidden>
+          <button
+            type="button"
+            class="viora-service-rail__control"
+            data-service-rail-previous
+            aria-label="Servicios anteriores"
+            disabled
+          >
+            <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+              <path d="m14.5 5-7 7 7 7" />
+            </svg>
+          </button>
+          <button
+            type="button"
+            class="viora-service-rail__control"
+            data-service-rail-next
+            aria-label="Servicios siguientes"
+          >
+            <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+              <path d="m9.5 5 7 7-7 7" />
+            </svg>
+          </button>
+          <span
+            class="viora-service-rail__status"
+            data-service-rail-status
+            aria-live="polite"
+          ></span>
+        </div>
+      )}
+    </div>
+    <div class="viora-service-rail__viewport" data-service-rail-viewport>
+      <div class="viora-service-rail__track">
+        {services.map((service) => {
+          const visual = resolveServiceVisual(visuals, service.id);
+          return (
+            <article class="viora-service-rail__card" data-service-rail-card>
+              <a class="viora-service-rail__link" href={`/servicios/${service.slug}/`}>
+                {visual && (
+                  <div class="viora-service-rail__media">
+                    <ServiceVisual
+                      visual={visual}
+                      context="card"
+                      transitionName={`viora-service-image-${service.slug}`}
+                    />
+                  </div>
+                )}
+                <div class="viora-service-rail__copy">
+                  <h3>{service.displayName}</h3>
+                  <p>{service.description}</p>
+                  <span class="viora-service-rail__affordance">Ver experiencia</span>
+                </div>
+              </a>
+            </article>
+          );
+        })}
+      </div>
+    </div>
+  </Container>
+</section>
+
+<script>
+  const rails = document.querySelectorAll<HTMLElement>('[data-service-rail]');
+
+  for (const rail of rails) {
+    const viewport = rail.querySelector<HTMLElement>('[data-service-rail-viewport]');
+    const cards = [...rail.querySelectorAll<HTMLElement>('[data-service-rail-card]')];
+    const controls = rail.querySelector<HTMLElement>('[data-service-rail-controls]');
+    const previous = rail.querySelector<HTMLButtonElement>('[data-service-rail-previous]');
+    const next = rail.querySelector<HTMLButtonElement>('[data-service-rail-next]');
+    const status = rail.querySelector<HTMLElement>('[data-service-rail-status]');
+    const pageSize = Number(rail.dataset.pageSize);
+    const pageCount = Number(rail.dataset.pageCount);
+
+    if (!viewport || !controls || !previous || !next || !cards.length || pageCount < 2) continue;
+
+    const desktop = window.matchMedia('(min-width: 961px)');
+    const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
+    let activePage = 0;
+
+    const update = () => {
+      controls.hidden = !desktop.matches;
+      if (!desktop.matches) return;
+
+      const viewportLeft = viewport.getBoundingClientRect().left + 1;
+      const firstVisibleIndex = Math.max(
+        0,
+        cards.findIndex((card) => card.getBoundingClientRect().right > viewportLeft),
+      );
+      activePage = Math.min(Math.floor(firstVisibleIndex / pageSize), pageCount - 1);
+      previous.disabled = activePage === 0;
+      next.disabled = activePage === pageCount - 1;
+      if (status) status.textContent = `Grupo ${activePage + 1} de ${pageCount}`;
+    };
+
+    const goToPage = (page: number) => {
+      const target = cards[Math.min(Math.max(page, 0), pageCount - 1) * pageSize];
+      if (!target) return;
+      const left = target.getBoundingClientRect().left - viewport.getBoundingClientRect().left;
+      viewport.scrollTo({
+        left: viewport.scrollLeft + left,
+        behavior: reducedMotion.matches ? 'auto' : 'smooth',
+      });
+    };
+
+    previous.addEventListener('click', () => goToPage(activePage - 1));
+    next.addEventListener('click', () => goToPage(activePage + 1));
+    viewport.addEventListener('scroll', update, { passive: true });
+    desktop.addEventListener('change', update);
+    update();
+  }
+</script>

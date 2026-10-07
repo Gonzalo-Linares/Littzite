@@ -1,0 +1,31 @@
+---
+import type { Service } from '@littzite/content-schema';
+import VioraServiceRail from '../../../../src/components/VioraServiceRail.astro';
+
+const allServices: Service[] = Array.from({ length: 9 }, (_, index) => {
+  const number = String(index + 1).padStart(2, '0');
+  return {
+    id: `servicio-${number}`,
+    slug: `servicio-${number}`,
+    displayName: `Servicio ${number}`,
+    description: `Descripción del servicio ${number}.`,
+    actions: [],
+  };
+});
+const counts = [0, 1, 4, 5, 8, 9];
+---
+
+<html lang="es-AR">
+  <body>
+    {counts.map((count) => (
+      <VioraServiceRail
+        id={`rail-${count}`}
+        eyebrow="Fixture"
+        title={`Rail de ${count}`}
+        description="Fixture de rail adaptable."
+        services={allServices.slice(0, count)}
+        visuals={[]}
+      />
+    ))}
+  </body>
+</html>

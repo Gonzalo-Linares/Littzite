@@ -1,60 +1,34 @@
 ---
 import type { Service } from '@littzite/content-schema';
 import Container from '@littzite/ui/Container.astro';
-import ButtonLink from '@littzite/ui/ButtonLink.astro';
 import ServiceVisual from './ServiceVisual.astro';
 import { resolveServiceVisual, type VioraServiceVisual } from '../service-visuals.validation';
 
 interface Props {
   services: Service[];
   visuals: readonly VioraServiceVisual[];
-  variant: 'preview' | 'catalog';
-  serviceIds?: string[];
 }
 
-const { services, visuals, variant, serviceIds } = Astro.props;
-if (variant === 'preview' && !serviceIds) throw new Error('VIORA preview requires service IDs');
-const listedIds = serviceIds ?? services.map(({ id }) => id);
-const servicesById = new Map(services.map((service) => [service.id, service]));
-const listedServices = listedIds.map((id) => {
-  const service = servicesById.get(id);
-  if (!service) throw new Error(`Missing service ${id} in VIORA catalog`);
-  return { service, visual: resolveServiceVisual(visuals, service.id) };
-});
-const sectionId = variant === 'preview' ? 'alcance' : 'catalogo-servicios';
+const { services, visuals } = Astro.props;
+const listedServices = services.map((service) => ({
+  service,
+  visual: resolveServiceVisual(visuals, service.id),
+}));
+const sectionId = 'catalogo-servicios';
 ---
 
-<section
-  class:list={['viora-catalog', { 'viora-catalog--preview': variant === 'preview' }]}
-  id={sectionId}
-  aria-labelledby={`${sectionId}-titulo`}
->
+<section class="viora-catalog" id={sectionId} aria-labelledby={`${sectionId}-titulo`}>
   <Container>
     <div class="viora-catalog__intro">
       <div>
-        <p class="viora-catalog__eyebrow">
-          {variant === 'preview' ? 'Nuestro universo' : 'VIORA / servicios'}
-        </p>
-        {variant === 'preview' ? (
-          <h2 id={`${sectionId}-titulo`}>Cada cuidado tiene su momento.</h2>
-        ) : (
-          <h1 id={`${sectionId}-titulo`}>Nuestras experiencias.</h1>
-        )}
+        <p class="viora-catalog__eyebrow">VIORA / servicios</p>
+        <h1 id={`${sectionId}-titulo`}>Nuestras experiencias.</h1>
       </div>
-      <p>
-        {variant === 'preview'
-          ? 'Conocé las líneas de VIORA y explorá cada experiencia.'
-          : 'Cuidado pensado para distintos momentos. Conocé las propuestas de VIORA.'}
-      </p>
+      <p>Cuidado pensado para distintos momentos. Conocé las propuestas de VIORA.</p>
     </div>
     <div class="viora-catalog__grid">
       {listedServices.map(({ service, visual }) => (
-        <article
-          class:list={[
-            'viora-catalog__card',
-            { 'viora-catalog__card--visual': visual !== undefined },
-          ]}
-        >
+        <article class:list={['viora-catalog__card', { 'viora-catalog__card--visual': visual }]}>
           {visual && (
             <ServiceVisual
               visual={visual}
@@ -76,10 +50,5 @@ const sectionId = variant === 'preview' ? 'alcance' : 'catalogo-servicios';
         </article>
       ))}
     </div>
-    {variant === 'preview' && (
-      <ButtonLink href="/servicios/" variant="secondary">
-        Ver todos los servicios
-      </ButtonLink>
-    )}
   </Container>
 </section>
