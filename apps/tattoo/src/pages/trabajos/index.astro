@@ -1,0 +1,12 @@
+---
+import TattooSiteLayout from '../../layouts/TattooSiteLayout.astro';
+import TattooGallery from '../../components/TattooGallery.astro';
+import { tattooPortfolio } from '../../portfolio';
+---
+
+<TattooSiteLayout
+  title="Trabajos | Juanjo Tattoo Studio"
+  description="Portfolio de Juanjo Tattoo Studio. Trabajos originales en preparación."
+>
+  <TattooGallery items={tattooPortfolio} />
+</TattooSiteLayout>

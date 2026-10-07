@@ -146,7 +146,7 @@ test('SiteConfig accepts an optional root-relative local browser icon only', () 
   );
   assert.equal(siteConfigSchema.safeParse({ ...base, iconHref: '/../icon.png' }).success, false);
   assert.equal(estetica.site.iconHref, '/brand/viora-principal.png');
-  assert.equal('iconHref' in tattoo.site, false);
+  assert.equal(tattoo.site.iconHref, '/brand/monograma-jt.png');
 });
 
 test('VIORA visuals validate optional service references and image alternatives independently', () => {
@@ -287,7 +287,7 @@ test('external targets require HTTPS and contact numbers require E.164', () => {
   assert.equal(siteContentSchema.safeParse(badNumber).success, false);
 });
 
-test('VIORA landing derives discovery from services and Juanjo keeps its shared feature-grid', () => {
+test('VIORA landing derives discovery from services and Juanjo keeps app-local page composition', () => {
   const vioraSections = estetica.pages.find((page) => page.slug === '').sections;
   assert.deepEqual(
     vioraSections.map((section) => section.type),
@@ -297,24 +297,37 @@ test('VIORA landing derives discovery from services and Juanjo keeps its shared 
   assert.deepEqual(pageSectionSchema.safeParse(vioraSections[0]).success, true);
 
   const juanjoSections = tattoo.pages.find((page) => page.slug === '').sections;
-  assert.deepEqual(
-    juanjoSections.map((section) => section.type),
-    ['intro', 'feature-grid'],
-  );
-  assert.equal(juanjoSections[1].items.length, 3);
+  assert.deepEqual(juanjoSections, []);
 });
 
 test('feature-grid rejects empty text, excess cards and duplicate IDs', () => {
-  const base = structuredClone(tattoo);
-  const grid = base.pages[0].sections.find((section) => section.type === 'feature-grid');
-  const duplicate = structuredClone(base);
-  duplicate.pages[0].sections[1].items[1].id = duplicate.pages[0].sections[1].items[0].id;
-  assert.equal(siteContentSchema.safeParse(duplicate).success, false);
-  assert.equal(pageSectionSchema.safeParse({ ...grid, heading: '' }).success, false);
+  const grid = {
+    id: 'concepts',
+    type: 'feature-grid',
+    eyebrow: 'HOW IT WORKS',
+    heading: 'A clear path',
+    intro: 'Every project has a clear path.',
+    items: [
+      { id: 'first', title: 'First', body: 'A first valid item.' },
+      { id: 'second', title: 'Second', body: 'A second valid item.' },
+    ],
+  };
+  assert.equal(pageSectionSchema.safeParse(grid).success, true);
   assert.equal(
-    pageSectionSchema.safeParse({ ...grid, items: [...grid.items, ...grid.items] }).success,
+    pageSectionSchema.safeParse({ ...grid, items: [...grid.items, ...grid.items, grid.items[0]] })
+      .success,
     false,
   );
+  assert.equal(pageSectionSchema.safeParse({ ...grid, items: [] }).success, false);
+  assert.equal(pageSectionSchema.safeParse({ ...grid, heading: '' }).success, false);
+  const duplicate = fixture();
+  duplicate.pages[0].sections = [
+    {
+      ...grid,
+      items: grid.items.map((item) => ({ ...item, id: 'same' })),
+    },
+  ];
+  assert.equal(siteContentSchema.safeParse(duplicate).success, false);
 });
 
 test('VIORA theme, voice and four named services match its brand manual', () => {
@@ -423,19 +436,17 @@ test('VIORA service slugs are unique and URL-safe for the app-local rail and cat
 
 test('Juanjo brand stays independent and its commercial targets remain inactive', () => {
   assert.deepEqual(tattoo.site.theme, {
-    surface: '#17191B',
-    text: '#F8F4ED',
-    accent: '#EF9476',
-    accentText: '#17191B',
-    border: '#67696B',
-    focus: '#FFD4B3',
+    surface: '#0E0E0E',
+    text: '#EADCC6',
+    accent: '#A61E1E',
+    accentText: '#EADCC6',
+    border: '#C9A96B',
+    focus: '#C9A96B',
   });
   const home = tattoo.pages.find((page) => page.slug === '');
-  assert.equal(home.sections[0].heading, 'De la idea a la piel.');
-  assert.deepEqual(
-    home.sections[1].items.map((item) => item.id),
-    ['portfolio', 'piezas-pequenas', 'proyectos-grandes'],
-  );
+  assert.equal(home.seo.title, 'Juanjo Tattoo Studio | Tinta con carácter');
+  assert.deepEqual(home.sections, []);
+  assert.equal(tattoo.site.iconHref, '/brand/monograma-jt.png');
   assert.equal(tattoo.services.length, 0);
   assert.equal(tattoo.bookingTargets.length, 0);
   assert.equal(tattoo.quoteTargets.length, 0);

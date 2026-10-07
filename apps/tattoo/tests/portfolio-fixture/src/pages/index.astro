@@ -1,0 +1,29 @@
+---
+import TattooGallery from '../../../../src/components/TattooGallery.astro';
+import type { TattooPortfolioItem } from '../../../../src/portfolio';
+import firstWork from '../assets/work-one.svg';
+import secondWork from '../assets/work-two.svg';
+
+const items: TattooPortfolioItem[] = [
+  {
+    id: 'fixture-principal',
+    title: 'Fixture principal',
+    alt: 'Fixture geométrico de prueba; no representa un tatuaje real',
+    image: firstWork,
+  },
+  {
+    id: 'fixture-secundario',
+    title: 'Fixture secundario',
+    alt: 'Segundo fixture geométrico de prueba; no representa un tatuaje real',
+    image: secondWork,
+  },
+];
+---
+
+<html lang="es-AR">
+  <body>
+    <main>
+      <TattooGallery items={items} />
+    </main>
+  </body>
+</html>

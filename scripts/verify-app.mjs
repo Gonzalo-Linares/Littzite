@@ -7,7 +7,7 @@ import { verifyInternalLinks } from './verify-site-links.mjs';
 
 const expectedTitles = {
   estetica: 'VIORA · Estética integral',
-  tattoo: 'Juanjo Tattoos · San Juan | Vista previa',
+  tattoo: 'Juanjo Tattoo Studio | Tinta con carácter',
 };
 
 const app = process.argv[2];
@@ -42,7 +42,7 @@ assert.match(html, /<meta name="twitter:description" content=/);
 assertMetadata(html, siteContent.pages.find((page) => page.slug === '').seo, app);
 assertBrowserIcon(html, siteContent.site.iconHref, `${app} home`);
 assert.ok(
-  html.includes(`>${app === 'estetica' ? 'Regalate una pausa.' : 'De la idea a la piel.'}</h1>`),
+  html.includes(`>${app === 'estetica' ? 'Regalate una pausa.' : 'Tinta con carácter.'}</h1>`),
   'Expected editorial heading',
 );
 assert.ok(html.includes('class="site-header"'), 'Shared header missing');
@@ -634,15 +634,27 @@ if (app === 'estetica') {
   assert.ok(!html.includes('H4jmqTGKicDse2iS7'), 'VIORA directions leaked into tattoo');
   assert.ok(!html.includes('vioramasajes.ok'), 'VIORA Instagram leaked into tattoo');
   assert.ok(html.includes('class="juanjo-site"'), 'Juanjo body style missing');
-  assert.ok(html.includes('class="juanjo-gallery"'), 'Juanjo portfolio region missing');
-  assert.ok(html.includes('class="juanjo-gallery__empty"'), 'Honest portfolio empty state missing');
+  assert.ok(html.includes('class="tattoo-hero"'), 'Juanjo branded hero missing');
+  assert.ok(html.includes('class="tattoo-hero__mark"'), 'Official Oni artwork missing');
+  assert.ok(html.includes('id="como-trabajamos"'), 'Conceptual service paths missing');
+  assert.ok(
+    html.includes('Powered by') && html.includes('Littzite'),
+    'Powered by attribution missing',
+  );
+  const attribution = html.match(
+    /<div class="site-attribution tattoo-attribution">([\s\S]*?)<\/div>/,
+  )?.[1];
+  assert.ok(attribution, 'Juanjo attribution wrapper missing');
+  assert.doesNotMatch(attribution, /<a\b|<img\b|href=/, 'Unconfigured attribution is text only');
   assert.ok(
     html.includes('href="https://www.instagram.com/juanjo.tattoos/"'),
     'Approved Instagram link missing',
   );
   assert.ok(
-    html.includes('id="portfolio"') && html.includes('id="alcance"'),
-    'Juanjo section anchors missing',
+    html.includes('href="/trabajos/"') &&
+      html.includes('href="/estudio/"') &&
+      html.includes('href="/contacto/"'),
+    'Juanjo routes missing',
   );
   assert.ok(
     !html.includes('wa.me/') && !html.includes('api.whatsapp.com/'),
@@ -653,32 +665,76 @@ if (app === 'estetica') {
     'Juanjo must not publish a booking provider or CTA',
   );
   assert.ok(
-    !html.includes('juanjo-gallery__item--lead'),
+    !html.includes('tattoo-gallery__item--lead'),
     'No real artwork should appear before originals arrive',
   );
   assert.ok(!html.includes('href="/servicios/"'), 'VIORA navigation must not leak into Juanjo');
-  assert.ok(!html.includes('aria-label="Navegación del pie de página"'));
-}
-assert.ok(html.includes('class="landing-hero landing-hero--'), 'Shared hero missing');
-if (app === 'tattoo')
-  assert.equal(
-    (html.match(/class="feature-card"/g) ?? []).length,
-    3,
-    'Juanjo feature cards missing',
+  assert.ok(html.includes('aria-label="Navegación del pie de página"'));
+  assert.ok(html.includes('href="/brand/monograma-jt.png"'), 'Official JT favicon missing');
+  assert.ok(
+    html.includes('class="tattoo-brand-mark__image"'),
+    'Official signature header mark missing',
   );
-assert.ok(html.includes('id="alcance"'), 'Feature grid anchor missing');
-assert.ok(
-  !html.includes('feature-card__symbol'),
-  'Informational cards must not suggest a nonexistent link',
-);
+  assert.ok(html.includes('srcset="/brand/monograma-jt.png"'), 'Compact JT header mark missing');
+  assert.ok(!/<(?:img|figure)[^>]*>[^<]*(?:placeholder|fake|stock)/i.test(html));
+  for (const route of ['trabajos', 'estudio', 'contacto']) {
+    const routeHtml = await readFile(
+      new URL(`../apps/tattoo/dist/${route}/index.html`, import.meta.url),
+      'utf8',
+    );
+    assert.match(routeHtml, /<meta name="robots" content="noindex, nofollow">/);
+    assert.equal((routeHtml.match(/<header class="site-header">/g) ?? []).length, 1);
+    assert.equal((routeHtml.match(/<footer class="site-footer">/g) ?? []).length, 1);
+    assert.match(routeHtml, /Powered by/);
+    assert.match(routeHtml, /Littzite/);
+  }
+  const notFound = await readFile(new URL('../apps/tattoo/dist/404.html', import.meta.url), 'utf8');
+  assert.match(notFound, /<meta name="robots" content="noindex, nofollow">/);
+  assert.match(notFound, /Esta página no existe/);
+  const workPage = await readFile(
+    new URL('../apps/tattoo/dist/trabajos/index.html', import.meta.url),
+    'utf8',
+  );
+  assert.ok(workPage.includes('class="tattoo-gallery"'), 'Juanjo portfolio route missing');
+  assert.ok(
+    workPage.includes('class="tattoo-gallery__empty"'),
+    'Honest portfolio empty state missing',
+  );
+  const tattooStyles = await readFile(
+    new URL('../apps/tattoo/src/styles/juanjo.css', import.meta.url),
+    'utf8',
+  );
+  assert.match(tattooStyles, /@font-face[\s\S]*Rye-Regular\.ttf/);
+  assert.match(tattooStyles, /@font-face[\s\S]*DejaVuSerif\.ttf/);
+  assert.match(tattooStyles, /@font-face[\s\S]*DejaVuSans\.ttf/);
+  const contact = await readFile(
+    new URL('../apps/tattoo/dist/contacto/index.html', import.meta.url),
+    'utf8',
+  );
+  assert.match(contact, /href="https:\/\/www\.instagram\.com\/juanjo\.tattoos\/"/);
+  assert.match(contact, /class="tattoo-instagram-link"/);
+  assert.doesNotMatch(
+    html + contact,
+    /wa\.me|api\.whatsapp|cal\.com|Reserva tu turno|Agendá ahora/i,
+  );
+}
+if (app === 'estetica') {
+  assert.ok(html.includes('class="landing-hero landing-hero--'), 'Shared hero missing');
+  assert.ok(html.includes('id="alcance"'), 'Feature grid anchor missing');
+  assert.ok(!html.includes('feature-card__symbol'));
+}
 assert.ok(html.includes('class="skip-link" href="#contenido"'));
 assert.ok(html.includes('class="container"'));
-const expectedHeroHref = app === 'tattoo' ? '#portfolio' : '/servicios/';
+const expectedHeroHref = '/servicios/';
 assert.ok(
-  html.includes(
-    `class="button-link button-link--primary button-link--default" href="${expectedHeroHref}"`,
-  ),
-  `${app}: hero CTA must point to ${expectedHeroHref}`,
+  app === 'estetica'
+    ? html.includes(
+        `class="button-link button-link--primary button-link--default" href="${expectedHeroHref}"`,
+      )
+    : html.includes(
+        'class="button-link button-link--primary button-link--default" href="/trabajos/"',
+      ),
+  `${app}: main CTA must point to the appropriate route`,
 );
 for (const [token, value] of Object.entries(siteContent.site.theme)) {
   const cssName = token === 'accentText' ? 'accent-text' : token;

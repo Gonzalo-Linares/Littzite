@@ -1,0 +1,60 @@
+---
+import TattooSiteLayout from '../layouts/TattooSiteLayout.astro';
+import { tattooBrand } from '../brand.config';
+---
+
+<TattooSiteLayout
+  title="Estudio | Juanjo Tattoo Studio"
+  description="Tradición, fuerza y detalle: el universo visual y el enfoque creativo de Juanjo Tattoo Studio."
+>
+  <article class="tattoo-editorial-page tattoo-studio-page">
+    <div class="container">
+      <p class="tattoo-eyebrow">EL UNIVERSO CREATIVO</p>
+      <div class="tattoo-studio-page__grid">
+        <div>
+          <h1>
+            Tradición.
+            <br />
+            Fuerza.
+            <br />
+            <span>Detalle.</span>
+          </h1>
+          <p class="tattoo-editorial-page__lead">Una marca que deja huella.</p>
+          <p>
+            La identidad de Juanjo Tattoo Studio reúne el carácter del oni, la profundidad de la
+            tinta y el contraste cálido del marfil y el dorado. Una composición precisa deja que el
+            arte hable por sí mismo.
+          </p>
+        </div>
+        <figure class="tattoo-studio-page__mark">
+          <img
+            src={tattooBrand.marks.principal.src}
+            width={tattooBrand.marks.principal.width}
+            height={tattooBrand.marks.principal.height}
+            alt="Logo principal oficial de Juanjo Tattoo Studio"
+            loading="eager"
+            decoding="async"
+          />
+          <figcaption>Firma principal · arte original sin modificaciones</figcaption>
+        </figure>
+      </div>
+      <div class="tattoo-studio-page__principles">
+        <article>
+          <span>01</span>
+          <h2>Tradición</h2>
+          <p>Un lenguaje visual arraigado en símbolos y oficio.</p>
+        </article>
+        <article>
+          <span>02</span>
+          <h2>Fuerza</h2>
+          <p>Contraste y presencia con intención.</p>
+        </article>
+        <article>
+          <span>03</span>
+          <h2>Detalle</h2>
+          <p>Precisión en la pieza y espacio para apreciarla.</p>
+        </article>
+      </div>
+    </div>
+  </article>
+</TattooSiteLayout>

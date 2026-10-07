@@ -1,97 +1,124 @@
 ---
-import BaseLayout from '@littzite/ui/BaseLayout.astro';
-import SiteHeader from '@littzite/ui/SiteHeader.astro';
-import SiteFooter from '@littzite/ui/SiteFooter.astro';
-import LandingHero from '@littzite/sections/LandingHero.astro';
-import FeatureGrid from '@littzite/sections/FeatureGrid.astro';
-import TattooGallery from '../components/TattooGallery.astro';
-import { siteContent } from '../site.config';
+import ButtonLink from '@littzite/ui/ButtonLink.astro';
+import TattooSiteLayout from '../layouts/TattooSiteLayout.astro';
+import { tattooBrand } from '../brand.config';
 import { tattooPortfolio } from '../portfolio';
-import '../styles/juanjo.css';
-
-const { site, pages } = siteContent;
-const home = pages.find((page) => page.slug === '');
-const intro = home?.sections.find((section) => section.type === 'intro');
-const features = home?.sections.find((section) => section.type === 'feature-grid');
-if (!home || !intro || !features) throw new Error('Incomplete Juanjo Tattoos preview');
 ---
 
-<BaseLayout
-  locale={site.defaultLocale}
-  theme={site.theme}
-  seo={home.seo}
-  noindex={true}
-  iconHref={site.iconHref}
-  bodyClass="juanjo-site"
+<TattooSiteLayout
+  title="Juanjo Tattoo Studio | Tinta con carácter"
+  description="Tradición, fuerza y detalle. Conocé el universo creativo de Juanjo Tattoo Studio."
 >
-  <SiteHeader
-    slot="header"
-    brand="Juanjo Tattoos"
-    descriptor="San Juan"
-    links={[
-      { label: 'Inicio', href: '#inicio' },
-      { label: 'Portfolio', href: '#portfolio' },
-      { label: 'Cómo consultar', href: '#alcance' },
-    ]}
-    badge={{ label: 'Instagram', href: 'https://www.instagram.com/juanjo.tattoos/' }}
-  >
-    <span slot="brand" class="juanjo-wordmark" aria-hidden="true">
-      <span class="juanjo-wordmark__name">
-        JUANJO<span>.</span>
-      </span>
-      <span class="juanjo-wordmark__tag">TATTOOS / SAN JUAN</span>
-    </span>
-  </SiteHeader>
-
-  <LandingHero
-    section={intro}
-    variant="graphic"
-    ctaLabel="Explorá el portfolio"
-    ctaHref="#portfolio"
-    artLabel="JUANJO / EDITORIAL"
-    artIndex="001 / 002"
-  >
-    <div slot="artwork" class="juanjo-hero__artwork" aria-hidden="true">
-      <div class="juanjo-hero__artwork-top">
-        <span>FORMAS &amp; CONTRASTE</span>
-        <span>JUANJO / SJ</span>
+  <section class="tattoo-hero" aria-labelledby="hero-title">
+    <div class="container tattoo-hero__grid">
+      <div class="tattoo-hero__copy">
+        <p class="tattoo-eyebrow">
+          <span aria-hidden="true"></span> TRADICIÓN · FUERZA · DETALLE
+        </p>
+        <h1 id="hero-title">Tinta con carácter.</h1>
+        <p class="tattoo-hero__lead">Una marca que deja huella.</p>
+        <p class="tattoo-hero__body">
+          Una identidad construida alrededor del oficio, la precisión y el carácter de cada pieza.
+        </p>
+        <div class="tattoo-actions">
+          <ButtonLink href="/trabajos/" variant="primary">
+            Explorar trabajos
+          </ButtonLink>
+          <ButtonLink href="/contacto/" variant="secondary">
+            Contanos tu idea
+          </ButtonLink>
+        </div>
+        <p class="tattoo-hero__index">
+          JUANJO TATTOO STUDIO <span>·</span> SAN JUAN
+        </p>
       </div>
-      <span class="juanjo-hero__artwork-ring"></span>
-      <span class="juanjo-hero__artwork-mark">J</span>
-      <span class="juanjo-hero__artwork-line"></span>
-      <div class="juanjo-hero__artwork-bottom">
-        <span>
-          TINTA
+      <figure class="tattoo-hero__mark">
+        <span class="tattoo-hero__mark-label">SÍMBOLO / 01</span>
+        <img
+          src={tattooBrand.marks.oni.src}
+          width={tattooBrand.marks.oni.width}
+          height={tattooBrand.marks.oni.height}
+          alt="Oni oficial de Juanjo Tattoo Studio"
+          loading="eager"
+          decoding="async"
+          fetchpriority="high"
+        />
+        <span class="tattoo-hero__mark-rule" aria-hidden="true"></span>
+        <figcaption>Una presencia expresiva. Cada detalle, intacto.</figcaption>
+      </figure>
+    </div>
+  </section>
+
+  <section class="tattoo-portfolio-teaser" aria-labelledby="teaser-title">
+    <div class="container tattoo-portfolio-teaser__inner">
+      <div>
+        <p class="tattoo-eyebrow">EL TRABAJO HABLA</p>
+        <h2 id="teaser-title">
+          Obras reales.
           <br />
-          EN PROCESO.
-        </span>
-        <span>→</span>
+          Sin imágenes de relleno.
+        </h2>
+        <p>
+          {tattooPortfolio.length > 0
+            ? 'Una selección de trabajos originales y autorizados.'
+            : 'El portfolio se publicará cuando estén listas las fotografías originales autorizadas.'}
+        </p>
+      </div>
+      <a href="/trabajos/" class="tattoo-portfolio-teaser__link">
+        {tattooPortfolio.length > 0 ? 'Ver trabajos' : 'Conocer el estado del portfolio'}
+        <span aria-hidden="true">↗</span>
+      </a>
+    </div>
+  </section>
+
+  <section class="tattoo-manifesto" aria-labelledby="manifesto-title">
+    <div class="container tattoo-manifesto__inner">
+      <p class="tattoo-eyebrow">UNA FORMA DE HACER</p>
+      <h2 id="manifesto-title">
+        Tradición, fuerza <span>y detalle.</span>
+      </h2>
+      <p>
+        El carácter vive en el arte. El espacio, el contraste y cada línea acompañan sin quitarle
+        protagonismo.
+      </p>
+      <span class="tattoo-manifesto__rule" aria-hidden="true"></span>
+    </div>
+  </section>
+
+  <section class="tattoo-process" id="como-trabajamos" aria-labelledby="process-title">
+    <div class="container">
+      <div class="tattoo-section-heading">
+        <p class="tattoo-eyebrow">CADA PROYECTO, SU CAMINO</p>
+        <h2 id="process-title">Cómo trabajamos</h2>
+      </div>
+      <div class="tattoo-process__grid">
+        <article>
+          <span class="tattoo-process__number">01</span>
+          <h3>Piezas pequeñas</h3>
+          <p>La reserva directa se habilitará cuando estén confirmados el alcance y la agenda.</p>
+          <span class="tattoo-process__status">RESERVAS NO DISPONIBLES</span>
+        </article>
+        <article>
+          <span class="tattoo-process__number">02</span>
+          <h3>Proyectos grandes</h3>
+          <p>
+            El trabajo comienza con un presupuesto previo. El canal de consulta aún no está activo.
+          </p>
+          <span class="tattoo-process__status">CONSULTAS EN PREPARACIÓN</span>
+        </article>
       </div>
     </div>
-  </LandingHero>
+  </section>
 
-  <TattooGallery items={tattooPortfolio} />
-  <FeatureGrid section={features} />
-
-  <aside class="juanjo-outro" aria-label="Información de esta vista previa">
-    <div class="container juanjo-outro__inner">
-      <span>JUANJO TATTOOS / SAN JUAN</span>
-      <p>
-        Los turnos y el canal de presupuestos se habilitarán cuando Juanjo confirme los detalles
-        comerciales.
-      </p>
+  <section class="tattoo-contact-band" aria-labelledby="contact-band-title">
+    <div class="container tattoo-contact-band__inner">
+      <div>
+        <p class="tattoo-eyebrow">TU PRÓXIMA HISTORIA EMPIEZA ACÁ</p>
+        <h2 id="contact-band-title">Contanos tu idea.</h2>
+      </div>
+      <ButtonLink href="/contacto/" variant="primary">
+        Ir a contacto
+      </ButtonLink>
     </div>
-  </aside>
-
-  <SiteFooter
-    slot="footer"
-    brand="Juanjo Tattoos"
-    note="Una vista previa del sitio. La identidad final y las fotografías del portfolio se completarán con Juanjo."
-    meta={['Vista previa · No admite reservas todavía', 'JUANJO TATTOOS / SAN JUAN']}
-  >
-    <span slot="brand" class="juanjo-footer-wordmark">
-      JUANJO<span>.</span>
-      <small>TATTOOS</small>
-    </span>
-  </SiteFooter>
-</BaseLayout>
+  </section>
+</TattooSiteLayout>

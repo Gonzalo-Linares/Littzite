@@ -1,6 +1,6 @@
 ---
-import { Image } from 'astro:assets';
 import Link from '@littzite/ui/Link.astro';
+import { tattooBrand } from '../brand.config';
 import type { TattooPortfolioItem } from '../portfolio';
 
 interface Props {
@@ -10,34 +10,31 @@ interface Props {
 const { items } = Astro.props;
 ---
 
-<section class="juanjo-gallery" id="portfolio" aria-labelledby="portfolio-heading">
+<section class="tattoo-gallery" aria-labelledby="portfolio-title">
   <div class="container">
-    <div class="juanjo-gallery__heading">
-      <div>
-        <p class="juanjo-kicker">
-          <span aria-hidden="true">/</span> 01 — PORTFOLIO
-        </p>
-        <h2 id="portfolio-heading">El trabajo habla.</h2>
-      </div>
+    <header class="tattoo-gallery__heading">
+      <p class="tattoo-eyebrow">TRABAJOS ORIGINALES</p>
+      <h1 id="portfolio-title">El trabajo habla.</h1>
       <p>
-        En esta sección vas a encontrar las piezas originales del artista. Hasta completar la
-        selección, podés ver sus publicaciones actuales en Instagram.
+        {items.length > 0
+          ? 'Una selección de piezas fotografiadas y aprobadas para este portfolio.'
+          : 'El portfolio está en preparación. Publicaremos las piezas cuando estén disponibles los originales autorizados.'}
       </p>
-    </div>
+    </header>
 
     {items.length > 0 ? (
-      <div class="juanjo-gallery__grid">
+      <div class="tattoo-gallery__grid">
         {items.map((item, index) => (
           <figure
-            class:list={['juanjo-gallery__item', { 'juanjo-gallery__item--lead': index === 0 }]}
+            class:list={['tattoo-gallery__item', { 'tattoo-gallery__item--lead': index === 0 }]}
           >
-            <Image
-              src={item.image}
+            <img
+              src={item.image.src}
               alt={item.alt}
-              widths={[480, 760, 1120]}
-              sizes="(max-width: 680px) 100vw, (max-width: 1060px) 50vw, 33vw"
-              format="webp"
+              width={item.image.width}
+              height={item.image.height}
               loading={index === 0 ? 'eager' : 'lazy'}
+              decoding="async"
             />
             <figcaption>
               <span>{String(index + 1).padStart(2, '0')}</span>
@@ -47,29 +44,27 @@ const { items } = Astro.props;
         ))}
       </div>
     ) : (
-      <div class="juanjo-gallery__empty">
-        <div class="juanjo-gallery__graphic" aria-hidden="true">
-          <span class="juanjo-gallery__graphic-id">JJ // 01</span>
-          <span class="juanjo-gallery__graphic-letter">J</span>
-          <span class="juanjo-gallery__graphic-ring"></span>
-          <span class="juanjo-gallery__graphic-caption">ESTUDIO EDITORIAL / SAN JUAN</span>
+      <div class="tattoo-gallery__empty">
+        <div class="tattoo-gallery__seal">
+          <img
+            src={tattooBrand.marks.seal.src}
+            width={tattooBrand.marks.seal.width}
+            height={tattooBrand.marks.seal.height}
+            alt=""
+            loading="lazy"
+            decoding="async"
+          />
         </div>
-        <div class="juanjo-gallery__placeholder-copy">
-          <p class="juanjo-kicker">LA COLECCIÓN ESTÁ EN PREPARACIÓN</p>
-          <h3>
-            Obras reales.
-            <br />
-            Sin imágenes de relleno.
-          </h3>
+        <div class="tattoo-gallery__empty-copy">
+          <p class="tattoo-eyebrow">PORTFOLIO EN PREPARACIÓN</p>
+          <h2>Primero, el trabajo real.</h2>
           <p>
-            Estamos seleccionando las fotografías originales de Juanjo para mostrarlas con el
-            detalle que merecen. El trabajo publicado hasta hoy se puede consultar en su cuenta
-            oficial.
+            Esta sección no usa imágenes de muestra. Cuando estén listas las fotografías originales
+            autorizadas, vas a poder recorrerlas acá.
           </p>
-          <Link href="https://www.instagram.com/juanjo.tattoos/">Ver trabajos en Instagram</Link>
-          <p class="juanjo-gallery__third-party">
-            Este enlace abre Instagram, un servicio externo.
-          </p>
+          <Link className="tattoo-text-link" href="/contacto/">
+            Ver contacto <span aria-hidden="true">↗</span>
+          </Link>
         </div>
       </div>
     )}

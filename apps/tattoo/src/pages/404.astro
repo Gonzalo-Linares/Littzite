@@ -1,0 +1,19 @@
+---
+import ButtonLink from '@littzite/ui/ButtonLink.astro';
+import TattooSiteLayout from '../layouts/TattooSiteLayout.astro';
+---
+
+<TattooSiteLayout
+  title="Página no encontrada | Juanjo Tattoo Studio"
+  description="La página que buscás no está disponible."
+>
+  <section class="tattoo-not-found" aria-labelledby="not-found-title">
+    <div class="container">
+      <p class="tattoo-eyebrow">404 / RUTA NO DISPONIBLE</p>
+      <h1 id="not-found-title">Esta página no existe.</h1>
+      <ButtonLink href="/" variant="primary">
+        Volver al inicio
+      </ButtonLink>
+    </div>
+  </section>
+</TattooSiteLayout>

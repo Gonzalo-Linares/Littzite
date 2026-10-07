@@ -1,5 +1,7 @@
 # Juanjo Tattoos — Identidad editorial y galería preparada para originales
 
+> Estado actualizado: PR-19 implementa el manual oficial entregado por el titular. La dirección provisional descrita en el documento original quedó reemplazada. Ver [docs/20](20-juanjo-digital-brand-implementation.md) para roles, assets, licencias y checksums.
+
 **Estado:** base editorial PR-05 fusionada; portfolio fotográfico final pendiente de originales. **Referencias:** capturas del perfil `@juanjo.tattoos` y de sus tatuajes facilitadas por el usuario el 29/09/2026. Se confirmó autorización para usar los trabajos y materiales de ambos negocios en Littzite. Los archivos fotográficos originales y el logotipo nativo de Juanjo **todavía no se recibieron**.
 
 ## Lectura de las referencias proporcionadas

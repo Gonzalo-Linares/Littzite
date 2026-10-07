@@ -1,10 +1,10 @@
 # Littzite — arquitectura fundacional
 
-**Estado de implementación (07/10/2026):** dos prototipos estáticos `noindex`; PR-15 agrega una acción Cal.com temporal de UAT solo a depilación definitiva y PR-16 pule el sistema compartido de acciones, contacto y mapa de VIORA. El UAT manual se completó; la Location `Cal Video` del Event Type debe cambiarse a presencial en Cal.com y el link UAT debe sustituirse antes de producción.
+**Estado de implementación (07/10/2026):** dos prototipos estáticos `noindex`; PR-19 aplica el manual oficial de Juanjo con cinco firmas maestras, tipografías licenciadas y cuatro rutas. PR-15 conserva una acción Cal.com temporal de UAT solo para depilación definitiva; la Location `Cal Video` debe cambiarse y el link UAT sustituirse antes de producción.
 **Producto:** plataforma de creación de sitios comerciales modulares; primeros casos: estética integral y estudio de tatuajes en San Juan, Argentina.  
 **Propósito:** captación orgánica local, diferenciación visual, contacto y reservas/solicitudes mediante proveedores externos.
 
-> El repositorio incluye dos aplicaciones Astro, cuatro paquetes compartidos, contratos Zod, secciones compartidas y prototipos visuales. Ambas apps tienen `title` y `description` tipados en sus páginas y conservan `noindex, nofollow`. La app de estética incorpora el manual de marca y los tres logos oficiales autorizados de VIORA. El enlace Cal.com actual de depilación es exclusivamente temporal para UAT; la producción espera URL final y corregir `Cal Video` en el Event Type. Las decisiones pendientes requieren validación antes de implementarse.
+> El repositorio incluye dos aplicaciones Astro, cuatro paquetes compartidos, contratos Zod, secciones compartidas y prototipos visuales. Ambas apps tienen `title` y `description` tipados y conservan `noindex, nofollow`. Estética usa identidad VIORA y Tattoo el manual oficial de Juanjo. El portfolio de Juanjo y los canales comerciales que faltan permanecen inactivos.
 
 ## Acuerdos de alcance
 
@@ -36,6 +36,7 @@
 15. [Política de propiedad intelectual, terceros y contribuciones](docs/15-ip-license-policy.md)
 16. [Integración visual del manual de marca VIORA](docs/16-viora-brand.md)
 17. [Identidad editorial y galería preparada de Juanjo Tattoos](docs/17-juanjo-web-identity.md)
+18. [Implementación digital del manual de Juanjo](docs/20-juanjo-digital-brand-implementation.md)
 18. [Estado real de implementación](docs/18-implementation-status.md)
 19. [Registros de decisión arquitectónica — ADR](docs/adr/)
 20. [Instrucciones para agentes de código](AGENTS.md)
@@ -55,9 +56,13 @@ Para iniciar cada sitio en desarrollo, ejecutar `corepack pnpm dev:estetica` (pu
 
 Para trabajar en una sola aplicación, usar `corepack pnpm --filter @littzite/estetica <check|build|test>` o `@littzite/tattoo`. Las pruebas de salida requieren ejecutar antes el build de la app. Ambas páginas siguen siendo prototipos `noindex` con componentes compartidos. VIORA usa identidad aprobada y catálogo de cuatro servicios; depilación definitiva tiene una acción Cal.com de UAT temporal en PR-15, mientras los otros servicios siguen sin reservas activas. El UAT manual funcionó, pero Cal.com mostró `Dónde: Cal Video`: Victoria debe configurar la Location del Event Type como `In-person` o ubicación física personalizada apropiada y revisar su duración. Reemplazar el link UAT antes de producción. Juanjo tiene identidad editorial provisional sin fotografías ni logo gráfico originales. Faltan dominios y datos comerciales de producción. VIORA conserva sus tres logotipos originales autorizados en `apps/estetica/public/brand/`. Las instrucciones y limitaciones están en [la guía de marca](docs/16-viora-brand.md).
 
+## Juanjo Tattoo Studio (PR-19)
+
+La app `tattoo` implementa el manual oficial en `apps/tattoo/src/brand.config.ts`: cinco PNG maestros intactos, paleta exacta y Rye/DejaVu locales con licencias. `TattooSiteLayout.astro` centraliza `/`, `/trabajos/`, `/estudio/` y `/contacto/`; se mantienen `noindex`, `tattooPortfolio=[]` hasta recibir originales autorizados y las listas comerciales vacías. Reutiliza la atribución neutral compartida; no se configura URL ni logo de Littzite. Ver [la guía de implementación](docs/20-juanjo-digital-brand-implementation.md) y [los avisos de terceros](THIRD_PARTY_NOTICES.md).
+
 ## Atribución del desarrollador
 
-La firma del desarrollador se compone con `@littzite/ui/SiteAttribution.astro`: `label`, `brand`, `href?`, `logoSrc?` y `className?`. Es una primitive neutral; VIORA configura “Powered by / Littzite” en `apps/estetica/src/site-attribution.ts`, sin URL ni logo hasta recibir datos reales. La firma es contenido no interactivo mientras falta `href`; una URL futura utiliza el `Link` seguro. No reserva un espacio de imagen cuando falta `logoSrc`. `SiteFooter` ofrece slots opcionales `attribution` y `secondary-links`; Juanjo conserva su composición actual y aún no incorpora firma.
+La firma del desarrollador se compone con `@littzite/ui/SiteAttribution.astro`: `label`, `brand`, `href?`, `logoSrc?` y `className?`. Es una primitive neutral; cada app configura “Powered by / Littzite” localmente, sin URL ni logo hasta recibir datos reales. La firma es texto no interactivo mientras falta `href`; una URL futura utiliza el `Link` seguro. No reserva un espacio de imagen cuando falta `logoSrc`. `SiteFooter` ofrece slots opcionales `attribution` y `secondary-links`.
 
 Cuando exista el sitio real de Littzite, se podrá configurar su URL con `?utm_source=viora&utm_medium=footer&utm_campaign=powered_by`. Esta posibilidad no habilita analytics ni instala tracking; hoy no se publica una URL ficticia ni un logo provisional.
 

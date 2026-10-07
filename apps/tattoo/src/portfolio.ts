@@ -1,7 +1,7 @@
 import type { ImageMetadata } from 'astro';
 
-// The image metadata is provided by static imports from ../assets/portfolio/.
-// Astro will generate responsive formats at build time once originals arrive.
+// Image metadata comes from static imports under ../assets/portfolio/.
+// Original files are served unchanged; the app's gallery layout adapts to viewport size.
 export interface TattooPortfolioItem {
   id: string;
   title: string;
