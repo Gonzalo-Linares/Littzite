@@ -1,0 +1,65 @@
+---
+import Link from './Link.astro';
+
+interface Props {
+  label: string;
+  brand: string;
+  href?: string;
+  logoSrc?: string;
+  className?: string;
+}
+
+const { label, brand, href, logoSrc, className = '' } = Astro.props;
+const contentClass = 'site-attribution__identity';
+---
+
+<div class:list={['site-attribution', className]}>
+  <span class="site-attribution__label">{label}</span>
+  {href !== undefined ? (
+    <Link href={href} className={contentClass}>
+      {logoSrc && <img class="site-attribution__logo" src={logoSrc} alt="" loading="lazy" />}
+      <span>{brand}</span>
+    </Link>
+  ) : (
+    <span class={contentClass}>
+      {logoSrc && <img class="site-attribution__logo" src={logoSrc} alt="" loading="lazy" />}
+      <span>{brand}</span>
+    </span>
+  )}
+</div>
+
+<style is:global>
+  .site-attribution {
+    display: grid;
+    gap: 0.15rem;
+    justify-items: center;
+    color: var(--color-text);
+  }
+  .site-attribution__label {
+    font-size: 0.65rem;
+    letter-spacing: 0.08em;
+    line-height: 1.4;
+    opacity: 0.65;
+  }
+  .site-attribution__identity {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45rem;
+    font-size: 1.75rem;
+    font-weight: 600;
+    letter-spacing: -0.035em;
+    line-height: 1.15;
+    text-decoration: none;
+  }
+  a.site-attribution__identity:hover {
+    text-decoration: underline;
+    text-underline-offset: 0.15em;
+  }
+  .site-attribution__logo {
+    display: block;
+    width: auto;
+    height: 1.75rem;
+    max-width: 6rem;
+    object-fit: contain;
+  }
+</style>

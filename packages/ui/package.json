@@ -10,7 +10,8 @@
     "./ButtonLink.astro": "./src/ButtonLink.astro",
     "./ActionList.astro": "./src/ActionList.astro",
     "./SiteHeader.astro": "./src/SiteHeader.astro",
-    "./SiteFooter.astro": "./src/SiteFooter.astro"
+    "./SiteFooter.astro": "./src/SiteFooter.astro",
+    "./SiteAttribution.astro": "./src/SiteAttribution.astro"
   },
   "dependencies": {
     "@littzite/content-schema": "workspace:*"

@@ -2,6 +2,8 @@
 import BaseLayout from '@littzite/ui/BaseLayout.astro';
 import SiteHeader from '@littzite/ui/SiteHeader.astro';
 import SiteFooter from '@littzite/ui/SiteFooter.astro';
+import SiteAttribution from '@littzite/ui/SiteAttribution.astro';
+import { vioraAttribution } from '../site-attribution';
 import Link from '@littzite/ui/Link.astro';
 import ButtonLink from '@littzite/ui/ButtonLink.astro';
 import type { SeoMetadata } from '@littzite/content-schema';
@@ -83,21 +85,30 @@ const { site } = siteContent;
       alt="VIORA"
       loading="lazy"
     />
-    <div slot="links" class="viora-footer-groups">
+    <SiteAttribution
+      slot="attribution"
+      {...vioraAttribution}
+      className="viora-footer-attribution"
+    />
+    <div slot="secondary-links" class="viora-footer-groups">
       <nav class="viora-footer-links" aria-label="Navegación del pie de página">
         <Link href="/servicios/" className="viora-footer-link">
           Servicios
         </Link>
+        <span aria-hidden="true">·</span>
         <Link href="/viora/" className="viora-footer-link">
           VIORA
         </Link>
+        <span aria-hidden="true">·</span>
         <Link href="/contacto/" className="viora-footer-link">
           Contacto
         </Link>
+        <span aria-hidden="true">·</span>
         <Link href="/reservar/" className="viora-footer-link">
           Turnos
         </Link>
       </nav>
+      <span aria-hidden="true">·</span>
       <nav class="viora-footer-legal" aria-label="Información legal">
         <Link href="/privacidad/" className="viora-footer-link">
           Privacidad

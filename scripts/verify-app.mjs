@@ -152,6 +152,14 @@ if (app === 'estetica') {
     assert.match(footerNav, /href="\/reservar\/"[^>]*>\s*Turnos/);
     const footer = markup.match(/<footer class="site-footer">([\s\S]*?)<\/footer>/)?.[1];
     assert.ok(footer, `${page}: footer missing`);
+    const attribution = footer.match(
+      /<div class="site-attribution viora-footer-attribution">([\s\S]*?)<\/div>/,
+    )?.[1];
+    assert.ok(attribution, `${page}: developer attribution missing`);
+    assert.match(attribution, /Powered by/);
+    assert.match(attribution, /Littzite/);
+    assert.doesNotMatch(attribution, /<a\b|<img\b|href=/);
+    assert.match(footer, /class="container site-footer__secondary"/);
     assert.doesNotMatch(
       footer,
       /instagram|vioramasajes/i,
@@ -570,7 +578,11 @@ if (app === 'estetica') {
       /Términos y condiciones|Política de privacidad|BOTÓN DE ARREPENTIMIENTO/,
     );
     assert.match(legalPage, /href="\/arrepentimiento\/"/);
-    if (route !== 'arrepentimiento') assert.doesNotMatch(legalPage, /Littzite/);
+    if (route !== 'arrepentimiento')
+      assert.doesNotMatch(
+        legalPage.match(/<main\b[^>]*>([\s\S]*?)<\/main>/)?.[1] ?? '',
+        /Littzite/,
+      );
   }
   assert.match(html, /href="\/arrepentimiento\/"[^>]*>\s*BOTÓN DE ARREPENTIMIENTO/);
   assert.doesNotMatch(contactBuildCheck, /example\.com|John Doe|11-11111111-1/);

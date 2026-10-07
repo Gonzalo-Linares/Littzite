@@ -1,0 +1,29 @@
+---
+import SiteAttribution from '@littzite/ui/SiteAttribution.astro';
+const unsafeHref = process.env.SITE_ATTRIBUTION_TEST_HREF;
+---
+
+<html lang="es-AR">
+  <head>
+    <meta charset="utf-8" />
+    <title>Attribution fixture</title>
+  </head>
+  <body>
+    <section id="plain">
+      <SiteAttribution label="Built by" brand="Studio" className="custom-signature" />
+    </section>
+    <section id="linked">
+      <SiteAttribution
+        label="Built by"
+        brand="Studio"
+        href="https://studio.example.test/?utm_source=fixture"
+      />
+    </section>
+    <section id="logo">
+      <SiteAttribution label="Built by" brand="Studio" logoSrc="/authorized-logo.svg" />
+    </section>
+    {unsafeHref !== undefined && (
+      <SiteAttribution label="Built by" brand="Studio" href={unsafeHref} />
+    )}
+  </body>
+</html>

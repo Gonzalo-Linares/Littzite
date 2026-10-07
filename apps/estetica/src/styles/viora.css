@@ -692,10 +692,10 @@
 }
 .viora-site .site-footer__inner {
   display: grid;
-  grid-template-columns: auto minmax(0, 1fr) auto;
+  grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
   align-items: center;
   gap: 1.5rem 2rem;
-  padding-block: 1.65rem;
+  padding-block: 1.2rem 0.65rem;
 }
 .viora-site .site-footer__note {
   font-size: 0.75rem;
@@ -703,7 +703,24 @@
 .viora-site .site-footer__meta {
   flex-wrap: wrap;
   gap: 0.3rem 1rem;
-  padding-block: 0.7rem 1rem;
+  border-top: 0;
+  padding-block: 0.35rem 0.8rem;
+  font-size: 0.68rem;
+}
+.viora-site .site-footer__secondary {
+  padding-block: 0.15rem;
+}
+.viora-site .site-footer__inner > .button-link {
+  justify-self: end;
+  min-height: 2.75rem;
+  padding-inline: 0;
+  border-color: transparent;
+  background: transparent;
+  font-size: 0.75rem;
+}
+.viora-site .site-footer__inner > .button-link:hover {
+  text-decoration: underline;
+  background: transparent;
 }
 .viora-footer-logo {
   width: 9rem;
@@ -1328,23 +1345,27 @@
   flex: 0 0 auto;
 }
 .viora-footer-groups {
-  display: grid;
-  justify-self: center;
-  gap: 0.25rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.2rem 0.65rem;
+  font-size: 0.72rem;
 }
 .viora-footer-links,
 .viora-footer-legal {
   display: flex;
   align-items: center;
+  justify-content: center;
   flex-wrap: wrap;
-  gap: 0.4rem 1.1rem;
+  gap: 0.2rem 0.65rem;
 }
 .viora-footer-link {
   display: inline-flex;
   min-height: 2.75rem;
   align-items: center;
   color: color-mix(in srgb, var(--viora-ink) 83%, transparent);
-  font-size: 0.82rem;
+  font-size: 0.72rem;
   text-decoration: none;
   text-decoration-thickness: 1px;
   text-underline-offset: 0.2em;
@@ -1355,11 +1376,9 @@
 }
 .viora-footer-legal {
   gap: 0.2rem 0.65rem;
-  border-top: 1px solid color-mix(in srgb, var(--viora-plum) 15%, transparent);
-  padding-top: 0.25rem;
 }
 .viora-footer-legal .viora-footer-link {
-  min-height: 2.4rem;
+  min-height: 2.75rem;
   font-size: 0.72rem;
 }
 .viora-service-rail {
@@ -1580,10 +1599,16 @@
     grid-template-columns: minmax(0, 1fr) auto;
     gap: 0.75rem 1rem;
   }
-  .viora-footer-groups {
+  .viora-footer-attribution {
     grid-column: 1 / -1;
     grid-row: 2;
-    justify-self: start;
+  }
+  .viora-footer-groups span[aria-hidden='true'] {
+    display: none;
+  }
+  .viora-footer-links,
+  .viora-footer-legal {
+    gap: 0.2rem 0.5rem;
   }
   .viora-site .site-footer__inner > .button-link {
     grid-column: 2;
