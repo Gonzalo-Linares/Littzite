@@ -18,7 +18,7 @@ const services = siteContent.services.map((service) => {
       const resolved = resolveDirectBookingAction(action, siteContent.bookingTargets);
       return {
         id: resolved.actionId,
-        label: resolved.label || 'Elegir turno',
+        label: resolved.label || 'Sacar turno',
         href: resolved.href,
         note: resolved.eligibilityNote,
         icon: 'external' as const,

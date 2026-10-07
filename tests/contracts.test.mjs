@@ -287,18 +287,14 @@ test('external targets require HTTPS and contact numbers require E.164', () => {
   assert.equal(siteContentSchema.safeParse(badNumber).success, false);
 });
 
-test('VIORA service-list references all services and Juanjo keeps its shared feature-grid', () => {
+test('VIORA landing derives discovery from services and Juanjo keeps its shared feature-grid', () => {
   const vioraSections = estetica.pages.find((page) => page.slug === '').sections;
   assert.deepEqual(
     vioraSections.map((section) => section.type),
-    ['intro', 'service-list'],
+    ['intro'],
   );
-  const serviceList = vioraSections[1];
-  assert.equal(pageSectionSchema.safeParse(serviceList).success, true);
-  assert.deepEqual(
-    serviceList.serviceIds,
-    estetica.services.map((service) => service.id),
-  );
+  assert.ok(estetica.services.length > 0);
+  assert.deepEqual(pageSectionSchema.safeParse(vioraSections[0]).success, true);
 
   const juanjoSections = tattoo.pages.find((page) => page.slug === '').sections;
   assert.deepEqual(
@@ -333,14 +329,11 @@ test('VIORA theme, voice and four named services match its brand manual', () => 
 
   const home = estetica.pages.find((page) => page.slug === '');
   const intro = home.sections.find((section) => section.type === 'intro');
-  const serviceList = home.sections.find((section) => section.type === 'service-list');
   assert.equal(intro.heading, 'Regalate una pausa.');
-  assert.deepEqual(serviceList.serviceIds, [
-    'limpieza-facial',
-    'depilacion-definitiva',
-    'masajes',
-    'reiki',
-  ]);
+  assert.equal(
+    home.sections.some((section) => section.type === 'service-list'),
+    false,
+  );
   assert.deepEqual(
     estetica.services.map(({ displayName, slug }) => [displayName, slug]),
     [
@@ -355,7 +348,7 @@ test('VIORA theme, voice and four named services match its brand manual', () => 
     {
       id: 'reservar',
       type: 'direct-booking',
-      label: 'Elegir turno',
+      label: 'Sacar turno',
       targetId: 'booking-depilacion-definitiva',
     },
   ]);
@@ -417,7 +410,7 @@ test('VIORA focal positions stay within supported horizontal and vertical values
   }
 });
 
-test('VIORA service slugs are unique, URL-safe and referenced by the catalog', () => {
+test('VIORA service slugs are unique and URL-safe for the app-local rail and catalog', () => {
   assert.equal(new Set(estetica.services.map((service) => service.slug)).size, 4);
   assert.ok(estetica.services.every((service) => /^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(service.slug)));
 
@@ -425,9 +418,7 @@ test('VIORA service slugs are unique, URL-safe and referenced by the catalog', (
   duplicateSlug.services[1].slug = duplicateSlug.services[0].slug;
   assert.equal(siteContentSchema.safeParse(duplicateSlug).success, false);
 
-  const missingReference = structuredClone(estetica);
-  missingReference.pages[0].sections[1].serviceIds[0] = 'missing-service';
-  assert.equal(siteContentSchema.safeParse(missingReference).success, false);
+  assert.ok(estetica.services.length > 0);
 });
 
 test('Juanjo brand stays independent and its commercial targets remain inactive', () => {

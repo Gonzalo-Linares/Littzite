@@ -5,12 +5,13 @@ interface Props {
   href: string;
   className?: string;
   describedBy?: string;
+  ariaLabel?: string;
 }
 
-const { href, className = 'action-link', describedBy } = Astro.props;
+const { href, className = 'action-link', describedBy, ariaLabel } = Astro.props;
 if (!isAllowedHref(href)) throw new Error('Unsupported link URL');
 ---
 
-<a class={className} href={href} aria-describedby={describedBy}>
+<a class={className} href={href} aria-describedby={describedBy} aria-label={ariaLabel}>
   <slot />
 </a>

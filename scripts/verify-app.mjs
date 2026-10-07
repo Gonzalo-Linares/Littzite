@@ -63,7 +63,7 @@ if (app === 'estetica') {
     {
       id: 'reservar',
       type: 'direct-booking',
-      label: 'Elegir turno',
+      label: 'Sacar turno',
       targetId: 'booking-depilacion-definitiva',
     },
   ]);
@@ -80,11 +80,12 @@ if (app === 'estetica') {
   );
   assert.equal(resolvedUatAction.providerKey, 'cal-com');
   assert.equal(resolvedUatAction.href, uatBookingUrl);
-  assert.doesNotMatch(
-    html,
-    /<script\b/i,
-    'VIORA interaction polish must not add browser JavaScript',
+  const railSource = await readFile(
+    new URL('../apps/estetica/src/components/VioraServiceRail.astro', import.meta.url),
+    'utf8',
   );
+  assert.match(railSource, /prefers-reduced-motion: reduce/);
+  assert.doesNotMatch(railSource, /setInterval|autoplay/i);
   const vioraStyles = await readFile(
     new URL('../apps/estetica/src/styles/viora.css', import.meta.url),
     'utf8',
@@ -134,6 +135,11 @@ if (app === 'estetica') {
     assert.match(markup, /<a href="\/contacto\/">Contacto<\/a>/, `${page}: Contact route missing`);
     assert.match(
       markup,
+      /<a class="viora-instagram-link viora-header-instagram" href="https:\/\/www\.instagram\.com\/vioramasajes\.ok\/" aria-label="VIORA en Instagram">/,
+      `${page}: accessible Instagram header link missing`,
+    );
+    assert.match(
+      markup,
       /class="button-link button-link--primary button-link--compact site-header__badge" href="\/reservar\/">Turnos/,
     );
     const footerNav = markup.match(
@@ -144,6 +150,20 @@ if (app === 'estetica') {
     assert.match(footerNav, /href="\/viora\/"[^>]*>\s*VIORA/);
     assert.match(footerNav, /href="\/contacto\/"[^>]*>\s*Contacto/);
     assert.match(footerNav, /href="\/reservar\/"[^>]*>\s*Turnos/);
+    assert.match(
+      markup,
+      /<a class="viora-instagram-link viora-footer-social" href="https:\/\/www\.instagram\.com\/vioramasajes\.ok\/" aria-label="VIORA en Instagram">[\s\S]*?@vioramasajes\.ok/,
+      `${page}: Instagram footer link missing`,
+    );
+    const legalFooter = markup.match(
+      /<nav class="viora-footer-legal" aria-label="Información legal">([\s\S]*?)<\/nav>/,
+    )?.[1];
+    assert.ok(legalFooter, `${page}: legal footer links missing`);
+    assert.match(
+      legalFooter,
+      /<a class="viora-footer-link" href="\/arrepentimiento\/">\s*BOTÓN DE ARREPENTIMIENTO/,
+    );
+    assert.doesNotMatch(legalFooter, /button-link|<button/);
     assert.match(markup, /href="#inicio"[^>]*>\s*Volver arriba/);
     assert.ok(markup.includes('/brand/viora-horizontal.png'), `${page}: horizontal logo missing`);
     assert.ok(markup.includes('/brand/viora-palabra.png'), `${page}: wordmark missing`);
@@ -162,16 +182,15 @@ if (app === 'estetica') {
   assert.ok(heroImageTag, 'VIORA hero photo image missing');
   assert.ok(html.includes('/brand/viora-palabra.png'), 'VIORA footer asset missing');
   assert.ok(html.includes('class="viora-home-teaser viora-home-teaser--story"'));
-  assert.ok(html.includes('class="viora-moment-teaser"'));
+  assert.doesNotMatch(html, /viora-moment-teaser/);
   assert.ok(html.includes('class="viora-contact-teaser"'));
   assert.doesNotMatch(html, /class="viora-moment"/, 'Full moment narrative belongs on /viora/');
   assert.doesNotMatch(html, /class="viora-contact__map"/, 'The map panel belongs on /contacto/');
   assert.ok(html.includes('aria-label="Navegación del pie de página"'));
   assert.ok(html.includes('href="/contacto/">Contacto</a>'));
-  assert.match(
-    html,
-    /class="button-link button-link--secondary button-link--default" href="\/servicios\/">\s*Ver todos los servicios/,
-  );
+  assert.doesNotMatch(html, /Ver todos los servicios/);
+  assert.doesNotMatch(html, /viora-regret-access/);
+  assert.equal((html.match(/BOTÓN DE ARREPENTIMIENTO/g) ?? []).length, 1);
   assert.match(html, /href="\/viora\/"[^>]*>\s*Conocé VIORA/);
   assert.match(html, /href="\/contacto\/"[^>]*>\s*Ver contacto/);
   assert.match(
@@ -180,10 +199,10 @@ if (app === 'estetica') {
   );
   assert.doesNotMatch(html, /VIORA \/ 01|viora-catalog__card-number|referencias ilustrativas/);
   assert.match(html, /UN RESPIRO PARA VOS/);
-  assert.match(html, /<span class="viora-service-card__explore">Ver experiencia<\/span>/);
+  assert.match(html, /<span class="viora-service-rail__affordance">Ver experiencia<\/span>/);
   assert.doesNotMatch(html, /href="\/(?:#alcance|#esencia|#contacto|#viora-moment-title)"/);
   assert.ok(!/<iframe\b/i.test(html), 'VIORA home must not embed a map');
-  assert.ok(!/instagram\.com\//i.test(html), 'VIORA must not publish an unconfirmed social link');
+  assert.equal((html.match(/instagram\.com\/vioramasajes\.ok\//g) ?? []).length, 2);
   assert.ok(
     !/(?:cal\.com|booking\.example|wa\.me|api\.whatsapp)/i.test(html),
     'No commercial destination may be published',
@@ -197,7 +216,7 @@ if (app === 'estetica') {
     await access(new URL(`../apps/estetica/dist/brand/${asset}`, import.meta.url));
   }
   assert.equal(
-    (html.match(/class="viora-catalog__card(?:\s[^"]*)?"/g) ?? []).length,
+    (html.match(/class="viora-service-rail__card(?:\s[^"]*)?"/g) ?? []).length,
     4,
     'Expected four VIORA service cards',
   );
@@ -259,17 +278,9 @@ if (app === 'estetica') {
     );
     assertResponsiveImage(tag, `VIORA catalog image ${index + 1}`);
   }
-  assert.deepEqual(
-    Array.from(
-      html.matchAll(/view-transition-name: (viora-service-(?!image-)[a-z0-9-]+)/g),
-      ([, name]) => name,
-    ),
-    siteContent.services.map(({ slug }) => `viora-service-${slug}`),
-    'VIORA card transition names must be unique and derived from service slugs',
-  );
   for (const service of siteContent.services) {
     assert.ok(
-      html.includes(`<span>${service.displayName}</span>`),
+      html.includes(`<h3>${service.displayName}</h3>`),
       `${service.slug}: card title missing`,
     );
     assert.ok(html.includes(service.description), `${service.slug}: card description missing`);
@@ -368,18 +379,21 @@ if (app === 'estetica') {
     );
     if (service.id === 'depilacion-definitiva') {
       assert.match(detail, /class="viora-service-actions"/);
-      assert.match(detail, /<h2 id="viora-service-actions-title">Reservá tu momento\.<\/h2>/);
       assert.match(
         detail,
-        /class="button-link button-link--primary button-link--compact" href="https:\/\/cal\.com\/gonzalo-linares-rfbhnf\/prueba">\s*Elegir turno/,
+        /class="button-link button-link--primary button-link--compact" href="https:\/\/cal\.com\/gonzalo-linares-rfbhnf\/prueba">\s*Sacar turno/,
       );
+      assert.ok(
+        detail.indexOf('Sacar turno') < detail.indexOf('viora-service-detail__article--visual'),
+      );
+      assert.equal((detail.match(/Sacar turno/g) ?? []).length, 1);
       assert.equal((detail.match(/gonzalo-linares-rfbhnf\/prueba/g) ?? []).length, 1);
     } else {
       assert.ok(
         !detail.includes('class="viora-service-actions"'),
         `${service.slug}: empty service actions must not render a section`,
       );
-      assert.doesNotMatch(detail, /cal\.com|<a[^>]*>[^<]*Elegir turno/);
+      assert.doesNotMatch(detail, /cal\.com|<a[^>]*>[^<]*Sacar turno/);
     }
     assert.ok(
       !/(?:\$\s?\d|ARS\s?\d|\d+\s?(?:minutos|min))/i.test(detail),
@@ -450,18 +464,18 @@ if (app === 'estetica') {
     contactPage,
     {
       title: 'Contacto y ubicación | VIORA · Estética integral',
-      description:
-        'Abrí la ubicación de VIORA en Google Maps. Otros datos de contacto se confirmarán más adelante.',
+      description: 'Ubicación e Instagram oficial de VIORA en Rivadavia, San Juan.',
     },
     'VIORA contact',
   );
   assert.match(contactPage, /<h1 id="[^"]+">Contacto y ubicación<\/h1>/);
-  assert.match(contactPage, /Ya podés abrir la ubicación de VIORA en Google Maps/);
+  assert.match(contactPage, /Rivadavia, San Juan, Argentina/);
+  assert.doesNotMatch(contactPage, /más adelante|próximamente|se confirmarán/);
   assert.match(
     contactPage,
     /class="button-link button-link--secondary button-link--compact viora-map__directions" href="https:\/\/maps\.app\.goo\.gl\/H4jmqTGKicDse2iS7">/,
   );
-  assert.ok(contactPage.includes('Cómo llegar'));
+  assert.ok(contactPage.includes('Ver en Google Maps'));
   assert.match(
     contactPage,
     /<iframe src="https:\/\/www\.google\.com\/maps\/embed\?pb=!1m17!1m12!1m3!1d3401\.297756485471!2d-68\.567944!3d-31\.515980999999996[^"]*" title="Mapa interactivo: Ubicación de VIORA" loading="lazy" referrerpolicy="no-referrer-when-downgrade"><\/iframe>/,
@@ -524,7 +538,7 @@ if (app === 'estetica') {
   assert.match(contactBuildCheck, /href="https:\/\/www\.instagram\.com\/vioramasajes\.ok\/"/);
   assert.match(
     contactBuildCheck,
-    /href="https:\/\/maps\.app\.goo\.gl\/H4jmqTGKicDse2iS7">\s*Cómo llegar/,
+    /href="https:\/\/maps\.app\.goo\.gl\/H4jmqTGKicDse2iS7">\s*Ver en Google Maps/,
   );
   assert.match(contactBuildCheck, /<iframe[^>]*title="Mapa interactivo:[^>]*loading="lazy"/);
   assert.match(contactBuildCheck, /referrerpolicy="no-referrer-when-downgrade"/);
@@ -556,6 +570,7 @@ if (app === 'estetica') {
       /Términos y condiciones|Política de privacidad|BOTÓN DE ARREPENTIMIENTO/,
     );
     assert.match(legalPage, /href="\/arrepentimiento\/"/);
+    if (route !== 'arrepentimiento') assert.doesNotMatch(legalPage, /Littzite/);
   }
   assert.match(html, /href="\/arrepentimiento\/"[^>]*>\s*BOTÓN DE ARREPENTIMIENTO/);
   assert.doesNotMatch(contactBuildCheck, /example\.com|John Doe|11-11111111-1/);
@@ -567,13 +582,13 @@ if (app === 'estetica') {
   assert.equal(bookingCards.length, 4);
   const bookingCtas =
     booking.match(
-      /class="button-link button-link--primary button-link--compact" href="https:\/\/cal\.com\/gonzalo-linares-rfbhnf\/prueba">\s*Elegir turno/g,
+      /class="button-link button-link--primary button-link--compact" href="https:\/\/cal\.com\/gonzalo-linares-rfbhnf\/prueba">\s*Sacar turno/g,
     ) ?? [];
   assert.equal(bookingCtas.length, 1);
   assert.equal((booking.match(/gonzalo-linares-rfbhnf\/prueba/g) ?? []).length, 1);
   for (const card of bookingCards) {
     if (card.includes('Depilación definitiva')) {
-      assert.match(card, /Elegir turno/);
+      assert.match(card, /Sacar turno/);
       assert.match(card, /href="https:\/\/cal\.com\/gonzalo-linares-rfbhnf\/prueba"/);
       assert.doesNotMatch(card, /Agenda próximamente/);
     } else {

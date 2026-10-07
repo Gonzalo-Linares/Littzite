@@ -45,13 +45,18 @@ const actions = service.actions
         title={service.displayName}
         titleId="viora-service-title"
         titleStyle={`view-transition-name: viora-service-${service.slug}`}
+        lead={service.description}
         backHref="/servicios/"
         backLabel="Servicios"
         className="viora-service-detail__intro"
       />
+      {actions.length > 0 && (
+        <section class="viora-service-actions" aria-label="Reservar esta experiencia">
+          <ActionList idPrefix={service.slug} actions={actions} />
+        </section>
+      )}
       <article class:list={{ 'viora-service-detail__article--visual': visual !== undefined }}>
         <div class="viora-service-detail__copy">
-          <p class="viora-service-detail__description">{service.description}</p>
           <p class="viora-service-detail__note">
             Esta información es orientativa. Los detalles del servicio y su disponibilidad se
             confirmarán antes de ofrecer turnos.
@@ -73,13 +78,6 @@ const actions = service.actions
         >
           <ServiceVisual visual={visual} context="detail-secondary" />
         </div>
-      )}
-      {actions.length > 0 && (
-        <section class="viora-service-actions" aria-labelledby="viora-service-actions-title">
-          <p class="viora-service-detail__eyebrow">El próximo paso</p>
-          <h2 id="viora-service-actions-title">Reservá tu momento.</h2>
-          <ActionList idPrefix={service.slug} actions={actions} />
-        </section>
       )}
     </Container>
   </section>

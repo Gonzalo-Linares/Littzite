@@ -35,6 +35,7 @@ if (![...links, ...(badge ? [badge] : [])].every((link) => isAllowedHref(link.hr
         <a href={item.href}>{item.label}</a>
       ))}
     </nav>
+    <slot name="actions" />
     {badge && (
       <ButtonLink variant="primary" size="compact" href={badge.href} className="site-header__badge">
         {badge.label}

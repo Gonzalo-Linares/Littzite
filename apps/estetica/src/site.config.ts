@@ -42,7 +42,7 @@ const parsedContent = siteContentSchema.parse({
         {
           id: 'reservar',
           type: 'direct-booking',
-          label: 'Elegir turno',
+          label: 'Sacar turno',
           targetId: 'booking-depilacion-definitiva',
         },
       ],
@@ -88,11 +88,6 @@ const parsedContent = siteContentSchema.parse({
           heading: 'Regalate una pausa.',
           body: 'Tu momento, tu bienestar. Un espacio donde el cuidado personal se encuentra con una atención cercana, serena y profesional.',
           visualCaption: 'Tu momento, tu bienestar.',
-        },
-        {
-          id: 'alcance',
-          type: 'service-list',
-          serviceIds: ['limpieza-facial', 'depilacion-definitiva', 'masajes', 'reiki'],
         },
       ],
     },

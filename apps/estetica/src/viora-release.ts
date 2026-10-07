@@ -30,6 +30,7 @@ export const vioraBookingReadiness = {
   durationReviewed: buildEnvironment.VIORA_BOOKING_DURATION_REVIEWED === 'true',
   commercialTermsApproved: buildEnvironment.VIORA_TERMS_APPROVED === 'true',
   withdrawalWorkflowApproved: buildEnvironment.VIORA_WITHDRAWAL_APPROVED === 'true',
+  withdrawalPlacementApproved: buildEnvironment.VIORA_WITHDRAWAL_PLACEMENT_APPROVED === 'true',
 } as const;
 
 export interface BookingReadiness {
@@ -39,6 +40,7 @@ export interface BookingReadiness {
   durationReviewed: boolean;
   commercialTermsApproved: boolean;
   withdrawalWorkflowApproved: boolean;
+  withdrawalPlacementApproved: boolean;
 }
 
 export interface ReleaseReadiness {
@@ -116,6 +118,8 @@ export function releaseBlockers(readiness: ReleaseReadiness): string[] {
   if (!readiness.booking.commercialTermsApproved) blockers.push('commercial.terms-approval');
   if (!readiness.booking.withdrawalWorkflowApproved)
     blockers.push('legal.withdrawal-workflow-review');
+  if (!readiness.booking.withdrawalPlacementApproved)
+    blockers.push('legal.withdrawal-placement-review');
   return blockers;
 }
 

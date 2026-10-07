@@ -2,8 +2,9 @@
 import BaseLayout from '@littzite/ui/BaseLayout.astro';
 import SiteHeader from '@littzite/ui/SiteHeader.astro';
 import SiteFooter from '@littzite/ui/SiteFooter.astro';
-import ButtonLink from '@littzite/ui/ButtonLink.astro';
+import Link from '@littzite/ui/Link.astro';
 import type { SeoMetadata } from '@littzite/content-schema';
+import VioraInstagramLink from '../components/VioraInstagramLink.astro';
 import { siteContent } from '../site.config';
 import {
   canonicalFor,
@@ -54,6 +55,7 @@ const { site } = siteContent;
       alt=""
       decoding="async"
     />
+    <VioraInstagramLink slot="actions" className="viora-header-instagram" />
   </SiteHeader>
 
   <slot />
@@ -76,28 +78,35 @@ const { site } = siteContent;
       alt="VIORA"
       loading="lazy"
     />
-    <nav slot="links" class="viora-footer-links" aria-label="Navegación del pie de página">
-      <ButtonLink href="/servicios/" variant="quiet" size="compact">
-        Servicios
-      </ButtonLink>
-      <ButtonLink href="/viora/" variant="quiet" size="compact">
-        VIORA
-      </ButtonLink>
-      <ButtonLink href="/contacto/" variant="quiet" size="compact">
-        Contacto
-      </ButtonLink>
-      <ButtonLink href="/reservar/" variant="quiet" size="compact">
-        Turnos
-      </ButtonLink>
-      <ButtonLink href="/terminos-y-condiciones/" variant="quiet" size="compact">
-        Términos y condiciones
-      </ButtonLink>
-      <ButtonLink href="/privacidad/" variant="quiet" size="compact">
-        Privacidad
-      </ButtonLink>
-      <ButtonLink href="/arrepentimiento/" variant="secondary" size="compact">
-        BOTÓN DE ARREPENTIMIENTO
-      </ButtonLink>
-    </nav>
+    <div slot="links" class="viora-footer-groups">
+      <nav class="viora-footer-links" aria-label="Navegación del pie de página">
+        <Link href="/servicios/" className="viora-footer-link">
+          Servicios
+        </Link>
+        <Link href="/viora/" className="viora-footer-link">
+          VIORA
+        </Link>
+        <Link href="/contacto/" className="viora-footer-link">
+          Contacto
+        </Link>
+        <Link href="/reservar/" className="viora-footer-link">
+          Turnos
+        </Link>
+      </nav>
+      <VioraInstagramLink showHandle className="viora-footer-social" />
+      <nav class="viora-footer-legal" aria-label="Información legal">
+        <Link href="/privacidad/" className="viora-footer-link">
+          Privacidad
+        </Link>
+        <span aria-hidden="true">·</span>
+        <Link href="/terminos-y-condiciones/" className="viora-footer-link">
+          Términos
+        </Link>
+        <span aria-hidden="true">·</span>
+        <Link href="/arrepentimiento/" className="viora-footer-link">
+          BOTÓN DE ARREPENTIMIENTO
+        </Link>
+      </nav>
+    </div>
   </SiteFooter>
 </BaseLayout>

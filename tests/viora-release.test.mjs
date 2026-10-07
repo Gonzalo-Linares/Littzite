@@ -26,6 +26,7 @@ const validFixture = {
     durationReviewed: true,
     commercialTermsApproved: true,
     withdrawalWorkflowApproved: true,
+    withdrawalPlacementApproved: true,
   },
 };
 
@@ -103,6 +104,14 @@ test('release fails closed while any booking/legal approval is pending', () => {
   assert.ok(blockers.includes('booking.in-person-location'));
 });
 
+test('release fails closed until footer-only withdrawal placement receives legal review', () => {
+  const blockers = releaseBlockers({
+    ...validFixture,
+    booking: { ...validFixture.booking, withdrawalPlacementApproved: false },
+  });
+  assert.ok(blockers.includes('legal.withdrawal-placement-review'));
+});
+
 test('release fixture build emits canonical, social metadata and truthful non-medical JSON-LD', () => {
   const env = {
     ...process.env,
@@ -120,6 +129,7 @@ test('release fixture build emits canonical, social metadata and truthful non-me
     VIORA_BOOKING_DURATION_REVIEWED: 'true',
     VIORA_TERMS_APPROVED: 'true',
     VIORA_WITHDRAWAL_APPROVED: 'true',
+    VIORA_WITHDRAWAL_PLACEMENT_APPROVED: 'true',
   };
   execFileSync(
     process.execPath,

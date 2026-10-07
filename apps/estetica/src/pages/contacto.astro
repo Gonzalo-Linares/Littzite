@@ -4,15 +4,13 @@ import VioraSiteLayout from '../layouts/VioraSiteLayout.astro';
 import { siteContent } from '../site.config';
 import VioraPageIntro from '../components/VioraPageIntro.astro';
 import { vioraLocation } from '../viora-location';
-import { vioraCommercial } from '../viora-release.ts';
-import ButtonLink from '@littzite/ui/ButtonLink.astro';
+import VioraInstagramLink from '../components/VioraInstagramLink.astro';
 ---
 
 <VioraSiteLayout
   seo={{
     title: 'Contacto y ubicación | VIORA · Estética integral',
-    description:
-      'Abrí la ubicación de VIORA en Google Maps. Otros datos de contacto se confirmarán más adelante.',
+    description: 'Ubicación e Instagram oficial de VIORA en Rivadavia, San Juan.',
   }}
 >
   <div class="viora-contact-page">
@@ -20,7 +18,7 @@ import ButtonLink from '@littzite/ui/ButtonLink.astro';
       eyebrow="VIORA / contacto"
       title="Contacto y ubicación"
       titleId="viora-contact-page-title"
-      lead="Ya podés abrir la ubicación de VIORA en Google Maps. Los demás datos de contacto se incorporarán cuando estén confirmados."
+      lead="Rivadavia, San Juan, Argentina. Encontrá las indicaciones y el Instagram oficial de VIORA."
     />
     <VioraContact
       contact={siteContent.site.contact}
@@ -28,9 +26,7 @@ import ButtonLink from '@littzite/ui/ButtonLink.astro';
       map={vioraLocation}
     />
     <div class="container viora-contact__social">
-      <ButtonLink href={vioraCommercial.instagramHref} variant="secondary" icon="external">
-        Instagram @vioramasajes.ok
-      </ButtonLink>
+      <VioraInstagramLink showHandle />
     </div>
   </div>
 </VioraSiteLayout>
