@@ -4,10 +4,10 @@ import { validateBookingTargets } from '@littzite/booking';
 // D-09 / VIORA manual de marca, edición 01 (septiembre de 2026).
 // Los servicios del manual son líneas editoriales: disponibilidad, técnicas,
 // precios, duración y política de turnos deben confirmarse antes del lanzamiento.
-// Piloto Cal.com en standby: los event types tendrán una configuración provisional
-// independiente de 60 minutos cada uno, pendiente de revisión profesional. No es
-// duración aprobada para producción; validar especialmente depilación por zona.
-// Sin actions/bookingTargets hasta recibir URLs reales y aprobación de publicación.
+// La URL temporal de Cal.com configurada abajo pertenece a una cuenta de prueba.
+// Solo habilita UAT de depilación en PR-15; debe sustituirse por la URL final
+// aprobada de Victoria/VIORA antes de producción. UAT manual todavía pendiente.
+// La duración del Event Type es operacional en Cal.com y debe revisarla Victoria.
 const parsedContent = siteContentSchema.parse({
   site: {
     defaultLocale: 'es-AR',
@@ -36,7 +36,14 @@ const parsedContent = siteContentSchema.parse({
       displayName: 'Depilaci\u00f3n definitiva',
       description:
         'Una l\u00ednea de cuidado personal de VIORA. El equipo, el procedimiento y su alcance se confirmar\u00e1n antes de ofrecer turnos.',
-      actions: [],
+      actions: [
+        {
+          id: 'reservar',
+          type: 'direct-booking',
+          label: 'Elegir turno',
+          targetId: 'booking-depilacion-definitiva',
+        },
+      ],
     },
     {
       id: 'masajes',
@@ -55,7 +62,13 @@ const parsedContent = siteContentSchema.parse({
       actions: [],
     },
   ],
-  bookingTargets: [],
+  bookingTargets: [
+    {
+      id: 'booking-depilacion-definitiva',
+      providerKey: 'cal-com',
+      fallbackUrl: 'https://cal.com/gonzalo-linares-rfbhnf/prueba',
+    },
+  ],
   quoteTargets: [],
   pages: [
     {

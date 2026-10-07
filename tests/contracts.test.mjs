@@ -18,6 +18,10 @@ import {
   resolveServiceVisual,
   validateServiceVisuals,
 } from '../apps/estetica/src/service-visuals.validation.ts';
+import {
+  resolveDirectBookingAction,
+  validateBookingTargets,
+} from '../packages/booking/src/index.ts';
 
 const theme = {
   surface: '#ffffff',
@@ -74,7 +78,12 @@ test('both demo apps validate independently and use different themes', () => {
     assert.ok(contrastRatio(accent, accentText) >= 4.5);
     assert.ok(contrastRatio(surface, focus) >= 3);
   }
-  assert.deepEqual(estetica.bookingTargets, []);
+  assert.equal(estetica.bookingTargets.length, 1);
+  assert.equal(estetica.bookingTargets[0].providerKey, 'cal-com');
+  assert.equal(
+    estetica.bookingTargets[0].fallbackUrl,
+    'https://cal.com/gonzalo-linares-rfbhnf/prueba',
+  );
   assert.deepEqual(tattoo.quoteTargets, []);
 });
 
@@ -341,8 +350,25 @@ test('VIORA theme, voice and four named services match its brand manual', () => 
       ['Reiki', 'reiki'],
     ],
   );
-  assert.ok(estetica.services.every((service) => service.actions.length === 0));
-  assert.deepEqual(estetica.bookingTargets, []);
+  const depilation = estetica.services.find(({ id }) => id === 'depilacion-definitiva');
+  assert.deepEqual(depilation.actions, [
+    {
+      id: 'reservar',
+      type: 'direct-booking',
+      label: 'Elegir turno',
+      targetId: 'booking-depilacion-definitiva',
+    },
+  ]);
+  assert.ok(
+    estetica.services
+      .filter(({ id }) => id !== 'depilacion-definitiva')
+      .every(({ actions }) => actions.length === 0),
+  );
+  assert.equal(validateBookingTargets(estetica.bookingTargets), undefined);
+  assert.equal(
+    resolveDirectBookingAction(depilation.actions[0], estetica.bookingTargets).href,
+    'https://cal.com/gonzalo-linares-rfbhnf/prueba',
+  );
   assert.deepEqual(estetica.quoteTargets, []);
 });
 

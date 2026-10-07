@@ -42,11 +42,38 @@ assert.ok(
 assert.ok(html.includes('class="site-header"'), 'Shared header missing');
 assert.ok(html.includes('class="site-footer"'), 'Shared footer missing');
 if (app === 'estetica') {
-  assert.equal(siteContent.bookingTargets.length, 0, 'VIORA must not have live booking targets');
-  assert.ok(
-    siteContent.services.every(({ actions }) => actions.length === 0),
-    'VIORA services must not have booking CTAs',
+  const uatBookingUrl = 'https://cal.com/gonzalo-linares-rfbhnf/prueba';
+  const bookingTarget = siteContent.bookingTargets.find(
+    ({ id }) => id === 'booking-depilacion-definitiva',
   );
+  assert.equal(siteContent.bookingTargets.length, 1, 'VIORA must have only the UAT target');
+  assert.deepEqual(bookingTarget, {
+    id: 'booking-depilacion-definitiva',
+    providerKey: 'cal-com',
+    fallbackUrl: uatBookingUrl,
+  });
+  const depilation = siteContent.services.find(({ id }) => id === 'depilacion-definitiva');
+  assert.deepEqual(depilation?.actions, [
+    {
+      id: 'reservar',
+      type: 'direct-booking',
+      label: 'Elegir turno',
+      targetId: 'booking-depilacion-definitiva',
+    },
+  ]);
+  assert.ok(
+    siteContent.services
+      .filter(({ id }) => id !== 'depilacion-definitiva')
+      .every(({ actions }) => actions.length === 0),
+    'Only depilación definitiva may have a UAT booking action',
+  );
+  const { resolveDirectBookingAction } = await import('../packages/booking/src/index.ts');
+  const resolvedUatAction = resolveDirectBookingAction(
+    depilation.actions[0],
+    siteContent.bookingTargets,
+  );
+  assert.equal(resolvedUatAction.providerKey, 'cal-com');
+  assert.equal(resolvedUatAction.href, uatBookingUrl);
   assert.doesNotMatch(
     html,
     /<script\b/i,
@@ -333,10 +360,21 @@ if (app === 'estetica') {
       !/<a[^>]*>[^<]*(Reservar|Agendar|Consultar)[^<]*<\/a>/i.test(detail),
       `${service.slug}: unapproved conversion CTA`,
     );
-    assert.ok(
-      !detail.includes('class="viora-service-actions"'),
-      `${service.slug}: empty service actions must not render a section`,
-    );
+    if (service.id === 'depilacion-definitiva') {
+      assert.match(detail, /class="viora-service-actions"/);
+      assert.match(detail, /<h2 id="viora-service-actions-title">Reservá tu momento\.<\/h2>/);
+      assert.match(
+        detail,
+        /class="button-link button-link--primary button-link--compact" href="https:\/\/cal\.com\/gonzalo-linares-rfbhnf\/prueba">\s*Elegir turno/,
+      );
+      assert.equal((detail.match(/gonzalo-linares-rfbhnf\/prueba/g) ?? []).length, 1);
+    } else {
+      assert.ok(
+        !detail.includes('class="viora-service-actions"'),
+        `${service.slug}: empty service actions must not render a section`,
+      );
+      assert.doesNotMatch(detail, /cal\.com|<a[^>]*>[^<]*Elegir turno/);
+    }
     assert.ok(
       !/(?:\$\s?\d|ARS\s?\d|\d+\s?(?:minutos|min))/i.test(detail),
       `${service.slug}: unapproved price or duration`,
@@ -345,10 +383,11 @@ if (app === 'estetica') {
       !/60\s*(?:minutos|min\b)/i.test(detail),
       `${service.slug}: pilot duration must not be presented as a technical duration`,
     );
-    assert.ok(
-      !/(?:cal\.com|booking\.example|wa\.me|api\.whatsapp)/i.test(detail),
-      `${service.slug}: fictitious commercial URL`,
-    );
+    if (service.id !== 'depilacion-definitiva')
+      assert.ok(
+        !/(?:cal\.com|booking\.example|wa\.me|api\.whatsapp)/i.test(detail),
+        `${service.slug}: unexpected commercial URL`,
+      );
   }
   const catalog = await readFile(
     new URL('../apps/estetica/dist/servicios/index.html', import.meta.url),
@@ -462,16 +501,31 @@ if (app === 'estetica') {
   assert.equal((booking.match(/class="viora-booking-card"/g) ?? []).length, 4);
   assert.equal(
     (booking.match(/class="viora-booking-card__status">Agenda próximamente/g) ?? []).length,
-    4,
+    3,
   );
   assert.match(booking, /Estamos terminando de configurar los horarios/);
-  assert.doesNotMatch(booking, /cal\.com|booking\.example|href="#"/);
+  assert.doesNotMatch(booking, /booking\.example|href="#"/);
   const bookingCards = Array.from(
     booking.matchAll(/<article class="viora-booking-card">.*?<\/article>/gs),
     ([markup]) => markup,
   );
   assert.equal(bookingCards.length, 4);
-  assert.ok(bookingCards.every((card) => !card.includes('button-link--primary')));
+  const bookingCtas =
+    booking.match(
+      /class="button-link button-link--primary button-link--compact" href="https:\/\/cal\.com\/gonzalo-linares-rfbhnf\/prueba">\s*Elegir turno/g,
+    ) ?? [];
+  assert.equal(bookingCtas.length, 1);
+  assert.equal((booking.match(/gonzalo-linares-rfbhnf\/prueba/g) ?? []).length, 1);
+  for (const card of bookingCards) {
+    if (card.includes('Depilación definitiva')) {
+      assert.match(card, /Elegir turno/);
+      assert.match(card, /href="https:\/\/cal\.com\/gonzalo-linares-rfbhnf\/prueba"/);
+      assert.doesNotMatch(card, /Agenda próximamente/);
+    } else {
+      assert.doesNotMatch(card, /button-link--primary|cal\.com/);
+      assert.match(card, /Agenda próximamente/);
+    }
+  }
   assert.equal((booking.match(/class="viora-booking-card__media"/g) ?? []).length, 4);
   assert.equal((booking.match(/class="viora-booking-card__body"/g) ?? []).length, 4);
   for (const card of bookingCards) {
@@ -482,8 +536,6 @@ if (app === 'estetica') {
     assert.match(card, /<div class="viora-booking-card__body">/);
     assert.ok(card.indexOf('viora-booking-card__media') < card.indexOf('viora-booking-card__body'));
   }
-  assert.equal(siteContent.bookingTargets.length, 0);
-  assert.ok(siteContent.services.every(({ actions }) => actions.length === 0));
   await assert.rejects(
     access(new URL('../apps/estetica/dist/servicios/no-existe/index.html', import.meta.url)),
   );

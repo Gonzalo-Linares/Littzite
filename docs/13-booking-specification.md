@@ -69,13 +69,26 @@ Véanse [registro de decisiones](09-open-decisions.md), [modelo de dominio](03-d
 
 `packages/booking` es una librería ESM/TypeScript headless que depende solo de `content-schema`. `siteContentSchema` conserva la validación de formas, referencias y unicidad; `booking` agrega el registro cerrado de proveedores y la política de URL por proveedor. Las dos apps validan sus colecciones completas de `bookingTargets` después del parseo, incluso si están vacías: son consumidores del policy gate de configuración, no del flujo de reservas.
 
-El único proveedor admitido es `cal-com`: URL HTTPS con origen exacto `https://cal.com`, sin credenciales y con ruta distinta de `/`. Se aceptan query y fragmento; no se impone un patrón de usuario/evento ni se reescribe la URL. Proveedores desconocidos fallan con diagnóstico de `targetId` y `providerKey`. PR-13 agrega `resolveDirectBookingAction`, una primitiva genérica, pura y síncrona; no requiere que las apps configuren acciones o targets reales. La librería no contiene SDK, secretos, API, interfaz, modal, iframe ni estado mutable. El piloto VIORA sigue sin acciones ni targets y no muestra enlaces comerciales.
+El único proveedor admitido es `cal-com`: URL HTTPS con origen exacto `https://cal.com`, sin credenciales y con ruta distinta de `/`. Se aceptan query y fragmento; no se impone un patrón de usuario/evento ni se reescribe la URL. Proveedores desconocidos fallan con diagnóstico de `targetId` y `providerKey`. PR-13 agrega `resolveDirectBookingAction`, una primitiva genérica, pura y síncrona. La librería no contiene SDK, secretos, API, interfaz, modal, iframe ni estado mutable.
 
 Juanjo consume la misma validación general de destinos, pero no configura proveedor ni target. La regla de agenda directa para trabajos pequeños sigue sin activarse hasta aprobar proveedor y URLs reales. Véase [ADR-013](adr/013-booking-provider-foundation.md).
 
 El titular eligió **Cal.com Individual Gratis** para probar los turnos de una profesional de VIORA, con un volumen estimado de alrededor de **15 citas mensuales**, sujeto a variación. La configuración prevista para el piloto asigna provisionalmente 60 minutos a cada uno de los cuatro event types de Cal.com. Esos valores requieren revisión profesional y no son reglas técnicas ni comerciales aprobadas para el público. La duración operacional será propiedad de cada event type del proveedor, no de `Service`; la profesional debe revisar especialmente los tiempos de depilación según zona antes de habilitar clientes reales.
 
-La profesional es titular de la cuenta y gestiona sus cuatro tipos de evento, disponibilidad efectiva, calendario de conflictos y mensajes; Cal.com es la fuente de verdad de citas. No almacenar datos de clientes ni credenciales de proveedor en Littzite. Durante la preparación, `Service.actions=[]` y `bookingTargets=[]`: ninguna ficha ofrece aún reserva.
+La profesional es titular de la cuenta y gestiona sus tipos de evento, disponibilidad efectiva, calendario de conflictos y mensajes; Cal.com es la fuente de verdad de citas. No almacenar datos de clientes ni credenciales de proveedor en Littzite. En PR-15, solo `depilacion-definitiva` configura una acción y un target de **UAT** usando `https://cal.com/gonzalo-linares-rfbhnf/prueba`, una URL de cuenta de prueba suministrada para validación técnica/manual. No es el booking link comercial final y no puede llegar a producción: debe reemplazarse antes del merge por la URL final de Victoria/VIORA. `limpieza-facial`, `masajes` y `reiki` mantienen `actions: []` y “Agenda próximamente”. No se afirma que el UAT manual haya pasado.
+
+El modelo operativo de depilación usa un único booking link permanente. La disponibilidad semanal puede permanecer cerrada y los días puntuales de máquina se agregan en Cal.com como Date Overrides; no se crean links mensuales ni se codifican fechas en Littzite. Cal.com conserva la fuente de verdad de disponibilidad. Victoria debe revisar la duración del Event Type antes de producción; Littzite no agrega ni duplica `durationMinutes`.
+
+### Checklist de UAT manual pendiente (navegación incógnita)
+
+1. Abrir el link de UAT y comprobar que presenta fecha/hora disponible.
+2. Seleccionar un slot y completar los datos requeridos.
+3. Confirmar la reserva y verificar el email recibido.
+4. Comprobar cancelación y reprogramación.
+5. Comprobar que la zona horaria sea Argentina.
+6. Comprobar que el flujo no exija crear una cuenta de Cal.com.
+
+Registrar los resultados reales antes de reemplazar el link de UAT por el final y cerrar el blocker; no marcar el UAT como completado por pruebas de build.
 
 Luego de crear los cuatro eventos, pedir únicamente sus cuatro URLs públicas HTTPS de Cal.com, una por servicio. Verificar la pertenencia a la cuenta real de VIORA, el host legítimo, la duración revisada y la disponibilidad común de la profesional; rechazar URLs o datos ficticios. Evaluar enlace externo como primer fallback estable y embed solo tras comprobar consentimiento/privacidad, experiencia móvil y carga diferida. Ni un clic ni callbacks visuales del embed constituyen confirmación verificable de la cita.
 
