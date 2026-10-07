@@ -44,7 +44,7 @@ test('VioraMap supports directions without an embed and renders a lazy titled Go
   assert.doesNotMatch(directionsOnly, /<iframe\b/);
   assert.match(
     html,
-    /<iframe src="https:\/\/www\.google\.com\/maps\/embed\?pb=verified-fixture" title="Mapa interactivo: Ubicación de prueba" loading="lazy" referrerpolicy="no-referrer-when-downgrade"><\/iframe>/,
+    /<iframe src="https:\/\/www\.google\.com\/maps\/embed\?pb=verified-fixture" title="Mapa interactivo: Ubicación de prueba" loading="lazy" referrerpolicy="strict-origin-when-cross-origin"><\/iframe>/,
   );
   assert.match(
     html,
@@ -57,9 +57,17 @@ test('VioraMap rejects HTTP, unrelated hosts and Google lookalike embed URLs', (
     'http://www.google.com/maps/embed?pb=not-secure',
     'https://evil.example/maps/embed?pb=untrusted',
     'https://google.com.example/maps/embed?pb=lookalike',
+    'https://user@www.google.com/maps/embed?pb=credentials',
   ]) {
     const result = build('viora-map-invalid', { VIORA_MAP_INVALID_URL: url });
     assert.notEqual(result.status, 0, `${url} should fail closed`);
     assert.match(result.output, /valid Google Maps embed URL/);
   }
+});
+
+test('VIORA production map uses the official embed src and keeps the confirmed directions URL separate', () => {
+  const config = readFileSync(path.join(root, 'apps/estetica/src/viora-location.ts'), 'utf8');
+  assert.match(config, /directionsHref: 'https:\/\/maps\.app\.goo\.gl\/H4jmqTGKicDse2iS7'/);
+  assert.match(config, /embedUrl:\s*'https:\/\/www\.google\.com\/maps\/embed\?pb=!1m17/);
+  assert.doesNotMatch(config, /example\.test|verified-fixture/);
 });

@@ -5,11 +5,12 @@ interface Props {
   href: string;
   variant?: 'primary' | 'secondary' | 'quiet';
   size?: 'default' | 'compact';
+  icon?: 'external' | 'back';
   describedBy?: string;
   className?: string;
 }
 
-const { href, variant = 'primary', size = 'default', describedBy, className } = Astro.props;
+const { href, variant = 'primary', size = 'default', icon, describedBy, className } = Astro.props;
 ---
 
 <Link
@@ -17,5 +18,16 @@ const { href, variant = 'primary', size = 'default', describedBy, className } = 
   className={`button-link button-link--${variant} button-link--${size}${className ? ` ${className}` : ''}`}
   describedBy={describedBy}
 >
+  {icon === 'back' && (
+    <svg class="button-link__icon" viewBox="0 0 20 20" aria-hidden="true" focusable="false">
+      <path d="M12.75 4.75 7.5 10l5.25 5.25M8 10h8" />
+    </svg>
+  )}
   <slot />
+  {icon === 'external' && (
+    <svg class="button-link__icon" viewBox="0 0 20 20" aria-hidden="true" focusable="false">
+      <path d="M11 4.75h4.25V9M15 5l-6.5 6.5" />
+      <path d="M13.5 10.5v4.75h-9v-9h4.75" />
+    </svg>
+  )}
 </Link>

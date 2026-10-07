@@ -42,6 +42,19 @@ test('ButtonLink exposes three visual variants and describedBy through the safe 
     html,
     /class="button-link button-link--quiet button-link--compact" href="#inicio" aria-describedby="nota"/,
   );
+  assert.match(
+    html,
+    /<a class="button-link button-link--primary button-link--default" href="\/seguro\/">\s*Principal\s*<\/a>/,
+  );
+  assert.match(
+    html,
+    /<a class="button-link button-link--primary button-link--default" href="https:\/\/example\.test\/booking">\s*Agenda externa\s*<svg class="button-link__icon"[^>]*aria-hidden="true"[^>]*>.*?<\/svg><\/a>/s,
+  );
+  assert.match(
+    html,
+    /<a class="button-link button-link--primary button-link--default" href="\/servicios\/"><svg class="button-link__icon"[^>]*aria-hidden="true"[^>]*>.*?<\/svg>\s*Volver a servicios\s*<\/a>/s,
+  );
+  assert.equal((html.match(/class="button-link__icon"/g) ?? []).length, 2);
 });
 
 test('ButtonLink rejects an unsafe href through Link', () => {

@@ -51,6 +51,8 @@ test('ActionList renders empty, single and ordered multiple actions with scoped 
 
   const multiple = caseMarkup(html, 'many');
   assert.ok(multiple.indexOf('First action') < multiple.indexOf('Second action'));
+  assert.doesNotMatch(single, /button-link__icon/);
+  assert.match(multiple, /button-link__icon[^>]*aria-hidden="true"/);
   assert.equal(
     (multiple.match(/<a class="button-link button-link--primary button-link--compact"/g) ?? [])
       .length,

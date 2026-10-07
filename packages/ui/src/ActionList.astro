@@ -6,6 +6,7 @@ interface ActionItem {
   label: string;
   href: string;
   note?: string;
+  icon?: 'external' | 'back';
 }
 
 interface Props {
@@ -34,6 +35,7 @@ if (new Set(actions.map(({ id }) => id)).size !== actions.length) {
           href={action.href}
           variant="primary"
           size="compact"
+          icon={action.icon}
           describedBy={action.note ? `${idPrefix}-action-note-${action.id}` : undefined}
         >
           {action.label}

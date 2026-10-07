@@ -15,7 +15,9 @@ const validEmbed = (value?: string) => {
     return (
       url.protocol === 'https:' &&
       url.hostname === 'www.google.com' &&
-      url.pathname === '/maps/embed'
+      url.pathname === '/maps/embed' &&
+      !url.username &&
+      !url.password
     );
   } catch {
     return false;
@@ -32,12 +34,12 @@ if (embedUrl && !validEmbed(embedUrl))
         src={embedUrl}
         title={`Mapa interactivo: ${locationLabel}`}
         loading="lazy"
-        referrerpolicy="no-referrer-when-downgrade"
+        referrerpolicy="strict-origin-when-cross-origin"
       />
     )}
     {directionsHref && (
-      <ButtonLink href={directionsHref} variant="secondary" size="compact">
-        Cómo llegar <span aria-hidden="true">↗</span>
+      <ButtonLink href={directionsHref} variant="secondary" size="compact" icon="external">
+        Cómo llegar
       </ButtonLink>
     )}
   </div>

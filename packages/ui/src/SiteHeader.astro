@@ -37,7 +37,7 @@ if (![...links, ...(badge ? [badge] : [])].every((link) => isAllowedHref(link.hr
     </nav>
     {badge && (
       <ButtonLink variant="primary" size="compact" href={badge.href} className="site-header__badge">
-        {badge.label} <span aria-hidden="true">↗</span>
+        {badge.label}
       </ButtonLink>
     )}
   </div>
