@@ -405,17 +405,20 @@ if (app === 'estetica') {
     contact,
     {
       title: 'Contacto y ubicación | VIORA · Vista previa',
-      description: 'Información de contacto y ubicación de VIORA, pendiente de confirmación.',
+      description:
+        'Abrí la ubicación de VIORA en Google Maps. Otros datos de contacto se confirmarán más adelante.',
     },
     'VIORA contact',
   );
   assert.match(contact, /<h1 id="[^"]+">Contacto y ubicación<\/h1>/);
-  assert.match(contact, /Los datos de contacto estarán disponibles cuando queden confirmados/);
-  assert.doesNotMatch(contact, /class="viora-contact__map"|<iframe\b/);
-  assert.doesNotMatch(
+  assert.match(contact, /Ya podés abrir la ubicación de VIORA en Google Maps/);
+  assert.match(
     contact,
-    /<iframe\b|google\.com\/maps|instagram\.com\/|href="(?:tel:|mailto:)/i,
+    /class="button-link button-link--secondary button-link--compact viora-map__directions" href="https:\/\/maps\.app\.goo\.gl\/H4jmqTGKicDse2iS7">/,
   );
+  assert.ok(contact.includes('Cómo llegar'));
+  assert.doesNotMatch(contact, /<iframe\b|instagram\.com\/|href="(?:tel:|mailto:)/i);
+  assert.equal((contact.match(/H4jmqTGKicDse2iS7/g) ?? []).length, 1);
   assert.doesNotMatch(contact, /cal\.com|<a[^>]*>[^<]*(?:Reservar|Agendar)[^<]*<\/a>/i);
 
   const notFound = await readFile(
@@ -469,6 +472,16 @@ if (app === 'estetica') {
   );
   assert.equal(bookingCards.length, 4);
   assert.ok(bookingCards.every((card) => !card.includes('button-link--primary')));
+  assert.equal((booking.match(/class="viora-booking-card__media"/g) ?? []).length, 4);
+  assert.equal((booking.match(/class="viora-booking-card__body"/g) ?? []).length, 4);
+  for (const card of bookingCards) {
+    assert.match(
+      card,
+      /<div class="viora-booking-card__media">\s*<figure[^>]*class="viora-service-visual viora-service-visual--card/,
+    );
+    assert.match(card, /<div class="viora-booking-card__body">/);
+    assert.ok(card.indexOf('viora-booking-card__media') < card.indexOf('viora-booking-card__body'));
+  }
   assert.equal(siteContent.bookingTargets.length, 0);
   assert.ok(siteContent.services.every(({ actions }) => actions.length === 0));
   await assert.rejects(
@@ -484,6 +497,7 @@ if (app === 'estetica') {
     !html.includes('viora-site') && !html.includes('/brand/viora-'),
     'VIORA assets leaked into tattoo',
   );
+  assert.ok(!html.includes('H4jmqTGKicDse2iS7'), 'VIORA directions leaked into tattoo');
   assert.ok(html.includes('class="juanjo-site"'), 'Juanjo body style missing');
   assert.ok(html.includes('class="juanjo-gallery"'), 'Juanjo portfolio region missing');
   assert.ok(html.includes('class="juanjo-gallery__empty"'), 'Honest portfolio empty state missing');

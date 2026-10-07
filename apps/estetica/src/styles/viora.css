@@ -1072,8 +1072,11 @@
   background: var(--viora-ivory);
   box-shadow: 0 0.8rem 2rem rgb(57 37 45 / 5%);
 }
-.viora-booking-card > .viora-service-visual {
-  aspect-ratio: 16 / 8.5;
+.viora-booking-card__media {
+  position: relative;
+  overflow: hidden;
+  aspect-ratio: 4 / 3;
+  background: var(--viora-soft-rose);
 }
 .viora-booking-card__body {
   padding: clamp(1.25rem, 2.5vw, 2rem);
@@ -1135,9 +1138,6 @@
   }
   .viora-booking__grid {
     grid-template-columns: minmax(0, 1fr);
-  }
-  .viora-booking-card > .viora-service-visual {
-    aspect-ratio: 16 / 9;
   }
   .viora-booking-card__body > .button-link,
   .viora-booking-card .action-list__item,

@@ -45,7 +45,9 @@ const services = siteContent.services.map((service) => {
       <div class="container viora-booking__grid">
         {services.map(({ service, visual, actions }) => (
           <article class="viora-booking-card">
-            <ServiceVisual visual={visual} context="card" />
+            <div class="viora-booking-card__media">
+              <ServiceVisual visual={visual} context="card" />
+            </div>
             <div class="viora-booking-card__body">
               <p class="viora-booking-card__eyebrow">Experiencia VIORA</p>
               <h2>{service.displayName}</h2>

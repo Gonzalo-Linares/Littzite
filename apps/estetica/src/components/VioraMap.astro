@@ -1,5 +1,5 @@
 ---
-import Link from '@littzite/ui/Link.astro';
+import ButtonLink from '@littzite/ui/ButtonLink.astro';
 
 interface Props {
   embedUrl?: string;
@@ -25,18 +25,20 @@ if (embedUrl && !validEmbed(embedUrl))
   throw new Error('VioraMap requires a valid Google Maps embed URL');
 ---
 
-{embedUrl && (
+{(embedUrl || directionsHref) && (
   <div class="viora-map">
-    <iframe
-      src={embedUrl}
-      title={`Mapa interactivo: ${locationLabel}`}
-      loading="lazy"
-      referrerpolicy="no-referrer-when-downgrade"
-    />
+    {embedUrl && (
+      <iframe
+        src={embedUrl}
+        title={`Mapa interactivo: ${locationLabel}`}
+        loading="lazy"
+        referrerpolicy="no-referrer-when-downgrade"
+      />
+    )}
     {directionsHref && (
-      <Link href={directionsHref} className="viora-map__directions">
-        Cómo llegar
-      </Link>
+      <ButtonLink href={directionsHref} variant="secondary" size="compact">
+        Cómo llegar <span aria-hidden="true">↗</span>
+      </ButtonLink>
     )}
   </div>
 )}

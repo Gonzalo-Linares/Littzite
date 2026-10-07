@@ -1,5 +1,6 @@
 ---
 import Container from '@littzite/ui/Container.astro';
+import ButtonLink from '@littzite/ui/ButtonLink.astro';
 import type { ContactConfig, Location } from '@littzite/content-schema';
 import VioraMap from './VioraMap.astro';
 
@@ -32,16 +33,28 @@ const { contact, location, map } = Astro.props;
             <a href={`mailto:${contact.email}`}>{contact.email}</a>
           </p>
         )}
-        {!location && !contact && !map?.embedUrl && (
+        {!location && !contact && !map?.directionsHref && !map?.embedUrl && (
           <p class="viora-contact__pending">
-            Los datos de contacto estarán disponibles cuando queden confirmados.
+            Los demás datos de contacto se incorporarán cuando estén confirmados.
           </p>
         )}
+        {map?.directionsHref && (
+          <ButtonLink
+            href={map.directionsHref}
+            variant="secondary"
+            size="compact"
+            className="viora-map__directions"
+          >
+            Cómo llegar <span aria-hidden="true">↗</span>
+          </ButtonLink>
+        )}
       </div>
-      <VioraMap
-        {...map}
-        locationLabel={map?.locationLabel ?? location?.address ?? 'Ubicación de VIORA'}
-      />
+      {map?.embedUrl && (
+        <VioraMap
+          embedUrl={map.embedUrl}
+          locationLabel={map.locationLabel ?? location?.address ?? 'Ubicación de VIORA'}
+        />
+      )}
     </div>
   </Container>
 </section>
