@@ -9,9 +9,24 @@ interface Props {
   noindex: boolean;
   iconHref?: SiteConfig['iconHref'];
   bodyClass?: string;
+  canonicalUrl?: string;
+  siteName?: string;
+  socialImageHref?: string;
+  structuredData?: Record<string, unknown>;
 }
 
-const { locale, theme, seo, noindex, iconHref, bodyClass } = Astro.props;
+const {
+  locale,
+  theme,
+  seo,
+  noindex,
+  iconHref,
+  bodyClass,
+  canonicalUrl,
+  siteName,
+  socialImageHref,
+  structuredData,
+} = Astro.props;
 const themeStyle = {
   '--color-surface': theme.surface,
   '--color-text': theme.text,
@@ -27,10 +42,25 @@ const themeStyle = {
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    {noindex && <meta name="robots" content="noindex, nofollow" />}
+    <meta name="robots" content={noindex ? 'noindex, nofollow' : 'index, follow'} />
     {iconHref && <link rel="icon" href={iconHref} />}
+    {canonicalUrl && <link rel="canonical" href={canonicalUrl} />}
     <title>{seo.title}</title>
     <meta name="description" content={seo.description} />
+    <meta property="og:type" content="website" />
+    <meta property="og:locale" content={locale.replace('-', '_')} />
+    {siteName && <meta property="og:site_name" content={siteName} />}
+    <meta property="og:title" content={seo.title} />
+    <meta property="og:description" content={seo.description} />
+    {canonicalUrl && <meta property="og:url" content={canonicalUrl} />}
+    {socialImageHref && <meta property="og:image" content={socialImageHref} />}
+    <meta name="twitter:card" content={socialImageHref ? 'summary_large_image' : 'summary'} />
+    <meta name="twitter:title" content={seo.title} />
+    <meta name="twitter:description" content={seo.description} />
+    {socialImageHref && <meta name="twitter:image" content={socialImageHref} />}
+    {structuredData && (
+      <script type="application/ld+json" set:html={JSON.stringify(structuredData)} />
+    )}
   </head>
   <body id="inicio" class={bodyClass}>
     <a class="skip-link" href="#contenido">

@@ -34,7 +34,7 @@ if (embedUrl && !validEmbed(embedUrl))
         src={embedUrl}
         title={`Mapa interactivo: ${locationLabel}`}
         loading="lazy"
-        referrerpolicy="strict-origin-when-cross-origin"
+        referrerpolicy="no-referrer-when-downgrade"
       />
     )}
     {directionsHref && (

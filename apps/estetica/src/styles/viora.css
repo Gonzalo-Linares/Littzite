@@ -1043,6 +1043,43 @@
 .viora-contact-page .viora-contact {
   padding-block: 1.25rem 3.5rem;
 }
+.viora-contact__social {
+  padding-bottom: 3rem;
+}
+.viora-legal {
+  max-width: 52rem;
+  padding-block: 1rem 4rem;
+  color: var(--viora-ink);
+  line-height: 1.75;
+}
+.viora-legal h2 {
+  margin: 2rem 0 0.6rem;
+  font-family: Georgia, 'Times New Roman', serif;
+  font-size: clamp(1.35rem, 2vw, 1.8rem);
+}
+.viora-legal p {
+  margin: 0 0 1rem;
+}
+.viora-legal a:not(.button-link) {
+  color: var(--viora-plum);
+  text-underline-offset: 0.18em;
+}
+.viora-regret-access {
+  padding-block: 1rem;
+  border-block: 1px solid color-mix(in srgb, var(--viora-plum) 16%, transparent);
+}
+.viora-regret-access__inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+}
+.viora-regret-access__inner p {
+  margin: 0;
+}
+.viora-regret {
+  padding-block: 2rem 4rem;
+}
 .viora-contact__grid--map {
   grid-template-columns: minmax(15rem, 0.75fr) minmax(0, 1.25fr);
 }
@@ -1159,6 +1196,10 @@
 }
 
 @media (max-width: 740px) {
+  .viora-regret-access__inner {
+    align-items: flex-start;
+    flex-direction: column;
+  }
   .viora-story-block,
   .viora-story-block--reverse {
     grid-template-columns: minmax(0, 1fr);

@@ -70,3 +70,6 @@ Requiere validar dirección, contacto/red social, URLs públicas de los cuatro e
 ## Gates locales obligatorios
 
 Ejecutar `corepack pnpm quality` sobre el último HEAD y adjuntar resultados. El comando incluye límites, lint, formato, contratos, Astro check, builds, HTML generado y tests de ambas apps. No activar GitHub Actions ni afirmar que está verde. Antes de publicación productiva se exigirán gates adicionales de SEO, privacidad, proveedor real, accesibilidad y rendimiento medido.
+# PR-17 — preparación de publicación de VIORA
+
+VIORA continúa noindex por defecto. El flag explícito `VIORA_PUBLIC_RELEASE=true` falla cerrado ante datos legales/comerciales pendientes, `PUBLIC_SITE_URL` no HTTPS, booking UAT o aprobaciones pendientes. La preparación de Cloudflare Pages, SEO, políticas y QA está en [docs/19](19-viora-release-readiness.md). Este cambio no autoriza deploy ni indexación.

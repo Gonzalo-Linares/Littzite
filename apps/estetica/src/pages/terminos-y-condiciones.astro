@@ -1,0 +1,96 @@
+---
+import VioraSiteLayout from '../layouts/VioraSiteLayout.astro';
+import VioraPageIntro from '../components/VioraPageIntro.astro';
+import { vioraLegal, vioraCommercial } from '../viora-release.ts';
+---
+
+<VioraSiteLayout
+  seo={{
+    title: 'Términos y condiciones | VIORA · Estética integral',
+    description: 'Condiciones de uso del sitio y de la información comercial de VIORA.',
+  }}
+>
+  <VioraPageIntro eyebrow="VIORA / información legal" title="Términos y condiciones" />
+  <article class="container viora-legal">
+    <p>
+      <strong>Última actualización: 7 de octubre de 2026.</strong>
+    </p>
+    <h2>1. Prestador e identificación</h2>
+    <p>
+      El sitio presenta la propuesta de estética integral VIORA. Prestador:{' '}
+      {vioraLegal.providerName}. CUIT: {vioraLegal.taxId}. Domicilio legal:{' '}
+      {vioraLegal.legalDomicile}. Contacto: {vioraLegal.contactEmail}; teléfono: {vioraLegal.phone}.
+      Estos datos deben completarse y verificarse antes de una publicación comercial definitiva.
+    </p>
+    <h2>2. Alcance del sitio y servicios</h2>
+    <p>
+      Este sitio estático ofrece información comercial sobre servicios de estética y bienestar,
+      ubicación pública y vías para consultar o coordinar. La descripción publicada no es una oferta
+      médica ni promete resultados. VIORA no se presenta aquí como prestador médico; el contenido no
+      diagnostica ni reemplaza una consulta profesional cuando sea necesaria. La conveniencia de
+      cada servicio depende de las circunstancias de cada persona.
+    </p>
+    <h2>3. Reservas y plataforma externa</h2>
+    <p>
+      Cuando se habilite una acción de reserva, el sitio podrá redirigir a Cal.com, plataforma
+      externa que administra horarios disponibles, selección de turnos y comunicaciones de reserva.
+      La disponibilidad y los cambios de agenda se reflejan en esa plataforma. Una reserva queda
+      sujeta a la confirmación que allí se emita. Las cancelaciones y reprogramaciones de turnos se
+      gestionan en el flujo indicado por Cal.com; no equivalen al derecho legal de arrepentimiento.
+    </p>
+    <p>
+      La agenda pública sigue en preparación. La URL temporal de prueba no constituye una invitación
+      a contratar. No ingreses información médica o sensible en campos de reserva. Consultá la
+      política de privacidad de Cal.com antes de continuar.
+    </p>
+    <h2>4. Contratación, precios y pagos</h2>
+    <p>
+      La publicación actual no informa precios, medios de pago, señas, cargos por cancelación, no
+      presentación, reintegros, promociones ni duraciones definitivas. Esas condiciones no se
+      presumen por utilizar el sitio. Antes de aceptar una contratación, la información aplicable
+      deberá comunicarse de manera clara y conforme a la normativa vigente. Littzite no procesa
+      pagos ni recibe importes por este sitio.
+    </p>
+    <h2>5. Derecho de arrepentimiento</h2>
+    <p>
+      Cuando corresponda a una contratación a distancia, conservás los derechos irrenunciables
+      previstos por la legislación de defensa del consumidor. El acceso{' '}
+      <a href="/arrepentimiento/">BOTÓN DE ARREPENTIMIENTO</a> explica cómo ejercerlo. Este derecho
+      es distinto de cancelar o reprogramar un turno en Cal.com.
+    </p>
+    <h2>6. Uso del sitio y exactitud de la información</h2>
+    <p>
+      Usá el sitio de forma lícita, sin afectar su seguridad, disponibilidad ni los derechos de
+      terceros. La información que facilites directamente a un proveedor externo debe ser exacta y
+      limitada a lo necesario para el trámite elegido. No remitas información de salud por este
+      sitio.
+    </p>
+    <h2>7. Servicios de terceros y disponibilidad</h2>
+    <p>
+      El sitio contiene enlaces a Cal.com, Google Maps e Instagram. Al abrirlos o cargar el mapa,
+      interactuás con servicios sujetos a sus propios términos y políticas. La ubicación comercial
+      pública indicada es {vioraCommercial.publicLocation}; no reemplaza un domicilio legal. El
+      sitio puede tener interrupciones por mantenimiento, conectividad o causas ajenas a VIORA, sin
+      limitar derechos obligatorios del consumidor.
+    </p>
+    <h2>8. Contenidos y propiedad intelectual</h2>
+    <p>
+      Las marcas, logotipos, fotografías y demás contenidos conservan los derechos de sus titulares.
+      No se concede una autorización general para reproducirlos. Los usos permitidos por la ley y
+      los derechos de terceros permanecen intactos.
+    </p>
+    <h2>9. Responsabilidad, cambios y normativa</h2>
+    <p>
+      Ninguna disposición limita derechos irrenunciables ni excluye responsabilidades que la ley no
+      permite excluir. La fuerza mayor y las contingencias técnicas se evaluarán conforme a las
+      circunstancias y la normativa aplicable. Los cambios de estas condiciones se identificarán con
+      su fecha de actualización y no afectarán derechos ya adquiridos. Rigen las normas de la
+      República Argentina y las reglas de competencia que protegen al consumidor.
+    </p>
+    <h2>10. Consultas y reclamos</h2>
+    <p>
+      Canales de contacto: {vioraLegal.contactEmail} y {vioraLegal.phone}. Mientras estos datos
+      figuren como pendientes, el canal debe completarse antes de habilitar contratación pública.
+    </p>
+  </article>
+</VioraSiteLayout>

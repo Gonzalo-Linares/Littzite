@@ -1,17 +1,19 @@
 import { siteContentSchema } from '@littzite/content-schema';
 import { validateBookingTargets } from '@littzite/booking';
+import { vioraBookingReadiness, vioraCommercial } from './viora-release.ts';
 
 // D-09 / VIORA manual de marca, edición 01 (septiembre de 2026).
 // Los servicios del manual son líneas editoriales: disponibilidad, técnicas,
 // precios, duración y política de turnos deben confirmarse antes del lanzamiento.
 // La URL temporal de Cal.com configurada abajo pertenece a una cuenta de prueba.
 // Solo habilita UAT de depilación en PR-15; debe sustituirse por la URL final
-// aprobada de Victoria/VIORA antes de producción. UAT manual todavía pendiente.
+// aprobada de Victoria/VIORA antes de producción. UAT manual completado.
 // La duración del Event Type es operacional en Cal.com y debe revisarla Victoria.
 const parsedContent = siteContentSchema.parse({
   site: {
     defaultLocale: 'es-AR',
     iconHref: '/brand/viora-principal.png',
+    locations: [{ id: 'viora-public-location', city: vioraCommercial.publicLocation }],
     theme: {
       surface: '#FAF5F0', // Marfil
       text: '#39252D', // Tinta
@@ -66,7 +68,7 @@ const parsedContent = siteContentSchema.parse({
     {
       id: 'booking-depilacion-definitiva',
       providerKey: 'cal-com',
-      fallbackUrl: 'https://cal.com/gonzalo-linares-rfbhnf/prueba',
+      fallbackUrl: vioraBookingReadiness.productionUrl,
     },
   ],
   quoteTargets: [],
@@ -74,9 +76,9 @@ const parsedContent = siteContentSchema.parse({
     {
       slug: '',
       seo: {
-        title: 'VIORA · Estética integral | Vista previa',
+        title: 'VIORA · Estética integral',
         description:
-          'Tu momento, tu bienestar. Conocé la vista previa de VIORA, un espacio de estética integral y cuidado personal.',
+          'Tu momento, tu bienestar. Conocé la propuesta de estética integral y cuidado personal de VIORA.',
       },
       sections: [
         {

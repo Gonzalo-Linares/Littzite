@@ -4,11 +4,13 @@ import VioraSiteLayout from '../layouts/VioraSiteLayout.astro';
 import { siteContent } from '../site.config';
 import VioraPageIntro from '../components/VioraPageIntro.astro';
 import { vioraLocation } from '../viora-location';
+import { vioraCommercial } from '../viora-release.ts';
+import ButtonLink from '@littzite/ui/ButtonLink.astro';
 ---
 
 <VioraSiteLayout
   seo={{
-    title: 'Contacto y ubicación | VIORA · Vista previa',
+    title: 'Contacto y ubicación | VIORA · Estética integral',
     description:
       'Abrí la ubicación de VIORA en Google Maps. Otros datos de contacto se confirmarán más adelante.',
   }}
@@ -25,5 +27,10 @@ import { vioraLocation } from '../viora-location';
       location={siteContent.site.locations[0]}
       map={vioraLocation}
     />
+    <div class="container viora-contact__social">
+      <ButtonLink href={vioraCommercial.instagramHref} variant="secondary" icon="external">
+        Instagram @vioramasajes.ok
+      </ButtonLink>
+    </div>
   </div>
 </VioraSiteLayout>

@@ -48,3 +48,10 @@
 ## Próxima validación comercial
 
 **D-04B:** confirmar número comercial real en formato internacional E.164, texto de apertura aprobado y aviso de salida a WhatsApp. D-01C y D-02A están parcialmente resueltos **solo para el piloto VIORA** (Cal.com, una URL de UAT de cuenta de prueba solo para depilación y duración operativa en Cal.com). El UAT manual confirmó reserva sin cuenta, selección de horario, confirmación/email y cancelación/reprogramación. La confirmación mostró `Dónde: Cal Video`: corregir la Location del Event Type a `In-person` o ubicación física personalizada apropiada; este dato lo configura Cal.com y no se debe ocultar en Littzite. La URL final debe reemplazar UAT y Victoria debe revisar la duración antes de producción. La disponibilidad se mantiene en Cal.com mediante un link permanente y Date Overrides puntuales. D-02B y D-03 siguen pendientes. No inferir duración del tatuador, señas ni política de cancelación.
+# VIORA — bloqueos de release PR-17
+
+- Identidad legal del prestador, CUIT, email de privacidad/reclamos y domicilio legal si corresponde.
+- Datos comerciales que deban informarse antes de contratar: precio y condiciones aplicables; validar con asesoría jurídica. No inventar señas, medios de pago, cancelaciones, reintegros ni duración.
+- Reemplazar la URL UAT Cal.com, aprobar Location presencial, revisar duración y repetir UAT focal.
+- Confirmar suficiencia jurídica del flujo estático de arrepentimiento por email y completar contacto real.
+- URL real de producción (incluido `pages.dev` tras primer deploy) antes de definir `PUBLIC_SITE_URL`.

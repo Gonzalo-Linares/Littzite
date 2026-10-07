@@ -44,7 +44,7 @@ test('VioraMap supports directions without an embed and renders a lazy titled Go
   assert.doesNotMatch(directionsOnly, /<iframe\b/);
   assert.match(
     html,
-    /<iframe src="https:\/\/www\.google\.com\/maps\/embed\?pb=verified-fixture" title="Mapa interactivo: Ubicación de prueba" loading="lazy" referrerpolicy="strict-origin-when-cross-origin"><\/iframe>/,
+    /<iframe src="https:\/\/www\.google\.com\/maps\/embed\?pb=verified-fixture" title="Mapa interactivo: Ubicación de prueba" loading="lazy" referrerpolicy="no-referrer-when-downgrade"><\/iframe>/,
   );
   assert.match(
     html,
