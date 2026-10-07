@@ -21,6 +21,7 @@ const services = siteContent.services.map((service) => {
         label: resolved.label || 'Elegir turno',
         href: resolved.href,
         note: resolved.eligibilityNote,
+        icon: 'external' as const,
       };
     });
   return { service, visual, actions };
@@ -52,14 +53,17 @@ const services = siteContent.services.map((service) => {
               <p class="viora-booking-card__eyebrow">Experiencia VIORA</p>
               <h2>{service.displayName}</h2>
               <p>{service.description}</p>
-              {actions.length ? (
-                <ActionList idPrefix={`booking-${service.slug}`} actions={actions} />
-              ) : (
+              {!actions.length && (
                 <span class="viora-booking-card__status">Agenda próximamente</span>
               )}
-              <ButtonLink href={`/servicios/${service.slug}/`} variant="quiet" size="compact">
-                Conocer experiencia
-              </ButtonLink>
+              <div class="viora-booking-card__actions">
+                {actions.length > 0 && (
+                  <ActionList idPrefix={`booking-${service.slug}`} actions={actions} />
+                )}
+                <ButtonLink href={`/servicios/${service.slug}/`} variant="quiet" size="compact">
+                  Conocer experiencia
+                </ButtonLink>
+              </div>
             </div>
           </article>
         ))}

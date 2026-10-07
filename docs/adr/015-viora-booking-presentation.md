@@ -14,12 +14,13 @@ La arquitectura multipágina de VIORA ya existe, pero el titular pidió preparar
 - La ruta puede existir aunque `actions` y `bookingTargets` sigan vacíos. No implica disponibilidad ni confirmación de turnos.
 - La interfaz visual no crea URLs, datos de ubicación, credenciales, embed de agenda, backend ni integración externa.
 - Las tarjetas de `/reservar/` contienen cada visual en un media wrapper local con proporción definida; la primitiva compartida `ServiceVisual` conserva su comportamiento para las otras cards.
-- El enlace de indicaciones aprobado por el titular vive en configuración local de VIORA y puede mostrarse sin un iframe. El `embedUrl` de Google Maps permanece pendiente de recibir el `src` oficial; el enlace de indicaciones nunca se usa como `iframe src`.
+- El enlace de indicaciones aprobado por el titular vive en configuración local de VIORA. El `embedUrl` usa el `src` copiado desde el diálogo oficial “Insertar un mapa” de Google Maps; el enlace de indicaciones nunca se usa como `iframe src`.
 - PR-15 configura un target y una acción de reserva temporal solo para `depilacion-definitiva`, mediante el resolver y `ActionList` ya existentes. La URL pertenece a una cuenta de prueba, es exclusivamente de UAT y debe reemplazarse por el booking link final de Victoria/VIORA antes de merge/producción. Los otros servicios permanecen sin acciones ni targets.
-- La URL de UAT no implica que la reserva manual se haya probado ni que exista disponibilidad aprobada. No se codifican fechas ni duraciones operacionales; Cal.com mantiene la disponibilidad y Victoria debe revisar la duración del Event Type.
+- El UAT manual confirmó reserva sin crear cuenta Cal.com, selección de horario, confirmación/email y cancelación/reprogramación. La confirmación mostró `Dónde: Cal Video`, una Location configurada en el Event Type de Cal.com. Antes de producción Victoria debe cambiarla a `In-person` o a una ubicación física personalizada apropiada; Littzite no oculta ni modifica el valor del proveedor.
+- La URL de UAT sigue siendo temporal y debe reemplazarse por el booking link final antes de producción. No se codifican fechas ni duraciones operacionales; Cal.com mantiene la disponibilidad y Victoria debe revisar la duración del Event Type.
 
 ## Consecuencias
 
-Se puede revisar el flujo visual y el wiring de reserva en UAT sin convertir la URL de prueba en dato de producción. El blocker de PR-15 exige el link final y el checklist UAT manual antes del merge. Para el mapa, las indicaciones están activas con el enlace confirmado; el mapa interactivo requiere el `src` oficial de embed.
+Se puede revisar el flujo de reserva en UAT sin convertir la URL de prueba en dato de producción. Los blockers restantes son reemplazar el enlace y corregir la Location `Cal Video` en Cal.com. La ubicación de VIORA se comparte mediante un `directionsHref` aprobado y un iframe cuyo `src` procede del diálogo oficial “Insertar un mapa” de Google Maps; nunca se deriva el iframe del short link.
 
 La aplicación de VIORA puede incluir un CTA de navegación “Turnos” hacia `/reservar/`; la página declara con claridad el estado de configuración y no ofrece un control de reserva falso.

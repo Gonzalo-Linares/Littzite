@@ -69,9 +69,7 @@ const sectionId = variant === 'preview' ? 'alcance' : 'catalogo-servicios';
               style={`view-transition-name: viora-service-${service.slug}`}
             >
               <span>{service.displayName}</span>
-              <span class="viora-service-card__explore">
-                <span>Explorar experiencia</span> <span aria-hidden="true">↗</span>
-              </span>
+              <span class="viora-service-card__explore">Ver experiencia</span>
             </a>
           </h3>
           <p>{service.description}</p>
@@ -80,7 +78,7 @@ const sectionId = variant === 'preview' ? 'alcance' : 'catalogo-servicios';
     </div>
     {variant === 'preview' && (
       <ButtonLink href="/servicios/" variant="secondary">
-        Ver todos los servicios <span aria-hidden="true">→</span>
+        Ver todos los servicios
       </ButtonLink>
     )}
   </Container>

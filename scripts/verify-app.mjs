@@ -174,9 +174,9 @@ if (app === 'estetica') {
   );
   assert.doesNotMatch(html, /VIORA \/ 01|viora-catalog__card-number|referencias ilustrativas/);
   assert.match(html, /UN RESPIRO PARA VOS/);
-  assert.match(html, /<span>Explorar experiencia<\/span>/);
+  assert.match(html, /<span class="viora-service-card__explore">Ver experiencia<\/span>/);
   assert.doesNotMatch(html, /href="\/(?:#alcance|#esencia|#contacto|#viora-moment-title)"/);
-  assert.ok(!/<iframe\b/i.test(html), 'VIORA preview must not embed a map');
+  assert.ok(!/<iframe\b/i.test(html), 'VIORA home must not embed a map');
   assert.ok(!/instagram\.com\//i.test(html), 'VIORA must not publish an unconfirmed social link');
   assert.ok(
     !/(?:cal\.com|booking\.example|wa\.me|api\.whatsapp)/i.test(html),
@@ -456,8 +456,13 @@ if (app === 'estetica') {
     /class="button-link button-link--secondary button-link--compact viora-map__directions" href="https:\/\/maps\.app\.goo\.gl\/H4jmqTGKicDse2iS7">/,
   );
   assert.ok(contact.includes('Cómo llegar'));
-  assert.doesNotMatch(contact, /<iframe\b|instagram\.com\/|href="(?:tel:|mailto:)/i);
+  assert.match(
+    contact,
+    /<iframe src="https:\/\/www\.google\.com\/maps\/embed\?pb=!1m17!1m12!1m3!1d3401\.297756485471!2d-68\.567944!3d-31\.515980999999996[^"]*" title="Mapa interactivo: Ubicación de VIORA" loading="lazy" referrerpolicy="strict-origin-when-cross-origin"><\/iframe>/,
+  );
+  assert.doesNotMatch(contact, /instagram\.com\/|href="(?:tel:|mailto:)/i);
   assert.equal((contact.match(/H4jmqTGKicDse2iS7/g) ?? []).length, 1);
+  assert.equal((contact.match(/<iframe\b/g) ?? []).length, 1);
   assert.doesNotMatch(contact, /cal\.com|<a[^>]*>[^<]*(?:Reservar|Agendar)[^<]*<\/a>/i);
 
   const notFound = await readFile(
