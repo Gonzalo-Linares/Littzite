@@ -22,11 +22,9 @@ const visibleWorks = previewOnly ? tattooPreviewPortfolio : tattooPortfolio;
         <p class="tattoo-eyebrow">
           <span aria-hidden="true"></span>Tinta con carácter
         </p>
-        <h1 id="home-hero-title">
-          Tu próximo <span>tatuaje</span> empieza acá.
-        </h1>
+        <h1 id="home-hero-title">Tu próximo tatuaje empieza acá.</h1>
         <p class="tattoo-home-hero__lead">
-          Explorá trabajos, elegí el estilo que más te represente y sacá tu turno con Juanjo.
+          Explorá trabajos, elegí el estilo que más te represente y sacá tu turno.
         </p>
         <div class="tattoo-home-hero__actions">
           <ButtonLink href={tattooActions.turnsHref} variant="primary" icon="external">
@@ -39,9 +37,6 @@ const visibleWorks = previewOnly ? tattooPreviewPortfolio : tattooPortfolio;
         <p class="tattoo-home-hero__location">
           {tattooBrand.name} <span aria-hidden="true">·</span> San Juan, Argentina
         </p>
-        <p class="tattoo-preview-note tattoo-home-hero__booking-note">
-          Agenda de prueba en Cal.com; el enlace no confirma disponibilidad real del estudio.
-        </p>
       </div>
       <TattooHeroMedia media={tattooBrand.heroMedia} />
     </div>
@@ -51,9 +46,9 @@ const visibleWorks = previewOnly ? tattooPreviewPortfolio : tattooPortfolio;
     <div class="container">
       <div class="tattoo-section-heading tattoo-section-heading--split">
         <div>
-          <p class="tattoo-eyebrow">ESTILOS Y REFERENCIAS VISUALES</p>
+          <p class="tattoo-eyebrow">ESTILOS DEL ESTUDIO</p>
           <h2 id="home-work-title">Trabajos</h2>
-          <p>Una selección de trabajos y referencias visuales del estudio.</p>
+          <p>Una selección de tatuajes y estilos.</p>
         </div>
         <div class="tattoo-work-section__actions">
           <a class="tattoo-text-link" href="/trabajos/">
@@ -64,17 +59,7 @@ const visibleWorks = previewOnly ? tattooPreviewPortfolio : tattooPortfolio;
           </TattooInstagramLink>
         </div>
       </div>
-      <TattooWorkCarousel
-        items={visibleWorks}
-        previewOnly={previewOnly}
-        id="inicio-trabajos-carousel"
-      />
-      {previewOnly && (
-        <p class="tattoo-preview-note">
-          Imágenes generadas solo para evaluar esta preview; no representan trabajos reales de
-          Juanjo. Se reemplazarán por originales autorizados antes de publicar.
-        </p>
-      )}
+      <TattooWorkCarousel items={visibleWorks} id="inicio-trabajos-carousel" />
     </div>
   </section>
 
@@ -88,7 +73,7 @@ const visibleWorks = previewOnly ? tattooPreviewPortfolio : tattooPortfolio;
         <article class="tattoo-process-card">
           <span class="tattoo-process-card__number">01 / TURNOS</span>
           <h3>Sacá tu turno</h3>
-          <p>El botón abre una agenda de prueba de Cal.com para revisar el recorrido.</p>
+          <p>Elegí un horario disponible desde la agenda.</p>
           <ButtonLink
             href={tattooActions.turnsHref}
             variant="primary"

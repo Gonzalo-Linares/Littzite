@@ -5,16 +5,26 @@ interface Props {
   href: string;
   ariaLabel: string;
   className?: string;
+  iconClassName?: string;
+  dotClassName?: string;
   handle?: string;
   showHandle?: boolean;
 }
 
-const { href, ariaLabel, className = '', handle, showHandle = false } = Astro.props;
+const {
+  href,
+  ariaLabel,
+  className = '',
+  iconClassName = '',
+  dotClassName = '',
+  handle,
+  showHandle = false,
+} = Astro.props;
 ---
 
-<Link href={href} ariaLabel={ariaLabel} className={`site-social-icon-link ${className}`.trim()}>
+<Link href={href} ariaLabel={ariaLabel} className={className || undefined}>
   <svg
-    class="site-social-icon-link__icon"
+    class:list={['site-social-icon-link__icon', iconClassName]}
     viewBox="0 0 24 24"
     fill="none"
     aria-hidden="true"
@@ -22,10 +32,15 @@ const { href, ariaLabel, className = '', handle, showHandle = false } = Astro.pr
   >
     <rect x="3.75" y="3.75" width="16.5" height="16.5" rx="4.8" />
     <circle cx="12" cy="12" r="3.7" />
-    <circle class="site-social-icon-link__dot" cx="17.35" cy="6.75" r="0.85" />
+    <circle
+      class:list={['site-social-icon-link__dot', dotClassName]}
+      cx="17.35"
+      cy="6.75"
+      r="0.85"
+    />
   </svg>
-  {showHandle && handle && <span>{handle}</span>}
   <slot />
+  {showHandle && handle && <span>{handle}</span>}
 </Link>
 
 <style is:global>

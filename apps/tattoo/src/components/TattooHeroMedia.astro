@@ -23,7 +23,7 @@ if (media.src && (!media.src.startsWith('/') || media.src.startsWith('//')))
       <img
         class="tattoo-hero-media__photo"
         src={heroPreview.src}
-        alt="Brazo tatuado mientras el tatuador trabaja; imagen generada para la preview, no es un trabajo de Juanjo."
+        alt="Detalle de un tatuaje durante una sesión de trabajo."
         width={heroPreview.width}
         height={heroPreview.height}
         fetchpriority="high"
@@ -44,6 +44,5 @@ if (media.src && (!media.src.startsWith('/') || media.src.startsWith('//')))
   </div>
   <figcaption class="tattoo-hero-media__caption-line">
     <span>Estudio en San Juan, Argentina</span>
-    {!media.src && <small>Imagen de preview generada · no es un trabajo real del estudio</small>}
   </figcaption>
 </figure>

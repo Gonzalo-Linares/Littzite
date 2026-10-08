@@ -35,12 +35,12 @@ test('carousel handles 0, 1, 2 and 5 authorized metadata items and a configured 
       count,
       `${id}: wrong item count`,
     );
-    const controls = /data-carousel-(?:prev|next|toggle)/.test(section);
+    const controls = /data-carousel-(?:prev|next)/.test(section);
     assert.equal(controls, count > 1, `${id}: controls depend on having two or more items`);
     if (count === 0) {
       assert.match(section, /class="tattoo-carousel__empty"/);
-      assert.match(section, /Una selección de trabajos y referencias visuales del estudio/);
-      assert.doesNotMatch(section, /data-carousel-(?:prev|next|toggle)/);
+      assert.match(section, /Una selección de tatuajes y estilos/);
+      assert.doesNotMatch(section, /data-carousel-(?:prev|next)/);
     }
   }
   assert.match(
@@ -53,16 +53,19 @@ test('carousel handles 0, 1, 2 and 5 authorized metadata items and a configured 
     path.join(root, 'apps/tattoo/src/components/TattooWorkCarousel.astro'),
     'utf8',
   );
-  assert.match(carousel, /setInterval\(\(\) => update\(activeIndex \+ 1, false\), 7000\)/);
-  assert.match(carousel, /Pausar reproducción/);
-  assert.match(carousel, /Reanudar reproducción/);
+  assert.match(carousel, /aria-label="Trabajo anterior"/);
+  assert.match(carousel, /aria-label="Trabajo siguiente"/);
+  assert.match(carousel, /<svg viewBox="0 0 24 24"/);
   assert.match(carousel, /ArrowLeft/);
   assert.match(carousel, /ArrowRight/);
-  assert.match(carousel, /prefers-reduced-motion: reduce/);
-  assert.match(carousel, /mouseenter/);
-  assert.match(carousel, /focusin/);
+  assert.match(carousel, /viewport\.scrollTo\(\{\s*left:/);
+  assert.doesNotMatch(
+    carousel,
+    /setInterval|setTimeout|scrollIntoView|\.focus\(|location\.hash|carousel-toggle/i,
+  );
   const css = readFileSync(path.join(root, 'apps/tattoo/src/styles/juanjo.css'), 'utf8');
   assert.match(css, /scroll-snap-type:\s*x mandatory/);
   assert.match(css, /@media\s*\(prefers-reduced-motion:\s*reduce\)/);
-  assert.match(css, /\.tattoo-carousel__controls button\s*\{[^}]*min-height:\s*2\.9rem/);
+  assert.match(css, /\.tattoo-carousel__controls button\s*\{[^}]*min-height:\s*3\.2rem/);
+  assert.match(css, /\.tattoo-carousel__controls\s*\{[^}]*position:\s*absolute/);
 });

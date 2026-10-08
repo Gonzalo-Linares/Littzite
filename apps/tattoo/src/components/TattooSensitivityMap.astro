@@ -1,6 +1,3 @@
----
----
-
 <section
   class="tattoo-guide-section tattoo-sensitivity"
   id="sensibilidad"
@@ -8,7 +5,7 @@
 >
   <div class="container">
     <div class="tattoo-guide-heading">
-      <p class="tattoo-eyebrow">REFERENCIA GENERAL, NO UNA REGLA</p>
+      <p class="tattoo-eyebrow">02 / SENSIBILIDAD</p>
       <h2 id="sensitivity-title">Sensibilidad orientativa por zona</h2>
       <p>
         La sensibilidad cambia entre personas y zonas. Usá esta referencia para conversar la
@@ -18,49 +15,67 @@
     <div class="tattoo-sensitivity__layout">
       <div class="tattoo-body-maps">
         <figure>
-          <svg viewBox="0 0 220 410" role="img" aria-labelledby="body-front-title body-front-desc">
+          <svg viewBox="0 0 240 410" role="img" aria-labelledby="body-front-title body-front-desc">
             <title id="body-front-title">Silueta frontal orientativa</title>
             <desc id="body-front-desc">
-              Figura geométrica sin rasgos personales. Los tonos muestran referencias generales de
-              sensibilidad, no mediciones.
+              Silueta anatómica simplificada con zonas de sensibilidad orientativas, sin mediciones.
             </desc>
+            <defs>
+              <clipPath id="front-body-clip">
+                <circle cx="120" cy="41" r="24" />
+                <path d="M104 66v17c-13 2-25 8-39 16-8 5-12 12-12 21l-17 66c-3 11 3 21 13 24 8 2 15-2 18-11l15-42 8 23 1 60-12 102c-1 11 5 19 15 20 9 1 16-5 18-15l8-71 8 71c2 10 9 16 18 15 10-1 16-9 15-20l-12-102 1-60 8-23 15 42c3 9 10 13 18 11 10-3 16-13 13-24l-17-66c0-9-4-16-12-21-14-8-26-14-39-16V66z" />
+              </clipPath>
+            </defs>
             <g class="tattoo-body__outline">
-              <circle cx="110" cy="40" r="24" />
-              <path d="M99 63v18l-36 12-22 62 21 13 22-43 4 54-23 84 20 8 26-70 26 70 20-8-23-84 4-54 22 43 21-13-22-62-36-12V63" />
-              <path d="M62 166 35 247l10 4 35-69m78-16 27 81-10 4-35-69M83 270l-7 98m61-98 7 98m-68 0-3 40h18l12-38m40-2 12 40h18l-3-40" />
+              <circle cx="120" cy="41" r="24" />
+              <path d="M104 66v17c-13 2-25 8-39 16-8 5-12 12-12 21l-17 66c-3 11 3 21 13 24 8 2 15-2 18-11l15-42 8 23 1 60-12 102c-1 11 5 19 15 20 9 1 16-5 18-15l8-71 8 71c2 10 9 16 18 15 10-1 16-9 15-20l-12-102 1-60 8-23 15 42c3 9 10 13 18 11 10-3 16-13 13-24l-17-66c0-9-4-16-12-21-14-8-26-14-39-16V66" />
             </g>
-            <g aria-hidden="true">
-              <ellipse class="tattoo-zone tattoo-zone--lower" cx="78" cy="109" rx="16" ry="12" />
-              <ellipse class="tattoo-zone tattoo-zone--lower" cx="142" cy="109" rx="16" ry="12" />
-              <ellipse class="tattoo-zone tattoo-zone--middle" cx="91" cy="166" rx="12" ry="26" />
-              <ellipse class="tattoo-zone tattoo-zone--middle" cx="129" cy="166" rx="12" ry="26" />
-              <ellipse class="tattoo-zone tattoo-zone--higher" cx="110" cy="150" rx="18" ry="21" />
-              <ellipse class="tattoo-zone tattoo-zone--higher" cx="38" cy="242" rx="10" ry="10" />
-              <ellipse class="tattoo-zone tattoo-zone--higher" cx="182" cy="242" rx="10" ry="10" />
+            <g clip-path="url(#front-body-clip)" aria-hidden="true">
+              <path
+                class="tattoo-zone tattoo-zone--lower"
+                d="M57 91q17-10 36-10l7 45-37 5zM147 81q19 0 36 10l-6 40-37-5z"
+              />
+              <path
+                class="tattoo-zone tattoo-zone--middle"
+                d="M78 133q14 6 31 3v75l-29 3-9-43zM131 136q17 3 31-3l7 38-9 43-29-3zM93 218h24l-7 58-25 3zM123 218h24l8 61-25-3z"
+              />
+              <path
+                class="tattoo-zone tattoo-zone--higher"
+                d="M104 111q16 5 32 0l-3 70q-13 12-26 0zM25 169l30 7-12 46q-18-3-22-20zM185 176l30-7 4 33q-4 17-22 20z"
+              />
             </g>
           </svg>
           <figcaption>Frente</figcaption>
         </figure>
         <figure>
-          <svg viewBox="0 0 220 410" role="img" aria-labelledby="body-back-title body-back-desc">
-            <title id="body-back-title">Silueta trasera orientativa</title>
+          <svg viewBox="0 0 240 410" role="img" aria-labelledby="body-back-title body-back-desc">
+            <title id="body-back-title">Silueta posterior orientativa</title>
             <desc id="body-back-desc">
-              Figura geométrica sin rasgos personales. Los tonos muestran referencias generales de
-              sensibilidad, no mediciones.
+              Silueta anatómica simplificada con zonas de sensibilidad orientativas, sin mediciones.
             </desc>
+            <defs>
+              <clipPath id="back-body-clip">
+                <circle cx="120" cy="41" r="24" />
+                <path d="M104 66v17c-13 2-25 8-39 16-8 5-12 12-12 21l-17 66c-3 11 3 21 13 24 8 2 15-2 18-11l15-42 8 23 1 60-12 102c-1 11 5 19 15 20 9 1 16-5 18-15l8-71 8 71c2 10 9 16 18 15 10-1 16-9 15-20l-12-102 1-60 8-23 15 42c3 9 10 13 18 11 10-3 16-13 13-24l-17-66c0-9-4-16-12-21-14-8-26-14-39-16V66z" />
+              </clipPath>
+            </defs>
             <g class="tattoo-body__outline">
-              <circle cx="110" cy="40" r="24" />
-              <path d="M99 63v18l-36 12-22 62 21 13 22-43 4 54-23 84 20 8 26-70 26 70 20-8-23-84 4-54 22 43 21-13-22-62-36-12V63" />
-              <path d="M62 166 35 247l10 4 35-69m78-16 27 81-10 4-35-69M83 270l-7 98m61-98 7 98m-68 0-3 40h18l12-38m40-2 12 40h18l-3-40" />
+              <circle cx="120" cy="41" r="24" />
+              <path d="M104 66v17c-13 2-25 8-39 16-8 5-12 12-12 21l-17 66c-3 11 3 21 13 24 8 2 15-2 18-11l15-42 8 23 1 60-12 102c-1 11 5 19 15 20 9 1 16-5 18-15l8-71 8 71c2 10 9 16 18 15 10-1 16-9 15-20l-12-102 1-60 8-23 15 42c3 9 10 13 18 11 10-3 16-13 13-24l-17-66c0-9-4-16-12-21-14-8-26-14-39-16V66" />
             </g>
-            <g aria-hidden="true">
-              <ellipse class="tattoo-zone tattoo-zone--lower" cx="78" cy="109" rx="16" ry="12" />
-              <ellipse class="tattoo-zone tattoo-zone--lower" cx="142" cy="109" rx="16" ry="12" />
-              <ellipse class="tattoo-zone tattoo-zone--middle" cx="91" cy="166" rx="12" ry="26" />
-              <ellipse class="tattoo-zone tattoo-zone--middle" cx="129" cy="166" rx="12" ry="26" />
-              <ellipse class="tattoo-zone tattoo-zone--higher" cx="110" cy="152" rx="15" ry="34" />
-              <ellipse class="tattoo-zone tattoo-zone--higher" cx="38" cy="242" rx="10" ry="10" />
-              <ellipse class="tattoo-zone tattoo-zone--higher" cx="182" cy="242" rx="10" ry="10" />
+            <g clip-path="url(#back-body-clip)" aria-hidden="true">
+              <path
+                class="tattoo-zone tattoo-zone--lower"
+                d="M58 88q17-9 35-9l9 53-41 3zM147 79q18 0 35 9l-3 47-41-3z"
+              />
+              <path
+                class="tattoo-zone tattoo-zone--middle"
+                d="M77 138q17 2 34 0v68l-27 7-9-43zM129 138q17 2 34 0l2 32-9 43-27-7zM91 219h26l-9 58-25 2zM123 219h26l8 60-25-2z"
+              />
+              <path
+                class="tattoo-zone tattoo-zone--higher"
+                d="M107 112h26v116h-26zM23 169l31 7-11 46q-18-3-22-20zM186 176l31-7 2 33q-4 17-22 20z"
+              />
             </g>
           </svg>
           <figcaption>Espalda</figcaption>
@@ -68,34 +83,33 @@
       </div>
       <div class="tattoo-sensitivity__key">
         <h3 class="tattoo-sensitivity__key-title" id="sensitivity-key-title">
-          Referencias generales
+          Orientación general
         </h3>
         <ul class="tattoo-sensitivity-legend">
           <li>
             <span class="tattoo-sensitivity-legend__swatch tattoo-zone--lower"></span>
             <div>
-              <strong>Menor sensibilidad</strong>
-              <p>Hombro y brazo exterior suelen describirse como zonas más llevaderas.</p>
+              <strong>Menor</strong>
+              <p>Hombro y brazo exterior suelen sentirse más llevaderos.</p>
             </div>
           </li>
           <li>
             <span class="tattoo-sensitivity-legend__swatch tattoo-zone--middle"></span>
             <div>
-              <strong>Sensibilidad media</strong>
-              <p>La percepción puede variar mucho dentro de una misma zona.</p>
+              <strong>Media</strong>
+              <p>La percepción puede variar dentro de una misma zona.</p>
             </div>
           </li>
           <li>
             <span class="tattoo-sensitivity-legend__swatch tattoo-zone--higher"></span>
             <div>
-              <strong>Mayor sensibilidad</strong>
+              <strong>Mayor</strong>
               <p>Costillas, codos y manos suelen sentirse más sensibles.</p>
             </div>
           </li>
         </ul>
         <p class="tattoo-guide-note">
-          La sensibilidad varía entre personas y puede cambiar según la zona, el tamaño del tatuaje
-          y la duración de la sesión. No es una medición ni una evaluación médica.
+          La sensibilidad varía según la persona, la zona y la duración de la sesión.
         </p>
       </div>
     </div>

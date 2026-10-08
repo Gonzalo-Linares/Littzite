@@ -5,10 +5,9 @@ import type { TattooPortfolioItem } from '../portfolio';
 interface Props {
   items: readonly TattooPortfolioItem[];
   id?: string;
-  previewOnly?: boolean;
 }
 
-const { items, id = 'trabajos-carousel', previewOnly = false } = Astro.props;
+const { items, id = 'trabajos-carousel' } = Astro.props;
 const canMove = items.length > 1;
 ---
 
@@ -43,22 +42,22 @@ const canMove = items.length > 1;
               <figcaption>
                 <span class="tattoo-carousel__number">{String(index + 1).padStart(2, '0')}</span>
                 <span>{item.title}</span>
-                {previewOnly && <small>Referencia generada · preview</small>}
               </figcaption>
             </figure>
           ))}
         </div>
       </div>
       {canMove && (
-        <div class="tattoo-carousel__controls">
+        <div class="tattoo-carousel__controls" role="group" aria-label="Controles de trabajos">
           <button type="button" data-carousel-prev aria-label="Trabajo anterior">
-            ←
-          </button>
-          <button type="button" data-carousel-toggle aria-label="Pausar reproducción">
-            <span data-carousel-toggle-label>Pausar reproducción</span>
+            <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+              <path d="m14.5 5-7 7 7 7" />
+            </svg>
           </button>
           <button type="button" data-carousel-next aria-label="Trabajo siguiente">
-            →
+            <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+              <path d="m9.5 5 7 7-7 7" />
+            </svg>
           </button>
         </div>
       )}
@@ -80,7 +79,7 @@ const canMove = items.length > 1;
       <div class="tattoo-carousel__empty-copy">
         <p class="tattoo-eyebrow">TRABAJOS DEL ESTUDIO</p>
         <h3>TRABAJOS</h3>
-        <p>Una selección de trabajos y referencias visuales del estudio.</p>
+        <p>Una selección de tatuajes y estilos.</p>
         <a class="tattoo-text-link" href="/trabajos/">
           Explorar trabajos <span aria-hidden="true">↗</span>
         </a>
@@ -100,43 +99,29 @@ const canMove = items.length > 1;
 </section>
 
 {canMove && <script>
-  const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
-
   document.querySelectorAll<HTMLElement>('[data-tattoo-carousel]').forEach((carousel) => {
     const viewport = carousel.querySelector<HTMLElement>('.tattoo-carousel__viewport');
     const slides = [...carousel.querySelectorAll<HTMLElement>('[data-slide-index]')];
     const previous = carousel.querySelector<HTMLButtonElement>('[data-carousel-prev]');
     const next = carousel.querySelector<HTMLButtonElement>('[data-carousel-next]');
-    const toggle = carousel.querySelector<HTMLButtonElement>('[data-carousel-toggle]');
-    const toggleLabel = carousel.querySelector<HTMLElement>('[data-carousel-toggle-label]');
-    if (!viewport || !previous || !next || !toggle || !toggleLabel || slides.length < 2) return;
+    if (!viewport || !previous || !next || slides.length < 2) return;
 
     let activeIndex = 0;
-    let userPaused = reduceMotion.matches;
-    let manualPlay = false;
-    let suspended = false;
-    let timer: number | undefined;
 
-    const update = (index: number, manual: boolean) => {
+    const update = (index: number) => {
       activeIndex = (index + slides.length) % slides.length;
-      if (manual) {
-        userPaused = true;
-        manualPlay = false;
-      }
       slides.forEach((slide, slideIndex) =>
         slide.classList.toggle('is-active', slideIndex === activeIndex),
       );
-      slides[activeIndex]?.scrollIntoView({
-        behavior: reduceMotion.matches ? 'auto' : 'smooth',
-        block: 'nearest',
-        inline: 'center',
-      });
-    };
-
-    const renderToggle = () => {
-      const isPaused = userPaused || suspended;
-      toggle.setAttribute('aria-label', isPaused ? 'Reanudar reproducción' : 'Pausar reproducción');
-      toggleLabel.textContent = isPaused ? 'Reanudar reproducción' : 'Pausar reproducción';
+      const target = slides[activeIndex];
+      if (target) {
+        viewport.scrollTo({
+          left: target.offsetLeft - (viewport.clientWidth - target.offsetWidth) / 2,
+          behavior: window.matchMedia('(prefers-reduced-motion: reduce)').matches
+            ? 'auto'
+            : 'smooth',
+        });
+      }
     };
 
     const syncActive = () => {
@@ -153,76 +138,23 @@ const canMove = items.length > 1;
       );
     };
 
-    const start = () => {
-      window.clearInterval(timer);
-      timer = undefined;
-      if (!userPaused && !suspended && (!reduceMotion.matches || manualPlay)) {
-        timer = window.setInterval(() => update(activeIndex + 1, false), 7000);
-      }
-      renderToggle();
-    };
-
     previous.addEventListener('click', () => {
-      update(activeIndex - 1, true);
-      start();
+      update(activeIndex - 1);
     });
     next.addEventListener('click', () => {
-      update(activeIndex + 1, true);
-      start();
-    });
-    toggle.addEventListener('click', () => {
-      userPaused = !userPaused;
-      manualPlay = !userPaused;
-      start();
+      update(activeIndex + 1);
     });
     viewport.addEventListener('scroll', syncActive, { passive: true });
     viewport.addEventListener('keydown', (event) => {
       if (event.key === 'ArrowLeft') {
         event.preventDefault();
-        update(activeIndex - 1, true);
-        start();
+        update(activeIndex - 1);
       }
       if (event.key === 'ArrowRight') {
         event.preventDefault();
-        update(activeIndex + 1, true);
-        start();
+        update(activeIndex + 1);
       }
-    });
-    carousel.addEventListener(
-      'pointerdown',
-      () => {
-        userPaused = true;
-        manualPlay = false;
-        start();
-      },
-      { passive: true },
-    );
-    carousel.addEventListener('mouseenter', () => {
-      suspended = true;
-      start();
-    });
-    carousel.addEventListener('mouseleave', () => {
-      suspended = false;
-      start();
-    });
-    carousel.addEventListener('focusin', () => {
-      suspended = true;
-      start();
-    });
-    carousel.addEventListener('focusout', (event) => {
-      if (!carousel.contains(event.relatedTarget as Node | null)) {
-        suspended = false;
-        start();
-      }
-    });
-    reduceMotion.addEventListener('change', (event) => {
-      if (event.matches) {
-        userPaused = true;
-        manualPlay = false;
-      }
-      start();
     });
     syncActive();
-    start();
   });
 </script>}

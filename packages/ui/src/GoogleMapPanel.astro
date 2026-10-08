@@ -5,7 +5,6 @@ interface Props {
   embedUrl?: string;
   directionsHref?: string;
   locationLabel?: string;
-  pendingMessage?: string;
   directionsLabel?: string;
   className?: string;
 }
@@ -14,7 +13,6 @@ const {
   embedUrl,
   directionsHref,
   locationLabel = 'Ubicación',
-  pendingMessage,
   directionsLabel = 'Cómo llegar',
   className = '',
 } = Astro.props;
@@ -39,9 +37,9 @@ if (embedUrl && !isAllowedGoogleEmbed(embedUrl))
   throw new Error('GoogleMapPanel requires a valid Google Maps embed URL');
 ---
 
-{(embedUrl || directionsHref || pendingMessage) && (
+{(embedUrl || directionsHref) && (
   <div class:list={['google-map-panel', className]}>
-    {embedUrl ? (
+    {embedUrl && (
       <iframe
         class="google-map-panel__iframe"
         src={embedUrl}
@@ -49,24 +47,6 @@ if (embedUrl && !isAllowedGoogleEmbed(embedUrl))
         loading="lazy"
         referrerpolicy="no-referrer-when-downgrade"
       />
-    ) : (
-      pendingMessage && (
-        <div
-          class="google-map-panel__pending"
-          role="group"
-          aria-label={`Referencia: ${locationLabel}`}
-        >
-          <svg viewBox="0 0 640 360" aria-hidden="true" focusable="false">
-            <path d="M-18 72 220 28l92 61 151-52 194 42M-18 152l176-32 119 58 151-42 230 47M-18 248l215-42 98 65 159-37 206 43M72-20l45 111-31 94 56 73-18 122M223-20l-20 108 70 83-27 85 47 123M414-20l-12 94 62 91-18 97 40 118M566-20l-40 101 48 90-25 102 32 100" />
-            <path class="google-map-panel__route" d="m92 281 116-90 112 25 83-95 115 40" />
-          </svg>
-          <div class="google-map-panel__pending-copy">
-            <span>REFERENCIA DE UBICACIÓN</span>
-            <strong>{locationLabel}</strong>
-            <p>{pendingMessage}</p>
-          </div>
-        </div>
-      )
     )}
     {directionsHref && (
       <ButtonLink
@@ -92,55 +72,6 @@ if (embedUrl && !isAllowedGoogleEmbed(embedUrl))
     min-height: 19rem;
     border: 0;
     border-radius: 0.7rem;
-  }
-  .google-map-panel__pending {
-    position: relative;
-    display: grid;
-    min-height: 18rem;
-    align-items: end;
-    overflow: hidden;
-    border: 1px solid color-mix(in srgb, var(--color-border) 55%, transparent);
-    border-radius: 0.7rem;
-    background: color-mix(in srgb, var(--color-surface) 84%, var(--color-border));
-  }
-  .google-map-panel__pending > svg {
-    position: absolute;
-    inset: 0;
-    width: 100%;
-    height: 100%;
-    fill: none;
-    stroke: color-mix(in srgb, var(--color-border) 48%, transparent);
-    stroke-width: 1.2;
-  }
-  .google-map-panel__pending > svg .google-map-panel__route {
-    stroke: var(--color-accent);
-    stroke-width: 2;
-    stroke-dasharray: 4 7;
-    opacity: 0.55;
-  }
-  .google-map-panel__pending-copy {
-    position: relative;
-    max-width: 33rem;
-    margin: 1rem;
-    padding: 1rem 1.2rem;
-    border: 1px solid color-mix(in srgb, var(--color-border) 35%, transparent);
-    background: color-mix(in srgb, var(--color-surface) 88%, transparent);
-    backdrop-filter: blur(8px);
-  }
-  .google-map-panel__pending-copy > span {
-    display: block;
-    margin-bottom: 0.25rem;
-    font-size: 0.63rem;
-    font-weight: 750;
-    letter-spacing: 0.12em;
-  }
-  .google-map-panel__pending-copy > strong {
-    display: block;
-    font-size: 1.15rem;
-  }
-  .google-map-panel__pending-copy > p {
-    margin: 0.25rem 0 0;
-    font-size: 0.83rem;
   }
   .google-map-panel__directions {
     display: inline-flex;

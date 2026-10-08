@@ -780,13 +780,6 @@
   letter-spacing: -0.035em;
   text-wrap: balance;
 }
-.tattoo-home-hero h1 span {
-  display: block;
-  color: var(--tattoo-gold);
-  font-family: 'DejaVu Serif', serif;
-  font-size: 0.82em;
-  letter-spacing: -0.055em;
-}
 .tattoo-home-hero__lead {
   max-width: 31rem;
   margin-bottom: 0;
@@ -2496,5 +2489,491 @@
   .tattoo-footer-nav,
   .tattoo-footer-legal {
     grid-column: 1 / -1;
+  }
+}
+
+/* Final editorial balance for the existing Juanjo identity. */
+.juanjo-site .tattoo-home-hero > .container,
+.juanjo-site .tattoo-work-section > .container {
+  width: min(calc(100% - 2.5rem), 88rem);
+}
+.juanjo-site .tattoo-home-hero__grid {
+  min-height: min(51rem, calc(100svh - 5rem));
+  grid-template-columns: minmax(0, 0.9fr) minmax(25rem, 1.1fr);
+  gap: clamp(2rem, 4vw, 4.5rem);
+}
+.juanjo-site .tattoo-home-hero h1 {
+  max-width: 10ch;
+  font-family: 'Rye', serif;
+  font-size: clamp(3.3rem, 6vw, 6.4rem);
+  letter-spacing: -0.045em;
+}
+.juanjo-site .tattoo-home-hero h1 span {
+  display: inline;
+  color: inherit;
+  font-family: inherit;
+  font-size: inherit;
+  letter-spacing: inherit;
+}
+.juanjo-site .tattoo-hero-media {
+  max-width: 51rem;
+}
+.juanjo-site .tattoo-hero-media__oni {
+  width: clamp(9rem, 20vw, 16rem);
+}
+.juanjo-site .tattoo-brand-mark {
+  width: clamp(8.8rem, 12vw, 11rem);
+}
+.juanjo-site .tattoo-header-instagram {
+  width: 2.9rem;
+  min-height: 2.9rem;
+  border: 0;
+  border-radius: 50%;
+  background: transparent;
+  color: var(--tattoo-ivory);
+  transition:
+    color 160ms ease,
+    background-color 160ms ease;
+}
+.juanjo-site .tattoo-header-instagram:hover {
+  color: var(--tattoo-gold);
+  background: rgb(201 169 107 / 9%);
+}
+.juanjo-site .tattoo-header-instagram:focus-visible {
+  outline: 2px solid var(--tattoo-gold);
+  outline-offset: 2px;
+}
+.tattoo-work-section > .container {
+  max-width: 88rem;
+}
+.tattoo-carousel {
+  padding-inline: 3rem;
+}
+.tattoo-carousel__viewport {
+  scrollbar-width: none;
+}
+.tattoo-carousel__viewport::-webkit-scrollbar {
+  display: none;
+}
+.tattoo-carousel__track {
+  width: auto;
+  gap: clamp(0.7rem, 1.5vw, 1.4rem);
+  padding: 1.3rem 34% 1.6rem;
+}
+.tattoo-carousel__item {
+  flex-basis: 32%;
+}
+.tattoo-carousel__item img {
+  height: clamp(21rem, 36vw, 35rem);
+  object-fit: cover;
+}
+.tattoo-carousel__controls {
+  position: absolute;
+  z-index: 2;
+  inset: 50% 0 auto;
+  display: flex;
+  justify-content: space-between;
+  margin: 0;
+  pointer-events: none;
+  transform: translateY(-50%);
+}
+.tattoo-carousel__controls button {
+  width: 3.2rem;
+  min-width: 3.2rem;
+  min-height: 3.2rem;
+  padding: 0.7rem;
+  border: 1px solid rgb(201 169 107 / 78%);
+  border-radius: 50%;
+  background: rgb(14 14 14 / 88%);
+  pointer-events: auto;
+}
+.tattoo-carousel__controls button svg {
+  width: 1.2rem;
+  height: 1.2rem;
+  fill: none;
+  stroke: currentColor;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-width: 1.8;
+}
+.tattoo-carousel__controls button:hover {
+  border-color: var(--tattoo-gold);
+  color: var(--tattoo-gold);
+}
+.juanjo-site .site-footer__inner {
+  display: flex;
+  flex-direction: column;
+  gap: 0.65rem;
+  padding-block: 1.15rem 0.85rem;
+  text-align: center;
+}
+.juanjo-site .site-footer__inner > div:first-child {
+  order: 2;
+}
+.juanjo-site .site-footer__note {
+  max-width: none;
+  margin: 0.15rem 0 0;
+  white-space: nowrap;
+}
+.tattoo-footer-brand {
+  display: none;
+}
+.tattoo-footer-nav {
+  order: 1;
+  justify-content: center;
+  gap: 0 0.75rem;
+}
+.tattoo-footer-nav a {
+  min-height: 2rem;
+  font-size: 0.72rem;
+}
+.juanjo-site .site-attribution {
+  order: 0;
+  align-items: center;
+  flex-direction: column;
+  gap: 0.15rem;
+}
+.juanjo-site .site-attribution__label {
+  font-size: 0.62rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+.juanjo-site .site-attribution__identity {
+  min-height: auto;
+}
+.juanjo-site .site-attribution__logo {
+  width: clamp(8.8rem, 12vw, 10.5rem);
+  max-height: 2.35rem;
+}
+.juanjo-site .site-footer .button-link--quiet {
+  order: 3;
+  min-height: 1.8rem;
+  padding-block: 0;
+}
+.tattoo-footer-legal {
+  justify-content: center;
+  gap: 0 1rem;
+  padding-top: 0.4rem;
+}
+.tattoo-footer-legal a {
+  min-height: 1.8rem;
+}
+.juanjo-site .site-footer__secondary {
+  padding-bottom: 0.15rem;
+}
+.tattoo-sensitivity__layout {
+  grid-template-columns: minmax(0, 1.15fr) minmax(19rem, 0.85fr);
+  align-items: center;
+  gap: clamp(2rem, 5vw, 5rem);
+}
+.tattoo-body-maps figure {
+  width: min(48%, 14rem);
+  padding: 1rem 0.75rem 0.8rem;
+  border: 1px solid rgb(201 169 107 / 22%);
+  background: linear-gradient(160deg, rgb(44 44 44 / 72%), rgb(14 14 14 / 48%));
+}
+.tattoo-body-maps svg {
+  max-height: 27rem;
+}
+.tattoo-body__outline {
+  fill: #292522;
+  stroke: rgb(234 220 198 / 60%);
+  stroke-width: 1.3;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+.tattoo-zone {
+  stroke: var(--tattoo-ink);
+  stroke-width: 1.1;
+  opacity: 0.83;
+}
+.tattoo-size-guide__grid {
+  grid-template-columns: minmax(0, 0.88fr) minmax(25rem, 1.12fr);
+  align-items: center;
+  gap: clamp(2rem, 5vw, 5rem);
+}
+.tattoo-size-guide__grid h2 {
+  max-width: 14ch;
+}
+.tattoo-scale-comparison {
+  grid-template-columns: 1fr;
+  gap: 0.5rem;
+  padding: 1rem;
+}
+.tattoo-scale-comparison__body {
+  display: block;
+  width: 100%;
+  max-height: 20rem;
+  overflow: visible;
+}
+.tattoo-scale-comparison__silhouette {
+  fill: #2d2925;
+  stroke: rgb(234 220 198 / 68%);
+  stroke-width: 1.4;
+  stroke-linejoin: round;
+}
+.tattoo-scale-comparison__arm {
+  fill: none;
+  stroke: rgb(234 220 198 / 48%);
+  stroke-linecap: round;
+  stroke-width: 1.4;
+}
+.tattoo-scale-comparison__motif {
+  fill: var(--tattoo-red);
+  stroke: var(--tattoo-gold);
+  stroke-width: 1.5;
+}
+.tattoo-scale-comparison__motif circle {
+  fill: var(--tattoo-ivory);
+  stroke: var(--tattoo-gold);
+}
+.tattoo-scale-comparison__labels {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  border-top: 1px solid rgb(201 169 107 / 30%);
+}
+.tattoo-scale-comparison__labels span {
+  display: grid;
+  gap: 0.15rem;
+  justify-items: center;
+  padding: 0.7rem 0.25rem 0.15rem;
+  text-align: center;
+}
+.tattoo-scale-comparison__labels strong {
+  color: var(--tattoo-gold);
+  font-family: 'DejaVu Serif', serif;
+  font-size: 1.05rem;
+  font-weight: 400;
+}
+.tattoo-scale-comparison__labels small {
+  color: var(--tattoo-muted);
+  font-size: 0.68rem;
+}
+.tattoo-aftercare-card__visual {
+  min-height: 18rem;
+  background-image:
+    linear-gradient(180deg, rgb(14 14 14 / 8%) 8%, rgb(14 14 14 / 92%) 100%),
+    url('/preview/aftercare-contact-sheet-preview.webp');
+}
+.tattoo-studio-intro {
+  padding-block: clamp(2.8rem, 5vw, 4.5rem);
+}
+.tattoo-studio-intro__grid {
+  grid-template-columns: minmax(0, 1.1fr) minmax(15rem, 0.6fr);
+  gap: clamp(2rem, 5vw, 5rem);
+}
+.tattoo-studio-page h1 {
+  max-width: 14ch;
+  font-size: clamp(2.6rem, 4.6vw, 4.4rem);
+  line-height: 1.16;
+}
+.tattoo-studio-page__mark {
+  width: min(100%, 22rem);
+  justify-self: end;
+  padding: 7%;
+}
+.tattoo-studio-page__principles {
+  margin-top: 1.5rem;
+}
+.tattoo-studio-page__principles article {
+  padding-block: 1.15rem;
+}
+.tattoo-studio-page__principles h2 {
+  margin-top: 0.7rem;
+}
+.tattoo-studio-cta {
+  padding-block: 1.4rem 2rem;
+}
+.tattoo-contact-page {
+  display: block;
+  min-height: 0;
+  padding-block: clamp(3rem, 6vw, 5rem);
+  background: var(--tattoo-ink);
+}
+.tattoo-contact-hero {
+  padding-block: 0 1.5rem;
+}
+.tattoo-contact-hero h1 {
+  margin: 0;
+  font-size: clamp(2.8rem, 5vw, 4.5rem);
+}
+.tattoo-contact-layout {
+  grid-template-columns: minmax(0, 1fr);
+  gap: 2.5rem;
+}
+.tattoo-contact-paths {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  align-items: stretch;
+  gap: 1rem;
+}
+.tattoo-contact-path {
+  display: flex;
+  min-height: 20rem;
+  flex-direction: column;
+  align-items: flex-start;
+  padding: clamp(1.25rem, 3vw, 2rem);
+  border: 1px solid rgb(201 169 107 / 36%);
+  background: linear-gradient(145deg, rgb(44 44 44 / 78%), rgb(26 24 22 / 72%));
+}
+.tattoo-contact-path + .tattoo-contact-path {
+  border-left: 1px solid rgb(201 169 107 / 36%);
+}
+.tattoo-contact-path__icon {
+  display: grid;
+  width: 2.8rem;
+  aspect-ratio: 1;
+  place-items: center;
+  border: 1px solid rgb(201 169 107 / 50%);
+  border-radius: 50%;
+  color: var(--tattoo-gold);
+  font-size: 0.75rem;
+}
+.tattoo-contact-path__eyebrow {
+  margin: 1rem 0 0.2rem;
+  color: var(--tattoo-gold);
+  font-size: 0.65rem;
+  letter-spacing: 0.11em;
+}
+.tattoo-contact-path h2 {
+  margin: 0.4rem 0 0.6rem;
+  font-size: clamp(1.45rem, 2vw, 1.85rem);
+}
+.tattoo-contact-path > p:not(.tattoo-contact-path__eyebrow) {
+  margin: 0 0 1.2rem;
+}
+.tattoo-contact-path > .button-link,
+.tattoo-contact-path > .tattoo-contact-path__instagram {
+  margin-top: auto;
+}
+.tattoo-contact-path__instagram {
+  min-height: 3rem;
+  border: 1px solid var(--tattoo-gold);
+}
+.tattoo-contact-location {
+  max-width: 78rem;
+}
+.tattoo-contact-location h2 {
+  margin: 0.4rem 0 1rem;
+  font-size: clamp(1.7rem, 3vw, 2.4rem);
+}
+.tattoo-location-map {
+  display: flex;
+  min-height: 0;
+  align-items: center;
+}
+.tattoo-location-map .google-map-panel__directions {
+  margin-top: 0;
+}
+.tattoo-instagram-link {
+  text-decoration: none;
+}
+.tattoo-instagram-link:hover {
+  color: var(--tattoo-gold);
+}
+.tattoo-instagram-link:focus-visible {
+  outline: 2px solid var(--tattoo-gold);
+  outline-offset: 3px;
+}
+@media (max-width: 900px) {
+  .juanjo-site .tattoo-home-hero__grid {
+    grid-template-columns: minmax(0, 0.9fr) minmax(18rem, 1.1fr);
+  }
+  .tattoo-carousel {
+    padding-inline: 2.4rem;
+  }
+  .tattoo-carousel__track {
+    padding-inline: 33%;
+  }
+  .tattoo-carousel__item {
+    flex-basis: 36%;
+  }
+  .tattoo-contact-path {
+    min-height: 19rem;
+  }
+}
+@media (max-width: 700px) {
+  .juanjo-site .tattoo-home-hero > .container,
+  .juanjo-site .tattoo-work-section > .container {
+    width: min(calc(100% - 1.5rem), 88rem);
+  }
+  .juanjo-site .tattoo-home-hero__grid {
+    min-height: 0;
+    grid-template-columns: 1fr;
+    gap: 1.6rem;
+    padding-block: 2.5rem 1.8rem;
+  }
+  .juanjo-site .tattoo-home-hero h1 {
+    max-width: 12ch;
+    font-size: clamp(2.7rem, 11vw, 4.3rem);
+  }
+  .juanjo-site .tattoo-hero-media {
+    width: 100%;
+  }
+  .juanjo-site .tattoo-hero-media__oni {
+    width: clamp(7.5rem, 26vw, 11rem);
+  }
+  .tattoo-carousel {
+    padding-inline: 1.9rem;
+  }
+  .tattoo-carousel__track {
+    gap: 0.7rem;
+    padding-inline: 8%;
+  }
+  .tattoo-carousel__item {
+    flex-basis: 84%;
+  }
+  .tattoo-carousel__item img {
+    height: clamp(18rem, 88vw, 28rem);
+  }
+  .tattoo-carousel__controls button {
+    width: 2.8rem;
+    min-width: 2.8rem;
+    min-height: 2.8rem;
+  }
+  .tattoo-footer-nav {
+    gap: 0 0.4rem;
+  }
+  .tattoo-footer-nav a {
+    font-size: 0.68rem;
+  }
+  .tattoo-sensitivity__layout,
+  .tattoo-size-guide__grid,
+  .tattoo-studio-intro__grid {
+    grid-template-columns: 1fr;
+  }
+  .tattoo-studio-page__mark {
+    width: min(72%, 19rem);
+    justify-self: center;
+  }
+  .tattoo-contact-paths {
+    grid-template-columns: 1fr 1fr;
+  }
+  .tattoo-contact-path {
+    min-height: 20rem;
+    padding: 1.05rem;
+  }
+}
+@media (max-width: 480px) {
+  .juanjo-site .site-footer__note {
+    white-space: normal;
+  }
+  .tattoo-contact-paths {
+    grid-template-columns: 1fr;
+  }
+  .tattoo-contact-path {
+    min-height: 17rem;
+  }
+  .tattoo-aftercare__grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  .tattoo-aftercare-card__visual {
+    min-height: 14rem;
+    padding: 0.8rem;
+  }
+  .tattoo-aftercare-card__visual h3 {
+    font-size: 0.95rem;
+  }
+  .tattoo-aftercare-card__visual p {
+    font-size: 0.7rem;
   }
 }

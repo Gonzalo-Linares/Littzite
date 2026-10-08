@@ -1155,6 +1155,12 @@
   border: 1px solid color-mix(in srgb, var(--viora-plum) 24%, transparent);
   border-radius: 0.55rem;
 }
+.viora-map .google-map-panel__directions {
+  display: inline-flex;
+  margin-top: 0.8rem;
+  color: var(--viora-plum);
+  font-weight: 700;
+}
 .viora-map__directions {
   display: inline-flex;
   margin-top: 0.8rem;

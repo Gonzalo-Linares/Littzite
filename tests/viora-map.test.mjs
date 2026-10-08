@@ -39,16 +39,16 @@ test('VioraMap supports directions without an embed and renders a lazy titled Go
   const directionsOnly = html.match(/<div data-case="directions-only">(.*?)<\/div>/s)?.[1];
   assert.match(
     directionsOnly,
-    /class="button-link button-link--secondary button-link--compact" href="https:\/\/maps\.app\.goo\.gl\/H4jmqTGKicDse2iS7">\s*Cómo llegar/,
+    /class="button-link button-link--secondary button-link--compact google-map-panel__directions" href="https:\/\/maps\.app\.goo\.gl\/H4jmqTGKicDse2iS7">Ver en Google Maps/,
   );
   assert.doesNotMatch(directionsOnly, /<iframe\b/);
   assert.match(
     html,
-    /<iframe src="https:\/\/www\.google\.com\/maps\/embed\?pb=verified-fixture" title="Mapa interactivo: Ubicación de prueba" loading="lazy" referrerpolicy="no-referrer-when-downgrade"><\/iframe>/,
+    /<iframe class="google-map-panel__iframe" src="https:\/\/www\.google\.com\/maps\/embed\?pb=verified-fixture" title="Mapa interactivo: Ubicación de prueba" loading="lazy" referrerpolicy="no-referrer-when-downgrade"><\/iframe>/,
   );
   assert.match(
     html,
-    /class="button-link button-link--secondary button-link--compact" href="https:\/\/www\.google\.com\/maps\/dir\/\?api=1">\s*Cómo llegar/,
+    /class="button-link button-link--secondary button-link--compact google-map-panel__directions" href="https:\/\/www\.google\.com\/maps\/dir\/\?api=1">Ver en Google Maps/,
   );
 });
 

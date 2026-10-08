@@ -73,6 +73,19 @@ export const tattooActions = {
   instagramHref: tattooBrand.social.instagram,
 } as const;
 
+export const tattooLocation = {
+  directionsHref: 'https://maps.app.goo.gl/SrLiJA1dutozzdKn7',
+  embedUrl: undefined as string | undefined,
+} as const;
+
+export const tattooReleaseState = {
+  temporaryHeroImage: true,
+  temporaryPortfolioImages: true,
+  temporaryAftercareImage: true,
+  bookingUrlIsPlaceholder:
+    tattooActions.turnsHref === 'https://cal.com/gonzalo-linares-rfbhnf/prueba',
+} as const;
+
 export const tattooIdentity = {
   surface: tattooBrand.palette.ink,
   text: tattooBrand.palette.ivory,

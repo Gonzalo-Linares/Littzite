@@ -89,10 +89,10 @@ import { tattooActions, tattooBrand } from '../brand.config';
       <div class="container tattoo-size-guide__grid">
         <div>
           <p class="tattoo-eyebrow">03 / TAMAÑO Y UBICACIÓN</p>
-          <h2 id="size-title">El tamaño y la ubicación cambian cómo se ve un tatuaje.</h2>
+          <h2 id="size-title">¿Qué tamaño puede tener tu tatuaje?</h2>
           <p>
-            Un tatuaje de 5 cm deja menos espacio para el detalle que uno de 20 cm. La zona y el
-            diseño también cambian cómo se lee. Compará las escalas antes de definirlas con Juanjo.
+            Compará referencias de 5, 10 y 20 cm para imaginar mejor la escala antes de definir el
+            diseño.
           </p>
           <p class="tattoo-guide-note">
             La comparación es proporcional y orientativa; no representa una medida exacta sobre el
@@ -103,25 +103,60 @@ import { tattooActions, tattooBrand } from '../brand.config';
           <div
             class="tattoo-scale-comparison"
             role="img"
-            aria-label="Comparación proporcional de tatuajes de 5, 10 y 20 centímetros"
+            aria-label="El mismo símbolo geométrico en tres escalas sobre muñeca, antebrazo y brazo"
           >
-            <div class="tattoo-scale-comparison__item tattoo-scale-comparison__item--small">
-              <span class="tattoo-scale-comparison__mark" aria-hidden="true"></span>
-              <strong>5 cm</strong>
-              <small>Pequeño</small>
-            </div>
-            <div class="tattoo-scale-comparison__item tattoo-scale-comparison__item--medium">
-              <span class="tattoo-scale-comparison__mark" aria-hidden="true"></span>
-              <strong>10 cm</strong>
-              <small>Mediano</small>
-            </div>
-            <div class="tattoo-scale-comparison__item tattoo-scale-comparison__item--large">
-              <span class="tattoo-scale-comparison__mark" aria-hidden="true"></span>
-              <strong>20 cm</strong>
-              <small>Grande</small>
+            <svg
+              class="tattoo-scale-comparison__body"
+              viewBox="0 0 520 390"
+              aria-hidden="true"
+              focusable="false"
+            >
+              <path
+                class="tattoo-scale-comparison__silhouette"
+                d="M190 26c-20 0-35 17-35 38 0 15 7 28 18 34l-8 25-72 27c-12 5-20 17-20 30v88c0 12 8 22 20 24l25 4 10 79c1 10 9 17 19 17h14c10 0 18-7 19-17l18-106h44l18 106c1 10 9 17 19 17h14c10 0 18-7 19-17l10-79 25-4c12-2 20-12 20-24v-88c0-13-8-25-20-30l-72-27-8-25c11-6 18-19 18-34 0-21-15-38-35-38z"
+              />
+              <path
+                class="tattoo-scale-comparison__arm"
+                d="M96 180c-9 23-12 53-8 85m344-85c9 23 12 53 8 85"
+              />
+              <g
+                class="tattoo-scale-comparison__motif tattoo-scale-comparison__motif--small"
+                transform="translate(87 255)"
+              >
+                <path d="m0-8 2.4 5.6L8 0 2.4 2.4 0 8-2.4 2.4-8 0l5.6-2.4z" />
+                <circle r="2" />
+              </g>
+              <g
+                class="tattoo-scale-comparison__motif tattoo-scale-comparison__motif--medium"
+                transform="translate(117 214)"
+              >
+                <path d="m0-12 3.6 8.4L12 0l-8.4 3.6L0 12l-3.6-8.4L-12 0l8.4-3.6z" />
+                <circle r="3" />
+              </g>
+              <g
+                class="tattoo-scale-comparison__motif tattoo-scale-comparison__motif--large"
+                transform="translate(165 154)"
+              >
+                <path d="m0-18 5.4 12.6L18 0 5.4 5.4 0 18l-5.4-12.6L-18 0l12.6-5.4z" />
+                <circle r="4.5" />
+              </g>
+            </svg>
+            <div class="tattoo-scale-comparison__labels" aria-hidden="true">
+              <span>
+                <strong>5 cm</strong>
+                <small>Muñeca</small>
+              </span>
+              <span>
+                <strong>10 cm</strong>
+                <small>Antebrazo</small>
+              </span>
+              <span>
+                <strong>20 cm</strong>
+                <small>Brazo</small>
+              </span>
             </div>
           </div>
-          <figcaption>Escalas gráficas relativas para comparar tamaños.</figcaption>
+          <figcaption>Un mismo símbolo a escala orientativa sobre distintas zonas.</figcaption>
         </figure>
       </div>
     </section>
@@ -160,7 +195,7 @@ import { tattooActions, tattooBrand } from '../brand.config';
             >
               <span>02</span>
               <div>
-                <h3>Secado suave</h3>
+                <h3>Secado y cuidado</h3>
                 <p>Secá con cuidado, sin frotar la piel.</p>
               </div>
             </div>
@@ -184,7 +219,7 @@ import { tattooActions, tattooBrand } from '../brand.config';
             >
               <span>04</span>
               <div>
-                <h3>Sol e hidratación</h3>
+                <h3>Sol y piel</h3>
                 <p>Seguí las indicaciones de cuidado y protección solar.</p>
               </div>
             </div>
@@ -213,11 +248,11 @@ import { tattooActions, tattooBrand } from '../brand.config';
           <details>
             <summary>¿Cómo saco turno?</summary>
             <p>
-              El botón abre la agenda de prueba de Cal.com. También podés consultar por Instagram si
-              querés conversar el proyecto; la agenda no confirma disponibilidad real.
+              Usá el botón Sacar turno para abrir la agenda y elegir un horario. Si tu tatuaje
+              requiere una consulta previa, también podés escribir por Instagram.
             </p>
             <p>
-              <a href={tattooActions.turnsHref}>Abrir agenda de prueba</a>
+              <a href={tattooActions.turnsHref}>Sacar turno</a>
             </p>
             <TattooInstagramLink showHandle={false} className="tattoo-inline-instagram">
               Consultar por Instagram
@@ -261,8 +296,8 @@ import { tattooActions, tattooBrand } from '../brand.config';
           <details>
             <summary>¿Dónde puedo ver trabajos recientes?</summary>
             <p>
-              Podés ver trabajos y referencias en <a href="/trabajos/">la sección Trabajos</a> y en
-              el Instagram del estudio.
+              Encontrá una selección en <a href="/trabajos/">Trabajos</a> y más contenido en
+              <a href={tattooBrand.social.instagram}>@juanjo.tattoos</a>.
             </p>
             <TattooInstagramLink showHandle={false} className="tattoo-inline-instagram">
               Ver Instagram
