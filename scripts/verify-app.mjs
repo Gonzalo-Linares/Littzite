@@ -743,7 +743,13 @@ if (app === 'estetica') {
     'Work fixture must render three physical copies of each preview item',
   );
   assert.equal((workPage.match(/<figure[^>]*aria-hidden="true"/g) ?? []).length, 6);
-  assert.match(workPage, /Una selección de tatuajes y estilos\./);
+  assert.equal((workPage.match(/class="tattoo-gallery__item"/g) ?? []).length, 3);
+  assert.equal((workPage.match(/loading="lazy"/g) ?? []).length >= 3, true);
+  assert.match(workPage, /Trabajos destacados/);
+  assert.match(workPage, /Todos los trabajos/);
+  assert.match(workPage, /<dialog[^>]*aria-labelledby="lightbox-title"/);
+  assert.equal((workPage.match(/<button[^>]*data-lightbox-(?:previous|next)/g) ?? []).length, 2);
+  assert.equal((workPage.match(/data-image="[^"]+"/g) ?? []).length, 3);
   assert.doesNotMatch(
     workPage.replace(/<script\b[\s\S]*?<\/script>/gi, ''),
     /referencia generada|imágenes generadas|no es un trabajo real/i,
@@ -753,19 +759,20 @@ if (app === 'estetica') {
     'utf8',
   );
   assert.match(guidePage, /<h1[^>]*>Una guía para llegar preparado\.<\/h1>/);
-  assert.match(guidePage, /Sensibilidad orientativa por zona/);
-  assert.match(guidePage, /¿Qué tamaño puede tener tu tatuaje\?/);
+  assert.doesNotMatch(
+    guidePage,
+    /Sensibilidad orientativa por zona|¿Qué tamaño puede tener tu tatuaje\?/i,
+  );
   assert.match(guidePage, /Cuidá el tatuaje\./);
   assert.match(guidePage, /Preguntas frecuentes/i);
   assert.equal((guidePage.match(/<details>/g) ?? []).length, 7);
-  assert.equal((guidePage.match(/href="#tattoo-size-motif"/g) ?? []).length, 3);
-  assert.equal((guidePage.match(/href="\/guide\/body-front\.webp"/g) ?? []).length, 2);
-  assert.equal((guidePage.match(/class="tattoo-body-map"/g) ?? []).length, 2);
-  assert.match(guidePage, /La sensibilidad varía entre personas y zonas/);
-  assert.match(guidePage, /no predice cuánto va a doler un tatuaje/);
-  assert.match(guidePage, /class="tattoo-size-figure"/);
-  assert.match(guidePage, /viewBox="0 0 1024 1536"/);
-  assert.equal((guidePage.match(/href="\/guide\/body-back\.webp"/g) ?? []).length, 1);
+  assert.doesNotMatch(
+    guidePage,
+    /tattoo-size|tattoo-body-map|body-(?:front|back)\.webp|id="(?:sensibilidad|tamano)"/i,
+  );
+  assert.match(guidePage, /01 \/ ANTES DE LA SESIÓN/);
+  assert.match(guidePage, /02 \/ DESPUÉS DE LA SESIÓN/);
+  assert.match(guidePage, /03 \/ PREGUNTAS FRECUENTES/);
   assert.doesNotMatch(guidePage, /[0-9]\/10|diagnóstico|garantiza|\$|seña|horarios ficticios/i);
   const tattooStyles = await readFile(
     new URL('../apps/tattoo/src/styles/juanjo.css', import.meta.url),
@@ -774,6 +781,12 @@ if (app === 'estetica') {
   assert.match(tattooStyles, /@font-face[\s\S]*Rye-Regular\.ttf/);
   assert.match(tattooStyles, /@font-face[\s\S]*DejaVuSerif\.ttf/);
   assert.match(tattooStyles, /@font-face[\s\S]*DejaVuSans\.ttf/);
+  assert.match(tattooStyles, /\.tattoo-gallery__grid\s*\{[^}]*grid-template-columns:\s*repeat\(3/);
+  assert.match(tattooStyles, /\.tattoo-lightbox::backdrop/);
+  assert.doesNotMatch(
+    tattooStyles,
+    /tattoo-sensitivity|tattoo-size-map|tattoo-size-guide|tattoo-body-map/,
+  );
   const contact = await readFile(
     new URL('../apps/tattoo/dist/contacto/index.html', import.meta.url),
     'utf8',

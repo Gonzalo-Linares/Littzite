@@ -8,7 +8,8 @@ import {
   tattooReleaseState,
 } from '../apps/tattoo/src/brand.config.ts';
 import { siteContent } from '../apps/tattoo/src/site.config.ts';
-import { tattooPortfolio } from '../apps/tattoo/src/portfolio.ts';
+import { tattooPortfolioRecords } from '../apps/tattoo/src/portfolio-data.ts';
+import { stepGalleryIndex } from '../apps/tattoo/src/gallery-navigation.ts';
 import {
   assertTattooProductionReady,
   tattooReleaseBlockers,
@@ -42,7 +43,13 @@ test('home keeps the approved copy and records temporary assets outside the inte
   assert.match(home, /Sacar turno/);
   assert.doesNotMatch(home, /Contanos tu idea|Antes de la tinta/);
   assert.equal(tattooBrand.heroMedia.src, undefined);
-  assert.equal(tattooPortfolio.length, 0);
+  assert.equal(tattooPortfolioRecords.length, 3);
+  assert.deepEqual(
+    tattooPortfolioRecords.filter((work) => work.featured),
+    tattooPortfolioRecords,
+  );
+  assert.match(home, /import \{ featuredTattooWorks \} from '\.\.\/portfolio'/);
+  assert.match(home, /<TattooWorkCarousel items=\{featuredTattooWorks\}/);
   assert.doesNotMatch(
     home + hero,
     /Imagen de preview generada|imagen generada para la preview|no es un trabajo real del estudio/i,
@@ -61,14 +68,12 @@ test('home has five focused sections and removes the retired preparation block',
   assert.doesNotMatch(home, /Contanos tu idea/);
 });
 
-test('guide explains preparation, orientation, scale, aftercare and consultation paths', async () => {
+test('guide retains preparation, aftercare and FAQ while removing the two retired visuals', async () => {
   const guide = await read('apps/tattoo/src/pages/guia.astro');
-  const map = await read('apps/tattoo/src/components/TattooSensitivityMap.astro');
   for (const heading of [
-    'Antes de la sesión',
-    '¿Qué tamaño puede tener tu tatuaje?',
-    'Cuidá el tatuaje.',
-    'Preguntas frecuentes',
+    '01 / ANTES DE LA SESIÓN',
+    '02 / DESPUÉS DE LA SESIÓN',
+    '03 / PREGUNTAS FRECUENTES',
   ])
     assert.ok(guide.toLocaleLowerCase('es-AR').includes(heading.toLocaleLowerCase('es-AR')));
   for (const text of [
@@ -79,7 +84,6 @@ test('guide explains preparation, orientation, scale, aftercare and consultation
     'indicaciones particulares',
   ])
     assert.ok(guide.toLocaleLowerCase('es-AR').includes(text.toLocaleLowerCase('es-AR')));
-  for (const size of ['5 cm', '10 cm', '20 cm']) assert.ok(guide.includes(size));
   for (const care of ['Manos limpias', 'Secado y cuidado', 'Menos fricción', 'Sol y piel'])
     assert.ok(guide.includes(care));
   assert.match(guide, /Usá el botón Sacar turno para abrir la agenda y elegir un horario/);
@@ -87,14 +91,15 @@ test('guide explains preparation, orientation, scale, aftercare and consultation
   assert.match(guide, /tienen prioridad/);
   assert.match(guide, /buscá evaluación médica/);
   assert.equal((guide.match(/<details>/g) ?? []).length, 7);
-  assert.match(map, /La sensibilidad varía entre personas y zonas/);
-  assert.match(map, /no predice\s*cuánto va a doler un tatuaje/);
-  assert.match(map, /viewBox="0 0 1024 1536"/);
-  assert.match(map, /preserveAspectRatio="none"/);
-  assert.match(map, /tattoo-zone--lower/);
-  assert.match(map, /tattoo-zone--middle/);
-  assert.match(map, /tattoo-zone--higher/);
-  assert.doesNotMatch(map, /tattoo-heat/);
+  assert.doesNotMatch(
+    guide,
+    /Sensibilidad orientativa por zona|¿Qué tamaño puede tener tu tatuaje\?/i,
+  );
+  assert.doesNotMatch(guide, /id="(?:sensibilidad|tamano)"/);
+  assert.doesNotMatch(
+    guide,
+    /body-(?:front|back)\.webp|tattoo-size-map|tattoo-sensitivity|id="(?:sensibilidad|tamano)"/i,
+  );
   assert.doesNotMatch(guide, /[0-9]\/10|diagnóstico|garantiza|\$\s*\d|seña|forma de pago/i);
 });
 
@@ -120,14 +125,13 @@ test('contact leads with the approved Google embed and keeps directions and card
   assert.equal(siteContent.services.length, 0);
 });
 
-test('temporary gallery images stay separate from the real portfolio and have an explicit release block', async () => {
+test('temporary image portfolio remains marked as release blocked', async () => {
   const gallery = await read('apps/tattoo/src/components/TattooGallery.astro');
-  const previewSource = await read('apps/tattoo/src/preview-portfolio.ts');
   const previewFiles = await readdir(new URL('apps/tattoo/src/assets/preview/', root));
-  assert.equal(tattooPortfolio.length, 0);
-  assert.match(previewSource, /work-botanical-preview\.webp/);
-  assert.doesNotMatch(gallery, /preview|generada|referencia/i);
-  assert.doesNotMatch(previewSource, /no es un trabajo real del estudio|generada para la preview/i);
+  assert.equal(tattooPortfolioRecords.length, 3);
+  assert.equal(tattooPortfolioRecords.filter((work) => work.featured).length, 3);
+  assert.match(gallery, /items\.map\(\(item, index\)/);
+  assert.match(gallery, /loading="lazy"/);
   assert.equal(tattooReleaseState.temporaryHeroImage, true);
   assert.equal(tattooReleaseState.temporaryPortfolioImages, true);
   assert.equal(tattooReleaseState.temporaryAftercareImage, true);
@@ -139,9 +143,10 @@ test('temporary gallery images stay separate from the real portfolio and have an
   assert.ok(previewFiles.includes('work-ornamental-preview.webp'));
 });
 
-test('only the tattoo app receives the temporary Cal.com URL and booking stays inactive', async () => {
+test('Juanjo keeps booking values app-local and booking stays inactive', async () => {
   const tattooFiles = await readdir(new URL('apps/tattoo/src/', root));
-  assert.ok(tattooFiles.includes('preview-portfolio.ts'));
+  assert.ok(tattooFiles.includes('portfolio.ts'));
+  assert.equal(tattooFiles.includes('preview-portfolio.ts'), false);
   assert.equal(siteContent.bookingTargets.length, 0);
   assert.equal(siteContent.quoteTargets.length, 0);
   assert.equal(
@@ -153,6 +158,26 @@ test('only the tattoo app receives the temporary Cal.com URL and booking stays i
     config,
     /https:\/\/cal\.com\/juanjo-pereyra-mkzgce\/turnos-tattoos\?overlayCalendar=true/,
   );
+});
+
+test('native gallery lightbox supports circular navigation, close, focus and scroll restoration', async () => {
+  const gallery = await read('apps/tattoo/src/components/TattooGallery.astro');
+  const lightbox = await read('apps/tattoo/src/components/TattooLightbox.astro');
+  assert.match(gallery, /dialog\.showModal\(\)/);
+  assert.match(gallery, /dialog\.close\(\)/);
+  assert.match(gallery, /event\.key === 'ArrowLeft'/);
+  assert.match(gallery, /event\.key === 'ArrowRight'/);
+  assert.match(gallery, /event\.target === dialog/);
+  assert.match(gallery, /closeButton\?\.focus\(\)/);
+  assert.match(gallery, /opener\?\.focus\(\)/);
+  assert.match(gallery, /document\.body\.style\.overflow = 'hidden'/);
+  assert.match(gallery, /window\.scrollTo\(\{ top: previousScrollY/);
+  assert.match(lightbox, /<dialog[^>]*aria-labelledby=/);
+  assert.match(lightbox, /count > 1/);
+  assert.equal(stepGalleryIndex(0, -1, 5), 4);
+  assert.equal(stepGalleryIndex(4, 1, 5), 0);
+  assert.equal(stepGalleryIndex(0, 1, 1), 0);
+  assert.equal(stepGalleryIndex(0, 1, 0), -1);
 });
 
 test('the work carousel has three accessible physical copies and manual horizontal controls', async () => {
@@ -200,22 +225,16 @@ test('the shared Instagram and map primitives are used by both apps without shar
   assert.doesNotMatch(tattooSource, /example/);
 });
 
-test('guide uses licensed body photos and repeats the same motif at a 1:2:4 visual scale', async () => {
+test('retired guide illustrations and their third-party body-photo assets are removed', async () => {
   const guide = await read('apps/tattoo/src/pages/guia.astro');
-  const sensitivity = await read('apps/tattoo/src/components/TattooSensitivityMap.astro');
   const notices = await read('THIRD_PARTY_NOTICES.md');
-  const front = await readFile(new URL('apps/tattoo/public/guide/body-front.webp', root));
-  const back = await readFile(new URL('apps/tattoo/public/guide/body-back.webp', root));
-  assert.ok(front.length > 0 && back.length > 0);
-  assert.equal((guide.match(/<figure class="tattoo-size-figure">/g) ?? []).length, 1);
-  assert.equal((guide.match(/<use href="#tattoo-size-motif" \/>/g) ?? []).length, 3);
-  assert.match(guide, /translate\(304 652\) scale\(1\)/);
-  assert.match(guide, /translate\(329 490\) scale\(2\)/);
-  assert.match(guide, /translate\(360 375\) scale\(4\)/);
-  assert.match(sensitivity, /<svg\b/);
-  assert.doesNotMatch(sensitivity, /tattoo-heat/);
-  assert.match(
-    notices,
-    /Jsplice\/MuscleMap[\s\S]*github\.com\/Jsplice\/MuscleMap[\s\S]*MIT License/,
+  assert.doesNotMatch(
+    guide,
+    /sensibilidad orientativa por zona|¿qué tamaño puede tener tu tatuaje\?/i,
+  );
+  assert.doesNotMatch(notices, /MuscleMap|body-front\.webp|body-back\.webp/);
+  assert.doesNotMatch(
+    await read('apps/tattoo/src/styles/juanjo.css'),
+    /tattoo-sensitivity|tattoo-size-map|tattoo-body-map/,
   );
 });

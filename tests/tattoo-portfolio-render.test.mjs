@@ -56,6 +56,38 @@ test('carousel handles 0, 1, 2 and 5 authorized metadata items and a configured 
   );
   assert.match(html, /class="tattoo-hero-media__oni"[^>]*alt=""/);
 
+  for (const [route, count, featuredCount] of [
+    ['gallery-empty', 0, 0],
+    ['gallery-one', 1, 1],
+    ['gallery-five', 5, 3],
+  ]) {
+    const gallery = readFileSync(path.join(fixtureRoot, `dist/${route}/index.html`), 'utf8');
+    assert.equal((gallery.match(/class="tattoo-gallery__item"/g) ?? []).length, count);
+    assert.equal((gallery.match(/class="tattoo-carousel__item/g) ?? []).length, featuredCount * 3);
+    assert.equal((gallery.match(/data-image="[^"]+"/g) ?? []).length, count);
+    if (count === 0) {
+      assert.match(gallery, /Todavía no hay trabajos publicados\./);
+      assert.doesNotMatch(gallery, /<dialog/);
+    } else {
+      const gridStart = gallery.indexOf('data-gallery-grid');
+      const gridEnd = gallery.indexOf('</div>', gridStart);
+      const grid = gallery.slice(gridStart, gridEnd);
+      assert.match(gallery, /<dialog[^>]*aria-labelledby="lightbox-title"/);
+      assert.ok((gallery.match(/loading="lazy"/g) ?? []).length >= count);
+      assert.equal(
+        (gallery.match(/<button[^>]*data-lightbox-(?:previous|next)/g) ?? []).length,
+        count > 1 ? 2 : 0,
+      );
+      assert.deepEqual(
+        [...grid.matchAll(/data-title="([^"]+)"/g)].map((match) => match[1]),
+        Array.from({ length: count }, (_, index) => `Obra fixture ${index + 1}`),
+      );
+      for (let index = 1; index <= count; index++) {
+        assert.match(grid, new RegExp(`alt="Descripción accesible de la imagen fixture ${index}"`));
+      }
+    }
+  }
+
   const carousel = readFileSync(
     path.join(root, 'apps/tattoo/src/components/TattooWorkCarousel.astro'),
     'utf8',

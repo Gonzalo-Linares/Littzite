@@ -1,14 +1,13 @@
 ---
 import ButtonLink from '@littzite/ui/ButtonLink.astro';
 import TattooSiteLayout from '../layouts/TattooSiteLayout.astro';
-import TattooSensitivityMap from '../components/TattooSensitivityMap.astro';
 import TattooInstagramLink from '../components/TattooInstagramLink.astro';
 import { tattooActions, tattooBrand } from '../brand.config';
 ---
 
 <TattooSiteLayout
   title="Guía para tu tatuaje | Juanjo Tattoo Studio"
-  description="Preparación, sensibilidad orientativa, tamaño y cuidados generales antes y después de tatuarte."
+  description="Preparación, cuidados generales y respuestas a preguntas frecuentes antes y después de tatuarte."
 >
   <article class="tattoo-guide-page">
     <header class="tattoo-guide-hero">
@@ -79,84 +78,6 @@ import { tattooActions, tattooBrand } from '../brand.config';
       </div>
     </section>
 
-    <TattooSensitivityMap />
-
-    <section
-      class="tattoo-guide-section tattoo-size-guide"
-      id="tamano"
-      aria-labelledby="size-title"
-    >
-      <div class="container tattoo-size-guide__grid">
-        <div>
-          <p class="tattoo-eyebrow">03 / TAMAÑO Y UBICACIÓN</p>
-          <h2 id="size-title">¿Qué tamaño puede tener tu tatuaje?</h2>
-          <p>
-            Compará referencias de 5, 10 y 20 cm para imaginar la escala antes de definir el diseño.
-          </p>
-          <p class="tattoo-guide-note">
-            Referencia visual orientativa. El tamaño final se define con el tatuador según el diseño
-            y la zona.
-          </p>
-        </div>
-        <figure class="tattoo-size-figure">
-          <svg
-            class="tattoo-size-map"
-            viewBox="0 0 1024 1536"
-            role="img"
-            aria-label="Comparación orientativa de tatuajes de 5 centímetros en la muñeca, 10 centímetros en el antebrazo y 20 centímetros en el brazo"
-            preserveAspectRatio="xMidYMid meet"
-          >
-            <defs>
-              <g id="tattoo-size-motif">
-                <path d="M0 -11 4 -3 11 0 4 3 0 11 -4 3 -11 0 -4 -3Z" />
-                <circle r="2" />
-              </g>
-            </defs>
-            <image
-              href="/guide/body-front.webp"
-              x="0"
-              y="0"
-              width="1024"
-              height="1536"
-              preserveAspectRatio="none"
-              class="tattoo-size-map__photo"
-            />
-            <g class="tattoo-size-map__mark" transform="translate(304 652) scale(1)">
-              <use href="#tattoo-size-motif" />
-            </g>
-            <g class="tattoo-size-map__mark" transform="translate(329 490) scale(2)">
-              <use href="#tattoo-size-motif" />
-            </g>
-            <g class="tattoo-size-map__mark" transform="translate(360 375) scale(4)">
-              <use href="#tattoo-size-motif" />
-            </g>
-            <path class="tattoo-size-map__leader" d="M316 652H770" />
-            <path class="tattoo-size-map__leader" d="M351 490H770" />
-            <path class="tattoo-size-map__leader" d="M404 375H770" />
-            <text class="tattoo-size-map__label" x="790" y="366">
-              <tspan x="790">20 cm</tspan>
-              <tspan x="790" dy="34">
-                Brazo
-              </tspan>
-            </text>
-            <text class="tattoo-size-map__label" x="790" y="481">
-              <tspan x="790">10 cm</tspan>
-              <tspan x="790" dy="34">
-                Antebrazo
-              </tspan>
-            </text>
-            <text class="tattoo-size-map__label" x="790" y="643">
-              <tspan x="790">5 cm</tspan>
-              <tspan x="790" dy="34">
-                Muñeca
-              </tspan>
-            </text>
-          </svg>
-          <figcaption>El mismo motivo a escala 1:2:4, como referencia visual.</figcaption>
-        </figure>
-      </div>
-    </section>
-
     <section
       class="tattoo-guide-section tattoo-aftercare"
       id="cuidados"
@@ -164,7 +85,7 @@ import { tattooActions, tattooBrand } from '../brand.config';
     >
       <div class="container">
         <div class="tattoo-guide-heading">
-          <p class="tattoo-eyebrow">04 / DESPUÉS DE LA SESIÓN</p>
+          <p class="tattoo-eyebrow">02 / DESPUÉS DE LA SESIÓN</p>
           <h2 id="aftercare-title">Cuidá el tatuaje.</h2>
           <p>
             Las indicaciones específicas que te entregue Juanjo después de la sesión prevalecen
@@ -231,7 +152,7 @@ import { tattooActions, tattooBrand } from '../brand.config';
     <section class="tattoo-guide-section tattoo-faq" id="preguntas" aria-labelledby="faq-title">
       <div class="container tattoo-faq__grid">
         <div class="tattoo-guide-heading">
-          <p class="tattoo-eyebrow">05 / PREGUNTAS FRECUENTES</p>
+          <p class="tattoo-eyebrow">03 / PREGUNTAS FRECUENTES</p>
           <h2 id="faq-title">Lo que conviene conversar.</h2>
           <p>
             Las respuestas dependen de cada proyecto. Juanjo puede orientarte por su canal oficial.

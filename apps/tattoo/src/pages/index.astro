@@ -5,11 +5,7 @@ import TattooHeroMedia from '../components/TattooHeroMedia.astro';
 import TattooInstagramLink from '../components/TattooInstagramLink.astro';
 import TattooWorkCarousel from '../components/TattooWorkCarousel.astro';
 import { tattooActions, tattooBrand } from '../brand.config';
-import { tattooPortfolio } from '../portfolio';
-import { tattooPreviewPortfolio } from '../preview-portfolio';
-
-const previewOnly = tattooPortfolio.length === 0;
-const visibleWorks = previewOnly ? tattooPreviewPortfolio : tattooPortfolio;
+import { featuredTattooWorks } from '../portfolio';
 ---
 
 <TattooSiteLayout
@@ -47,8 +43,8 @@ const visibleWorks = previewOnly ? tattooPreviewPortfolio : tattooPortfolio;
       <div class="tattoo-section-heading tattoo-section-heading--split">
         <div>
           <p class="tattoo-eyebrow">ESTILOS DEL ESTUDIO</p>
-          <h2 id="home-work-title">Trabajos</h2>
-          <p>Una selección de tatuajes y estilos.</p>
+          <h2 id="home-work-title">Trabajos destacados</h2>
+          <p>Una selección de trabajos del estudio.</p>
         </div>
         <div class="tattoo-work-section__actions">
           <ButtonLink href="/trabajos/" variant="secondary" size="compact">
@@ -59,7 +55,7 @@ const visibleWorks = previewOnly ? tattooPreviewPortfolio : tattooPortfolio;
           </TattooInstagramLink>
         </div>
       </div>
-      <TattooWorkCarousel items={visibleWorks} id="inicio-trabajos-carousel" />
+      <TattooWorkCarousel items={featuredTattooWorks} id="inicio-trabajos-carousel" />
     </div>
   </section>
 
@@ -101,7 +97,7 @@ const visibleWorks = previewOnly ? tattooPreviewPortfolio : tattooPortfolio;
     <div class="container tattoo-guide-teaser__inner">
       <div class="tattoo-guide-teaser__intro">
         <p class="tattoo-eyebrow">UNA GUÍA PARA TU SESIÓN</p>
-        <h2 id="guide-teaser-title">Preparación, tamaño y cuidados.</h2>
+        <h2 id="guide-teaser-title">Preparación y cuidados.</h2>
         <p>Información general para pensar el tatuaje y acompañar el proceso.</p>
         <ButtonLink href="/guia/" variant="secondary">
           Ver guía
@@ -113,18 +109,13 @@ const visibleWorks = previewOnly ? tattooPreviewPortfolio : tattooPortfolio;
           <strong>Antes de la sesión</strong>
           <b aria-hidden="true">↗</b>
         </a>
-        <a href="/guia/#sensibilidad">
-          <span>02</span>
-          <strong>Sensibilidad por zona</strong>
-          <b aria-hidden="true">↗</b>
-        </a>
         <a href="/guia/#cuidados">
-          <span>03</span>
+          <span>02</span>
           <strong>Cuidados del tatuaje</strong>
           <b aria-hidden="true">↗</b>
         </a>
         <a href="/guia/#preguntas">
-          <span>04</span>
+          <span>03</span>
           <strong>Preguntas frecuentes</strong>
           <b aria-hidden="true">↗</b>
         </a>

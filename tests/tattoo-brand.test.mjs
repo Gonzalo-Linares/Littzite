@@ -53,7 +53,7 @@ test('Juanjo brand styling contains no former palette or remote font loading', a
   assert.match(css, /font-display:\s*swap/);
   assert.match(css, /prefers-reduced-motion:\s*reduce/);
   assert.match(css, /object-fit:\s*contain/);
-  assert.doesNotMatch(
+  assert.match(
     css.match(/\.tattoo-gallery__item img\s*\{[^}]*\}/)?.[0] ?? '',
     /object-fit:\s*cover/,
   );

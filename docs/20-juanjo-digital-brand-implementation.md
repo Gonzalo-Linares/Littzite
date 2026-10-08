@@ -8,7 +8,7 @@ Kit auditado: `C:\Users\gonza\Downloads\Kit-Marca-Juanjo-Tattoo-Studio-Premium\J
 
 Los cinco PNG maestros de `logos/` están copiados sin cambios en `apps/tattoo/public/brand/`. Sus roles, proporciones y SHA-256 se declaran en `src/brand.config.ts`: Principal para identidad de estudio, Sello para el estado vacío, Oni en hero, JT en cabecera compacta/favicon y Firma en cabecera/pie. Se preservan color, forma y proporción.
 
-La carpeta `destacadas/` contiene símbolos independientes y portadas listas para perfiles sociales; `redes/`, `tarjetas/` e `indumentaria/` contienen composiciones finales o mockups. Esta web usa los maestros de `logos/` y, para los cuerpos de su guía, las fotos front/back de MuscleMap distribuidas localmente bajo MIT y registradas en `THIRD_PARTY_NOTICES.md`. No presenta composiciones de redes, tarjetas o merch como controles de interfaz, ni las presenta como fotografías de tatuajes.
+La carpeta `destacadas/` contiene símbolos independientes y portadas listas para perfiles sociales; `redes/`, `tarjetas/` e `indumentaria/` contienen composiciones finales o mockups. Esta web usa los maestros de `logos/`. No presenta composiciones de redes, tarjetas o merch como controles de interfaz, ni las presenta como fotografías de tatuajes.
 
 Paleta oficial: tinta `#0E0E0E`, rojo `#A61E1E`, marfil `#EADCC6`, dorado `#C9A96B` y carbón `#2C2C2C`. Rye se reserva para titulares breves; DejaVu Serif para apoyo editorial; DejaVu Sans para lectura y controles. Las fuentes y sus avisos de licencia se distribuyen localmente. Ver `THIRD_PARTY_NOTICES.md`.
 
@@ -24,9 +24,11 @@ La home se organiza en cinco bloques: hero; trabajos; proceso; teaser de guía; 
 
 ## Fotografías y carrusel
 
-Blockers editoriales, deliberados y no bloqueantes para build: **Hero photography: pending real authorized photo.** **Portfolio: pending original authorized tattoo photography.** El kit aportado no contiene fotografías auténticas autorizadas de tatuajes. `tattooPortfolio` sigue como única fuente de trabajo real y permanece `[]`. `src/preview-portfolio.ts` mantiene separado un conjunto temporal de tres imágenes generadas y `public/preview/aftercare-contact-sheet-preview.webp` aporta cuatro escenas ilustrativas generadas. Estos estados también están registrados en `tattooReleaseState`; no se exponen como copy en la interfaz.
+Blockers editoriales, deliberados y no bloqueantes para build: **Hero photography: pending real authorized photo.** **Portfolio: pending original authorized tattoo photography.** El kit aportado no contiene fotografías auténticas autorizadas de tatuajes. `tattooPortfolio` es la única colección canónica y contiene tres imágenes temporales; cada item define `featured`, y `featuredTattooWorks` se deriva con un filtro sin duplicar objetos. Estas imágenes siguen bloqueando release mediante `tattooReleaseState`; no se exponen como copy temporal en la interfaz. `public/preview/aftercare-contact-sheet-preview.webp` aporta cuatro escenas ilustrativas temporales de cuidados.
 
-`TattooWorkCarousel.astro` recibe items ya validados por `validatePortfolio()` en `src/portfolio.ts` y se reutiliza en home y `/trabajos/`. La selección temporal comparte el mismo tratamiento visual que los items reales durante la revisión. En modo vacío conserva un estado alternativo sin controles. Con 2 o más elementos renderiza tres copias físicas de la secuencia, mantiene solo la copia central en el árbol accesible y recentra en silencio al llegar a los extremos. Ofrece gesto táctil, scroll horizontal, teclado y flechas laterales, sin autoplay ni movimiento vertical.
+`TattooWorkCarousel.astro` recibe `featuredTattooWorks` en home y en `/trabajos/`; el carrusel presenta solo el subconjunto destacado. La segunda sección de `/trabajos/` muestra `tattooPortfolio` completo en una grilla de tres columnas en desktop, dos en tablet y una en mobile, con imágenes accesibles y lazy loading. Un `<dialog>` nativo app-local permite ampliar la foto, cerrar, recorrer circularmente, usar Escape/flechas, devolver el foco y bloquear/restaurar el scroll. No se añadió una dependencia.
+
+Con 2 o más elementos el carrusel renderiza tres copias físicas de la secuencia, mantiene solo la copia central en el árbol accesible y recentra en silencio al llegar a los extremos. Ofrece gesto táctil, scroll horizontal, teclado y flechas laterales, sin autoplay ni movimiento vertical. Los estados de 0, 1, 2 y 5 elementos permanecen cubiertos por fixtures de prueba.
 
 El fixture local cubre 0, 1, 2 y 5 items con SVG geométricos de prueba cuya alternativa textual declara que no son tatuajes. También cubre hero con una imagen configurada. Estos fixtures no se importan en la preview real.
 
@@ -40,13 +42,13 @@ El footer de Juanjo muestra el wordmark oficial, la atribución central de Littz
 
 ## Guía de preparación y cuidados
 
-`/guia/` contiene preparación breve, sensibilidad orientativa, escala, cuidados generales y siete preguntas frecuentes. La sensibilidad usa fotos anatómicas front/back de MuscleMap y overlays SVG anclados al mismo `viewBox`; las zonas y colores son cualitativos, no clínicos ni predictivos. La comparación de tamaño usa una figura SVG principal con la misma foto y motivo en tres posiciones, con escalas relativas 1:2:4 para 5, 10 y 20 cm. La fuente, revisión y licencia MIT de las dos imágenes vendorizadas constan en `THIRD_PARTY_NOTICES.md`.
+`/guia/` conserva preparación breve, cuidados generales y siete preguntas frecuentes. Se eliminaron las infografías de sensibilidad y tamaño junto con sus imágenes corporales y estilos; podrán reconsiderarse cuando existan recursos gráficos adecuados y aprobados. La guía no amplía sus recomendaciones sanitarias.
 
 Los cuidados son generales, sin plazos rígidos, medicamentos, diagnósticos ni tratamientos. Las indicaciones particulares que Juanjo entregue después de la sesión prevalecen. Ante signos importantes de infección, reacción intensa o empeoramiento inesperado, la guía orienta a buscar evaluación médica; no diagnostica. La recomendación de seguir la instrucción del tatuador coincide con la [guía de tatuajes y cuidados de UCLH](https://www.uclh.nhs.uk/patients-and-visitors/patient-information-pages/tattoos-and-cosmetic-procedures).
 
 ## Accesibilidad, límites y verificación
 
-El ícono social es SVG inline compartido, tiene nombre accesible y foco visible, sin dependencia. El destino del header tiene un área táctil mínima de 44 px. Los controles manuales del carrusel admiten teclado y los gestos nativos; el movimiento respeta reducción de movimiento. Mapa y escala tienen títulos/descripciones SVG y texto visible; la lectura no depende del color. La navegación HTML sigue funcionando sin JavaScript.
+El ícono social es SVG inline compartido, tiene nombre accesible y foco visible, sin dependencia. El destino del header tiene un área táctil mínima de 44 px. Los controles manuales del carrusel admiten teclado y los gestos nativos; el movimiento respeta reducción de movimiento. El lightbox usa semántica nativa de diálogo, gestión de foco y controles accesibles. La navegación HTML sigue funcionando sin JavaScript.
 
 La atribución de Littzite y las primitives neutrales de Instagram y mapa sí se comparten desde `packages/ui`; las apps mantienen sus datos y componentes de marca locales. No se modifican contratos, schema o booking. No se agregan dependencias ni se modifica `pnpm-lock.yaml`. Las páginas permanecen `noindex, nofollow`; este cambio no habilita publicación indexable.
 
