@@ -5,6 +5,10 @@ export const tattooBrand = {
     instagram: 'https://www.instagram.com/juanjo.tattoos/',
     handle: '@juanjo.tattoos',
   },
+  heroMedia: {
+    src: undefined as string | undefined,
+    alt: undefined as string | undefined,
+  },
   palette: {
     ink: '#0E0E0E',
     red: '#A61E1E',
@@ -61,6 +65,12 @@ export const tattooBrand = {
     href: undefined,
     logoSrc: undefined,
   },
+} as const;
+
+export const tattooActions = {
+  turnsHref: '/contacto/#turnos',
+  consultHref: tattooBrand.social.instagram,
+  instagramHref: tattooBrand.social.instagram,
 } as const;
 
 export const tattooIdentity = {

@@ -1,0 +1,227 @@
+---
+import { tattooBrand } from '../brand.config';
+import type { TattooPortfolioItem } from '../portfolio';
+
+interface Props {
+  items: readonly TattooPortfolioItem[];
+  id?: string;
+}
+
+const { items, id = 'trabajos-carousel' } = Astro.props;
+const canMove = items.length > 1;
+---
+
+<section
+  class="tattoo-carousel"
+  id={id}
+  aria-label="Trabajos de Juanjo Tattoo Studio"
+  data-tattoo-carousel
+  data-count={items.length}
+>
+  {items.length > 0 ? (
+    <>
+      <div
+        class="tattoo-carousel__viewport"
+        tabindex="0"
+        aria-label="Carrusel de trabajos. Usá las flechas izquierda y derecha para recorrer las piezas."
+      >
+        <div class="tattoo-carousel__track">
+          {items.map((item, index) => (
+            <figure class="tattoo-carousel__item" data-slide-index={index}>
+              <div class="tattoo-carousel__image-wrap">
+                <img
+                  src={item.image.src}
+                  alt={item.alt}
+                  width={item.image.width}
+                  height={item.image.height}
+                  loading={index === 0 ? 'eager' : 'lazy'}
+                  decoding="async"
+                />
+              </div>
+              <figcaption>
+                <span class="tattoo-carousel__number">{String(index + 1).padStart(2, '0')}</span>
+                <span>{item.title}</span>
+              </figcaption>
+            </figure>
+          ))}
+        </div>
+      </div>
+      {canMove && (
+        <div class="tattoo-carousel__controls" aria-label="Controles de trabajos">
+          <button type="button" data-carousel-prev aria-label="Trabajo anterior">
+            ←
+          </button>
+          <button type="button" data-carousel-toggle aria-label="Pausar reproducción">
+            <span data-carousel-toggle-label>Pausar reproducción</span>
+          </button>
+          <button type="button" data-carousel-next aria-label="Trabajo siguiente">
+            →
+          </button>
+        </div>
+      )}
+    </>
+  ) : (
+    <div class="tattoo-carousel__empty">
+      <div class="tattoo-carousel__empty-mark">
+        <img
+          src={tattooBrand.marks.signature.src}
+          width={tattooBrand.marks.signature.width}
+          height={tattooBrand.marks.signature.height}
+          alt=""
+          aria-hidden="true"
+          loading="lazy"
+          decoding="async"
+        />
+        <span>OBRA · OFICIO · IDENTIDAD</span>
+      </div>
+      <div class="tattoo-carousel__empty-copy">
+        <p class="tattoo-eyebrow">PIEZAS SELECCIONADAS</p>
+        <h3>TRABAJOS</h3>
+        <p>
+          Las piezas reales se incorporarán cuando estén disponibles las fotografías autorizadas.
+        </p>
+        <a class="tattoo-text-link" href="/trabajos/">
+          Explorar trabajos <span aria-hidden="true">↗</span>
+        </a>
+      </div>
+      <img
+        class="tattoo-carousel__seal"
+        src={tattooBrand.marks.seal.src}
+        width={tattooBrand.marks.seal.width}
+        height={tattooBrand.marks.seal.height}
+        alt=""
+        aria-hidden="true"
+        loading="lazy"
+        decoding="async"
+      />
+    </div>
+  )}
+</section>
+
+{canMove && <script>
+  const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
+
+  document.querySelectorAll<HTMLElement>('[data-tattoo-carousel]').forEach((carousel) => {
+    const viewport = carousel.querySelector<HTMLElement>('.tattoo-carousel__viewport');
+    const slides = [...carousel.querySelectorAll<HTMLElement>('[data-slide-index]')];
+    const previous = carousel.querySelector<HTMLButtonElement>('[data-carousel-prev]');
+    const next = carousel.querySelector<HTMLButtonElement>('[data-carousel-next]');
+    const toggle = carousel.querySelector<HTMLButtonElement>('[data-carousel-toggle]');
+    const toggleLabel = carousel.querySelector<HTMLElement>('[data-carousel-toggle-label]');
+    if (!viewport || !previous || !next || !toggle || !toggleLabel || slides.length < 2) return;
+
+    let activeIndex = 0;
+    let userPaused = reduceMotion.matches;
+    let manualPlay = false;
+    let suspended = false;
+    let timer: number | undefined;
+
+    const update = (index: number, manual: boolean) => {
+      activeIndex = (index + slides.length) % slides.length;
+      if (manual) {
+        userPaused = true;
+        manualPlay = false;
+      }
+      slides.forEach((slide, slideIndex) =>
+        slide.classList.toggle('is-active', slideIndex === activeIndex),
+      );
+      slides[activeIndex]?.scrollIntoView({
+        behavior: reduceMotion.matches ? 'auto' : 'smooth',
+        block: 'nearest',
+        inline: 'center',
+      });
+    };
+
+    const renderToggle = () => {
+      const isPaused = userPaused || suspended;
+      toggle.setAttribute('aria-label', isPaused ? 'Reanudar reproducción' : 'Pausar reproducción');
+      toggleLabel.textContent = isPaused ? 'Reanudar reproducción' : 'Pausar reproducción';
+    };
+
+    const syncActive = () => {
+      const center = viewport.scrollLeft + viewport.clientWidth / 2;
+      activeIndex = slides.reduce((closest, slide, index) => {
+        const slideCenter = slide.offsetLeft + slide.offsetWidth / 2;
+        return Math.abs(slideCenter - center) <
+          Math.abs(slides[closest].offsetLeft + slides[closest].offsetWidth / 2 - center)
+          ? index
+          : closest;
+      }, 0);
+      slides.forEach((slide, slideIndex) =>
+        slide.classList.toggle('is-active', slideIndex === activeIndex),
+      );
+    };
+
+    const start = () => {
+      window.clearInterval(timer);
+      timer = undefined;
+      if (!userPaused && !suspended && (!reduceMotion.matches || manualPlay)) {
+        timer = window.setInterval(() => update(activeIndex + 1, false), 7000);
+      }
+      renderToggle();
+    };
+
+    previous.addEventListener('click', () => {
+      update(activeIndex - 1, true);
+      start();
+    });
+    next.addEventListener('click', () => {
+      update(activeIndex + 1, true);
+      start();
+    });
+    toggle.addEventListener('click', () => {
+      userPaused = !userPaused;
+      manualPlay = !userPaused;
+      start();
+    });
+    viewport.addEventListener('scroll', syncActive, { passive: true });
+    viewport.addEventListener('keydown', (event) => {
+      if (event.key === 'ArrowLeft') {
+        event.preventDefault();
+        update(activeIndex - 1, true);
+        start();
+      }
+      if (event.key === 'ArrowRight') {
+        event.preventDefault();
+        update(activeIndex + 1, true);
+        start();
+      }
+    });
+    carousel.addEventListener(
+      'pointerdown',
+      () => {
+        userPaused = true;
+        manualPlay = false;
+        start();
+      },
+      { passive: true },
+    );
+    carousel.addEventListener('mouseenter', () => {
+      suspended = true;
+      start();
+    });
+    carousel.addEventListener('mouseleave', () => {
+      suspended = false;
+      start();
+    });
+    carousel.addEventListener('focusin', () => {
+      suspended = true;
+      start();
+    });
+    carousel.addEventListener('focusout', (event) => {
+      if (!carousel.contains(event.relatedTarget as Node | null)) {
+        suspended = false;
+        start();
+      }
+    });
+    reduceMotion.addEventListener('change', (event) => {
+      if (event.matches) {
+        userPaused = true;
+        manualPlay = false;
+      }
+      start();
+    });
+    syncActive();
+    start();
+  });
+</script>}

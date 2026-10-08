@@ -1,29 +1,38 @@
 ---
-import TattooGallery from '../../../../src/components/TattooGallery.astro';
+import TattooWorkCarousel from '../../../../src/components/TattooWorkCarousel.astro';
+import TattooHeroMedia from '../../../../src/components/TattooHeroMedia.astro';
 import type { TattooPortfolioItem } from '../../../../src/portfolio';
 import firstWork from '../assets/work-one.svg';
 import secondWork from '../assets/work-two.svg';
 
-const items: TattooPortfolioItem[] = [
-  {
-    id: 'fixture-principal',
-    title: 'Fixture principal',
-    alt: 'Fixture geométrico de prueba; no representa un tatuaje real',
-    image: firstWork,
-  },
-  {
-    id: 'fixture-secundario',
-    title: 'Fixture secundario',
-    alt: 'Segundo fixture geométrico de prueba; no representa un tatuaje real',
-    image: secondWork,
-  },
-];
+const fixtures = [firstWork, secondWork];
+const makeItems = (count: number): TattooPortfolioItem[] =>
+  Array.from({ length: count }, (_, index) => ({
+    id: `fixture-${index + 1}`,
+    title: `Fixture ${index + 1}`,
+    alt: `Geometría de prueba ${index + 1}; no representa un tatuaje real`,
+    image: fixtures[index % fixtures.length],
+  }));
 ---
 
 <html lang="es-AR">
   <body>
     <main>
-      <TattooGallery items={items} />
+      <section>
+        <TattooWorkCarousel items={makeItems(0)} id="carousel-empty" />
+      </section>
+      <section>
+        <TattooWorkCarousel items={makeItems(1)} id="carousel-one" />
+      </section>
+      <section>
+        <TattooWorkCarousel items={makeItems(2)} id="carousel-two" />
+      </section>
+      <section>
+        <TattooWorkCarousel items={makeItems(5)} id="carousel-five" />
+      </section>
+      <TattooHeroMedia
+        media={{ src: '/tests/work-one.svg', alt: 'Foto fixture de prueba, no real' }}
+      />
     </main>
   </body>
 </html>

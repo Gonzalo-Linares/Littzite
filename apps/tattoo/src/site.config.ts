@@ -22,9 +22,9 @@ const parsedContent = siteContentSchema.parse({
     {
       slug: '',
       seo: {
-        title: 'Juanjo Tattoo Studio | Tinta con carácter',
+        title: 'Juanjo Tattoo Studio | Tu próxima pieza empieza acá',
         description:
-          'Tradición, fuerza y detalle. Conocé el universo creativo de Juanjo Tattoo Studio.',
+          'Explorá trabajos, definí tu idea y coordiná el próximo paso con Juanjo Tattoo Studio en San Juan.',
       },
       sections: [],
     },

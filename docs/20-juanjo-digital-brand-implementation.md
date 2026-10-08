@@ -1,46 +1,51 @@
-# Juanjo Tattoo Studio: digital brand implementation
+# Juanjo Tattoo Studio: identidad y experiencia digital
 
-This document records the website translation of the official 2026 brand manual. The supplied manual remains authoritative; this note does not replace it.
+El manual oficial de marca suministrado por el titular es la fuente de verdad. Esta implementación vive en `apps/tattoo`, mantiene `es-AR`, `noindex, nofollow` y no activa booking.
 
-## Source kit and marks
+## Manual y recursos
 
-Source: `C:\Users\gonza\Downloads\Kit-Marca-Juanjo-Tattoo-Studio-Premium\Juanjo-Tattoo-Studio-Premium`. The owner supplied the complete official kit and authorized its use for the Juanjo site. The five master PNG files were copied byte-for-byte to `apps/tattoo/public/brand/`; the hashes below cover both the source and repository copy.
+Kit auditado: `C:\Users\gonza\Downloads\Kit-Marca-Juanjo-Tattoo-Studio-Premium\Juanjo-Tattoo-Studio-Premium`.
 
-| Official mark | Source PNG → repository asset | Digital role | SHA-256 |
-| --- | --- | --- | --- |
-| Principal | `logos/logo-principal.png` → `/brand/logo-principal.png` | Full identity on `/estudio/` | `c66d7dc0fa4c99daefadab6200f55ed9f750819d7ecaab1055e3b0609c80a237` |
-| Sello | `logos/sello-circular.png` → `/brand/sello-circular.png` | Honest empty state on `/trabajos/` | `8bb1da4d3b7cb300fd7d741a481928f07d4056e5fe9a28e65e42d4ca6666d92d` |
-| Oni | `logos/icono-oni.png` → `/brand/icono-oni.png` | Hero symbol | `576f730d5f44aaf2840e78413e99f0aafa733918d148d629756be16e9f149b01` |
-| JT | `logos/monograma-jt.png` → `/brand/monograma-jt.png` | Compact mobile header mark and favicon | `971090d517b7ad5236be56e2010e864b03b18826091ae63197b22c48aa0ca002` |
-| Firma | `logos/wordmark.png` → `/brand/wordmark.png` | Desktop header and footer signature | `ce40f98a9c935642e56d66021513fd2680b75225cd75e2e100593a4a42dfe1c4` |
+Los cinco PNG maestros de `logos/` están copiados sin cambios en `apps/tattoo/public/brand/`. Sus roles, proporciones y SHA-256 se declaran en `src/brand.config.ts`: Principal para identidad de estudio, Sello para el estado vacío, Oni en hero, JT en cabecera compacta/favicon y Firma en cabecera/pie. Se preservan color, forma y proporción.
 
-Use `object-fit: contain` and preserve the source dimensions. Do not crop, recolor, filter, rotate, redraw, or place textures over a mark. Leave approximately ten percent clear space around each signature. Asset paths, natural dimensions, roles and hashes live in `apps/tattoo/src/brand.config.ts`.
+La carpeta `destacadas/` contiene símbolos independientes y portadas listas para perfiles sociales; `redes/`, `tarjetas/` e `indumentaria/` contienen composiciones finales o mockups. Esta web usa los maestros de `logos/`, además de formas geométricas CSS/SVG originales para sus guías. No presenta composiciones de redes, tarjetas o merch como controles de interfaz, ni las presenta como fotografías de tatuajes.
 
-## Color and type
+Paleta oficial: tinta `#0E0E0E`, rojo `#A61E1E`, marfil `#EADCC6`, dorado `#C9A96B` y carbón `#2C2C2C`. Rye se reserva para titulares breves; DejaVu Serif para apoyo editorial; DejaVu Sans para lectura y controles. Las fuentes y sus avisos de licencia se distribuyen localmente. Ver `THIRD_PARTY_NOTICES.md`.
 
-The app-local theme preserves the manual values: ink `#0E0E0E`, red `#A61E1E`, ivory `#EADCC6`, gold `#C9A96B`, charcoal `#2C2C2C`. Ink and ivory carry large surfaces; red is used for focused actions; gold for fine rules and secondary detail.
+## Rutas y acciones
 
-Only the supplied font files used on the site are distributed locally under `apps/tattoo/public/fonts/`: Rye Regular for short display headings, DejaVu Serif Regular for editorial phrases, and DejaVu Sans Regular/Bold for navigation and functional text. All use `@font-face` with `font-display: swap`; no remote font service is loaded. Their original license notices are retained next to the files. Unused font variants are not bundled.
+`TattooSiteLayout.astro` mantiene una única cabecera/pie y la atribución neutral preexistente de `packages/ui`. La navegación es Inicio, Trabajos, Guía, Estudio y Contacto, con icono SVG de Instagram y CTA Turnos. El perfil `https://www.instagram.com/juanjo.tattoos/` es el único destino social aprobado.
 
-## Page system
+`tattooActions` centraliza `turnsHref` (`/contacto/#turnos`) y los dos usos del perfil de Instagram. No se encontró/verificó un deep link de DM estable; consultar abre el perfil. “Sacar turno” inicia la coordinación por Instagram, no una reserva automática. `bookingTargets`, `quoteTargets` y servicios permanecen vacíos; no se publican teléfono, WhatsApp, precios, horarios, señas ni políticas de agenda.
 
-`TattooSiteLayout.astro` owns the shared frame for `/`, `/trabajos/`, `/estudio/` and `/contacto/`. It composes public `packages/ui` APIs: `BaseLayout`, `SiteHeader`, `SiteFooter`, `Link`, `ButtonLink` and the existing neutral `SiteAttribution`. All four routes remain `noindex, nofollow` and `es-AR`.
+La home se organiza en seis bloques: hero; trabajos; antes de la tinta; cómo trabajamos; teaser de guía; cierre/consulta. El hero acepta `heroMedia.src` y `heroMedia.alt`, ambos opcionales y app-locales. La config actual no tiene fotografía. En su ausencia se presenta un marco carbón con líneas y círculos originales, y el Oni oficial superpuesto en la esquina superior derecha. Una foto local aprobada se renderiza con su texto alternativo sin rehacer la composición.
 
-The home uses the Oni as the only hero mark, a truthful work teaser, the editorial line “Tradición, fuerza y detalle”, two informational (non-clickable) commercial paths, and a contact route. `/estudio/` presents the brand's creative universe without biography, experience or physical-location claims. `/contacto/` exposes only the supplied Instagram profile. The shared footer includes accessible route navigation, Instagram, preview status and “Powered by Littzite”. Its attribution is plain text until a real URL and logo are supplied.
+## Fotografías y carrusel
 
-The portfolio stays `[]` until original, authorized tattoo photographs and descriptive alt text are available. `/trabajos/` then changes from the branded empty state to the responsive gallery through `validatePortfolio`; original photos keep their natural colors and are contained without cropping. The test fixture uses neutral geometric SVGs and is never imported into production.
+Blockers editoriales, deliberados y no bloqueantes para build: **Hero photography: pending real authorized photo.** **Portfolio: pending original authorized tattoo photography.** El kit aportado no contiene fotografías auténticas autorizadas de tatuajes. `tattooPortfolio` sigue como única fuente de trabajo real y permanece `[]`. No se descargó stock, no se usaron capturas de Instagram y no se generaron ni inventaron tatuajes.
 
-## Motion, accessibility and boundaries
+`TattooWorkCarousel.astro` recibe los items ya validados por `validatePortfolio()` en `src/portfolio.ts`, y se reutiliza en home y `/trabajos/`. Con 0 items muestra Firma/Sello y un estado visual honesto sin controles; con 1 item no inicia reproducción; con 2 o más ofrece tres piezas visibles aproximadamente en escritorio, una con peek en móvil, snap/gesto táctil, anterior/siguiente, teclado y pausa/reanudación. El avance es cada siete segundos; se suspende al hover/foco y se detiene después de interacción manual. `prefers-reduced-motion` impide el avance automático inicial. No usa región live para anunciar cada cambio.
 
-Motion is limited to a short entrance and native cross-document View Transitions. The page and links work without script. Reduced-motion preferences remove entrances and transitions. Logo images declare natural dimensions and use proportional containment; the Oni loads eagerly and secondary marks lazily. Focus styles, skip link, landmarks, headings, meaningful image alt text and touch-sized navigation remain in place.
+El fixture local cubre 0, 1, 2 y 5 piezas con SVG geométricos de prueba cuya alternativa textual declara que no son tatuajes. También cubre hero con una imagen configurada. Estos fixtures no se importan en producción.
 
-All identity, theme, fonts, pages and portfolio components remain in `apps/tattoo`. The only shared capability consumed is the already existing neutral footer attribution; this PR adds no shared package code. VIORA configuration and presentation remain unchanged.
+## Guía de preparación y cuidados
 
-## Pending before production
+`/guia/` contiene preparación breve, sensibilidad orientativa, escala, cuidados generales y siete preguntas frecuentes. Sus siluetas frontal/trasera son SVG geométricos originales. El mapa no da puntajes ni pretende evaluar clínicamente: presenta zonas como orientación para conversar, muestra leyenda textual además del color y reconoce variación personal. La base de la clasificación cualitativa es un estudio piloto con entrevistas, no una escala validada: [estudio piloto sobre la experiencia de dolor durante tatuajes](https://www.frontiersin.org/journals/virtual-reality/articles/10.3389/frvir.2021.643938/full).
 
-- Original authorized tattoo photographs, editorial titles and alt text.
-- Approved small-work booking provider and scope; no booking target is active.
-- Approved WhatsApp number and message for large-work quotes; no WhatsApp link is active.
-- Production domain, indexation, legal and release approval.
+Los cuidados son generales, sin plazos rígidos, medicamentos, diagnósticos ni tratamientos. Las indicaciones particulares que Juanjo entregue después de la sesión prevalecen. Ante signos importantes de infección, reacción intensa o empeoramiento inesperado, la guía orienta a buscar evaluación médica; no diagnostica. La recomendación de seguir la instrucción del tatuador coincide con la [guía de tatuajes y cuidados de UCLH](https://www.uclh.nhs.uk/patients-and-visitors/patient-information-pages/tattoos-and-cosmetic-procedures).
 
-GitHub Actions remain disabled. This prototype is not a production release.
+## Accesibilidad, límites y verificación
+
+El ícono social es SVG inline, tiene nombre accesible y foco visible, sin dependencia. Controles del carrusel superan 44 px, admiten teclado y pausa; el movimiento respeta reducción de movimiento. Mapa y escala tienen títulos/descripciones SVG y texto visible; la lectura no depende del color. La navegación HTML sigue funcionando sin JavaScript. Diseño comprobado en escritorio y anchos 1024, 768, 390 y 320 px; registrar los resultados de esta iteración en el PR.
+
+No se modifican `packages/*`, contratos, schema, booking o la app VIORA. No se agregan dependencias ni se modifica `pnpm-lock.yaml`. Las páginas permanecen `noindex, nofollow`; este cambio no habilita publicación indexable.
+
+## Pendientes antes de lanzamiento
+
+- Foto real autorizada para el hero y originales de tatuajes con aprobación, título y texto alternativo para el portfolio.
+- Definición de proveedor/alcance de turnos directos para piezas pequeñas (D-01C/D-02B).
+- Número, texto aprobado y destino de consultas por WhatsApp para presupuesto grande (D-04B); no hay CTA de WhatsApp activo.
+- Aprobación de contenido visual y guía de cuidados por Juanjo; verificar recomendaciones locales antes de publicarlas.
+- Dominio, privacidad, legal y autorización de indexación.
+
+GitHub Actions siguen desactivadas. El prototipo no es un release productivo.

@@ -4,7 +4,9 @@ import SiteHeader from '@littzite/ui/SiteHeader.astro';
 import SiteFooter from '@littzite/ui/SiteFooter.astro';
 import Link from '@littzite/ui/Link.astro';
 import SiteAttribution from '@littzite/ui/SiteAttribution.astro';
-import { tattooBrand } from '../brand.config';
+import ButtonLink from '@littzite/ui/ButtonLink.astro';
+import TattooInstagramLink from '../components/TattooInstagramLink.astro';
+import { tattooActions, tattooBrand } from '../brand.config';
 import { siteContent } from '../site.config';
 import '../styles/juanjo.css';
 
@@ -15,7 +17,6 @@ interface Props {
 
 const { title, description } = Astro.props;
 const { site } = siteContent;
-const socialHref = tattooBrand.social.instagram;
 ---
 
 <BaseLayout
@@ -34,10 +35,10 @@ const socialHref = tattooBrand.social.instagram;
     links={[
       { label: 'Inicio', href: '/' },
       { label: 'Trabajos', href: '/trabajos/' },
+      { label: 'Guía', href: '/guia/' },
       { label: 'Estudio', href: '/estudio/' },
       { label: 'Contacto', href: '/contacto/' },
     ]}
-    badge={{ label: tattooBrand.social.handle, href: socialHref }}
   >
     <picture slot="brand" class="tattoo-brand-mark" aria-hidden="true">
       <source media="(max-width: 600px)" srcset={tattooBrand.marks.jt.src} type="image/png" />
@@ -51,6 +52,17 @@ const socialHref = tattooBrand.social.instagram;
         decoding="async"
       />
     </picture>
+    <div slot="actions" class="tattoo-header-actions">
+      <TattooInstagramLink className="tattoo-header-instagram" />
+      <ButtonLink
+        href={tattooActions.turnsHref}
+        variant="primary"
+        size="compact"
+        className="tattoo-header-turns"
+      >
+        Turnos
+      </ButtonLink>
+    </div>
   </SiteHeader>
 
   <slot />
@@ -59,7 +71,7 @@ const socialHref = tattooBrand.social.instagram;
     slot="footer"
     brand={tattooBrand.name}
     note="Tinta con carácter."
-    meta={['Vista previa · No admite reservas todavía', tattooBrand.name.toUpperCase()]}
+    meta={['Vista previa · No indexable', 'Turnos por Instagram']}
   >
     <span slot="brand" class="tattoo-footer-brand">
       <img
@@ -78,15 +90,16 @@ const socialHref = tattooBrand.social.instagram;
       <Link className="tattoo-footer-nav__link" href="/trabajos/">
         Trabajos
       </Link>
+      <Link className="tattoo-footer-nav__link" href="/guia/">
+        Guía
+      </Link>
       <Link className="tattoo-footer-nav__link" href="/estudio/">
         Estudio
       </Link>
       <Link className="tattoo-footer-nav__link" href="/contacto/">
         Contacto
       </Link>
-      <Link className="tattoo-footer-nav__link" href={socialHref}>
-        Instagram
-      </Link>
+      <TattooInstagramLink showHandle={false} className="tattoo-footer-instagram" />
     </nav>
     <SiteAttribution
       slot="attribution"

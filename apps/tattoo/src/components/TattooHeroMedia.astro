@@ -1,0 +1,45 @@
+---
+import { tattooBrand } from '../brand.config';
+
+const { media = tattooBrand.heroMedia } = Astro.props;
+if (media.src && !media.alt)
+  throw new Error('Tattoo hero media requires approved descriptive alt text.');
+if (media.src && (!media.src.startsWith('/') || media.src.startsWith('//')))
+  throw new Error('Tattoo hero media must use a local root-relative asset.');
+---
+
+<figure class:list={['tattoo-hero-media', { 'tattoo-hero-media--photo': Boolean(media.src) }]}>
+  <div class="tattoo-hero-media__frame">
+    {media.src ? (
+      <img
+        class="tattoo-hero-media__photo"
+        src={media.src}
+        alt={media.alt}
+        fetchpriority="high"
+        decoding="async"
+      />
+    ) : (
+      <div class="tattoo-hero-media__art" aria-hidden="true">
+        <span class="tattoo-hero-media__orb"></span>
+        <span class="tattoo-hero-media__line tattoo-hero-media__line--one"></span>
+        <span class="tattoo-hero-media__line tattoo-hero-media__line--two"></span>
+        <span class="tattoo-hero-media__caption">JUANJO · TATTOO STUDIO</span>
+        <span class="tattoo-hero-media__index">01 / OFICIO</span>
+      </div>
+    )}
+    <img
+      class="tattoo-hero-media__oni"
+      src={tattooBrand.marks.oni.src}
+      width={tattooBrand.marks.oni.width}
+      height={tattooBrand.marks.oni.height}
+      alt=""
+      aria-hidden="true"
+      loading="eager"
+      decoding="async"
+    />
+    <span class="tattoo-hero-media__corner" aria-hidden="true"></span>
+  </div>
+  <figcaption class="tattoo-hero-media__caption-line">
+    Diseño con carácter · San Juan, Argentina
+  </figcaption>
+</figure>

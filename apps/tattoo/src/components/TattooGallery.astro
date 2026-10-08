@@ -1,72 +1,20 @@
 ---
-import Link from '@littzite/ui/Link.astro';
-import { tattooBrand } from '../brand.config';
+import TattooWorkCarousel from './TattooWorkCarousel.astro';
 import type { TattooPortfolioItem } from '../portfolio';
 
 interface Props {
   items: readonly TattooPortfolioItem[];
 }
-
 const { items } = Astro.props;
 ---
 
 <section class="tattoo-gallery" aria-labelledby="portfolio-title">
   <div class="container">
     <header class="tattoo-gallery__heading">
-      <p class="tattoo-eyebrow">TRABAJOS ORIGINALES</p>
-      <h1 id="portfolio-title">El trabajo habla.</h1>
-      <p>
-        {items.length > 0
-          ? 'Una selección de piezas fotografiadas y aprobadas para este portfolio.'
-          : 'El portfolio está en preparación. Publicaremos las piezas cuando estén disponibles los originales autorizados.'}
-      </p>
+      <p class="tattoo-eyebrow">PIEZAS SELECCIONADAS</p>
+      <h1 id="portfolio-title">Trabajos</h1>
+      {items.length > 0 && <p>Una selección de trabajos de Juanjo.</p>}
     </header>
-
-    {items.length > 0 ? (
-      <div class="tattoo-gallery__grid">
-        {items.map((item, index) => (
-          <figure
-            class:list={['tattoo-gallery__item', { 'tattoo-gallery__item--lead': index === 0 }]}
-          >
-            <img
-              src={item.image.src}
-              alt={item.alt}
-              width={item.image.width}
-              height={item.image.height}
-              loading={index === 0 ? 'eager' : 'lazy'}
-              decoding="async"
-            />
-            <figcaption>
-              <span>{String(index + 1).padStart(2, '0')}</span>
-              {item.title}
-            </figcaption>
-          </figure>
-        ))}
-      </div>
-    ) : (
-      <div class="tattoo-gallery__empty">
-        <div class="tattoo-gallery__seal">
-          <img
-            src={tattooBrand.marks.seal.src}
-            width={tattooBrand.marks.seal.width}
-            height={tattooBrand.marks.seal.height}
-            alt=""
-            loading="lazy"
-            decoding="async"
-          />
-        </div>
-        <div class="tattoo-gallery__empty-copy">
-          <p class="tattoo-eyebrow">PORTFOLIO EN PREPARACIÓN</p>
-          <h2>Primero, el trabajo real.</h2>
-          <p>
-            Esta sección no usa imágenes de muestra. Cuando estén listas las fotografías originales
-            autorizadas, vas a poder recorrerlas acá.
-          </p>
-          <Link className="tattoo-text-link" href="/contacto/">
-            Ver contacto <span aria-hidden="true">↗</span>
-          </Link>
-        </div>
-      </div>
-    )}
+    <TattooWorkCarousel items={items} id="trabajos-carousel" />
   </div>
 </section>

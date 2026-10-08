@@ -1,0 +1,261 @@
+---
+import ButtonLink from '@littzite/ui/ButtonLink.astro';
+import TattooSiteLayout from '../layouts/TattooSiteLayout.astro';
+import TattooSensitivityMap from '../components/TattooSensitivityMap.astro';
+import { tattooActions, tattooBrand } from '../brand.config';
+---
+
+<TattooSiteLayout
+  title="Guía para tu tatuaje | Juanjo Tattoo Studio"
+  description="Preparación, sensibilidad orientativa, tamaño y cuidados generales antes y después de tatuarte."
+>
+  <article class="tattoo-guide-page">
+    <header class="tattoo-guide-hero">
+      <div class="container tattoo-guide-hero__inner">
+        <p class="tattoo-eyebrow">ANTES Y DESPUÉS DE TATUARTE</p>
+        <h1>Una guía para llegar preparado.</h1>
+        <p>
+          Información general para pensar tu pieza, conversar la ubicación y acompañar los cuidados.
+        </p>
+        <a class="tattoo-guide-hero__jump" href="#preparacion">
+          Recorrer la guía <span aria-hidden="true">↓</span>
+        </a>
+      </div>
+      <img
+        class="tattoo-guide-hero__monogram"
+        src={tattooBrand.marks.jt.src}
+        width={tattooBrand.marks.jt.width}
+        height={tattooBrand.marks.jt.height}
+        alt=""
+        aria-hidden="true"
+        loading="lazy"
+        decoding="async"
+      />
+    </header>
+
+    <section class="tattoo-guide-section" id="preparacion" aria-labelledby="preparation-title">
+      <div class="container">
+        <div class="tattoo-guide-heading">
+          <p class="tattoo-eyebrow">01 / ANTES DE LA SESIÓN</p>
+          <h2 id="preparation-title">Llegá con tiempo para tu idea.</h2>
+          <p>
+            Algunas cosas simples ayudan a preparar el encuentro. Juanjo puede indicarte
+            recomendaciones particulares.
+          </p>
+        </div>
+        <ol class="tattoo-preparation-grid">
+          <li>
+            <span>01</span>
+            <h3>Descansá</h3>
+            <p>Intentá llegar descansado.</p>
+          </li>
+          <li>
+            <span>02</span>
+            <h3>Hidratate y comé</h3>
+            <p>Tomá agua y comé antes de la sesión.</p>
+          </li>
+          <li>
+            <span>03</span>
+            <h3>Traé referencias</h3>
+            <p>Si tenés imágenes o ideas de inspiración, podés compartirlas.</p>
+          </li>
+          <li>
+            <span>04</span>
+            <h3>Elegí ropa cómoda</h3>
+            <p>Que permita acceder con comodidad a la zona elegida.</p>
+          </li>
+          <li>
+            <span>05</span>
+            <h3>Conversá tus dudas</h3>
+            <p>Seguí las indicaciones particulares que te dé el tatuador.</p>
+          </li>
+        </ol>
+        <p class="tattoo-guide-note">
+          Si tenés una condición de salud relevante o dudas particulares, consultá previamente con
+          un profesional de salud y con el tatuador.
+        </p>
+      </div>
+    </section>
+
+    <TattooSensitivityMap />
+
+    <section
+      class="tattoo-guide-section tattoo-size-guide"
+      id="tamano"
+      aria-labelledby="size-title"
+    >
+      <div class="container tattoo-size-guide__grid">
+        <div>
+          <p class="tattoo-eyebrow">03 / TAMAÑO Y UBICACIÓN</p>
+          <h2 id="size-title">El tamaño cambia cómo se lee una pieza.</h2>
+          <p>
+            La escala y la zona se conversan juntas. Estas referencias comparan tamaños entre sí; no
+            representan un diseño ni una medida exacta sobre el cuerpo.
+          </p>
+          <div class="tattoo-size-guide__legend">
+            <span>
+              <i class="tattoo-size-dot tattoo-size-dot--5"></i>5 cm
+            </span>
+            <span>
+              <i class="tattoo-size-dot tattoo-size-dot--10"></i>10 cm
+            </span>
+            <span>
+              <i class="tattoo-size-dot tattoo-size-dot--15"></i>15 cm
+            </span>
+            <span>
+              <i class="tattoo-size-dot tattoo-size-dot--20"></i>20 cm
+            </span>
+          </div>
+          <p class="tattoo-guide-note">
+            La visualización es proporcional y orientativa; medí la pieza junto al tatuador antes de
+            definirla.
+          </p>
+        </div>
+        <figure class="tattoo-size-guide__figure">
+          <svg viewBox="0 0 420 560" role="img" aria-labelledby="scale-svg-title scale-svg-desc">
+            <title id="scale-svg-title">Silueta neutral con referencias de escala</title>
+            <desc id="scale-svg-desc">
+              Figura geométrica original con cuatro círculos neutrales de tamaños relativos. No
+              simulan tatuajes.
+            </desc>
+            <g class="tattoo-scale-body">
+              <circle cx="210" cy="52" r="29" />
+              <path d="M196 83v26l-58 20-35 91 23 11 35-66 8 82-32 108 24 9 49-91 49 91 24-9-32-108 8-82 35 66 23-11-35-91-58-20V83" />
+              <path d="m169 354-12 123m94-123 12 123m-114 0-4 70h26l17-69m57-1 17 69h26l-4-70" />
+            </g>
+            <g class="tattoo-scale-markers" aria-hidden="true">
+              <circle cx="137" cy="159" r="12" />
+              <circle cx="269" cy="222" r="20" />
+              <circle cx="164" cy="298" r="28" />
+              <circle cx="230" cy="340" r="36" />
+            </g>
+          </svg>
+          <figcaption>Marcadores gráficos para imaginar escala, no tatuajes.</figcaption>
+        </figure>
+      </div>
+    </section>
+
+    <section
+      class="tattoo-guide-section tattoo-aftercare"
+      id="cuidados"
+      aria-labelledby="aftercare-title"
+    >
+      <div class="container">
+        <div class="tattoo-guide-heading">
+          <p class="tattoo-eyebrow">04 / DESPUÉS DE LA SESIÓN</p>
+          <h2 id="aftercare-title">Cuidá la pieza.</h2>
+          <p>
+            Las indicaciones específicas que te entregue Juanjo después de la sesión prevalecen
+            sobre esta orientación general.
+          </p>
+        </div>
+        <ol class="tattoo-aftercare__timeline">
+          <li>
+            <span>01</span>
+            <div>
+              <h3>Manos limpias</h3>
+              <p>
+                Lavá tus manos antes de tocar la zona y mantené una higiene suave según las
+                indicaciones recibidas.
+              </p>
+            </div>
+          </li>
+          <li>
+            <span>02</span>
+            <div>
+              <h3>Secado y cuidado</h3>
+              <p>
+                Secá con cuidado, sin frotar. Usá hidratación únicamente según la recomendación del
+                tatuador.
+              </p>
+            </div>
+          </li>
+          <li>
+            <span>03</span>
+            <div>
+              <h3>Menos fricción</h3>
+              <p>Evitá el roce y seguí las indicaciones particulares sobre el vendaje.</p>
+            </div>
+          </li>
+          <li>
+            <span>04</span>
+            <div>
+              <h3>Sol y piel</h3>
+              <p>
+                Durante la cicatrización evitá la exposición solar directa. Luego, usá protección
+                solar para cuidar la piel y la pieza.
+              </p>
+            </div>
+          </li>
+        </ol>
+        <p class="tattoo-guide-alert">
+          Si aparecen signos importantes de infección, una reacción intensa o un empeoramiento
+          inesperado, buscá evaluación médica.
+        </p>
+      </div>
+    </section>
+
+    <section class="tattoo-guide-section tattoo-faq" id="preguntas" aria-labelledby="faq-title">
+      <div class="container tattoo-faq__grid">
+        <div class="tattoo-guide-heading">
+          <p class="tattoo-eyebrow">05 / PREGUNTAS FRECUENTES</p>
+          <h2 id="faq-title">Lo que conviene conversar.</h2>
+          <p>
+            Las respuestas dependen de cada proyecto. Juanjo puede orientarte por su canal oficial.
+          </p>
+          <ButtonLink href={tattooActions.turnsHref} variant="primary" size="compact">
+            Sacar turno
+          </ButtonLink>
+        </div>
+        <div class="tattoo-faq__list">
+          <details>
+            <summary>¿Cómo saco turno?</summary>
+            <p>Escribile a Juanjo por Instagram para conversar y coordinar el próximo paso.</p>
+          </details>
+          <details>
+            <summary>¿Qué información conviene enviar?</summary>
+            <p>
+              Podés compartir tu idea, referencias si las tenés, la zona y el tamaño aproximado que
+              imaginás.
+            </p>
+          </details>
+          <details>
+            <summary>¿Cómo se define el presupuesto?</summary>
+            <p>
+              Depende del proyecto. Juanjo puede evaluarlo cuando conversen la idea y sus
+              características.
+            </p>
+          </details>
+          <details>
+            <summary>¿Duele tatuarse?</summary>
+            <p>
+              La sensibilidad varía entre personas y puede cambiar según la zona, el tamaño y la
+              duración de la sesión.
+            </p>
+          </details>
+          <details>
+            <summary>¿Cómo elijo el tamaño?</summary>
+            <p>
+              La escala y la ubicación se pueden conversar juntas para entender cómo se va a leer la
+              pieza.
+            </p>
+          </details>
+          <details>
+            <summary>¿Cómo me preparo y cuido el tatuaje?</summary>
+            <p>
+              Encontrás recomendaciones generales en esta guía. Las instrucciones particulares de
+              Juanjo tras la sesión tienen prioridad.
+            </p>
+          </details>
+          <details>
+            <summary>¿Dónde puedo ver trabajos recientes?</summary>
+            <p>
+              La sección de trabajos incorporará fotografías originales autorizadas cuando estén
+              disponibles.
+            </p>
+          </details>
+        </div>
+      </div>
+    </section>
+  </article>
+</TattooSiteLayout>

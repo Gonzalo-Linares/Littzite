@@ -1,32 +1,43 @@
 ---
-import Link from '@littzite/ui/Link.astro';
+import ButtonLink from '@littzite/ui/ButtonLink.astro';
 import TattooSiteLayout from '../layouts/TattooSiteLayout.astro';
-import { tattooBrand } from '../brand.config';
+import TattooInstagramLink from '../components/TattooInstagramLink.astro';
+import { tattooActions } from '../brand.config';
 ---
 
 <TattooSiteLayout
-  title="Contacto | Juanjo Tattoo Studio"
-  description="Canal oficial de contacto de Juanjo Tattoo Studio en Instagram."
+  title="Turnos y consultas | Juanjo Tattoo Studio"
+  description="Coordiná turnos y consultas con Juanjo Tattoo Studio a través del perfil oficial de Instagram."
 >
-  <section class="tattoo-contact-page" aria-labelledby="contact-title">
-    <div class="container tattoo-contact-page__inner">
-      <p class="tattoo-eyebrow">CONTACTO OFICIAL</p>
-      <h1 id="contact-title">Contanos tu idea.</h1>
-      <p class="tattoo-contact-page__lead">
-        Para conocer el trabajo publicado y comunicarte con Juanjo, visitá su perfil oficial.
-      </p>
-      <Link className="tattoo-instagram-link" href={tattooBrand.social.instagram}>
-        <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
-          <rect x="3.5" y="3.5" width="17" height="17" rx="4.5" />
-          <circle cx="12" cy="12" r="4" />
-          <circle class="tattoo-instagram-link__dot" cx="17.6" cy="6.8" r="1" />
-        </svg>
-        <span>{tattooBrand.social.handle}</span>
-        <span class="tattoo-instagram-link__arrow" aria-hidden="true">
-          ↗
-        </span>
-      </Link>
-      <p class="tattoo-contact-page__note">El enlace abre Instagram, un servicio externo.</p>
-    </div>
-  </section>
+  <article class="tattoo-contact-page">
+    <header class="tattoo-contact-hero">
+      <div class="container">
+        <p class="tattoo-eyebrow">CANAL OFICIAL</p>
+        <h1>Turnos y consultas</h1>
+        <p>El primer paso es conversar tu idea con Juanjo.</p>
+      </div>
+    </header>
+    <section class="container tattoo-contact-paths" aria-label="Opciones de contacto">
+      <article class="tattoo-contact-path" id="turnos">
+        <span class="tattoo-contact-path__number">01 / TURNOS</span>
+        <h2>Sacar turno</h2>
+        <p>Escribile a Juanjo por Instagram para coordinar el próximo paso.</p>
+        <TattooInstagramLink showHandle className="tattoo-contact-path__instagram" />
+        <ButtonLink href={tattooActions.instagramHref} variant="primary" icon="external">
+          Sacar turno
+        </ButtonLink>
+      </article>
+      <article class="tattoo-contact-path">
+        <span class="tattoo-contact-path__number">02 / PROYECTOS PERSONALIZADOS</span>
+        <h2>Consultar por Instagram</h2>
+        <p>Los proyectos de mayor escala requieren una conversación y un presupuesto previo.</p>
+        <ButtonLink href={tattooActions.consultHref} variant="secondary" icon="external">
+          Consultar por Instagram
+        </ButtonLink>
+      </article>
+    </section>
+    <p class="container tattoo-contact-note">
+      El enlace abre Instagram, un servicio externo. No hay una agenda automática configurada.
+    </p>
+  </article>
 </TattooSiteLayout>
