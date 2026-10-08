@@ -54,4 +54,4 @@
 - Datos comerciales que deban informarse antes de contratar: precio y condiciones aplicables; validar con asesoría jurídica. No inventar señas, medios de pago, cancelaciones, reintegros ni duración.
 - Reemplazar la URL UAT Cal.com, aprobar Location presencial, revisar duración y repetir UAT focal.
 - Confirmar suficiencia jurídica del flujo estático de arrepentimiento por email y completar contacto real.
-- URL real de producción (incluido `pages.dev` tras primer deploy) antes de definir `PUBLIC_SITE_URL`.
+- URL real de producción (incluido `pages.dev` tras primer deploy) antes de definir `VIORA_PUBLIC_SITE_URL` y `JUANJO_PUBLIC_SITE_URL` por separado.

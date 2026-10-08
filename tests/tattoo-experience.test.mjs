@@ -12,6 +12,7 @@ import { tattooPortfolioRecords } from '../apps/tattoo/src/portfolio-data.ts';
 import { stepGalleryIndex } from '../apps/tattoo/src/gallery-navigation.ts';
 import {
   assertTattooProductionReady,
+  tattooProductionBlockers,
   tattooReleaseBlockers,
 } from '../apps/tattoo/src/release-readiness.ts';
 
@@ -136,7 +137,12 @@ test('temporary image portfolio remains marked as release blocked', async () => 
   assert.equal(tattooReleaseState.temporaryPortfolioImages, true);
   assert.equal(tattooReleaseState.temporaryAftercareImage, true);
   assert.equal('bookingUrlIsPlaceholder' in tattooReleaseState, false);
-  assert.equal(tattooReleaseBlockers.length, 3);
+  assert.equal(tattooReleaseBlockers.length, 0);
+  assert.equal(
+    tattooProductionBlockers.filter((blocker) => blocker.startsWith('assets.')).length,
+    3,
+  );
+  assert.ok(tattooProductionBlockers.includes('JUANJO_PUBLIC_SITE_URL.missing'));
   assert.throws(assertTattooProductionReady, /Juanjo production release blocked/);
   assert.ok(previewFiles.includes('work-botanical-preview.webp'));
   assert.ok(previewFiles.includes('work-moth-preview.webp'));

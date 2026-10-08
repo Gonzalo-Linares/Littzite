@@ -8,8 +8,10 @@
   "scripts": {
     "dev:estetica": "corepack pnpm --filter @littzite/estetica dev --port 4321",
     "dev:tattoo": "corepack pnpm --filter @littzite/tattoo dev --port 4322",
+    "build:estetica": "corepack pnpm --filter @littzite/estetica build",
+    "build:tattoo": "corepack pnpm --filter @littzite/tattoo build",
     "check:boundaries": "node scripts/check-boundaries.mjs",
-    "test:contracts": "node --test tests/contracts.test.mjs tests/boundaries.test.mjs tests/booking.test.mjs tests/link-utils.test.mjs tests/portfolio.test.mjs tests/site-links.test.mjs tests/validate-html.test.mjs tests/action-list.test.mjs tests/button-link.test.mjs tests/viora-map.test.mjs tests/viora-release.test.mjs tests/viora-service-rail.test.mjs tests/site-attribution.test.mjs tests/tattoo-brand.test.mjs tests/tattoo-portfolio-render.test.mjs tests/tattoo-experience.test.mjs",
+    "test:contracts": "node --test tests/contracts.test.mjs tests/boundaries.test.mjs tests/booking.test.mjs tests/link-utils.test.mjs tests/portfolio.test.mjs tests/site-links.test.mjs tests/validate-html.test.mjs tests/action-list.test.mjs tests/button-link.test.mjs tests/viora-map.test.mjs tests/viora-release.test.mjs tests/viora-service-rail.test.mjs tests/site-attribution.test.mjs tests/tattoo-brand.test.mjs tests/tattoo-portfolio-render.test.mjs tests/tattoo-experience.test.mjs tests/tattoo-release.test.mjs",
     "lint": "eslint --max-warnings=0 apps packages scripts tests *.mjs",
     "format": "prettier --write apps packages scripts tests *.mjs *.json *.yaml",
     "format:check": "prettier --check apps packages scripts tests *.mjs *.json *.yaml",

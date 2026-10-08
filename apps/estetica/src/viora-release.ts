@@ -81,7 +81,7 @@ export function releaseBlockers(readiness: ReleaseReadiness): string[] {
     blockers.push('legal.email.invalid');
   if (!isValidCuit(readiness.legal.taxId)) blockers.push('legal.taxId.invalid');
   if (!/^\+[1-9]\d{1,14}$/.test(readiness.legal.phone)) blockers.push('legal.phone.invalid');
-  if (!readiness.publicSiteUrl) blockers.push('PUBLIC_SITE_URL.missing');
+  if (!readiness.publicSiteUrl) blockers.push('VIORA_PUBLIC_SITE_URL.missing');
   else {
     try {
       const url = new URL(readiness.publicSiteUrl);
@@ -93,9 +93,9 @@ export function releaseBlockers(readiness: ReleaseReadiness): string[] {
         url.search ||
         url.hash
       )
-        blockers.push('PUBLIC_SITE_URL.invalid');
+        blockers.push('VIORA_PUBLIC_SITE_URL.invalid');
     } catch {
-      blockers.push('PUBLIC_SITE_URL.invalid');
+      blockers.push('VIORA_PUBLIC_SITE_URL.invalid');
     }
   }
   if (readiness.booking.productionUrl === 'https://cal.com/gonzalo-linares-rfbhnf/prueba')
@@ -124,7 +124,7 @@ export function releaseBlockers(readiness: ReleaseReadiness): string[] {
 }
 
 export const vioraPublicRelease = buildEnvironment.VIORA_PUBLIC_RELEASE === 'true';
-export const publicSiteUrl = buildEnvironment.PUBLIC_SITE_URL;
+export const publicSiteUrl = buildEnvironment.VIORA_PUBLIC_SITE_URL;
 
 const blockers = releaseBlockers({
   enabled: vioraPublicRelease,
