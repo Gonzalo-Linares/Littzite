@@ -63,12 +63,12 @@ export const tattooBrand = {
     label: 'Powered by',
     brand: 'Littzite',
     href: undefined,
-    logoSrc: undefined,
+    logoSrc: '/littzite/horizontal.svg',
   },
 } as const;
 
 export const tattooActions = {
-  turnsHref: '/contacto/#turnos',
+  turnsHref: 'https://cal.com/gonzalo-linares-rfbhnf/prueba',
   consultHref: tattooBrand.social.instagram,
   instagramHref: tattooBrand.social.instagram,
 } as const;

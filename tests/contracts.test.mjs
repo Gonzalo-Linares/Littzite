@@ -444,7 +444,7 @@ test('Juanjo brand stays independent and its commercial targets remain inactive'
     focus: '#C9A96B',
   });
   const home = tattoo.pages.find((page) => page.slug === '');
-  assert.equal(home.seo.title, 'Juanjo Tattoo Studio | Tu próxima pieza empieza acá');
+  assert.equal(home.seo.title, 'Juanjo Tattoo Studio | Tu próximo tatuaje empieza acá');
   assert.deepEqual(home.sections, []);
   assert.equal(tattoo.site.iconHref, '/brand/monograma-jt.png');
   assert.equal(tattoo.services.length, 0);

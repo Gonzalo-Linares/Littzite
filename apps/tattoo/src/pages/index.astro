@@ -6,11 +6,15 @@ import TattooInstagramLink from '../components/TattooInstagramLink.astro';
 import TattooWorkCarousel from '../components/TattooWorkCarousel.astro';
 import { tattooActions, tattooBrand } from '../brand.config';
 import { tattooPortfolio } from '../portfolio';
+import { tattooPreviewPortfolio } from '../preview-portfolio';
+
+const previewOnly = tattooPortfolio.length === 0;
+const visibleWorks = previewOnly ? tattooPreviewPortfolio : tattooPortfolio;
 ---
 
 <TattooSiteLayout
-  title="Juanjo Tattoo Studio | Tu próxima pieza empieza acá"
-  description="Explorá trabajos, definí tu idea y coordiná el próximo paso con Juanjo Tattoo Studio en San Juan."
+  title="Juanjo Tattoo Studio | Tu próximo tatuaje empieza acá"
+  description="Explorá trabajos, elegí el estilo que te representa y sacá tu turno con Juanjo Tattoo Studio en San Juan."
 >
   <section class="tattoo-home-hero" aria-labelledby="home-hero-title">
     <div class="container tattoo-home-hero__grid">
@@ -19,13 +23,13 @@ import { tattooPortfolio } from '../portfolio';
           <span aria-hidden="true"></span>Tinta con carácter
         </p>
         <h1 id="home-hero-title">
-          Tu próxima pieza <span>empieza acá.</span>
+          Tu próximo <span>tatuaje</span> empieza acá.
         </h1>
         <p class="tattoo-home-hero__lead">
-          Explorá trabajos, definí tu idea y coordiná el próximo paso con Juanjo.
+          Explorá trabajos, elegí el estilo que más te represente y sacá tu turno con Juanjo.
         </p>
         <div class="tattoo-home-hero__actions">
-          <ButtonLink href={tattooActions.turnsHref} variant="primary">
+          <ButtonLink href={tattooActions.turnsHref} variant="primary" icon="external">
             Sacar turno
           </ButtonLink>
           <ButtonLink href="/trabajos/" variant="secondary">
@@ -33,7 +37,10 @@ import { tattooPortfolio } from '../portfolio';
           </ButtonLink>
         </div>
         <p class="tattoo-home-hero__location">
-          Juanjo Tattoo Studio <span aria-hidden="true">·</span> San Juan, Argentina
+          {tattooBrand.name} <span aria-hidden="true">·</span> San Juan, Argentina
+        </p>
+        <p class="tattoo-preview-note tattoo-home-hero__booking-note">
+          Agenda de prueba en Cal.com; el enlace no confirma disponibilidad real del estudio.
         </p>
       </div>
       <TattooHeroMedia media={tattooBrand.heroMedia} />
@@ -44,81 +51,59 @@ import { tattooPortfolio } from '../portfolio';
     <div class="container">
       <div class="tattoo-section-heading tattoo-section-heading--split">
         <div>
-          <p class="tattoo-eyebrow">PIEZAS SELECCIONADAS</p>
+          <p class="tattoo-eyebrow">ESTILOS Y REFERENCIAS VISUALES</p>
           <h2 id="home-work-title">Trabajos</h2>
+          <p>Una selección de trabajos y referencias visuales del estudio.</p>
         </div>
-        <a class="tattoo-text-link" href="/trabajos/">
-          Ver trabajos <span aria-hidden="true">↗</span>
-        </a>
+        <div class="tattoo-work-section__actions">
+          <a class="tattoo-text-link" href="/trabajos/">
+            Ver trabajos <span aria-hidden="true">↗</span>
+          </a>
+          <TattooInstagramLink showHandle={false} className="tattoo-inline-instagram">
+            Ver Instagram
+          </TattooInstagramLink>
+        </div>
       </div>
-      <TattooWorkCarousel items={tattooPortfolio} id="inicio-trabajos-carousel" />
-    </div>
-  </section>
-
-  <section class="tattoo-before-ink" id="antes-de-la-tinta" aria-labelledby="before-ink-title">
-    <div class="container">
-      <div class="tattoo-section-heading tattoo-before-ink__heading">
-        <p class="tattoo-eyebrow">CADA PIEZA EMPIEZA ANTES</p>
-        <h2 id="before-ink-title">Antes de la tinta</h2>
-      </div>
-      <div class="tattoo-before-ink__grid">
-        <article class="tattoo-before-card">
-          <span class="tattoo-before-card__mark" aria-hidden="true">
-            01
-          </span>
-          <p class="tattoo-eyebrow">LA IDEA</p>
-          <h3>Referencia e intención</h3>
-          <p>Compartí qué te inspira y el estilo que imaginás.</p>
-        </article>
-        <article class="tattoo-before-card tattoo-before-card--featured">
-          <span class="tattoo-before-card__mark" aria-hidden="true">
-            02
-          </span>
-          <p class="tattoo-eyebrow">TAMAÑO Y UBICACIÓN</p>
-          <h3>La escala cambia la lectura</h3>
-          <p>La zona y el tamaño ayudan a pensar cómo se lee una pieza.</p>
-          <img
-            class="tattoo-before-card__monogram"
-            src={tattooBrand.marks.jt.src}
-            width={tattooBrand.marks.jt.width}
-            height={tattooBrand.marks.jt.height}
-            alt=""
-            aria-hidden="true"
-            loading="lazy"
-            decoding="async"
-          />
-        </article>
-        <article class="tattoo-before-card">
-          <span class="tattoo-before-card__mark" aria-hidden="true">
-            03
-          </span>
-          <p class="tattoo-eyebrow">LA PIEZA</p>
-          <h3>Una propuesta definida</h3>
-          <p>La idea se conversa y se define antes de tatuar.</p>
-        </article>
-      </div>
+      <TattooWorkCarousel
+        items={visibleWorks}
+        previewOnly={previewOnly}
+        id="inicio-trabajos-carousel"
+      />
+      {previewOnly && (
+        <p class="tattoo-preview-note">
+          Imágenes generadas solo para evaluar esta preview; no representan trabajos reales de
+          Juanjo. Se reemplazarán por originales autorizados antes de publicar.
+        </p>
+      )}
     </div>
   </section>
 
   <section class="tattoo-process" id="como-trabajamos" aria-labelledby="process-title">
     <div class="container">
       <div class="tattoo-section-heading">
-        <p class="tattoo-eyebrow">UN CAMINO PARA CADA PROYECTO</p>
-        <h2 id="process-title">Cómo trabajamos</h2>
+        <p class="tattoo-eyebrow">RESERVA O CONSULTA</p>
+        <h2 id="process-title">Elegí cómo seguir.</h2>
       </div>
       <div class="tattoo-process__grid">
         <article class="tattoo-process-card">
-          <span class="tattoo-process-card__number">01 / COORDINACIÓN</span>
-          <h3>Piezas pequeñas</h3>
-          <p>Escribile a Juanjo para conversar la idea y coordinar el próximo paso.</p>
-          <ButtonLink href={tattooActions.turnsHref} variant="primary" size="compact">
+          <span class="tattoo-process-card__number">01 / TURNOS</span>
+          <h3>Sacá tu turno</h3>
+          <p>El botón abre una agenda de prueba de Cal.com para revisar el recorrido.</p>
+          <ButtonLink
+            href={tattooActions.turnsHref}
+            variant="primary"
+            size="compact"
+            icon="external"
+          >
             Sacar turno
           </ButtonLink>
         </article>
         <article class="tattoo-process-card tattoo-process-card--large">
-          <span class="tattoo-process-card__number">02 / PROYECTO PERSONALIZADO</span>
-          <h3>Proyectos grandes</h3>
-          <p>Los proyectos de mayor escala requieren una conversación y un presupuesto previo.</p>
+          <span class="tattoo-process-card__number">02 / CONSULTAS</span>
+          <h3>Conversá tu proyecto</h3>
+          <p>
+            Para consultar una idea o un proyecto de mayor escala, escribile a Juanjo por Instagram.
+          </p>
           <TattooInstagramLink showHandle={false} className="tattoo-inline-instagram">
             Consultar por Instagram
           </TattooInstagramLink>
@@ -131,8 +116,8 @@ import { tattooPortfolio } from '../portfolio';
     <div class="container tattoo-guide-teaser__inner">
       <div class="tattoo-guide-teaser__intro">
         <p class="tattoo-eyebrow">UNA GUÍA PARA TU SESIÓN</p>
-        <h2 id="guide-teaser-title">Antes y después de tatuarte</h2>
-        <p>Preparación, escala y cuidados en una guía breve para acompañar el proceso.</p>
+        <h2 id="guide-teaser-title">Preparación, tamaño y cuidados.</h2>
+        <p>Información general para pensar el tatuaje y acompañar el proceso.</p>
         <ButtonLink href="/guia/" variant="secondary">
           Ver guía
         </ButtonLink>
@@ -140,7 +125,7 @@ import { tattooPortfolio } from '../portfolio';
       <div class="tattoo-guide-teaser__cards">
         <a href="/guia/#preparacion">
           <span>01</span>
-          <strong>Antes de venir</strong>
+          <strong>Antes de la sesión</strong>
           <b aria-hidden="true">↗</b>
         </a>
         <a href="/guia/#sensibilidad">
@@ -150,7 +135,12 @@ import { tattooPortfolio } from '../portfolio';
         </a>
         <a href="/guia/#cuidados">
           <span>03</span>
-          <strong>Cuidados</strong>
+          <strong>Cuidados del tatuaje</strong>
+          <b aria-hidden="true">↗</b>
+        </a>
+        <a href="/guia/#preguntas">
+          <span>04</span>
+          <strong>Preguntas frecuentes</strong>
           <b aria-hidden="true">↗</b>
         </a>
       </div>
@@ -161,10 +151,10 @@ import { tattooPortfolio } from '../portfolio';
     <div class="container tattoo-home-cta__inner">
       <div>
         <p class="tattoo-eyebrow">EL PRÓXIMO PASO</p>
-        <h2 id="home-cta-title">¿Tenés una idea?</h2>
+        <h2 id="home-cta-title">Empezá por tu turno.</h2>
       </div>
       <div class="tattoo-home-cta__actions">
-        <ButtonLink href={tattooActions.turnsHref} variant="primary">
+        <ButtonLink href={tattooActions.turnsHref} variant="primary" icon="external">
           Sacar turno
         </ButtonLink>
         <TattooInstagramLink showHandle={false} className="tattoo-inline-instagram">

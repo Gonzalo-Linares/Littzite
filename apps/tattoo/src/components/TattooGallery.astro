@@ -4,17 +4,24 @@ import type { TattooPortfolioItem } from '../portfolio';
 
 interface Props {
   items: readonly TattooPortfolioItem[];
+  previewOnly?: boolean;
 }
-const { items } = Astro.props;
+const { items, previewOnly = false } = Astro.props;
 ---
 
 <section class="tattoo-gallery" aria-labelledby="portfolio-title">
   <div class="container">
     <header class="tattoo-gallery__heading">
-      <p class="tattoo-eyebrow">PIEZAS SELECCIONADAS</p>
+      <p class="tattoo-eyebrow">ESTILOS Y REFERENCIAS VISUALES</p>
       <h1 id="portfolio-title">Trabajos</h1>
-      {items.length > 0 && <p>Una selección de trabajos de Juanjo.</p>}
+      <p>Una selección de trabajos y referencias visuales del estudio.</p>
+      {previewOnly && (
+        <p class="tattoo-preview-note">
+          Imágenes generadas solo para evaluar esta preview; no representan trabajos reales de
+          Juanjo. Se reemplazarán por originales autorizados antes de publicar.
+        </p>
+      )}
     </header>
-    <TattooWorkCarousel items={items} id="trabajos-carousel" />
+    <TattooWorkCarousel items={items} previewOnly={previewOnly} id="trabajos-carousel" />
   </div>
 </section>

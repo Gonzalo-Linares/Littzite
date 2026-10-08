@@ -1,43 +1,55 @@
 ---
 import ButtonLink from '@littzite/ui/ButtonLink.astro';
+import GoogleMapPanel from '@littzite/ui/GoogleMapPanel.astro';
 import TattooSiteLayout from '../layouts/TattooSiteLayout.astro';
 import TattooInstagramLink from '../components/TattooInstagramLink.astro';
 import { tattooActions } from '../brand.config';
 ---
 
 <TattooSiteLayout
-  title="Turnos y consultas | Juanjo Tattoo Studio"
-  description="Coordiná turnos y consultas con Juanjo Tattoo Studio a través del perfil oficial de Instagram."
+  title="Contacto | Juanjo Tattoo Studio"
+  description="Sacá un turno de prueba o consultá por Instagram a Juanjo Tattoo Studio en San Juan."
 >
   <article class="tattoo-contact-page">
     <header class="tattoo-contact-hero">
       <div class="container">
-        <p class="tattoo-eyebrow">CANAL OFICIAL</p>
-        <h1>Turnos y consultas</h1>
-        <p>El primer paso es conversar tu idea con Juanjo.</p>
+        <p class="tattoo-eyebrow">JUANJO TATTOO STUDIO</p>
+        <h1>Contacto</h1>
+        <p>Elegí si querés abrir la agenda de prueba o conversar tu proyecto por Instagram.</p>
       </div>
     </header>
-    <section class="container tattoo-contact-paths" aria-label="Opciones de contacto">
-      <article class="tattoo-contact-path" id="turnos">
-        <span class="tattoo-contact-path__number">01 / TURNOS</span>
-        <h2>Sacar turno</h2>
-        <p>Escribile a Juanjo por Instagram para coordinar el próximo paso.</p>
-        <TattooInstagramLink showHandle className="tattoo-contact-path__instagram" />
-        <ButtonLink href={tattooActions.instagramHref} variant="primary" icon="external">
-          Sacar turno
-        </ButtonLink>
-      </article>
-      <article class="tattoo-contact-path">
-        <span class="tattoo-contact-path__number">02 / PROYECTOS PERSONALIZADOS</span>
-        <h2>Consultar por Instagram</h2>
-        <p>Los proyectos de mayor escala requieren una conversación y un presupuesto previo.</p>
-        <ButtonLink href={tattooActions.consultHref} variant="secondary" icon="external">
-          Consultar por Instagram
-        </ButtonLink>
-      </article>
-    </section>
-    <p class="container tattoo-contact-note">
-      El enlace abre Instagram, un servicio externo. No hay una agenda automática configurada.
-    </p>
+    <div class="container tattoo-contact-layout">
+      <section class="tattoo-contact-paths" aria-label="Opciones de contacto">
+        <article class="tattoo-contact-path" id="turnos">
+          <span class="tattoo-contact-path__number">01 / TURNOS</span>
+          <h2>Sacá tu turno</h2>
+          <p>El enlace abre la agenda de prueba de Cal.com.</p>
+          <ButtonLink href={tattooActions.turnsHref} variant="primary" icon="external">
+            Sacar turno
+          </ButtonLink>
+          <p class="tattoo-preview-note">
+            Es una referencia temporal; no confirma disponibilidad ni constituye una agenda
+            comercial.
+          </p>
+        </article>
+        <article class="tattoo-contact-path">
+          <span class="tattoo-contact-path__number">02 / CONSULTAS</span>
+          <h2>Consultá por Instagram</h2>
+          <p>Si querés conversar tu idea o un proyecto de mayor escala, escribile a Juanjo.</p>
+          <TattooInstagramLink showHandle className="tattoo-contact-path__instagram">
+            Consultar por Instagram
+          </TattooInstagramLink>
+        </article>
+      </section>
+      <section class="tattoo-contact-location" aria-labelledby="tattoo-location-title">
+        <p class="tattoo-eyebrow">UBICACIÓN</p>
+        <h2 id="tattoo-location-title">San Juan, Argentina</h2>
+        <GoogleMapPanel
+          locationLabel="San Juan, Argentina"
+          pendingMessage="Mapa ilustrativo, sin una ubicación marcada. La dirección exacta se confirma al coordinar con Juanjo."
+          className="tattoo-location-preview"
+        />
+      </section>
+    </div>
   </article>
 </TattooSiteLayout>

@@ -78,7 +78,7 @@ test('the official Instagram and neutral Littzite attribution have no unapproved
   assert.equal(tattooBrand.attribution.label, 'Powered by');
   assert.equal(tattooBrand.attribution.brand, 'Littzite');
   assert.equal(tattooBrand.attribution.href, undefined);
-  assert.equal(tattooBrand.attribution.logoSrc, undefined);
+  assert.equal(tattooBrand.attribution.logoSrc, '/littzite/horizontal.svg');
   assert.equal(siteContent.bookingTargets.length, 0);
   assert.equal(siteContent.quoteTargets.length, 0);
 });

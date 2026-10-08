@@ -2,6 +2,7 @@
 import ButtonLink from '@littzite/ui/ButtonLink.astro';
 import TattooSiteLayout from '../layouts/TattooSiteLayout.astro';
 import TattooSensitivityMap from '../components/TattooSensitivityMap.astro';
+import TattooInstagramLink from '../components/TattooInstagramLink.astro';
 import { tattooActions, tattooBrand } from '../brand.config';
 ---
 
@@ -15,7 +16,8 @@ import { tattooActions, tattooBrand } from '../brand.config';
         <p class="tattoo-eyebrow">ANTES Y DESPUÉS DE TATUARTE</p>
         <h1>Una guía para llegar preparado.</h1>
         <p>
-          Información general para pensar tu pieza, conversar la ubicación y acompañar los cuidados.
+          Información general para pensar tu tatuaje, conversar la ubicación y acompañar los
+          cuidados.
         </p>
         <a class="tattoo-guide-hero__jump" href="#preparacion">
           Recorrer la guía <span aria-hidden="true">↓</span>
@@ -87,50 +89,39 @@ import { tattooActions, tattooBrand } from '../brand.config';
       <div class="container tattoo-size-guide__grid">
         <div>
           <p class="tattoo-eyebrow">03 / TAMAÑO Y UBICACIÓN</p>
-          <h2 id="size-title">El tamaño cambia cómo se lee una pieza.</h2>
+          <h2 id="size-title">El tamaño y la ubicación cambian cómo se ve un tatuaje.</h2>
           <p>
-            La escala y la zona se conversan juntas. Estas referencias comparan tamaños entre sí; no
-            representan un diseño ni una medida exacta sobre el cuerpo.
+            Un tatuaje de 5 cm deja menos espacio para el detalle que uno de 20 cm. La zona y el
+            diseño también cambian cómo se lee. Compará las escalas antes de definirlas con Juanjo.
           </p>
-          <div class="tattoo-size-guide__legend">
-            <span>
-              <i class="tattoo-size-dot tattoo-size-dot--5"></i>5 cm
-            </span>
-            <span>
-              <i class="tattoo-size-dot tattoo-size-dot--10"></i>10 cm
-            </span>
-            <span>
-              <i class="tattoo-size-dot tattoo-size-dot--15"></i>15 cm
-            </span>
-            <span>
-              <i class="tattoo-size-dot tattoo-size-dot--20"></i>20 cm
-            </span>
-          </div>
           <p class="tattoo-guide-note">
-            La visualización es proporcional y orientativa; medí la pieza junto al tatuador antes de
-            definirla.
+            La comparación es proporcional y orientativa; no representa una medida exacta sobre el
+            cuerpo.
           </p>
         </div>
         <figure class="tattoo-size-guide__figure">
-          <svg viewBox="0 0 420 560" role="img" aria-labelledby="scale-svg-title scale-svg-desc">
-            <title id="scale-svg-title">Silueta neutral con referencias de escala</title>
-            <desc id="scale-svg-desc">
-              Figura geométrica original con cuatro círculos neutrales de tamaños relativos. No
-              simulan tatuajes.
-            </desc>
-            <g class="tattoo-scale-body">
-              <circle cx="210" cy="52" r="29" />
-              <path d="M196 83v26l-58 20-35 91 23 11 35-66 8 82-32 108 24 9 49-91 49 91 24-9-32-108 8-82 35 66 23-11-35-91-58-20V83" />
-              <path d="m169 354-12 123m94-123 12 123m-114 0-4 70h26l17-69m57-1 17 69h26l-4-70" />
-            </g>
-            <g class="tattoo-scale-markers" aria-hidden="true">
-              <circle cx="137" cy="159" r="12" />
-              <circle cx="269" cy="222" r="20" />
-              <circle cx="164" cy="298" r="28" />
-              <circle cx="230" cy="340" r="36" />
-            </g>
-          </svg>
-          <figcaption>Marcadores gráficos para imaginar escala, no tatuajes.</figcaption>
+          <div
+            class="tattoo-scale-comparison"
+            role="img"
+            aria-label="Comparación proporcional de tatuajes de 5, 10 y 20 centímetros"
+          >
+            <div class="tattoo-scale-comparison__item tattoo-scale-comparison__item--small">
+              <span class="tattoo-scale-comparison__mark" aria-hidden="true"></span>
+              <strong>5 cm</strong>
+              <small>Pequeño</small>
+            </div>
+            <div class="tattoo-scale-comparison__item tattoo-scale-comparison__item--medium">
+              <span class="tattoo-scale-comparison__mark" aria-hidden="true"></span>
+              <strong>10 cm</strong>
+              <small>Mediano</small>
+            </div>
+            <div class="tattoo-scale-comparison__item tattoo-scale-comparison__item--large">
+              <span class="tattoo-scale-comparison__mark" aria-hidden="true"></span>
+              <strong>20 cm</strong>
+              <small>Grande</small>
+            </div>
+          </div>
+          <figcaption>Escalas gráficas relativas para comparar tamaños.</figcaption>
         </figure>
       </div>
     </section>
@@ -143,48 +134,59 @@ import { tattooActions, tattooBrand } from '../brand.config';
       <div class="container">
         <div class="tattoo-guide-heading">
           <p class="tattoo-eyebrow">04 / DESPUÉS DE LA SESIÓN</p>
-          <h2 id="aftercare-title">Cuidá la pieza.</h2>
+          <h2 id="aftercare-title">Cuidá el tatuaje.</h2>
           <p>
             Las indicaciones específicas que te entregue Juanjo después de la sesión prevalecen
             sobre esta orientación general.
           </p>
         </div>
-        <ol class="tattoo-aftercare__timeline">
-          <li>
-            <span>01</span>
-            <div>
-              <h3>Manos limpias</h3>
-              <p>
-                Lavá tus manos antes de tocar la zona y mantené una higiene suave según las
-                indicaciones recibidas.
-              </p>
+        <ol class="tattoo-aftercare__grid">
+          <li class="tattoo-aftercare-card">
+            <div
+              class="tattoo-aftercare-card__visual tattoo-aftercare-card__visual--hands"
+              aria-hidden="true"
+            >
+              <span>01</span>
+              <div>
+                <h3>Manos limpias</h3>
+                <p>Lavá tus manos antes de tocar el tatuaje.</p>
+              </div>
             </div>
           </li>
-          <li>
-            <span>02</span>
-            <div>
-              <h3>Secado y cuidado</h3>
-              <p>
-                Secá con cuidado, sin frotar. Usá hidratación únicamente según la recomendación del
-                tatuador.
-              </p>
+          <li class="tattoo-aftercare-card">
+            <div
+              class="tattoo-aftercare-card__visual tattoo-aftercare-card__visual--dry"
+              aria-hidden="true"
+            >
+              <span>02</span>
+              <div>
+                <h3>Secado suave</h3>
+                <p>Secá con cuidado, sin frotar la piel.</p>
+              </div>
             </div>
           </li>
-          <li>
-            <span>03</span>
-            <div>
-              <h3>Menos fricción</h3>
-              <p>Evitá el roce y seguí las indicaciones particulares sobre el vendaje.</p>
+          <li class="tattoo-aftercare-card">
+            <div
+              class="tattoo-aftercare-card__visual tattoo-aftercare-card__visual--friction"
+              aria-hidden="true"
+            >
+              <span>03</span>
+              <div>
+                <h3>Menos fricción</h3>
+                <p>Evitá el roce y seguí las indicaciones sobre el vendaje.</p>
+              </div>
             </div>
           </li>
-          <li>
-            <span>04</span>
-            <div>
-              <h3>Sol y piel</h3>
-              <p>
-                Durante la cicatrización evitá la exposición solar directa. Luego, usá protección
-                solar para cuidar la piel y la pieza.
-              </p>
+          <li class="tattoo-aftercare-card">
+            <div
+              class="tattoo-aftercare-card__visual tattoo-aftercare-card__visual--sun"
+              aria-hidden="true"
+            >
+              <span>04</span>
+              <div>
+                <h3>Sol e hidratación</h3>
+                <p>Seguí las indicaciones de cuidado y protección solar.</p>
+              </div>
             </div>
           </li>
         </ol>
@@ -210,12 +212,21 @@ import { tattooActions, tattooBrand } from '../brand.config';
         <div class="tattoo-faq__list">
           <details>
             <summary>¿Cómo saco turno?</summary>
-            <p>Escribile a Juanjo por Instagram para conversar y coordinar el próximo paso.</p>
+            <p>
+              El botón abre la agenda de prueba de Cal.com. También podés consultar por Instagram si
+              querés conversar el proyecto; la agenda no confirma disponibilidad real.
+            </p>
+            <p>
+              <a href={tattooActions.turnsHref}>Abrir agenda de prueba</a>
+            </p>
+            <TattooInstagramLink showHandle={false} className="tattoo-inline-instagram">
+              Consultar por Instagram
+            </TattooInstagramLink>
           </details>
           <details>
             <summary>¿Qué información conviene enviar?</summary>
             <p>
-              Podés compartir tu idea, referencias si las tenés, la zona y el tamaño aproximado que
+              Podés compartir la idea, referencias si las tenés, la zona y el tamaño aproximado que
               imaginás.
             </p>
           </details>
@@ -236,8 +247,8 @@ import { tattooActions, tattooBrand } from '../brand.config';
           <details>
             <summary>¿Cómo elijo el tamaño?</summary>
             <p>
-              La escala y la ubicación se pueden conversar juntas para entender cómo se va a leer la
-              pieza.
+              La escala y la ubicación se pueden conversar juntas para entender cómo se va a ver el
+              tatuaje.
             </p>
           </details>
           <details>
@@ -250,9 +261,12 @@ import { tattooActions, tattooBrand } from '../brand.config';
           <details>
             <summary>¿Dónde puedo ver trabajos recientes?</summary>
             <p>
-              La sección de trabajos incorporará fotografías originales autorizadas cuando estén
-              disponibles.
+              Podés ver trabajos y referencias en <a href="/trabajos/">la sección Trabajos</a> y en
+              el Instagram del estudio.
             </p>
+            <TattooInstagramLink showHandle={false} className="tattoo-inline-instagram">
+              Ver Instagram
+            </TattooInstagramLink>
           </details>
         </div>
       </div>

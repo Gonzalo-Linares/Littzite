@@ -39,10 +39,7 @@ test('carousel handles 0, 1, 2 and 5 authorized metadata items and a configured 
     assert.equal(controls, count > 1, `${id}: controls depend on having two or more items`);
     if (count === 0) {
       assert.match(section, /class="tattoo-carousel__empty"/);
-      assert.match(
-        section,
-        /Las piezas reales se incorporarán cuando estén disponibles las fotografías autorizadas/,
-      );
+      assert.match(section, /Una selección de trabajos y referencias visuales del estudio/);
       assert.doesNotMatch(section, /data-carousel-(?:prev|next|toggle)/);
     }
   }

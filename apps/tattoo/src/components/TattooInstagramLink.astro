@@ -1,5 +1,5 @@
 ---
-import Link from '@littzite/ui/Link.astro';
+import InstagramIconLink from '@littzite/ui/InstagramIconLink.astro';
 import { tattooActions, tattooBrand } from '../brand.config';
 
 interface Props {
@@ -10,22 +10,12 @@ interface Props {
 const { showHandle = false, className = '' } = Astro.props;
 ---
 
-<Link
+<InstagramIconLink
   href={tattooActions.instagramHref}
   ariaLabel="Juanjo Tattoo Studio en Instagram"
   className={`tattoo-instagram-link ${className}`.trim()}
+  handle={tattooBrand.social.handle}
+  showHandle={showHandle}
 >
-  <svg
-    class="tattoo-instagram-link__icon"
-    viewBox="0 0 24 24"
-    fill="none"
-    aria-hidden="true"
-    focusable="false"
-  >
-    <rect x="3.25" y="3.25" width="17.5" height="17.5" rx="5" />
-    <circle cx="12" cy="12" r="4.1" />
-    <circle class="tattoo-instagram-link__dot" cx="17.65" cy="6.55" r="1" />
-  </svg>
-  {showHandle && <span>{tattooBrand.social.handle}</span>}
   <slot />
-</Link>
+</InstagramIconLink>

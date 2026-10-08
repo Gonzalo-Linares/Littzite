@@ -58,7 +58,7 @@ Para trabajar en una sola aplicación, usar `corepack pnpm --filter @littzite/es
 
 ## Juanjo Tattoo Studio (PR-19)
 
-La app `tattoo` implementa el manual oficial en `apps/tattoo/src/brand.config.ts`: cinco PNG maestros intactos, paleta exacta y Rye/DejaVu locales con licencias. `TattooSiteLayout.astro` centraliza `/`, `/trabajos/`, `/guia/`, `/estudio/` y `/contacto/`; se mantienen `noindex`, `tattooPortfolio=[]` hasta recibir originales autorizados y las listas comerciales vacías. El hero acepta foto local futura con `src` y `alt`; mientras tanto usa una composición de marca terminada. “Sacar turno” inicia contacto en el Instagram aprobado; no se configura agenda automática. Ver [la guía de implementación](docs/20-juanjo-digital-brand-implementation.md) y [los avisos de terceros](THIRD_PARTY_NOTICES.md).
+La app `tattoo` implementa el manual oficial en `apps/tattoo/src/brand.config.ts`: cinco PNG maestros intactos, paleta exacta y Rye/DejaVu locales con licencias. `TattooSiteLayout.astro` centraliza `/`, `/trabajos/`, `/guia/`, `/estudio/` y `/contacto/`; se mantienen `noindex`, `tattooPortfolio=[]` hasta recibir originales autorizados y las listas comerciales vacías. Hero y galería muestran imágenes generadas rotuladas como preview; no representan trabajos reales y deben reemplazarse antes de publicar. “Sacar turno” abre una URL temporal de Cal.com aprobada para esta preview, sin disponibilidad comercial. Ver [la guía de implementación](docs/20-juanjo-digital-brand-implementation.md) y [los avisos de terceros](THIRD_PARTY_NOTICES.md).
 
 ## Atribución del desarrollador
 

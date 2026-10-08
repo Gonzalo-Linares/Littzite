@@ -7,7 +7,7 @@ import { verifyInternalLinks } from './verify-site-links.mjs';
 
 const expectedTitles = {
   estetica: 'VIORA · Estética integral',
-  tattoo: 'Juanjo Tattoo Studio | Tu próxima pieza empieza acá',
+  tattoo: 'Juanjo Tattoo Studio | Tu próximo tatuaje empieza acá',
 };
 
 const app = process.argv[2];
@@ -48,7 +48,7 @@ const renderedHeading = html
   .trim();
 assert.equal(
   renderedHeading,
-  app === 'estetica' ? 'Regalate una pausa.' : 'Tu próxima pieza empieza acá.',
+  app === 'estetica' ? 'Regalate una pausa.' : 'Tu próximo tatuaje empieza acá.',
   'Expected approved home heading',
 );
 assert.ok(html.includes('class="site-header"'), 'Shared header missing');
@@ -164,7 +164,8 @@ if (app === 'estetica') {
     assert.ok(attribution, `${page}: developer attribution missing`);
     assert.match(attribution, /Powered by/);
     assert.match(attribution, /Littzite/);
-    assert.doesNotMatch(attribution, /<a\b|<img\b|href=/);
+    assert.match(attribution, /src="\/littzite\/horizontal\.svg" alt="Littzite"/);
+    assert.doesNotMatch(attribution, /<a\b|href=/);
     assert.match(footer, /class="container site-footer__secondary"/);
     assert.doesNotMatch(
       footer,
@@ -642,8 +643,15 @@ if (app === 'estetica') {
   assert.ok(html.includes('class="juanjo-site"'), 'Juanjo body style missing');
   assert.ok(html.includes('class="tattoo-home-hero"'), 'Juanjo commercial hero missing');
   assert.ok(html.includes('class="tattoo-hero-media'), 'Official Oni hero media missing');
-  assert.ok(html.includes('Tu próxima pieza'), 'Approved Juanjo H1 missing');
-  assert.ok(html.includes('href="/contacto/#turnos"'), 'Turns must route to real contact');
+  assert.ok(
+    html.includes('Tu próximo <span>tatuaje</span> empieza acá.'),
+    'Approved Juanjo H1 missing',
+  );
+  assert.ok(
+    html.includes('href="https://cal.com/gonzalo-linares-rfbhnf/prueba"'),
+    'Test booking URL missing',
+  );
+  assert.ok(html.includes('agenda de prueba'), 'Test booking disclosure missing');
   assert.ok(html.includes('Explorar trabajos'), 'Work CTA missing');
   assert.ok(html.includes('href="/guia/"'), 'Guide route missing');
   assert.ok(
@@ -654,14 +662,19 @@ if (app === 'estetica') {
   assert.ok(!html.includes('Una marca que deja huella'), 'Legacy brand-copy hero must be removed');
   assert.ok(html.includes('id="como-trabajamos"'), 'Conceptual service paths missing');
   assert.ok(
-    html.includes('Powered by') && html.includes('Littzite'),
-    'Powered by attribution missing',
+    html.includes('Powered by') && html.includes('alt="Littzite"'),
+    'Powered by logo attribution missing',
   );
   const attribution = html.match(
     /<div class="site-attribution tattoo-attribution">([\s\S]*?)<\/div>/,
   )?.[1];
   assert.ok(attribution, 'Juanjo attribution wrapper missing');
-  assert.doesNotMatch(attribution, /<a\b|<img\b|href=/, 'Unconfigured attribution is text only');
+  assert.doesNotMatch(
+    attribution,
+    /<a\b|href=/,
+    'Attribution remains non-interactive without an approved URL',
+  );
+  assert.match(attribution, /src="\/littzite\/horizontal\.svg"/);
   assert.ok(
     html.includes('href="https://www.instagram.com/juanjo.tattoos/"'),
     'Approved Instagram link missing',
@@ -678,13 +691,16 @@ if (app === 'estetica') {
     'Unapproved WhatsApp CTA was published',
   );
   assert.ok(
-    !html.includes('cal.com') && !/<a[^>]*>[^<]*(Reservar|Agendar)[^<]*<\/a>/i.test(html),
-    'Juanjo must not publish a booking provider or CTA',
+    html.includes('cal.com/gonzalo-linares-rfbhnf/prueba') &&
+      !/<a[^>]*>[^<]*(Reservar|Agendar)[^<]*<\/a>/i.test(html),
+    'Juanjo preview must use only the disclosed test booking link',
   );
+  assert.ok(html.includes('imagen generada para la preview'), 'Generated hero disclosure missing');
   assert.ok(
-    !html.includes('tattoo-gallery__item--lead'),
-    'No real artwork should appear before originals arrive',
+    html.includes('Imágenes generadas solo para evaluar esta preview'),
+    'Generated portfolio disclosure missing',
   );
+  assert.ok(html.includes('class="tattoo-carousel__item"'), 'Preview portfolio items missing');
   assert.ok(!html.includes('href="/servicios/"'), 'VIORA navigation must not leak into Juanjo');
   assert.ok(html.includes('aria-label="Navegación del pie de página"'));
   assert.ok(html.includes('href="/brand/monograma-jt.png"'), 'Official JT favicon missing');
@@ -694,7 +710,15 @@ if (app === 'estetica') {
   );
   assert.ok(html.includes('srcset="/brand/monograma-jt.png"'), 'Compact JT header mark missing');
   assert.ok(!/<(?:img|figure)[^>]*>[^<]*(?:placeholder|fake|stock)/i.test(html));
-  for (const route of ['trabajos', 'guia', 'estudio', 'contacto']) {
+  for (const route of [
+    'trabajos',
+    'guia',
+    'estudio',
+    'contacto',
+    'privacidad',
+    'terminos-y-condiciones',
+    'arrepentimiento',
+  ]) {
     const routeHtml = await readFile(
       new URL(`../apps/tattoo/dist/${route}/index.html`, import.meta.url),
       'utf8',
@@ -714,8 +738,12 @@ if (app === 'estetica') {
   );
   assert.ok(workPage.includes('class="tattoo-gallery"'), 'Juanjo portfolio route missing');
   assert.ok(
-    workPage.includes('class="tattoo-carousel__empty"'),
-    'Honest portfolio empty state missing',
+    (workPage.match(/class="tattoo-carousel__item"/g) ?? []).length === 3,
+    'Generated preview works missing',
+  );
+  assert.ok(
+    workPage.includes('no representan trabajos reales de Juanjo'),
+    'Generated work preview disclosure missing',
   );
   const guidePage = await readFile(
     new URL('../apps/tattoo/dist/guia/index.html', import.meta.url),
@@ -723,8 +751,8 @@ if (app === 'estetica') {
   );
   assert.match(guidePage, /<h1[^>]*>Una guía para llegar preparado\.<\/h1>/);
   assert.match(guidePage, /Sensibilidad orientativa por zona/);
-  assert.match(guidePage, /El tamaño cambia cómo se lee una pieza/);
-  assert.match(guidePage, /Cuidá la pieza/);
+  assert.match(guidePage, /El tamaño y la ubicación cambian cómo se ve un tatuaje\./);
+  assert.match(guidePage, /Cuidá el tatuaje\./);
   assert.match(guidePage, /Preguntas frecuentes/i);
   assert.equal((guidePage.match(/<details>/g) ?? []).length, 7);
   assert.match(guidePage, /<svg[^>]*role="img" aria-labelledby=/);
@@ -741,15 +769,22 @@ if (app === 'estetica') {
     'utf8',
   );
   assert.match(contact, /href="https:\/\/www\.instagram\.com\/juanjo\.tattoos\/"/);
-  assert.match(contact, /class="tattoo-instagram-link(?:\s|")/);
+  assert.match(contact, /class="[^"]*\btattoo-instagram-link(?:\s|")/);
   assert.match(contact, /id="turnos"/);
   assert.match(contact, /Sacar turno/);
-  assert.match(contact, /Escribile a Juanjo por Instagram/);
+  assert.match(contact, /agenda de prueba de Cal\.com/);
+  assert.match(contact, /dirección exacta se confirma al coordinar/);
+  assert.match(contact, /href="https:\/\/cal\.com\/gonzalo-linares-rfbhnf\/prueba"/);
   assert.match(contact, /href="https:\/\/www\.instagram\.com\/juanjo\.tattoos\/"/);
-  assert.doesNotMatch(
-    html + contact,
-    /wa\.me|api\.whatsapp|cal\.com|Reserva tu turno|Agendá ahora/i,
-  );
+  assert.doesNotMatch(html + contact, /wa\.me|api\.whatsapp|Reserva tu turno|Agendá ahora/i);
+  for (const route of ['privacidad', 'terminos-y-condiciones', 'arrepentimiento']) {
+    const legal = await readFile(
+      new URL(`../apps/tattoo/dist/${route}/index.html`, import.meta.url),
+      'utf8',
+    );
+    assert.match(legal, /Información para la preview/i);
+    assert.match(legal, /Borrador informativo/i);
+  }
 }
 if (app === 'estetica') {
   assert.ok(html.includes('class="landing-hero landing-hero--'), 'Shared hero missing');
@@ -758,7 +793,8 @@ if (app === 'estetica') {
 }
 assert.ok(html.includes('class="skip-link" href="#contenido"'));
 assert.ok(html.includes('class="container"'));
-const expectedHeroHref = app === 'estetica' ? '/servicios/' : '/contacto/#turnos';
+const expectedHeroHref =
+  app === 'estetica' ? '/servicios/' : 'https://cal.com/gonzalo-linares-rfbhnf/prueba';
 assert.ok(
   app === 'estetica'
     ? html.includes(

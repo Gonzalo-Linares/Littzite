@@ -22,9 +22,9 @@ const parsedContent = siteContentSchema.parse({
     {
       slug: '',
       seo: {
-        title: 'Juanjo Tattoo Studio | Tu próxima pieza empieza acá',
+        title: 'Juanjo Tattoo Studio | Tu próximo tatuaje empieza acá',
         description:
-          'Explorá trabajos, definí tu idea y coordiná el próximo paso con Juanjo Tattoo Studio en San Juan.',
+          'Explorá trabajos, elegí el estilo que te representa y sacá tu turno con Juanjo Tattoo Studio en San Juan.',
       },
       sections: [],
     },

@@ -1,4 +1,5 @@
 ---
+import heroPreview from '../assets/preview/hero-process-preview.webp';
 import { tattooBrand } from '../brand.config';
 
 const { media = tattooBrand.heroMedia } = Astro.props;
@@ -19,13 +20,15 @@ if (media.src && (!media.src.startsWith('/') || media.src.startsWith('//')))
         decoding="async"
       />
     ) : (
-      <div class="tattoo-hero-media__art" aria-hidden="true">
-        <span class="tattoo-hero-media__orb"></span>
-        <span class="tattoo-hero-media__line tattoo-hero-media__line--one"></span>
-        <span class="tattoo-hero-media__line tattoo-hero-media__line--two"></span>
-        <span class="tattoo-hero-media__caption">JUANJO · TATTOO STUDIO</span>
-        <span class="tattoo-hero-media__index">01 / OFICIO</span>
-      </div>
+      <img
+        class="tattoo-hero-media__photo"
+        src={heroPreview.src}
+        alt="Brazo tatuado mientras el tatuador trabaja; imagen generada para la preview, no es un trabajo de Juanjo."
+        width={heroPreview.width}
+        height={heroPreview.height}
+        fetchpriority="high"
+        decoding="async"
+      />
     )}
     <img
       class="tattoo-hero-media__oni"
@@ -40,6 +43,7 @@ if (media.src && (!media.src.startsWith('/') || media.src.startsWith('//')))
     <span class="tattoo-hero-media__corner" aria-hidden="true"></span>
   </div>
   <figcaption class="tattoo-hero-media__caption-line">
-    Diseño con carácter · San Juan, Argentina
+    <span>Estudio en San Juan, Argentina</span>
+    {!media.src && <small>Imagen de preview generada · no es un trabajo real del estudio</small>}
   </figcaption>
 </figure>

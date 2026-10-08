@@ -2,11 +2,15 @@
 import TattooSiteLayout from '../../layouts/TattooSiteLayout.astro';
 import TattooGallery from '../../components/TattooGallery.astro';
 import { tattooPortfolio } from '../../portfolio';
+import { tattooPreviewPortfolio } from '../../preview-portfolio';
+
+const previewOnly = tattooPortfolio.length === 0;
+const visibleWorks = previewOnly ? tattooPreviewPortfolio : tattooPortfolio;
 ---
 
 <TattooSiteLayout
   title="Trabajos | Juanjo Tattoo Studio"
-  description="Portfolio de Juanjo Tattoo Studio. Trabajos originales en preparación."
+  description="Explorá trabajos y referencias visuales de Juanjo Tattoo Studio."
 >
-  <TattooGallery items={tattooPortfolio} />
+  <TattooGallery items={visibleWorks} previewOnly={previewOnly} />
 </TattooSiteLayout>

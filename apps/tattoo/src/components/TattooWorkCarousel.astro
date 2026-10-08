@@ -5,9 +5,10 @@ import type { TattooPortfolioItem } from '../portfolio';
 interface Props {
   items: readonly TattooPortfolioItem[];
   id?: string;
+  previewOnly?: boolean;
 }
 
-const { items, id = 'trabajos-carousel' } = Astro.props;
+const { items, id = 'trabajos-carousel', previewOnly = false } = Astro.props;
 const canMove = items.length > 1;
 ---
 
@@ -22,8 +23,9 @@ const canMove = items.length > 1;
     <>
       <div
         class="tattoo-carousel__viewport"
+        role="group"
         tabindex="0"
-        aria-label="Carrusel de trabajos. Usá las flechas izquierda y derecha para recorrer las piezas."
+        aria-label="Carrusel de trabajos. Usá las flechas izquierda y derecha para recorrer los trabajos."
       >
         <div class="tattoo-carousel__track">
           {items.map((item, index) => (
@@ -41,13 +43,14 @@ const canMove = items.length > 1;
               <figcaption>
                 <span class="tattoo-carousel__number">{String(index + 1).padStart(2, '0')}</span>
                 <span>{item.title}</span>
+                {previewOnly && <small>Referencia generada · preview</small>}
               </figcaption>
             </figure>
           ))}
         </div>
       </div>
       {canMove && (
-        <div class="tattoo-carousel__controls" aria-label="Controles de trabajos">
+        <div class="tattoo-carousel__controls">
           <button type="button" data-carousel-prev aria-label="Trabajo anterior">
             ←
           </button>
@@ -75,11 +78,9 @@ const canMove = items.length > 1;
         <span>OBRA · OFICIO · IDENTIDAD</span>
       </div>
       <div class="tattoo-carousel__empty-copy">
-        <p class="tattoo-eyebrow">PIEZAS SELECCIONADAS</p>
+        <p class="tattoo-eyebrow">TRABAJOS DEL ESTUDIO</p>
         <h3>TRABAJOS</h3>
-        <p>
-          Las piezas reales se incorporarán cuando estén disponibles las fotografías autorizadas.
-        </p>
+        <p>Una selección de trabajos y referencias visuales del estudio.</p>
         <a class="tattoo-text-link" href="/trabajos/">
           Explorar trabajos <span aria-hidden="true">↗</span>
         </a>

@@ -58,6 +58,7 @@ const { site } = siteContent;
         href={tattooActions.turnsHref}
         variant="primary"
         size="compact"
+        icon="external"
         className="tattoo-header-turns"
       >
         Turnos
@@ -70,8 +71,8 @@ const { site } = siteContent;
   <SiteFooter
     slot="footer"
     brand={tattooBrand.name}
-    note="Tinta con carácter."
-    meta={['Vista previa · No indexable', 'Turnos por Instagram']}
+    note="Tinta con carácter · San Juan, Argentina."
+    meta={['Vista previa · No indexable', 'Agenda de prueba · Cal.com']}
   >
     <span slot="brand" class="tattoo-footer-brand">
       <img
@@ -99,7 +100,21 @@ const { site } = siteContent;
       <Link className="tattoo-footer-nav__link" href="/contacto/">
         Contacto
       </Link>
+      <Link className="tattoo-footer-nav__link" href="/guia/#preguntas">
+        Preguntas frecuentes
+      </Link>
       <TattooInstagramLink showHandle={false} className="tattoo-footer-instagram" />
+    </nav>
+    <nav slot="secondary-links" class="tattoo-footer-legal" aria-label="Información legal">
+      <Link className="tattoo-footer-legal__link" href="/privacidad/">
+        Privacidad
+      </Link>
+      <Link className="tattoo-footer-legal__link" href="/terminos-y-condiciones/">
+        Términos
+      </Link>
+      <Link className="tattoo-footer-legal__link" href="/arrepentimiento/">
+        Arrepentimiento
+      </Link>
     </nav>
     <SiteAttribution
       slot="attribution"
