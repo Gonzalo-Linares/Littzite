@@ -7,7 +7,8 @@
     "dev": "astro dev",
     "check": "astro check",
     "build": "astro build",
-    "test": "node ../../scripts/verify-app.mjs tattoo"
+    "test": "node ../../scripts/verify-app.mjs tattoo",
+    "check:release": "node ../../scripts/check-tattoo-release.mjs"
   },
   "dependencies": {
     "@littzite/content-schema": "workspace:*",

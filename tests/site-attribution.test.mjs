@@ -62,12 +62,12 @@ test('SiteAttribution fails closed for unsafe hrefs', () => {
 test('SiteAttribution without logo emits no image or empty logo wrapper', () => {
   assert.doesNotMatch(section('plain'), /<img\b|site-attribution__logo/);
 });
-test('SiteAttribution preserves an optional logo and readable brand', () => {
+test('SiteAttribution exposes the configured logo with an accessible brand name', () => {
   assert.match(
     section('logo'),
-    /<img class="site-attribution__logo" src="\/authorized-logo\.svg" alt="" loading="lazy">/,
+    /<img class="site-attribution__logo" src="\/authorized-logo\.svg" alt="Studio" loading="lazy">/,
   );
-  assert.match(section('logo'), /<span>Studio<\/span>/);
+  assert.doesNotMatch(section('logo'), /<span>Studio<\/span>/);
 });
 test('SiteAttribution preserves the consumer className', () => {
   assert.match(section('plain'), /class="site-attribution custom-signature"/);

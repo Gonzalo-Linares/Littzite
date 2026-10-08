@@ -1,77 +1,138 @@
 ---
-import { Image } from 'astro:assets';
-import Link from '@littzite/ui/Link.astro';
+import TattooWorkCarousel from './TattooWorkCarousel.astro';
+import TattooLightbox from './TattooLightbox.astro';
 import type { TattooPortfolioItem } from '../portfolio';
 
 interface Props {
   items: readonly TattooPortfolioItem[];
+  featuredItems: readonly TattooPortfolioItem[];
 }
-
-const { items } = Astro.props;
+const { items, featuredItems } = Astro.props;
 ---
 
-<section class="juanjo-gallery" id="portfolio" aria-labelledby="portfolio-heading">
+<section class="tattoo-gallery" aria-labelledby="portfolio-title">
   <div class="container">
-    <div class="juanjo-gallery__heading">
-      <div>
-        <p class="juanjo-kicker">
-          <span aria-hidden="true">/</span> 01 — PORTFOLIO
-        </p>
-        <h2 id="portfolio-heading">El trabajo habla.</h2>
+    <header class="tattoo-gallery__heading">
+      <p class="tattoo-eyebrow">PORTFOLIO DEL ESTUDIO</p>
+      <h1 id="portfolio-title">Trabajos</h1>
+      <p>Una selección de trabajos de Juanjo Tattoo Studio.</p>
+    </header>
+    <section class="tattoo-gallery__featured" aria-labelledby="featured-title">
+      <div class="tattoo-gallery__section-heading">
+        <p class="tattoo-eyebrow">SELECCIÓN DEL ESTUDIO</p>
+        <h2 id="featured-title">Trabajos destacados</h2>
       </div>
-      <p>
-        En esta sección vas a encontrar las piezas originales del artista. Hasta completar la
-        selección, podés ver sus publicaciones actuales en Instagram.
-      </p>
-    </div>
+      <TattooWorkCarousel items={featuredItems} id="trabajos-carousel" />
+    </section>
 
-    {items.length > 0 ? (
-      <div class="juanjo-gallery__grid">
-        {items.map((item, index) => (
-          <figure
-            class:list={['juanjo-gallery__item', { 'juanjo-gallery__item--lead': index === 0 }]}
-          >
-            <Image
-              src={item.image}
-              alt={item.alt}
-              widths={[480, 760, 1120]}
-              sizes="(max-width: 680px) 100vw, (max-width: 1060px) 50vw, 33vw"
-              format="webp"
-              loading={index === 0 ? 'eager' : 'lazy'}
-            />
-            <figcaption>
-              <span>{String(index + 1).padStart(2, '0')}</span>
-              {item.title}
-            </figcaption>
-          </figure>
-        ))}
+    <section class="tattoo-gallery__all" aria-labelledby="all-works-title">
+      <div class="tattoo-gallery__section-heading">
+        <p class="tattoo-eyebrow">PORTFOLIO</p>
+        <h2 id="all-works-title">Todos los trabajos</h2>
       </div>
-    ) : (
-      <div class="juanjo-gallery__empty">
-        <div class="juanjo-gallery__graphic" aria-hidden="true">
-          <span class="juanjo-gallery__graphic-id">JJ // 01</span>
-          <span class="juanjo-gallery__graphic-letter">J</span>
-          <span class="juanjo-gallery__graphic-ring"></span>
-          <span class="juanjo-gallery__graphic-caption">ESTUDIO EDITORIAL / SAN JUAN</span>
+      {items.length > 0 ? (
+        <div class="tattoo-gallery__grid" data-gallery-grid>
+          {items.map((item, index) => (
+            <button
+              class="tattoo-gallery__item"
+              type="button"
+              aria-label={`Ampliar ${item.title}`}
+              data-gallery-item
+              data-index={index}
+              data-image={item.image.src}
+              data-alt={item.alt}
+              data-title={item.title}
+            >
+              <img
+                src={item.image.src}
+                alt={item.alt}
+                width={item.image.width}
+                height={item.image.height}
+                loading="lazy"
+                decoding="async"
+              />
+              <span>{item.title}</span>
+            </button>
+          ))}
         </div>
-        <div class="juanjo-gallery__placeholder-copy">
-          <p class="juanjo-kicker">LA COLECCIÓN ESTÁ EN PREPARACIÓN</p>
-          <h3>
-            Obras reales.
-            <br />
-            Sin imágenes de relleno.
-          </h3>
-          <p>
-            Estamos seleccionando las fotografías originales de Juanjo para mostrarlas con el
-            detalle que merecen. El trabajo publicado hasta hoy se puede consultar en su cuenta
-            oficial.
-          </p>
-          <Link href="https://www.instagram.com/juanjo.tattoos/">Ver trabajos en Instagram</Link>
-          <p class="juanjo-gallery__third-party">
-            Este enlace abre Instagram, un servicio externo.
-          </p>
-        </div>
-      </div>
-    )}
+      ) : (
+        <p class="tattoo-gallery__empty">Todavía no hay trabajos publicados.</p>
+      )}
+    </section>
   </div>
 </section>
+{items.length > 0 && <TattooLightbox count={items.length} item={items[0]} />}
+
+{items.length > 0 && <script>
+  import { stepGalleryIndex } from '../gallery-navigation';
+
+  const dialog = document.querySelector<HTMLDialogElement>('[data-gallery-lightbox]');
+  const triggers = [...document.querySelectorAll<HTMLButtonElement>('[data-gallery-item]')];
+  const image = dialog?.querySelector<HTMLImageElement>('[data-lightbox-image]');
+  const title = dialog?.querySelector<HTMLElement>('[data-lightbox-title]');
+  const closeButton = dialog?.querySelector<HTMLButtonElement>('[data-lightbox-close]');
+  const previousButton = dialog?.querySelector<HTMLButtonElement>('[data-lightbox-previous]');
+  const nextButton = dialog?.querySelector<HTMLButtonElement>('[data-lightbox-next]');
+  let activeIndex = -1;
+  let opener: HTMLButtonElement | null = null;
+  let previousOverflow = '';
+  let previousBodyOverflow = '';
+  let previousScrollY = 0;
+
+  const showItem = (index: number) => {
+    const trigger = triggers[index];
+    if (!trigger || !image || !title) return;
+    activeIndex = index;
+    image.src = trigger.dataset.image ?? '';
+    image.alt = trigger.dataset.alt ?? '';
+    title.textContent = trigger.dataset.title ?? '';
+  };
+
+  const close = () => {
+    if (!dialog?.open) return;
+    dialog.close();
+  };
+
+  triggers.forEach((trigger, index) => {
+    trigger.addEventListener('click', () => {
+      if (!dialog) return;
+      opener = trigger;
+      showItem(index);
+      previousScrollY = window.scrollY;
+      previousOverflow = document.documentElement.style.overflow;
+      previousBodyOverflow = document.body.style.overflow;
+      document.documentElement.style.overflow = 'hidden';
+      document.body.style.overflow = 'hidden';
+      dialog.showModal();
+      closeButton?.focus();
+    });
+  });
+
+  closeButton?.addEventListener('click', close);
+  previousButton?.addEventListener('click', () => {
+    if (triggers.length > 1) showItem(stepGalleryIndex(activeIndex, -1, triggers.length));
+  });
+  nextButton?.addEventListener('click', () => {
+    if (triggers.length > 1) showItem(stepGalleryIndex(activeIndex, 1, triggers.length));
+  });
+  dialog?.addEventListener('click', (event) => {
+    if (event.target === dialog) close();
+  });
+  dialog?.addEventListener('keydown', (event) => {
+    if (event.key === 'ArrowLeft' && triggers.length > 1) {
+      event.preventDefault();
+      showItem(stepGalleryIndex(activeIndex, -1, triggers.length));
+    }
+    if (event.key === 'ArrowRight' && triggers.length > 1) {
+      event.preventDefault();
+      showItem(stepGalleryIndex(activeIndex, 1, triggers.length));
+    }
+  });
+  dialog?.addEventListener('close', () => {
+    document.documentElement.style.overflow = previousOverflow;
+    document.body.style.overflow = previousBodyOverflow;
+    window.scrollTo({ top: previousScrollY, behavior: 'auto' });
+    opener?.focus();
+    opener = null;
+  });
+</script>}

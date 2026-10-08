@@ -1,5 +1,7 @@
 # Juanjo Tattoos — Identidad editorial y galería preparada para originales
 
+> Estado actualizado: PR-19 implementa el manual oficial entregado por el titular. La dirección provisional descrita en el documento original quedó reemplazada. Ver [docs/20](20-juanjo-digital-brand-implementation.md) para roles, assets, licencias y checksums.
+
 **Estado:** base editorial PR-05 fusionada; portfolio fotográfico final pendiente de originales. **Referencias:** capturas del perfil `@juanjo.tattoos` y de sus tatuajes facilitadas por el usuario el 29/09/2026. Se confirmó autorización para usar los trabajos y materiales de ambos negocios en Littzite. Los archivos fotográficos originales y el logotipo nativo de Juanjo **todavía no se recibieron**.
 
 ## Lectura de las referencias proporcionadas
@@ -13,7 +15,7 @@ El sitio incluye por ahora un *wordmark* puramente tipográfico `JUANJO.`, un he
 - `apps/tattoo/src/site.config.ts`: idioma `es-AR`, tokens y narrativa editorial propios de Juanjo, sin datos de contacto falsos.
 - `apps/tattoo/src/styles/juanjo.css`: estilos responsive **encapsulados en la app**, sin afectar a VIORA.
 - `apps/tattoo/src/pages/index.astro`: composición con `SiteHeader`, `SiteFooter`, `LandingHero` y `FeatureGrid` públicos de los paquetes compartidos. El arte exclusivo del hero utiliza un slot ya existente; no modifica la API de los paquetes.
-- `apps/tattoo/src/components/TattooGallery.astro`: grilla editorial de imágenes con `astro:assets` que genera formatos WebP responsive desde importaciones estáticas una vez aportados los originales. Mientras `tattooPortfolio` esté vacío, muestra un estado editorial honesto y enlaza a Instagram, **sin fotografías inventadas ni capturas comprimidas**.
+- `apps/tattoo/src/components/TattooGallery.astro`: carrusel de trabajos destacados más grilla visual del portfolio completo y lightbox nativo; la fuente canónica es `tattooPortfolio`, con destacados derivados por `featured`. Las tres imágenes actuales son temporales y continúan bloqueando el release.
 - `apps/tattoo/src/portfolio.ts`: contrato local `TattooPortfolioItem` y guardas para IDs, títulos, texto alternativo y originales de al menos 640 × 640 píxeles. La validación no sustituye una revisión editorial de enfoque, permiso o peso de archivo.
 - Se mantienen tres tarjetas de información no clicables. Los trabajos pequeños usarán agenda externa solo después de aprobar D-01C y D-02B; los grandes tendrán WhatsApp directo únicamente en texto una vez cerrado D-04B.
 
@@ -37,7 +39,7 @@ export const tattooPortfolio = validatePortfolio([
 
 No publicar capturas de pantallas de Instagram como fotos finales; solicitar 6–12 originales de calidad web (preferentemente JPG, PNG u otro formato soportado) y un logotipo original exportado a alta resolución o SVG verdaderamente vectorial. Confirmar la selección, consentimiento para mostrar a las personas cuando corresponda, título, descripción alternativa y orden editorial de cada trabajo. Mantener `noindex` hasta aprobar un despliegue comercial.
 
-La imagen principal de la galería se muestra primero y con prioridad de carga adecuada; las posteriores usan lazy loading. La elección definitiva de tamaños, formatos, recortes y presupuesto de peso se ajustará una vez medidas las imágenes auténticas, mediante inspección del build y capturas móviles.
+La grilla carga imágenes de forma diferida, conserva proporciones de origen en metadatos y recorta con `object-fit: cover`. `/guia/` conserva preparación, cuidados y preguntas frecuentes; las infografías de sensibilidad y tamaño se retiraron hasta contar con recursos gráficos representativos y aprobados.
 
 ## Lo que NO está implementado
 

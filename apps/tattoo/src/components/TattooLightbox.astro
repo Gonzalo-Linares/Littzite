@@ -1,0 +1,61 @@
+---
+import type { TattooPortfolioItem } from '../portfolio-data';
+
+interface Props {
+  count: number;
+  item: TattooPortfolioItem;
+}
+
+const { count, item } = Astro.props;
+---
+
+<dialog class="tattoo-lightbox" aria-labelledby="lightbox-title" data-gallery-lightbox>
+  <div class="tattoo-lightbox__panel">
+    <header class="tattoo-lightbox__header">
+      <h2 id="lightbox-title" data-lightbox-title>
+        {item.title}
+      </h2>
+      <button
+        class="tattoo-lightbox__close"
+        type="button"
+        aria-label="Cerrar imagen"
+        data-lightbox-close
+      >
+        <span aria-hidden="true">×</span>
+      </button>
+    </header>
+    <div class="tattoo-lightbox__stage">
+      {count > 1 && (
+        <button
+          class="tattoo-lightbox__step"
+          type="button"
+          aria-label="Trabajo anterior"
+          data-lightbox-previous
+        >
+          <span aria-hidden="true">←</span>
+        </button>
+      )}
+      <img
+        data-lightbox-image
+        src={item.image.src}
+        alt={item.alt}
+        width={item.image.width}
+        height={item.image.height}
+        loading="lazy"
+      />
+      {count > 1 && (
+        <button
+          class="tattoo-lightbox__step"
+          type="button"
+          aria-label="Trabajo siguiente"
+          data-lightbox-next
+        >
+          <span aria-hidden="true">→</span>
+        </button>
+      )}
+    </div>
+    <p class="tattoo-lightbox__hint">
+      Usá las flechas del teclado para recorrer los trabajos. Escape para cerrar.
+    </p>
+  </div>
+</dialog>

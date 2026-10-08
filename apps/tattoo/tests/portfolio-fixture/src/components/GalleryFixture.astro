@@ -1,0 +1,26 @@
+---
+import TattooGallery from '../../../../src/components/TattooGallery.astro';
+import type { TattooPortfolioItem } from '../../../../src/portfolio';
+import workImage from '../assets/work-one.svg';
+
+interface Props {
+  count: number;
+}
+
+const { count } = Astro.props;
+const items: TattooPortfolioItem[] = Array.from({ length: count }, (_, index) => ({
+  id: `gallery-fixture-${index + 1}`,
+  title: `Obra fixture ${index + 1}`,
+  alt: `Descripción accesible de la imagen fixture ${index + 1}`,
+  image: workImage,
+  featured: index % 2 === 0,
+}));
+---
+
+<html lang="es-AR">
+  <body>
+    <main>
+      <TattooGallery items={items} featuredItems={items.filter((item) => item.featured)} />
+    </main>
+  </body>
+</html>

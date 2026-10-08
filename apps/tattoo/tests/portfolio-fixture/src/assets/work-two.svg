@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="800" height="640" viewBox="0 0 800 640">
+  <rect width="800" height="640" fill="#2c2c2c" />
+  <path d="M80 80h640v480H80z" fill="none" stroke="#c9a96b" stroke-width="4" />
+  <circle cx="400" cy="320" r="120" fill="#a61e1e" />
+  <text x="400" y="330" fill="#eadcc6" font-family="sans-serif" font-size="26" text-anchor="middle">FIXTURE</text>
+</svg>

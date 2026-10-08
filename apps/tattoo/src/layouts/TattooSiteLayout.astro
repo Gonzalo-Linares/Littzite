@@ -1,0 +1,122 @@
+---
+import BaseLayout from '@littzite/ui/BaseLayout.astro';
+import SiteHeader from '@littzite/ui/SiteHeader.astro';
+import SiteFooter from '@littzite/ui/SiteFooter.astro';
+import Link from '@littzite/ui/Link.astro';
+import SiteAttribution from '@littzite/ui/SiteAttribution.astro';
+import ButtonLink from '@littzite/ui/ButtonLink.astro';
+import TattooInstagramLink from '../components/TattooInstagramLink.astro';
+import { tattooActions, tattooBrand } from '../brand.config';
+import { siteContent } from '../site.config';
+import '../styles/juanjo.css';
+
+interface Props {
+  title: string;
+  description: string;
+}
+
+const { title, description } = Astro.props;
+const { site } = siteContent;
+---
+
+<BaseLayout
+  locale={site.defaultLocale}
+  theme={site.theme}
+  seo={{ title, description }}
+  noindex={true}
+  iconHref={site.iconHref}
+  siteName={tattooBrand.name}
+  bodyClass="juanjo-site"
+>
+  <SiteHeader
+    slot="header"
+    brand={tattooBrand.name}
+    descriptor=""
+    links={[
+      { label: 'Inicio', href: '/' },
+      { label: 'Trabajos', href: '/trabajos/' },
+      { label: 'Guía', href: '/guia/' },
+      { label: 'Contacto', href: '/contacto/' },
+    ]}
+  >
+    <picture slot="brand" class="tattoo-brand-mark" aria-hidden="true">
+      <source media="(max-width: 600px)" srcset={tattooBrand.marks.jt.src} type="image/png" />
+      <img
+        class="tattoo-brand-mark__image"
+        src={tattooBrand.marks.signature.src}
+        width="1774"
+        height="887"
+        alt=""
+        loading="eager"
+        decoding="async"
+      />
+    </picture>
+    <div slot="actions" class="tattoo-header-actions">
+      <TattooInstagramLink className="tattoo-header-instagram" />
+      <ButtonLink
+        href={tattooActions.turnsHref}
+        variant="primary"
+        size="compact"
+        icon="external"
+        className="tattoo-header-turns"
+      >
+        Turnos
+      </ButtonLink>
+    </div>
+  </SiteHeader>
+
+  <slot />
+
+  <SiteFooter
+    slot="footer"
+    brand={tattooBrand.name}
+    note="Tinta con carácter · San Juan, Argentina."
+  >
+    <span slot="brand" class="tattoo-footer-brand">
+      <img
+        src={tattooBrand.marks.signature.src}
+        width="1774"
+        height="887"
+        alt=""
+        loading="lazy"
+        decoding="async"
+      />
+    </span>
+    <nav slot="links" class="tattoo-footer-nav" aria-label="Navegación del pie de página">
+      <Link className="tattoo-footer-nav__link" href="/">
+        Inicio
+      </Link>
+      <Link className="tattoo-footer-nav__link" href="/trabajos/">
+        Trabajos
+      </Link>
+      <Link className="tattoo-footer-nav__link" href="/guia/">
+        Guía
+      </Link>
+      <Link className="tattoo-footer-nav__link" href="/contacto/">
+        Contacto
+      </Link>
+      <Link className="tattoo-footer-nav__link" href="/guia/#preguntas">
+        Preguntas frecuentes
+      </Link>
+    </nav>
+    <nav slot="secondary-links" class="tattoo-footer-legal" aria-label="Información legal">
+      <Link className="tattoo-footer-legal__link" href="/privacidad/">
+        Privacidad
+      </Link>
+      <Link className="tattoo-footer-legal__link" href="/terminos-y-condiciones/">
+        Términos
+      </Link>
+      <Link className="tattoo-footer-legal__link" href="/arrepentimiento/">
+        Arrepentimiento
+      </Link>
+    </nav>
+    <SiteAttribution
+      slot="attribution"
+      label={tattooBrand.attribution.label}
+      brand={tattooBrand.attribution.brand}
+      href={tattooBrand.attribution.href}
+      logoSrc={tattooBrand.attribution.logoSrc}
+      className="tattoo-attribution"
+    />
+  </SiteFooter>
+</BaseLayout>

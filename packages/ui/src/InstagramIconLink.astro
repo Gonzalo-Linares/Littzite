@@ -1,0 +1,61 @@
+---
+import Link from './Link.astro';
+
+interface Props {
+  href: string;
+  ariaLabel: string;
+  className?: string;
+  iconClassName?: string;
+  dotClassName?: string;
+  handle?: string;
+  showHandle?: boolean;
+}
+
+const {
+  href,
+  ariaLabel,
+  className = '',
+  iconClassName = '',
+  dotClassName = '',
+  handle,
+  showHandle = false,
+} = Astro.props;
+---
+
+<Link href={href} ariaLabel={ariaLabel} className={className || undefined}>
+  <svg
+    class:list={['site-social-icon-link__icon', iconClassName]}
+    viewBox="0 0 24 24"
+    fill="none"
+    aria-hidden="true"
+    focusable="false"
+  >
+    <rect x="3.75" y="3.75" width="16.5" height="16.5" rx="4.8" />
+    <circle cx="12" cy="12" r="3.7" />
+    <circle
+      class:list={['site-social-icon-link__dot', dotClassName]}
+      cx="17.35"
+      cy="6.75"
+      r="0.85"
+    />
+  </svg>
+  <slot />
+  {showHandle && handle && <span>{handle}</span>}
+</Link>
+
+<style is:global>
+  .site-social-icon-link__icon {
+    display: block;
+    width: 1.25rem;
+    height: 1.25rem;
+    flex: none;
+    stroke: currentColor;
+    stroke-width: 1.7;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+  .site-social-icon-link__dot {
+    fill: currentColor;
+    stroke: none;
+  }
+</style>

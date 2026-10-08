@@ -1,0 +1,48 @@
+---
+import ButtonLink from '@littzite/ui/ButtonLink.astro';
+import GoogleMapPanel from '@littzite/ui/GoogleMapPanel.astro';
+import TattooSiteLayout from '../layouts/TattooSiteLayout.astro';
+import TattooInstagramLink from '../components/TattooInstagramLink.astro';
+import { tattooActions, tattooLocation } from '../brand.config';
+---
+
+<TattooSiteLayout
+  title="Contacto | Juanjo Tattoo Studio"
+  description="Sacá un turno o conversá tu proyecto con Juanjo Tattoo Studio en San Juan."
+>
+  <article class="tattoo-contact-page">
+    <header class="tattoo-contact-hero">
+      <div class="container">
+        <h1>Contacto</h1>
+      </div>
+    </header>
+    <div class="container tattoo-contact-layout">
+      <section class="tattoo-contact-location" aria-label="Mapa de Juanjo Tattoo Studio">
+        <GoogleMapPanel
+          directionsHref={tattooLocation.directionsHref}
+          embedUrl={tattooLocation.embedUrl}
+          locationLabel="Juanjo Tattoo Studio"
+          className="tattoo-location-map"
+        />
+      </section>
+      <section class="tattoo-contact-paths" aria-label="Opciones de contacto">
+        <article class="tattoo-contact-path" id="turnos">
+          <p class="tattoo-contact-path__eyebrow">AGENDA</p>
+          <h2>Sacar turno</h2>
+          <p>Elegí un horario disponible desde la agenda.</p>
+          <ButtonLink href={tattooActions.turnsHref} variant="primary" icon="external">
+            Sacar turno
+          </ButtonLink>
+        </article>
+        <article class="tattoo-contact-path" id="instagram">
+          <p class="tattoo-contact-path__eyebrow">PROYECTOS PERSONALIZADOS</p>
+          <h2>Consultar por Instagram</h2>
+          <p>Para proyectos personalizados o consultas, escribile a Juanjo.</p>
+          <TattooInstagramLink showHandle className="tattoo-contact-path__instagram">
+            Instagram
+          </TattooInstagramLink>
+        </article>
+      </section>
+    </div>
+  </article>
+</TattooSiteLayout>

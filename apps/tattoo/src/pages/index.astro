@@ -1,97 +1,142 @@
 ---
-import BaseLayout from '@littzite/ui/BaseLayout.astro';
-import SiteHeader from '@littzite/ui/SiteHeader.astro';
-import SiteFooter from '@littzite/ui/SiteFooter.astro';
-import LandingHero from '@littzite/sections/LandingHero.astro';
-import FeatureGrid from '@littzite/sections/FeatureGrid.astro';
-import TattooGallery from '../components/TattooGallery.astro';
-import { siteContent } from '../site.config';
-import { tattooPortfolio } from '../portfolio';
-import '../styles/juanjo.css';
-
-const { site, pages } = siteContent;
-const home = pages.find((page) => page.slug === '');
-const intro = home?.sections.find((section) => section.type === 'intro');
-const features = home?.sections.find((section) => section.type === 'feature-grid');
-if (!home || !intro || !features) throw new Error('Incomplete Juanjo Tattoos preview');
+import ButtonLink from '@littzite/ui/ButtonLink.astro';
+import TattooSiteLayout from '../layouts/TattooSiteLayout.astro';
+import TattooHeroMedia from '../components/TattooHeroMedia.astro';
+import TattooInstagramLink from '../components/TattooInstagramLink.astro';
+import TattooWorkCarousel from '../components/TattooWorkCarousel.astro';
+import { tattooActions, tattooBrand } from '../brand.config';
+import { featuredTattooWorks } from '../portfolio';
 ---
 
-<BaseLayout
-  locale={site.defaultLocale}
-  theme={site.theme}
-  seo={home.seo}
-  noindex={true}
-  iconHref={site.iconHref}
-  bodyClass="juanjo-site"
+<TattooSiteLayout
+  title="Juanjo Tattoo Studio | Tu próximo tatuaje empieza acá"
+  description="Explorá trabajos, elegí el estilo que te representa y sacá tu turno con Juanjo Tattoo Studio en San Juan."
 >
-  <SiteHeader
-    slot="header"
-    brand="Juanjo Tattoos"
-    descriptor="San Juan"
-    links={[
-      { label: 'Inicio', href: '#inicio' },
-      { label: 'Portfolio', href: '#portfolio' },
-      { label: 'Cómo consultar', href: '#alcance' },
-    ]}
-    badge={{ label: 'Instagram', href: 'https://www.instagram.com/juanjo.tattoos/' }}
-  >
-    <span slot="brand" class="juanjo-wordmark" aria-hidden="true">
-      <span class="juanjo-wordmark__name">
-        JUANJO<span>.</span>
-      </span>
-      <span class="juanjo-wordmark__tag">TATTOOS / SAN JUAN</span>
-    </span>
-  </SiteHeader>
-
-  <LandingHero
-    section={intro}
-    variant="graphic"
-    ctaLabel="Explorá el portfolio"
-    ctaHref="#portfolio"
-    artLabel="JUANJO / EDITORIAL"
-    artIndex="001 / 002"
-  >
-    <div slot="artwork" class="juanjo-hero__artwork" aria-hidden="true">
-      <div class="juanjo-hero__artwork-top">
-        <span>FORMAS &amp; CONTRASTE</span>
-        <span>JUANJO / SJ</span>
+  <section class="tattoo-home-hero" aria-labelledby="home-hero-title">
+    <div class="container tattoo-home-hero__grid">
+      <div class="tattoo-home-hero__copy">
+        <p class="tattoo-eyebrow">
+          <span aria-hidden="true"></span>Tinta con carácter
+        </p>
+        <h1 id="home-hero-title">Tu próximo tatuaje empieza acá.</h1>
+        <p class="tattoo-home-hero__lead">
+          Explorá trabajos, elegí el estilo que más te represente y sacá tu turno.
+        </p>
+        <div class="tattoo-home-hero__actions">
+          <ButtonLink href={tattooActions.turnsHref} variant="primary" icon="external">
+            Sacar turno
+          </ButtonLink>
+          <ButtonLink href="/trabajos/" variant="secondary">
+            Explorar trabajos
+          </ButtonLink>
+        </div>
+        <p class="tattoo-home-hero__location">
+          {tattooBrand.name} <span aria-hidden="true">·</span> San Juan, Argentina
+        </p>
       </div>
-      <span class="juanjo-hero__artwork-ring"></span>
-      <span class="juanjo-hero__artwork-mark">J</span>
-      <span class="juanjo-hero__artwork-line"></span>
-      <div class="juanjo-hero__artwork-bottom">
-        <span>
-          TINTA
-          <br />
-          EN PROCESO.
-        </span>
-        <span>→</span>
+      <TattooHeroMedia media={tattooBrand.heroMedia} />
+    </div>
+  </section>
+
+  <section class="tattoo-work-section" id="trabajos" aria-labelledby="home-work-title">
+    <div class="container">
+      <div class="tattoo-section-heading tattoo-section-heading--split">
+        <div>
+          <p class="tattoo-eyebrow">ESTILOS DEL ESTUDIO</p>
+          <h2 id="home-work-title">Trabajos destacados</h2>
+          <p>Una selección de trabajos del estudio.</p>
+        </div>
+        <div class="tattoo-work-section__actions">
+          <ButtonLink href="/trabajos/" variant="secondary" size="compact">
+            Ver todos los trabajos
+          </ButtonLink>
+          <TattooInstagramLink showHandle={false} className="tattoo-inline-instagram">
+            Ver Instagram
+          </TattooInstagramLink>
+        </div>
+      </div>
+      <TattooWorkCarousel items={featuredTattooWorks} id="inicio-trabajos-carousel" />
+    </div>
+  </section>
+
+  <section class="tattoo-process" id="como-trabajamos" aria-labelledby="process-title">
+    <div class="container">
+      <div class="tattoo-section-heading">
+        <p class="tattoo-eyebrow">RESERVA O CONSULTA</p>
+        <h2 id="process-title">Elegí cómo seguir.</h2>
+      </div>
+      <div class="tattoo-process__grid">
+        <article class="tattoo-process-card">
+          <span class="tattoo-process-card__number">01 / TURNOS</span>
+          <h3>Sacá tu turno</h3>
+          <p>Elegí un horario disponible desde la agenda.</p>
+          <ButtonLink
+            href={tattooActions.turnsHref}
+            variant="primary"
+            size="compact"
+            icon="external"
+          >
+            Sacar turno
+          </ButtonLink>
+        </article>
+        <article class="tattoo-process-card tattoo-process-card--large">
+          <span class="tattoo-process-card__number">02 / CONSULTAS</span>
+          <h3>Conversá tu proyecto</h3>
+          <p>
+            Para consultar una idea o un proyecto de mayor escala, escribile a Juanjo por Instagram.
+          </p>
+          <TattooInstagramLink showHandle={false} className="tattoo-inline-instagram">
+            Consultar por Instagram
+          </TattooInstagramLink>
+        </article>
       </div>
     </div>
-  </LandingHero>
+  </section>
 
-  <TattooGallery items={tattooPortfolio} />
-  <FeatureGrid section={features} />
-
-  <aside class="juanjo-outro" aria-label="Información de esta vista previa">
-    <div class="container juanjo-outro__inner">
-      <span>JUANJO TATTOOS / SAN JUAN</span>
-      <p>
-        Los turnos y el canal de presupuestos se habilitarán cuando Juanjo confirme los detalles
-        comerciales.
-      </p>
+  <section class="tattoo-guide-teaser" aria-labelledby="guide-teaser-title">
+    <div class="container tattoo-guide-teaser__inner">
+      <div class="tattoo-guide-teaser__intro">
+        <p class="tattoo-eyebrow">UNA GUÍA PARA TU SESIÓN</p>
+        <h2 id="guide-teaser-title">Preparación y cuidados.</h2>
+        <p>Información general para pensar el tatuaje y acompañar el proceso.</p>
+        <ButtonLink href="/guia/" variant="secondary">
+          Ver guía
+        </ButtonLink>
+      </div>
+      <div class="tattoo-guide-teaser__cards">
+        <a href="/guia/#preparacion">
+          <span>01</span>
+          <strong>Antes de la sesión</strong>
+          <b aria-hidden="true">↗</b>
+        </a>
+        <a href="/guia/#cuidados">
+          <span>02</span>
+          <strong>Cuidados del tatuaje</strong>
+          <b aria-hidden="true">↗</b>
+        </a>
+        <a href="/guia/#preguntas">
+          <span>03</span>
+          <strong>Preguntas frecuentes</strong>
+          <b aria-hidden="true">↗</b>
+        </a>
+      </div>
     </div>
-  </aside>
+  </section>
 
-  <SiteFooter
-    slot="footer"
-    brand="Juanjo Tattoos"
-    note="Una vista previa del sitio. La identidad final y las fotografías del portfolio se completarán con Juanjo."
-    meta={['Vista previa · No admite reservas todavía', 'JUANJO TATTOOS / SAN JUAN']}
-  >
-    <span slot="brand" class="juanjo-footer-wordmark">
-      JUANJO<span>.</span>
-      <small>TATTOOS</small>
-    </span>
-  </SiteFooter>
-</BaseLayout>
+  <section class="tattoo-home-cta" aria-labelledby="home-cta-title">
+    <div class="container tattoo-home-cta__inner">
+      <div>
+        <p class="tattoo-eyebrow">EL PRÓXIMO PASO</p>
+        <h2 id="home-cta-title">Empezá por tu turno.</h2>
+      </div>
+      <div class="tattoo-home-cta__actions">
+        <ButtonLink href={tattooActions.turnsHref} variant="primary" icon="external">
+          Sacar turno
+        </ButtonLink>
+        <TattooInstagramLink showHandle={false} className="tattoo-inline-instagram">
+          Consultar por Instagram
+        </TattooInstagramLink>
+      </div>
+    </div>
+  </section>
+</TattooSiteLayout>

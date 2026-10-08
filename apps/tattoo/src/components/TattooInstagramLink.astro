@@ -1,0 +1,23 @@
+---
+import InstagramIconLink from '@littzite/ui/InstagramIconLink.astro';
+import { tattooActions, tattooBrand } from '../brand.config';
+
+interface Props {
+  showHandle?: boolean;
+  className?: string;
+}
+
+const { showHandle = false, className = '' } = Astro.props;
+---
+
+<InstagramIconLink
+  href={tattooActions.instagramHref}
+  ariaLabel="Juanjo Tattoo Studio en Instagram"
+  className={`tattoo-instagram-link ${className}`.trim()}
+  iconClassName="tattoo-instagram-link__icon"
+  dotClassName="tattoo-instagram-link__dot"
+  handle={tattooBrand.social.handle}
+  showHandle={showHandle}
+>
+  <slot />
+</InstagramIconLink>

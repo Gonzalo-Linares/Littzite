@@ -1,0 +1,48 @@
+---
+import heroPreview from '../assets/preview/hero-process-preview.webp';
+import { tattooBrand } from '../brand.config';
+
+const { media = tattooBrand.heroMedia } = Astro.props;
+if (media.src && !media.alt)
+  throw new Error('Tattoo hero media requires approved descriptive alt text.');
+if (media.src && (!media.src.startsWith('/') || media.src.startsWith('//')))
+  throw new Error('Tattoo hero media must use a local root-relative asset.');
+---
+
+<figure class:list={['tattoo-hero-media', { 'tattoo-hero-media--photo': Boolean(media.src) }]}>
+  <div class="tattoo-hero-media__frame">
+    {media.src ? (
+      <img
+        class="tattoo-hero-media__photo"
+        src={media.src}
+        alt={media.alt}
+        fetchpriority="high"
+        decoding="async"
+      />
+    ) : (
+      <img
+        class="tattoo-hero-media__photo"
+        src={heroPreview.src}
+        alt="Detalle de un tatuaje durante una sesión de trabajo."
+        width={heroPreview.width}
+        height={heroPreview.height}
+        fetchpriority="high"
+        decoding="async"
+      />
+    )}
+    <img
+      class="tattoo-hero-media__oni"
+      src={tattooBrand.marks.oni.src}
+      width={tattooBrand.marks.oni.width}
+      height={tattooBrand.marks.oni.height}
+      alt=""
+      aria-hidden="true"
+      loading="eager"
+      decoding="async"
+    />
+    <span class="tattoo-hero-media__corner" aria-hidden="true"></span>
+  </div>
+  <figcaption class="tattoo-hero-media__caption-line">
+    <span>Estudio en San Juan, Argentina</span>
+  </figcaption>
+</figure>

@@ -49,9 +49,9 @@ La identidad de la aplicación `estetica` adopta el manual entregado por el titu
 
 La CI permanece desactivada por decisión del titular. No modificar el workflow para reactivarla; validar cambios mediante gates locales, registrar salidas concretas y no declarar GitHub Actions verde.
 
-## Juanjo Tattoos (PR-05)
+## Juanjo Tattoo Studio (PR-19)
 
-La app `tattoo` tiene CSS de marca provisional exclusivamente en `apps/tattoo/src/styles/juanjo.css`, un portfolio propio (`src/portfolio.ts`) y `TattooGallery.astro` con dos estados: galería de originales importados estáticamente y estado vacío honesto mientras no se aporten. No extraer al paquete `sections` una galería utilizada por un solo cliente ni añadir condicionales por cliente en los paquetes. No copiar imágenes desde capturas de Instagram ni generar obras falsas, y no recrear la marca circular original sin recibir su archivo. El perfil `juanjo.tattoos` está identificado en capturas del usuario; el enlace público a Instagram está aprobado como referencia, pero el teléfono y la agenda no se activan hasta D-04B, D-01C y D-02B. Aplicar el contrato de `ImageMetadata`, texto alternativo y originales autorizados al recibir material. Ver `docs/17-juanjo-web-identity.md` y ADR-011. CI continúa desactivada por decisión del usuario; pedir resultados reales de pruebas locales antes de fusionar.
+La identidad, páginas, guía, componentes del hero/portfolio, mapa orientativo y CSS son app-locales en `apps/tattoo`. Usar el kit oficial de `Downloads/Kit-Marca-Juanjo-Tattoo-Studio-Premium`; `docs/20-juanjo-digital-brand-implementation.md` registra roles/licencias y los límites del kit. `tattooPortfolio` en `src/portfolio.ts` es la única fuente de obras reales. Mantener vacío hasta recibir fotografías originales autorizadas. Hero acepta una foto local aprobada mediante `heroMedia.src` y `heroMedia.alt`; sin foto usa el marco gráfico terminado con Oni oficial. No usar stock, capturas sociales ni obras generadas. Turnos inicia contacto mediante el perfil Instagram aprobado; no inventar agenda, WhatsApp, precios ni reglas comerciales. La guía de salud es general, no diagnóstica, y las indicaciones del tatuador prevalecen. Mantener noindex. Sin cambios compartidos especulativos. Ver ADR-011 y mantener CI desactivada por decisión del titular.
 
 ## Catálogo informativo VIORA (PR-06 / PR-13)
 

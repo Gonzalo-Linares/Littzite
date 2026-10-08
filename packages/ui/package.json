@@ -11,7 +11,9 @@
     "./ActionList.astro": "./src/ActionList.astro",
     "./SiteHeader.astro": "./src/SiteHeader.astro",
     "./SiteFooter.astro": "./src/SiteFooter.astro",
-    "./SiteAttribution.astro": "./src/SiteAttribution.astro"
+    "./SiteAttribution.astro": "./src/SiteAttribution.astro",
+    "./InstagramIconLink.astro": "./src/InstagramIconLink.astro",
+    "./GoogleMapPanel.astro": "./src/GoogleMapPanel.astro"
   },
   "dependencies": {
     "@littzite/content-schema": "workspace:*"

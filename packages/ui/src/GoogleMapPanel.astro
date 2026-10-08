@@ -1,0 +1,84 @@
+---
+import ButtonLink from './ButtonLink.astro';
+
+interface Props {
+  embedUrl?: string;
+  directionsHref?: string;
+  locationLabel?: string;
+  directionsLabel?: string;
+  className?: string;
+}
+
+const {
+  embedUrl,
+  directionsHref,
+  locationLabel = 'Ubicación',
+  directionsLabel = 'Cómo llegar',
+  className = '',
+} = Astro.props;
+
+const isAllowedGoogleEmbed = (value?: string) => {
+  if (!value) return false;
+  try {
+    const url = new URL(value);
+    return (
+      url.protocol === 'https:' &&
+      url.hostname === 'www.google.com' &&
+      url.pathname === '/maps/embed' &&
+      Boolean(url.searchParams.get('pb')) &&
+      !url.username &&
+      !url.password
+    );
+  } catch {
+    return false;
+  }
+};
+
+if (embedUrl && !isAllowedGoogleEmbed(embedUrl))
+  throw new Error('GoogleMapPanel requires a valid Google Maps embed URL');
+---
+
+{(embedUrl || directionsHref) && (
+  <div class:list={['google-map-panel', className]}>
+    {embedUrl && (
+      <iframe
+        class="google-map-panel__iframe"
+        src={embedUrl}
+        title={`Mapa interactivo: ${locationLabel}`}
+        loading="lazy"
+        allowfullscreen
+        referrerpolicy="strict-origin-when-cross-origin"
+      />
+    )}
+    {directionsHref && (
+      <ButtonLink
+        href={directionsHref}
+        variant="secondary"
+        size="compact"
+        icon="external"
+        className="google-map-panel__directions"
+      >
+        {directionsLabel}
+      </ButtonLink>
+    )}
+  </div>
+)}
+
+<style is:global>
+  .google-map-panel {
+    min-width: 0;
+  }
+  .google-map-panel__iframe {
+    display: block;
+    width: 100%;
+    min-height: 24rem;
+    aspect-ratio: 16 / 7;
+    border: 0;
+    border: 1px solid rgb(201 169 107 / 38%);
+    border-radius: 0.25rem;
+  }
+  .google-map-panel__directions {
+    display: inline-flex;
+    margin-top: 0.8rem;
+  }
+</style>

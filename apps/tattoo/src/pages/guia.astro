@@ -1,0 +1,227 @@
+---
+import ButtonLink from '@littzite/ui/ButtonLink.astro';
+import TattooSiteLayout from '../layouts/TattooSiteLayout.astro';
+import TattooInstagramLink from '../components/TattooInstagramLink.astro';
+import { tattooActions, tattooBrand } from '../brand.config';
+---
+
+<TattooSiteLayout
+  title="Guía para tu tatuaje | Juanjo Tattoo Studio"
+  description="Preparación, cuidados generales y respuestas a preguntas frecuentes antes y después de tatuarte."
+>
+  <article class="tattoo-guide-page">
+    <header class="tattoo-guide-hero">
+      <div class="container tattoo-guide-hero__inner">
+        <p class="tattoo-eyebrow">ANTES Y DESPUÉS DE TATUARTE</p>
+        <h1>Una guía para llegar preparado.</h1>
+        <p>
+          Información general para pensar tu tatuaje, conversar la ubicación y acompañar los
+          cuidados.
+        </p>
+        <a class="tattoo-guide-hero__jump" href="#preparacion">
+          Recorrer la guía <span aria-hidden="true">↓</span>
+        </a>
+      </div>
+      <img
+        class="tattoo-guide-hero__monogram"
+        src={tattooBrand.marks.jt.src}
+        width={tattooBrand.marks.jt.width}
+        height={tattooBrand.marks.jt.height}
+        alt=""
+        aria-hidden="true"
+        loading="lazy"
+        decoding="async"
+      />
+    </header>
+
+    <section class="tattoo-guide-section" id="preparacion" aria-labelledby="preparation-title">
+      <div class="container">
+        <div class="tattoo-guide-heading">
+          <p class="tattoo-eyebrow">01 / ANTES DE LA SESIÓN</p>
+          <h2 id="preparation-title">Llegá con tiempo para tu idea.</h2>
+          <p>
+            Algunas cosas simples ayudan a preparar el encuentro. Juanjo puede indicarte
+            recomendaciones particulares.
+          </p>
+        </div>
+        <ol class="tattoo-preparation-grid">
+          <li>
+            <span>01</span>
+            <h3>Descansá</h3>
+            <p>Intentá llegar descansado.</p>
+          </li>
+          <li>
+            <span>02</span>
+            <h3>Hidratate y comé</h3>
+            <p>Tomá agua y comé antes de la sesión.</p>
+          </li>
+          <li>
+            <span>03</span>
+            <h3>Traé referencias</h3>
+            <p>Si tenés imágenes o ideas de inspiración, podés compartirlas.</p>
+          </li>
+          <li>
+            <span>04</span>
+            <h3>Elegí ropa cómoda</h3>
+            <p>Que permita acceder con comodidad a la zona elegida.</p>
+          </li>
+          <li>
+            <span>05</span>
+            <h3>Conversá tus dudas</h3>
+            <p>Seguí las indicaciones particulares que te dé el tatuador.</p>
+          </li>
+        </ol>
+        <p class="tattoo-guide-note">
+          Si tenés una condición de salud relevante o dudas particulares, consultá previamente con
+          un profesional de salud y con el tatuador.
+        </p>
+      </div>
+    </section>
+
+    <section
+      class="tattoo-guide-section tattoo-aftercare"
+      id="cuidados"
+      aria-labelledby="aftercare-title"
+    >
+      <div class="container">
+        <div class="tattoo-guide-heading">
+          <p class="tattoo-eyebrow">02 / DESPUÉS DE LA SESIÓN</p>
+          <h2 id="aftercare-title">Cuidá el tatuaje.</h2>
+          <p>
+            Las indicaciones específicas que te entregue Juanjo después de la sesión prevalecen
+            sobre esta orientación general.
+          </p>
+        </div>
+        <ol class="tattoo-aftercare__grid">
+          <li class="tattoo-aftercare-card">
+            <div
+              class="tattoo-aftercare-card__visual tattoo-aftercare-card__visual--hands"
+              aria-hidden="true"
+            >
+              <span>01</span>
+              <div>
+                <h3>Manos limpias</h3>
+                <p>Lavá tus manos antes de tocar el tatuaje.</p>
+              </div>
+            </div>
+          </li>
+          <li class="tattoo-aftercare-card">
+            <div
+              class="tattoo-aftercare-card__visual tattoo-aftercare-card__visual--dry"
+              aria-hidden="true"
+            >
+              <span>02</span>
+              <div>
+                <h3>Secado y cuidado</h3>
+                <p>Secá con cuidado, sin frotar la piel.</p>
+              </div>
+            </div>
+          </li>
+          <li class="tattoo-aftercare-card">
+            <div
+              class="tattoo-aftercare-card__visual tattoo-aftercare-card__visual--friction"
+              aria-hidden="true"
+            >
+              <span>03</span>
+              <div>
+                <h3>Menos fricción</h3>
+                <p>Evitá el roce y seguí las indicaciones sobre el vendaje.</p>
+              </div>
+            </div>
+          </li>
+          <li class="tattoo-aftercare-card">
+            <div
+              class="tattoo-aftercare-card__visual tattoo-aftercare-card__visual--sun"
+              aria-hidden="true"
+            >
+              <span>04</span>
+              <div>
+                <h3>Sol y piel</h3>
+                <p>Seguí las indicaciones de cuidado y protección solar.</p>
+              </div>
+            </div>
+          </li>
+        </ol>
+        <p class="tattoo-guide-alert">
+          Si aparecen signos importantes de infección, una reacción intensa o un empeoramiento
+          inesperado, buscá evaluación médica.
+        </p>
+      </div>
+    </section>
+
+    <section class="tattoo-guide-section tattoo-faq" id="preguntas" aria-labelledby="faq-title">
+      <div class="container tattoo-faq__grid">
+        <div class="tattoo-guide-heading">
+          <p class="tattoo-eyebrow">03 / PREGUNTAS FRECUENTES</p>
+          <h2 id="faq-title">Lo que conviene conversar.</h2>
+          <p>
+            Las respuestas dependen de cada proyecto. Juanjo puede orientarte por su canal oficial.
+          </p>
+          <ButtonLink href={tattooActions.turnsHref} variant="primary" size="compact">
+            Sacar turno
+          </ButtonLink>
+        </div>
+        <div class="tattoo-faq__list">
+          <details>
+            <summary>¿Cómo saco turno?</summary>
+            <p>
+              Usá el botón Sacar turno para abrir la agenda y elegir un horario. Si tu tatuaje
+              requiere una consulta previa, también podés escribir por Instagram.
+            </p>
+            <p>
+              <a href={tattooActions.turnsHref}>Sacar turno</a>
+            </p>
+            <TattooInstagramLink showHandle={false} className="tattoo-inline-instagram">
+              Consultar por Instagram
+            </TattooInstagramLink>
+          </details>
+          <details>
+            <summary>¿Qué información conviene enviar?</summary>
+            <p>
+              Podés compartir la idea, referencias si las tenés, la zona y el tamaño aproximado que
+              imaginás.
+            </p>
+          </details>
+          <details>
+            <summary>¿Cómo se define el presupuesto?</summary>
+            <p>
+              Depende del proyecto. Juanjo puede evaluarlo cuando conversen la idea y sus
+              características.
+            </p>
+          </details>
+          <details>
+            <summary>¿Duele tatuarse?</summary>
+            <p>
+              La sensibilidad varía entre personas y puede cambiar según la zona, el tamaño y la
+              duración de la sesión.
+            </p>
+          </details>
+          <details>
+            <summary>¿Cómo elijo el tamaño?</summary>
+            <p>
+              La escala y la ubicación se pueden conversar juntas para entender cómo se va a ver el
+              tatuaje.
+            </p>
+          </details>
+          <details>
+            <summary>¿Cómo me preparo y cuido el tatuaje?</summary>
+            <p>
+              Encontrás recomendaciones generales en esta guía. Las instrucciones particulares de
+              Juanjo tras la sesión tienen prioridad.
+            </p>
+          </details>
+          <details>
+            <summary>¿Dónde puedo ver trabajos recientes?</summary>
+            <p>
+              Encontrá una selección en <a href="/trabajos/">Trabajos</a> y más contenido en
+              <a href={tattooBrand.social.instagram}>@juanjo.tattoos</a>.
+            </p>
+            <TattooInstagramLink showHandle={false} className="tattoo-inline-instagram">
+              Ver Instagram
+            </TattooInstagramLink>
+          </details>
+        </div>
+      </div>
+    </section>
+  </article>
+</TattooSiteLayout>
