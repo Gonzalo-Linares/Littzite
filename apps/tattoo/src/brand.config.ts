@@ -68,7 +68,7 @@ export const tattooBrand = {
 } as const;
 
 export const tattooActions = {
-  turnsHref: 'https://cal.com/gonzalo-linares-rfbhnf/prueba',
+  turnsHref: 'https://cal.com/juanjo-pereyra-mkzgce/turnos-tattoos?overlayCalendar=true',
   consultHref: tattooBrand.social.instagram,
   instagramHref: tattooBrand.social.instagram,
 } as const;
@@ -83,8 +83,6 @@ export const tattooReleaseState = {
   temporaryHeroImage: true,
   temporaryPortfolioImages: true,
   temporaryAftercareImage: true,
-  bookingUrlIsPlaceholder:
-    tattooActions.turnsHref === 'https://cal.com/gonzalo-linares-rfbhnf/prueba',
 } as const;
 
 export const tattooIdentity = {

@@ -4,33 +4,6 @@ import TattooSiteLayout from '../layouts/TattooSiteLayout.astro';
 import TattooSensitivityMap from '../components/TattooSensitivityMap.astro';
 import TattooInstagramLink from '../components/TattooInstagramLink.astro';
 import { tattooActions, tattooBrand } from '../brand.config';
-
-const sizeExamples = [
-  {
-    label: '5 cm',
-    area: 'Muñeca',
-    scale: 1,
-    className: 'size-small',
-    markLeft: '32%',
-    markTop: '52%',
-  },
-  {
-    label: '10 cm',
-    area: 'Antebrazo',
-    scale: 2,
-    className: 'size-medium',
-    markLeft: '33%',
-    markTop: '43%',
-  },
-  {
-    label: '20 cm',
-    area: 'Brazo',
-    scale: 4,
-    className: 'size-large',
-    markLeft: '38%',
-    markTop: '31%',
-  },
-] as const;
 ---
 
 <TattooSiteLayout
@@ -125,39 +98,62 @@ const sizeExamples = [
             y la zona.
           </p>
         </div>
-        <div class="tattoo-size-examples" role="group" aria-label="Referencias visuales de tamaño">
-          {sizeExamples.map((example) => (
-            <figure
-              class:list={['tattoo-size-example', example.className]}
-              style={`--size-scale:${example.scale};--mark-left:${example.markLeft};--mark-top:${example.markTop}`}
-            >
-              <div class="tattoo-size-example__body">
-                <img
-                  src="/guide/body-front.webp"
-                  width="1024"
-                  height="1536"
-                  alt=""
-                  aria-hidden="true"
-                  loading="lazy"
-                  decoding="async"
-                />
-                <svg
-                  class="tattoo-size-example__mark"
-                  viewBox="0 0 24 24"
-                  aria-hidden="true"
-                  focusable="false"
-                >
-                  <path d="M12 1.5 14.8 9.2 22.5 12l-7.7 2.8-2.8 7.7-2.8-7.7L1.5 12l7.7-2.8z" />
-                  <circle cx="12" cy="12" r="1.6" />
-                </svg>
-              </div>
-              <figcaption>
-                <strong>{example.label}</strong>
-                <span>{example.area}</span>
-              </figcaption>
-            </figure>
-          ))}
-        </div>
+        <figure class="tattoo-size-figure">
+          <svg
+            class="tattoo-size-map"
+            viewBox="0 0 1024 1536"
+            role="img"
+            aria-label="Comparación orientativa de tatuajes de 5 centímetros en la muñeca, 10 centímetros en el antebrazo y 20 centímetros en el brazo"
+            preserveAspectRatio="xMidYMid meet"
+          >
+            <defs>
+              <g id="tattoo-size-motif">
+                <path d="M0 -11 4 -3 11 0 4 3 0 11 -4 3 -11 0 -4 -3Z" />
+                <circle r="2" />
+              </g>
+            </defs>
+            <image
+              href="/guide/body-front.webp"
+              x="0"
+              y="0"
+              width="1024"
+              height="1536"
+              preserveAspectRatio="none"
+              class="tattoo-size-map__photo"
+            />
+            <g class="tattoo-size-map__mark" transform="translate(304 652) scale(1)">
+              <use href="#tattoo-size-motif" />
+            </g>
+            <g class="tattoo-size-map__mark" transform="translate(329 490) scale(2)">
+              <use href="#tattoo-size-motif" />
+            </g>
+            <g class="tattoo-size-map__mark" transform="translate(360 375) scale(4)">
+              <use href="#tattoo-size-motif" />
+            </g>
+            <path class="tattoo-size-map__leader" d="M316 652H770" />
+            <path class="tattoo-size-map__leader" d="M351 490H770" />
+            <path class="tattoo-size-map__leader" d="M404 375H770" />
+            <text class="tattoo-size-map__label" x="790" y="366">
+              <tspan x="790">20 cm</tspan>
+              <tspan x="790" dy="34">
+                Brazo
+              </tspan>
+            </text>
+            <text class="tattoo-size-map__label" x="790" y="481">
+              <tspan x="790">10 cm</tspan>
+              <tspan x="790" dy="34">
+                Antebrazo
+              </tspan>
+            </text>
+            <text class="tattoo-size-map__label" x="790" y="643">
+              <tspan x="790">5 cm</tspan>
+              <tspan x="790" dy="34">
+                Muñeca
+              </tspan>
+            </text>
+          </svg>
+          <figcaption>El mismo motivo a escala 1:2:4, como referencia visual.</figcaption>
+        </figure>
       </div>
     </section>
 

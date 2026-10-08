@@ -1,3 +1,42 @@
+---
+const views = [
+  {
+    label: 'Frente',
+    image: '/guide/body-front.webp',
+    description: 'Referencia orientativa de sensibilidad en la parte frontal del cuerpo.',
+    zones: [
+      { level: 'lower', path: 'M340 260 Q512 220 684 260 L675 330 Q512 300 349 330 Z' },
+      { level: 'middle', path: 'M302 345 Q335 330 369 362 L345 522 Q322 540 292 510 Z' },
+      { level: 'middle', path: 'M655 362 Q689 330 722 345 L732 510 Q702 540 679 522 Z' },
+      { level: 'higher', path: 'M375 400 Q512 385 649 400 L628 615 Q512 640 396 615 Z' },
+      { level: 'higher', path: 'M310 492 Q343 475 368 502 L354 555 Q330 578 301 552 Z' },
+      { level: 'higher', path: 'M656 502 Q681 475 714 492 L723 552 Q694 578 670 555 Z' },
+      { level: 'middle', path: 'M365 720 Q430 690 488 735 L462 1010 Q414 1030 368 982 Z' },
+      { level: 'middle', path: 'M536 735 Q594 690 659 720 L656 982 Q610 1030 562 1010 Z' },
+      { level: 'higher', path: 'M370 1320 Q409 1300 449 1320 L448 1400 Q417 1420 378 1400 Z' },
+      { level: 'higher', path: 'M575 1320 Q615 1300 654 1320 L646 1400 Q607 1420 576 1400 Z' },
+    ],
+  },
+  {
+    label: 'Espalda',
+    image: '/guide/body-back.webp',
+    description: 'Referencia orientativa de sensibilidad en la parte posterior del cuerpo.',
+    zones: [
+      { level: 'lower', path: 'M340 260 Q512 220 684 260 L675 330 Q512 300 349 330 Z' },
+      { level: 'middle', path: 'M302 345 Q335 330 369 362 L345 522 Q322 540 292 510 Z' },
+      { level: 'middle', path: 'M655 362 Q689 330 722 345 L732 510 Q702 540 679 522 Z' },
+      { level: 'middle', path: 'M390 392 Q512 370 634 392 L620 710 Q512 735 404 710 Z' },
+      { level: 'higher', path: 'M310 492 Q343 475 368 502 L354 555 Q330 578 301 552 Z' },
+      { level: 'higher', path: 'M656 502 Q681 475 714 492 L723 552 Q694 578 670 555 Z' },
+      { level: 'middle', path: 'M365 850 Q430 825 488 858 L462 1080 Q414 1100 368 1050 Z' },
+      { level: 'middle', path: 'M536 858 Q594 825 659 850 L656 1050 Q610 1100 562 1080 Z' },
+      { level: 'higher', path: 'M370 1320 Q409 1300 449 1320 L448 1400 Q417 1420 378 1400 Z' },
+      { level: 'higher', path: 'M575 1320 Q615 1300 654 1320 L646 1400 Q607 1420 576 1400 Z' },
+    ],
+  },
+] as const;
+---
+
 <section
   class="tattoo-guide-section tattoo-sensitivity"
   id="sensibilidad"
@@ -11,114 +50,31 @@
     </div>
     <div class="tattoo-sensitivity__layout">
       <div class="tattoo-body-maps">
-        <figure class="tattoo-sensitivity-figure">
-          <div class="tattoo-body-photo tattoo-body-photo--front">
-            <img
-              src="/guide/body-front.webp"
-              width="1024"
-              height="1536"
-              alt=""
-              aria-hidden="true"
-              loading="lazy"
-              decoding="async"
-            />
-            <span
-              class="tattoo-heat tattoo-heat--low tattoo-heat--front-shoulders"
-              aria-hidden="true"
-            ></span>
-            <span
-              class="tattoo-heat tattoo-heat--medium tattoo-heat--front-arms tattoo-heat--left"
-              aria-hidden="true"
-            ></span>
-            <span
-              class="tattoo-heat tattoo-heat--medium tattoo-heat--front-arms tattoo-heat--right"
-              aria-hidden="true"
-            ></span>
-            <span
-              class="tattoo-heat tattoo-heat--high tattoo-heat--front-ribs"
-              aria-hidden="true"
-            ></span>
-            <span
-              class="tattoo-heat tattoo-heat--high tattoo-heat--front-elbows tattoo-heat--left"
-              aria-hidden="true"
-            ></span>
-            <span
-              class="tattoo-heat tattoo-heat--high tattoo-heat--front-elbows tattoo-heat--right"
-              aria-hidden="true"
-            ></span>
-            <span
-              class="tattoo-heat tattoo-heat--medium tattoo-heat--front-thighs tattoo-heat--left"
-              aria-hidden="true"
-            ></span>
-            <span
-              class="tattoo-heat tattoo-heat--medium tattoo-heat--front-thighs tattoo-heat--right"
-              aria-hidden="true"
-            ></span>
-            <span
-              class="tattoo-heat tattoo-heat--high tattoo-heat--front-ankles tattoo-heat--left"
-              aria-hidden="true"
-            ></span>
-            <span
-              class="tattoo-heat tattoo-heat--high tattoo-heat--front-ankles tattoo-heat--right"
-              aria-hidden="true"
-            ></span>
-          </div>
-          <figcaption>Frente</figcaption>
-        </figure>
-        <figure class="tattoo-sensitivity-figure">
-          <div class="tattoo-body-photo tattoo-body-photo--back">
-            <img
-              src="/guide/body-back.webp"
-              width="1024"
-              height="1536"
-              alt=""
-              aria-hidden="true"
-              loading="lazy"
-              decoding="async"
-            />
-            <span
-              class="tattoo-heat tattoo-heat--low tattoo-heat--back-shoulders"
-              aria-hidden="true"
-            ></span>
-            <span
-              class="tattoo-heat tattoo-heat--medium tattoo-heat--back-arms tattoo-heat--left"
-              aria-hidden="true"
-            ></span>
-            <span
-              class="tattoo-heat tattoo-heat--medium tattoo-heat--back-arms tattoo-heat--right"
-              aria-hidden="true"
-            ></span>
-            <span
-              class="tattoo-heat tattoo-heat--medium tattoo-heat--back-back"
-              aria-hidden="true"
-            ></span>
-            <span
-              class="tattoo-heat tattoo-heat--high tattoo-heat--back-elbows tattoo-heat--left"
-              aria-hidden="true"
-            ></span>
-            <span
-              class="tattoo-heat tattoo-heat--high tattoo-heat--back-elbows tattoo-heat--right"
-              aria-hidden="true"
-            ></span>
-            <span
-              class="tattoo-heat tattoo-heat--medium tattoo-heat--back-thighs tattoo-heat--left"
-              aria-hidden="true"
-            ></span>
-            <span
-              class="tattoo-heat tattoo-heat--medium tattoo-heat--back-thighs tattoo-heat--right"
-              aria-hidden="true"
-            ></span>
-            <span
-              class="tattoo-heat tattoo-heat--high tattoo-heat--back-ankles tattoo-heat--left"
-              aria-hidden="true"
-            ></span>
-            <span
-              class="tattoo-heat tattoo-heat--high tattoo-heat--back-ankles tattoo-heat--right"
-              aria-hidden="true"
-            ></span>
-          </div>
-          <figcaption>Espalda</figcaption>
-        </figure>
+        {views.map((view) => (
+          <figure class="tattoo-sensitivity-figure">
+            <svg
+              class="tattoo-body-map"
+              viewBox="0 0 1024 1536"
+              role="img"
+              aria-label={view.description}
+              preserveAspectRatio="xMidYMid meet"
+            >
+              <image
+                href={view.image}
+                x="0"
+                y="0"
+                width="1024"
+                height="1536"
+                preserveAspectRatio="none"
+                class="tattoo-body-map__photo"
+              />
+              {view.zones.map((zone) => (
+                <path class={`tattoo-zone tattoo-zone--${zone.level}`} d={zone.path} />
+              ))}
+            </svg>
+            <figcaption>{view.label}</figcaption>
+          </figure>
+        ))}
       </div>
       <div class="tattoo-sensitivity__key">
         <h3 class="tattoo-sensitivity__key-title" id="sensitivity-key-title">
@@ -139,8 +95,11 @@
           </li>
         </ul>
         <p class="tattoo-guide-note">
-          La sensibilidad varía según la persona, la zona y la duración de la sesión. Esta
-          referencia es orientativa y no constituye una evaluación médica.
+          La sensibilidad varía entre personas y zonas. Esta referencia es orientativa y no predice
+          cuánto va a doler un tatuaje.
+        </p>
+        <p class="tattoo-guide-note tattoo-guide-note--small">
+          Es una referencia general, no una evaluación médica.
         </p>
       </div>
     </div>

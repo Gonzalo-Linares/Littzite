@@ -13,6 +13,8 @@ const expectedTitles = {
 const app = process.argv[2];
 assert.ok(Object.hasOwn(expectedTitles, app), `Unknown app: ${app}`);
 assert.equal(siteConfigSchema.safeParse({ defaultLocale: 'es' }).success, false);
+const tattooBookingUrl =
+  'https://cal.com/juanjo-pereyra-mkzgce/turnos-tattoos?overlayCalendar=true';
 
 const { siteContent } = await import(`../apps/${app}/src/site.config.ts`);
 const html = await readFile(new URL(`../apps/${app}/dist/index.html`, import.meta.url), 'utf8');
@@ -650,10 +652,7 @@ if (app === 'estetica') {
   assert.ok(html.includes('class="tattoo-home-hero"'), 'Juanjo commercial hero missing');
   assert.ok(html.includes('class="tattoo-hero-media'), 'Official Oni hero media missing');
   assert.ok(html.includes('Tu próximo tatuaje empieza acá.'), 'Approved Juanjo H1 missing');
-  assert.ok(
-    html.includes('href="https://cal.com/gonzalo-linares-rfbhnf/prueba"'),
-    'Test booking URL missing',
-  );
+  assert.ok(html.includes(`href="${tattooBookingUrl}"`), 'Test booking URL missing');
   assert.ok(!html.includes('agenda de prueba'), 'UAT wording must not appear in public copy');
   assert.ok(html.includes('Explorar trabajos'), 'Work CTA missing');
   assert.ok(html.includes('href="/guia/"'), 'Guide route missing');
@@ -694,11 +693,14 @@ if (app === 'estetica') {
     'Unapproved WhatsApp CTA was published',
   );
   assert.ok(
-    html.includes('cal.com/gonzalo-linares-rfbhnf/prueba') &&
-      !/<a[^>]*>[^<]*(Reservar|Agendar)[^<]*<\/a>/i.test(html),
+    html.includes(tattooBookingUrl) && !/<a[^>]*>[^<]*(Reservar|Agendar)[^<]*<\/a>/i.test(html),
     'Juanjo must use only the configured booking link',
   );
-  assert.ok(html.includes('class="tattoo-carousel__item"'), 'Preview portfolio items missing');
+  assert.equal(
+    (html.match(/class="tattoo-carousel__item/g) ?? []).length,
+    9,
+    'Juanjo preview carousel must render three physical copies of each item',
+  );
   assert.ok(!html.includes('href="/servicios/"'), 'VIORA navigation must not leak into Juanjo');
   assert.ok(html.includes('aria-label="Navegación del pie de página"'));
   assert.ok(html.includes('href="/brand/monograma-jt.png"'), 'Official JT favicon missing');
@@ -735,10 +737,12 @@ if (app === 'estetica') {
     'utf8',
   );
   assert.ok(workPage.includes('class="tattoo-gallery"'), 'Juanjo portfolio route missing');
-  assert.ok(
-    (workPage.match(/class="tattoo-carousel__item"/g) ?? []).length === 3,
-    'Temporary work images missing',
+  assert.equal(
+    (workPage.match(/class="tattoo-carousel__item/g) ?? []).length,
+    9,
+    'Work fixture must render three physical copies of each preview item',
   );
+  assert.equal((workPage.match(/<figure[^>]*aria-hidden="true"/g) ?? []).length, 6);
   assert.match(workPage, /Una selección de tatuajes y estilos\./);
   assert.doesNotMatch(
     workPage.replace(/<script\b[\s\S]*?<\/script>/gi, ''),
@@ -754,12 +758,14 @@ if (app === 'estetica') {
   assert.match(guidePage, /Cuidá el tatuaje\./);
   assert.match(guidePage, /Preguntas frecuentes/i);
   assert.equal((guidePage.match(/<details>/g) ?? []).length, 7);
-  assert.equal((guidePage.match(/class="tattoo-size-example__mark"/g) ?? []).length, 3);
-  assert.equal((guidePage.match(/src="\/guide\/body-front\.webp"/g) ?? []).length, 4);
-  assert.equal((guidePage.match(/src="\/guide\/body-back\.webp"/g) ?? []).length, 1);
-  assert.equal((guidePage.match(/class="tattoo-size-example__mark"/g) ?? []).length, 3);
-  assert.equal((guidePage.match(/src="\/guide\/body-front\.webp"/g) ?? []).length, 4);
-  assert.equal((guidePage.match(/src="\/guide\/body-back\.webp"/g) ?? []).length, 1);
+  assert.equal((guidePage.match(/href="#tattoo-size-motif"/g) ?? []).length, 3);
+  assert.equal((guidePage.match(/href="\/guide\/body-front\.webp"/g) ?? []).length, 2);
+  assert.equal((guidePage.match(/class="tattoo-body-map"/g) ?? []).length, 2);
+  assert.match(guidePage, /La sensibilidad varía entre personas y zonas/);
+  assert.match(guidePage, /no predice cuánto va a doler un tatuaje/);
+  assert.match(guidePage, /class="tattoo-size-figure"/);
+  assert.match(guidePage, /viewBox="0 0 1024 1536"/);
+  assert.equal((guidePage.match(/href="\/guide\/body-back\.webp"/g) ?? []).length, 1);
   assert.doesNotMatch(guidePage, /[0-9]\/10|diagnóstico|garantiza|\$|seña|horarios ficticios/i);
   const tattooStyles = await readFile(
     new URL('../apps/tattoo/src/styles/juanjo.css', import.meta.url),
@@ -793,7 +799,7 @@ if (app === 'estetica') {
       contact.indexOf('class="tattoo-contact-paths"'),
   );
   assert.equal((contact.match(/class="tattoo-contact-path"/g) ?? []).length, 2);
-  assert.match(contact, /href="https:\/\/cal\.com\/gonzalo-linares-rfbhnf\/prueba"/);
+  assert.ok(contact.includes(`href="${tattooBookingUrl}"`));
   assert.match(contact, /href="https:\/\/www\.instagram\.com\/juanjo\.tattoos\/"/);
   assert.doesNotMatch(html + contact, /wa\.me|api\.whatsapp|Reserva tu turno|Agendá ahora/i);
   for (const route of ['privacidad', 'terminos-y-condiciones', 'arrepentimiento']) {
@@ -815,8 +821,7 @@ if (app === 'estetica') {
 }
 assert.ok(html.includes('class="skip-link" href="#contenido"'));
 assert.ok(html.includes('class="container"'));
-const expectedHeroHref =
-  app === 'estetica' ? '/servicios/' : 'https://cal.com/gonzalo-linares-rfbhnf/prueba';
+const expectedHeroHref = app === 'estetica' ? '/servicios/' : tattooBookingUrl;
 assert.ok(
   app === 'estetica'
     ? html.includes(

@@ -27,24 +27,32 @@ const canMove = items.length > 1;
         aria-label="Carrusel de trabajos. Usá las flechas izquierda y derecha para recorrer los trabajos."
       >
         <div class="tattoo-carousel__track">
-          {items.map((item, index) => (
-            <figure class="tattoo-carousel__item" data-slide-index={index}>
-              <div class="tattoo-carousel__image-wrap">
-                <img
-                  src={item.image.src}
-                  alt={item.alt}
-                  width={item.image.width}
-                  height={item.image.height}
-                  loading={index === 0 ? 'eager' : 'lazy'}
-                  decoding="async"
-                />
-              </div>
-              <figcaption>
-                <span class="tattoo-carousel__number">{String(index + 1).padStart(2, '0')}</span>
-                <span>{item.title}</span>
-              </figcaption>
-            </figure>
-          ))}
+          {[0, 1, 2].map((copy) =>
+            items.map((item, index) => (
+              <figure
+                class:list={['tattoo-carousel__item', copy !== 1 && 'is-clone']}
+                data-slide-index={copy * items.length + index}
+                data-logical-index={index}
+                data-copy={copy}
+                aria-hidden={copy !== 1 ? 'true' : undefined}
+              >
+                <div class="tattoo-carousel__image-wrap">
+                  <img
+                    src={item.image.src}
+                    alt={copy === 1 ? item.alt : ''}
+                    width={item.image.width}
+                    height={item.image.height}
+                    loading={copy === 1 && index === 0 ? 'eager' : 'lazy'}
+                    decoding="async"
+                  />
+                </div>
+                <figcaption>
+                  <span class="tattoo-carousel__number">{String(index + 1).padStart(2, '0')}</span>
+                  <span>{item.title}</span>
+                </figcaption>
+              </figure>
+            )),
+          )}
         </div>
       </div>
       {canMove && (
@@ -106,55 +114,103 @@ const canMove = items.length > 1;
     const next = carousel.querySelector<HTMLButtonElement>('[data-carousel-next]');
     if (!viewport || !previous || !next || slides.length < 2) return;
 
-    let activeIndex = 0;
+    const itemCount = Number(carousel.dataset.count);
+    if (!Number.isFinite(itemCount) || itemCount < 2 || slides.length !== itemCount * 3) return;
+    let logicalIndex = 0;
+    let physicalIndex = itemCount;
+    let settleTimer = 0;
+    let queuedSteps = 0;
+    let moving = false;
 
-    const update = (index: number) => {
-      activeIndex = (index + slides.length) % slides.length;
+    const reducedMotion = () => window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const centerSlide = (index: number, behavior: ScrollBehavior) => {
+      const slide = slides[index];
+      if (!slide) return;
+      const viewportRect = viewport.getBoundingClientRect();
+      const slideRect = slide.getBoundingClientRect();
+      viewport.scrollTo({
+        left:
+          viewport.scrollLeft +
+          slideRect.left +
+          slideRect.width / 2 -
+          viewportRect.left -
+          viewport.clientWidth / 2,
+        behavior,
+      });
+    };
+    const markActive = (index: number) => {
+      logicalIndex = Number(slides[index]?.dataset.logicalIndex ?? 0);
+      physicalIndex = index;
+      carousel.dataset.activeIndex = String(logicalIndex);
       slides.forEach((slide, slideIndex) =>
-        slide.classList.toggle('is-active', slideIndex === activeIndex),
+        slide.classList.toggle('is-active', slideIndex === index),
       );
-      const target = slides[activeIndex];
-      if (target) {
-        viewport.scrollTo({
-          left: target.offsetLeft - (viewport.clientWidth - target.offsetWidth) / 2,
-          behavior: window.matchMedia('(prefers-reduced-motion: reduce)').matches
-            ? 'auto'
-            : 'smooth',
-        });
+    };
+    const closestPhysicalIndex = () => {
+      const viewportRect = viewport.getBoundingClientRect();
+      const center = viewportRect.left + viewport.clientWidth / 2;
+      return slides.reduce(
+        (closest, slide, index) => {
+          const rect = slide.getBoundingClientRect();
+          const distance = Math.abs(rect.left + rect.width / 2 - center);
+          return distance < closest.distance ? { index, distance } : closest;
+        },
+        { index: 0, distance: Number.POSITIVE_INFINITY },
+      ).index;
+    };
+    const move = (step: number) => {
+      const targetIndex = physicalIndex + step;
+      if (targetIndex < 0 || targetIndex >= slides.length) return;
+      moving = true;
+      markActive(targetIndex);
+      centerSlide(targetIndex, reducedMotion() ? 'auto' : 'smooth');
+      if (reducedMotion()) settle();
+    };
+    const requestMove = (step: number) => {
+      if (moving) {
+        queuedSteps += step;
+        return;
+      }
+      move(step);
+    };
+    const settle = () => {
+      window.clearTimeout(settleTimer);
+      const nearest = closestPhysicalIndex();
+      markActive(nearest);
+      if (nearest < itemCount || nearest >= itemCount * 2) {
+        const recentered = nearest < itemCount ? nearest + itemCount : nearest - itemCount;
+        markActive(recentered);
+        centerSlide(recentered, 'auto');
+      }
+      moving = false;
+      if (queuedSteps !== 0) {
+        const step = Math.sign(queuedSteps);
+        queuedSteps -= step;
+        move(step);
       }
     };
 
-    const syncActive = () => {
-      const center = viewport.scrollLeft + viewport.clientWidth / 2;
-      activeIndex = slides.reduce((closest, slide, index) => {
-        const slideCenter = slide.offsetLeft + slide.offsetWidth / 2;
-        return Math.abs(slideCenter - center) <
-          Math.abs(slides[closest].offsetLeft + slides[closest].offsetWidth / 2 - center)
-          ? index
-          : closest;
-      }, 0);
-      slides.forEach((slide, slideIndex) =>
-        slide.classList.toggle('is-active', slideIndex === activeIndex),
-      );
-    };
-
-    previous.addEventListener('click', () => {
-      update(activeIndex - 1);
-    });
-    next.addEventListener('click', () => {
-      update(activeIndex + 1);
-    });
-    viewport.addEventListener('scroll', syncActive, { passive: true });
+    previous.addEventListener('click', () => requestMove(-1));
+    next.addEventListener('click', () => requestMove(1));
+    viewport.addEventListener(
+      'scroll',
+      () => {
+        window.clearTimeout(settleTimer);
+        settleTimer = window.setTimeout(settle, 140);
+      },
+      { passive: true },
+    );
     viewport.addEventListener('keydown', (event) => {
       if (event.key === 'ArrowLeft') {
         event.preventDefault();
-        update(activeIndex - 1);
+        requestMove(-1);
       }
       if (event.key === 'ArrowRight') {
         event.preventDefault();
-        update(activeIndex + 1);
+        requestMove(1);
       }
     });
-    syncActive();
+    markActive(physicalIndex);
+    centerSlide(physicalIndex, 'auto');
   });
 </script>}

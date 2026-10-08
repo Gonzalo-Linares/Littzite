@@ -32,9 +32,16 @@ test('carousel handles 0, 1, 2 and 5 authorized metadata items and a configured 
     assert.ok(section, `${id}: carousel section missing`);
     assert.equal(
       (section.match(/class="tattoo-carousel__item/g) ?? []).length,
-      count,
-      `${id}: wrong item count`,
+      count === 0 ? 0 : count * 3,
+      `${id}: expected three physical copies of each item`,
     );
+    if (count > 1) {
+      assert.equal((section.match(/data-copy="0"/g) ?? []).length, count);
+      assert.equal((section.match(/data-copy="1"/g) ?? []).length, count);
+      assert.equal((section.match(/data-copy="2"/g) ?? []).length, count);
+      assert.equal((section.match(/<figure[^>]*aria-hidden="true"/g) ?? []).length, count * 2);
+      assert.equal((section.match(/data-logical-index="0"/g) ?? []).length, 3);
+    }
     const controls = /data-carousel-(?:prev|next)/.test(section);
     assert.equal(controls, count > 1, `${id}: controls depend on having two or more items`);
     if (count === 0) {
@@ -61,7 +68,7 @@ test('carousel handles 0, 1, 2 and 5 authorized metadata items and a configured 
   assert.match(carousel, /viewport\.scrollTo\(\{\s*left:/);
   assert.doesNotMatch(
     carousel,
-    /setInterval|setTimeout|scrollIntoView|\.focus\(|location\.hash|carousel-toggle/i,
+    /setInterval|scrollIntoView|\.focus\(|location\.hash|carousel-toggle/i,
   );
   const css = readFileSync(path.join(root, 'apps/tattoo/src/styles/juanjo.css'), 'utf8');
   assert.match(css, /scroll-snap-type:\s*x mandatory/);

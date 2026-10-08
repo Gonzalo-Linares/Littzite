@@ -17,13 +17,16 @@ import {
 const root = new URL('../', import.meta.url);
 const read = (file) => readFile(new URL(file, root), 'utf8');
 
-test('Juanjo uses the exact preview booking link and keeps Instagram available', async () => {
+test('Juanjo uses the approved Cal.com booking link and keeps Instagram available', async () => {
   const layout = await read('apps/tattoo/src/layouts/TattooSiteLayout.astro');
   const social = await read('apps/tattoo/src/components/TattooInstagramLink.astro');
   assert.match(layout, /label: 'Guía', href: '\/guia\//);
   assert.match(layout, /href=\{tattooActions\.turnsHref\}/);
   assert.match(social, /InstagramIconLink/);
-  assert.equal(tattooActions.turnsHref, 'https://cal.com/gonzalo-linares-rfbhnf/prueba');
+  assert.equal(
+    tattooActions.turnsHref,
+    'https://cal.com/juanjo-pereyra-mkzgce/turnos-tattoos?overlayCalendar=true',
+  );
   assert.equal(tattooBrand.social.instagram, 'https://www.instagram.com/juanjo.tattoos/');
   assert.equal(tattooActions.instagramHref, tattooBrand.social.instagram);
   assert.equal(tattooActions.consultHref, tattooBrand.social.instagram);
@@ -84,20 +87,28 @@ test('guide explains preparation, orientation, scale, aftercare and consultation
   assert.match(guide, /tienen prioridad/);
   assert.match(guide, /buscá evaluación médica/);
   assert.equal((guide.match(/<details>/g) ?? []).length, 7);
-  assert.match(map, /La sensibilidad varía según la persona/);
-  assert.match(map, /no constituye una evaluación médica/);
+  assert.match(map, /La sensibilidad varía entre personas y zonas/);
+  assert.match(map, /no predice\s*cuánto va a doler un tatuaje/);
+  assert.match(map, /viewBox="0 0 1024 1536"/);
+  assert.match(map, /preserveAspectRatio="none"/);
+  assert.match(map, /tattoo-zone--lower/);
+  assert.match(map, /tattoo-zone--middle/);
+  assert.match(map, /tattoo-zone--higher/);
+  assert.doesNotMatch(map, /tattoo-heat/);
   assert.doesNotMatch(guide, /[0-9]\/10|diagnóstico|garantiza|\$\s*\d|seña|forma de pago/i);
 });
 
 test('contact leads with the approved Google embed and keeps directions and cards below it', async () => {
   const contact = await read('apps/tattoo/src/pages/contacto.astro');
   const mapPanel = await read('packages/ui/src/GoogleMapPanel.astro');
+  const styles = await read('apps/tattoo/src/styles/juanjo.css');
   assert.match(contact, /<h1>Contacto<\/h1>/);
   assert.match(contact, /Instagram/);
   assert.match(contact, /directionsHref=\{tattooLocation\.directionsHref\}/);
   assert.ok(contact.indexOf('tattoo-contact-location') < contact.indexOf('tattoo-contact-paths'));
   assert.match(contact, /class="tattoo-contact-path" id="turnos"/);
   assert.match(contact, /class="tattoo-contact-path" id="instagram"/);
+  assert.match(styles, /\.tattoo-contact-hero\s*\{[^}]*background:\s*var\(--tattoo-ink\)/);
   assert.equal(tattooLocation.directionsHref, 'https://maps.app.goo.gl/SrLiJA1dutozzdKn7');
   assert.match(tattooLocation.embedUrl, /^https:\/\/www\.google\.com\/maps\/embed\?pb=/);
   assert.match(mapPanel, /allowfullscreen/);
@@ -120,8 +131,8 @@ test('temporary gallery images stay separate from the real portfolio and have an
   assert.equal(tattooReleaseState.temporaryHeroImage, true);
   assert.equal(tattooReleaseState.temporaryPortfolioImages, true);
   assert.equal(tattooReleaseState.temporaryAftercareImage, true);
-  assert.equal(tattooReleaseState.bookingUrlIsPlaceholder, true);
-  assert.equal(tattooReleaseBlockers.length, 4);
+  assert.equal('bookingUrlIsPlaceholder' in tattooReleaseState, false);
+  assert.equal(tattooReleaseBlockers.length, 3);
   assert.throws(assertTattooProductionReady, /Juanjo production release blocked/);
   assert.ok(previewFiles.includes('work-botanical-preview.webp'));
   assert.ok(previewFiles.includes('work-moth-preview.webp'));
@@ -138,10 +149,13 @@ test('only the tattoo app receives the temporary Cal.com URL and booking stays i
     true,
   );
   const config = await read('apps/tattoo/src/brand.config.ts');
-  assert.match(config, /https:\/\/cal\.com\/gonzalo-linares-rfbhnf\/prueba/);
+  assert.match(
+    config,
+    /https:\/\/cal\.com\/juanjo-pereyra-mkzgce\/turnos-tattoos\?overlayCalendar=true/,
+  );
 });
 
-test('the work carousel has only manual horizontal controls and no vertical navigation side effects', async () => {
+test('the work carousel has three accessible physical copies and manual horizontal controls', async () => {
   const carousel = await read('apps/tattoo/src/components/TattooWorkCarousel.astro');
   const css = await read('apps/tattoo/src/styles/juanjo.css');
   assert.match(carousel, /aria-label="Trabajo anterior"/);
@@ -150,9 +164,18 @@ test('the work carousel has only manual horizontal controls and no vertical navi
   assert.match(carousel, /ArrowLeft/);
   assert.match(carousel, /ArrowRight/);
   assert.match(carousel, /viewport\.scrollTo\(\{\s*left:/);
+  assert.match(carousel, /\[0, 1, 2\]\.map\(\(copy\)/);
+  assert.match(carousel, /copy \* items\.length \+ index/);
+  assert.match(carousel, /data-logical-index=\{index\}/);
+  assert.match(carousel, /aria-hidden=\{copy !== 1 \? 'true' : undefined\}/);
+  assert.match(carousel, /const itemCount = Number\(carousel\.dataset\.count\)/);
+  assert.match(carousel, /nearest < itemCount \|\| nearest >= itemCount \* 2/);
+  assert.match(carousel, /window\.setTimeout\(settle, 140\)/);
+  assert.match(carousel, /let physicalIndex = itemCount/);
+  assert.match(carousel, /centerSlide\(physicalIndex, 'auto'\)/);
   assert.doesNotMatch(
     carousel,
-    /setInterval|setTimeout|scrollIntoView|\.focus\(|location\.hash|carousel-toggle/i,
+    /setInterval|scrollIntoView|\.focus\(|location\.hash|carousel-toggle/i,
   );
   assert.match(css, /\.tattoo-carousel__controls\s*\{[^}]*position:\s*absolute/);
   assert.match(css, /\.tattoo-carousel__controls button\s*\{[^}]*min-height:\s*3rem/);
@@ -184,12 +207,13 @@ test('guide uses licensed body photos and repeats the same motif at a 1:2:4 visu
   const front = await readFile(new URL('apps/tattoo/public/guide/body-front.webp', root));
   const back = await readFile(new URL('apps/tattoo/public/guide/body-back.webp', root));
   assert.ok(front.length > 0 && back.length > 0);
-  assert.equal((guide.match(/class="tattoo-size-example__mark"/g) ?? []).length, 1);
-  assert.match(guide, /sizeExamples\.map\(\(example\) =>/);
-  assert.equal((guide.match(/src="\/guide\/body-front\.webp"/g) ?? []).length, 1);
-  assert.match(guide, /scale: 1[\s\S]*scale: 2[\s\S]*scale: 4/);
-  assert.match(sensitivity, /tattoo-heat/);
-  assert.doesNotMatch(sensitivity, /<svg\b/);
+  assert.equal((guide.match(/<figure class="tattoo-size-figure">/g) ?? []).length, 1);
+  assert.equal((guide.match(/<use href="#tattoo-size-motif" \/>/g) ?? []).length, 3);
+  assert.match(guide, /translate\(304 652\) scale\(1\)/);
+  assert.match(guide, /translate\(329 490\) scale\(2\)/);
+  assert.match(guide, /translate\(360 375\) scale\(4\)/);
+  assert.match(sensitivity, /<svg\b/);
+  assert.doesNotMatch(sensitivity, /tattoo-heat/);
   assert.match(
     notices,
     /Jsplice\/MuscleMap[\s\S]*github\.com\/Jsplice\/MuscleMap[\s\S]*MIT License/,
