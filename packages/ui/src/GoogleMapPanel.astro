@@ -25,6 +25,7 @@ const isAllowedGoogleEmbed = (value?: string) => {
       url.protocol === 'https:' &&
       url.hostname === 'www.google.com' &&
       url.pathname === '/maps/embed' &&
+      Boolean(url.searchParams.get('pb')) &&
       !url.username &&
       !url.password
     );
@@ -45,7 +46,8 @@ if (embedUrl && !isAllowedGoogleEmbed(embedUrl))
         src={embedUrl}
         title={`Mapa interactivo: ${locationLabel}`}
         loading="lazy"
-        referrerpolicy="no-referrer-when-downgrade"
+        allowfullscreen
+        referrerpolicy="strict-origin-when-cross-origin"
       />
     )}
     {directionsHref && (
@@ -69,9 +71,11 @@ if (embedUrl && !isAllowedGoogleEmbed(embedUrl))
   .google-map-panel__iframe {
     display: block;
     width: 100%;
-    min-height: 19rem;
+    min-height: 24rem;
+    aspect-ratio: 16 / 7;
     border: 0;
-    border-radius: 0.7rem;
+    border: 1px solid rgb(201 169 107 / 38%);
+    border-radius: 0.25rem;
   }
   .google-map-panel__directions {
     display: inline-flex;

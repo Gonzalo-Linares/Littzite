@@ -2,5 +2,5 @@ export const vioraAttribution = {
   label: 'Powered by',
   brand: 'Littzite',
   href: undefined,
-  logoSrc: '/littzite/horizontal.svg',
+  logoSrc: '/littzite/horizontal-dark.svg',
 } as const;

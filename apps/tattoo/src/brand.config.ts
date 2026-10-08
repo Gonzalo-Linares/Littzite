@@ -63,7 +63,7 @@ export const tattooBrand = {
     label: 'Powered by',
     brand: 'Littzite',
     href: undefined,
-    logoSrc: '/littzite/horizontal.svg',
+    logoSrc: '/littzite/horizontal-dark.svg',
   },
 } as const;
 
@@ -75,7 +75,8 @@ export const tattooActions = {
 
 export const tattooLocation = {
   directionsHref: 'https://maps.app.goo.gl/SrLiJA1dutozzdKn7',
-  embedUrl: undefined as string | undefined,
+  embedUrl:
+    'https://www.google.com/maps/embed?pb=!1m17!1m12!1m3!1d3401.3042722461555!2d-68.571153!3d-31.515802!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m2!1m1!2zMzHCsDMwJzU2LjkiUyA2OMKwMzQnMTYuMiJX!5e0!3m2!1ses!2sar!4v1791429708287!5m2!1ses!2sar',
 } as const;
 
 export const tattooReleaseState = {

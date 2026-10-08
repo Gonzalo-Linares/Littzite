@@ -44,7 +44,7 @@ test('VioraMap supports directions without an embed and renders a lazy titled Go
   assert.doesNotMatch(directionsOnly, /<iframe\b/);
   assert.match(
     html,
-    /<iframe class="google-map-panel__iframe" src="https:\/\/www\.google\.com\/maps\/embed\?pb=verified-fixture" title="Mapa interactivo: Ubicación de prueba" loading="lazy" referrerpolicy="no-referrer-when-downgrade"><\/iframe>/,
+    /<iframe class="google-map-panel__iframe" src="https:\/\/www\.google\.com\/maps\/embed\?pb=verified-fixture" title="Mapa interactivo: Ubicación de prueba" loading="lazy" allowfullscreen referrerpolicy="strict-origin-when-cross-origin"><\/iframe>/,
   );
   assert.match(
     html,
@@ -58,6 +58,8 @@ test('VioraMap rejects HTTP, unrelated hosts and Google lookalike embed URLs', (
     'https://evil.example/maps/embed?pb=untrusted',
     'https://google.com.example/maps/embed?pb=lookalike',
     'https://user@www.google.com/maps/embed?pb=credentials',
+    'https://www.google.com/maps/embed?other=missing-pb',
+    'https://www.google.com/maps/dir/?api=1&pb=wrong-path',
   ]) {
     const result = build('viora-map-invalid', { VIORA_MAP_INVALID_URL: url });
     assert.notEqual(result.status, 0, `${url} should fail closed`);

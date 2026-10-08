@@ -78,7 +78,24 @@ test('the official Instagram and neutral Littzite attribution have no unapproved
   assert.equal(tattooBrand.attribution.label, 'Powered by');
   assert.equal(tattooBrand.attribution.brand, 'Littzite');
   assert.equal(tattooBrand.attribution.href, undefined);
-  assert.equal(tattooBrand.attribution.logoSrc, '/littzite/horizontal.svg');
+  assert.equal(tattooBrand.attribution.logoSrc, '/littzite/horizontal-dark.svg');
   assert.equal(siteContent.bookingTargets.length, 0);
   assert.equal(siteContent.quoteTargets.length, 0);
+});
+
+test('Juanjo footer and navigation retain the owner logo and omit Estudio and Instagram', async () => {
+  const layout = await readFile(
+    new URL('apps/tattoo/src/layouts/TattooSiteLayout.astro', root),
+    'utf8',
+  );
+  const footer = layout.slice(layout.indexOf('<SiteFooter'));
+  assert.match(layout, /tattoo-footer-brand/);
+  assert.match(layout, /tattooBrand\.marks\.signature\.src/);
+  assert.doesNotMatch(layout, /href="\/estudio\//);
+  assert.doesNotMatch(footer, /Instagram/i);
+  assert.match(footer, /href="\/arrepentimiento\/"/);
+  const css = await readFile(new URL('apps/tattoo/src/styles/juanjo.css', root), 'utf8');
+  assert.match(css, /inline-size:\s*44px/);
+  assert.match(css, /block-size:\s*44px/);
+  assert.match(css, /place-items:\s*center/);
 });

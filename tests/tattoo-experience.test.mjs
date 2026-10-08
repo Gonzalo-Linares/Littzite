@@ -85,22 +85,24 @@ test('guide explains preparation, orientation, scale, aftercare and consultation
   assert.match(guide, /buscá evaluación médica/);
   assert.equal((guide.match(/<details>/g) ?? []).length, 7);
   assert.match(map, /La sensibilidad varía según la persona/);
-  assert.match(map, /no es una evaluación médica/);
-  assert.doesNotMatch(guide, /[0-9]\/10|diagnóstico|garantiza|\$|seña|forma de pago/i);
+  assert.match(map, /no constituye una evaluación médica/);
+  assert.doesNotMatch(guide, /[0-9]\/10|diagnóstico|garantiza|\$\s*\d|seña|forma de pago/i);
 });
 
-test('contact uses the approved directions URL and has no fake map while embed is pending', async () => {
+test('contact leads with the approved Google embed and keeps directions and cards below it', async () => {
   const contact = await read('apps/tattoo/src/pages/contacto.astro');
+  const mapPanel = await read('packages/ui/src/GoogleMapPanel.astro');
   assert.match(contact, /<h1>Contacto<\/h1>/);
   assert.match(contact, /Instagram/);
   assert.match(contact, /directionsHref=\{tattooLocation\.directionsHref\}/);
-  assert.match(contact, /<h2 id="tattoo-location-title">Encontranos<\/h2>/);
-  assert.doesNotMatch(
-    contact,
-    /pendingMessage|iframe|mapa ilustrativo|dirección exacta se confirma/i,
-  );
+  assert.ok(contact.indexOf('tattoo-contact-location') < contact.indexOf('tattoo-contact-paths'));
+  assert.match(contact, /class="tattoo-contact-path" id="turnos"/);
+  assert.match(contact, /class="tattoo-contact-path" id="instagram"/);
   assert.equal(tattooLocation.directionsHref, 'https://maps.app.goo.gl/SrLiJA1dutozzdKn7');
-  assert.equal(tattooLocation.embedUrl, undefined);
+  assert.match(tattooLocation.embedUrl, /^https:\/\/www\.google\.com\/maps\/embed\?pb=/);
+  assert.match(mapPanel, /allowfullscreen/);
+  assert.match(mapPanel, /referrerpolicy="strict-origin-when-cross-origin"/);
+  assert.match(mapPanel, /searchParams\.get\('pb'\)/);
   assert.doesNotMatch(contact, /CANAL OFICIAL|cal\.com[^<]*agenda comercial/);
   assert.equal(siteContent.bookingTargets.length, 0);
   assert.equal(siteContent.quoteTargets.length, 0);
@@ -153,7 +155,7 @@ test('the work carousel has only manual horizontal controls and no vertical navi
     /setInterval|setTimeout|scrollIntoView|\.focus\(|location\.hash|carousel-toggle/i,
   );
   assert.match(css, /\.tattoo-carousel__controls\s*\{[^}]*position:\s*absolute/);
-  assert.match(css, /\.tattoo-carousel__controls button\s*\{[^}]*min-height:\s*3\.2rem/);
+  assert.match(css, /\.tattoo-carousel__controls button\s*\{[^}]*min-height:\s*3rem/);
 });
 
 test('the shared Instagram and map primitives are used by both apps without sharing commercial data', async () => {
@@ -167,9 +169,29 @@ test('the shared Instagram and map primitives are used by both apps without shar
   assert.match(map, /hostname === 'www\.google\.com'/);
   assert.match(map, /pathname === '\/maps\/embed'/);
   assert.match(map, /loading="lazy"/);
-  assert.match(map, /referrerpolicy="no-referrer-when-downgrade"/);
+  assert.match(map, /referrerpolicy="strict-origin-when-cross-origin"/);
   assert.doesNotMatch(map, /pendingMessage|google-map-panel__pending|<svg viewBox="0 0 640/);
   const tattooSource = await read('apps/tattoo/src/brand.config.ts');
   assert.match(tattooSource, /https:\/\/maps\.app\.goo\.gl\/SrLiJA1dutozzdKn7/);
-  assert.doesNotMatch(tattooSource, /\/maps\/embed|example/);
+  assert.match(tattooSource, /https:\/\/www\.google\.com\/maps\/embed\?pb=/);
+  assert.doesNotMatch(tattooSource, /example/);
+});
+
+test('guide uses licensed body photos and repeats the same motif at a 1:2:4 visual scale', async () => {
+  const guide = await read('apps/tattoo/src/pages/guia.astro');
+  const sensitivity = await read('apps/tattoo/src/components/TattooSensitivityMap.astro');
+  const notices = await read('THIRD_PARTY_NOTICES.md');
+  const front = await readFile(new URL('apps/tattoo/public/guide/body-front.webp', root));
+  const back = await readFile(new URL('apps/tattoo/public/guide/body-back.webp', root));
+  assert.ok(front.length > 0 && back.length > 0);
+  assert.equal((guide.match(/class="tattoo-size-example__mark"/g) ?? []).length, 1);
+  assert.match(guide, /sizeExamples\.map\(\(example\) =>/);
+  assert.equal((guide.match(/src="\/guide\/body-front\.webp"/g) ?? []).length, 1);
+  assert.match(guide, /scale: 1[\s\S]*scale: 2[\s\S]*scale: 4/);
+  assert.match(sensitivity, /tattoo-heat/);
+  assert.doesNotMatch(sensitivity, /<svg\b/);
+  assert.match(
+    notices,
+    /Jsplice\/MuscleMap[\s\S]*github\.com\/Jsplice\/MuscleMap[\s\S]*MIT License/,
+  );
 });

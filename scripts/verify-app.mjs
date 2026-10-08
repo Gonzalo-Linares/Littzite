@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict';
 import { fileURLToPath } from 'node:url';
-import { readFile } from 'node:fs/promises';
+import { access, readFile } from 'node:fs/promises';
 import { siteConfigSchema } from '../packages/content-schema/src/index.ts';
 import { assertMetadata } from './html-metadata.mjs';
 import { verifyInternalLinks } from './verify-site-links.mjs';
@@ -164,7 +164,7 @@ if (app === 'estetica') {
     assert.ok(attribution, `${page}: developer attribution missing`);
     assert.match(attribution, /Powered by/);
     assert.match(attribution, /Littzite/);
-    assert.match(attribution, /src="\/littzite\/horizontal\.svg" alt="Littzite"/);
+    assert.match(attribution, /src="\/littzite\/horizontal-dark\.svg" alt="Littzite"/);
     assert.doesNotMatch(attribution, /<a\b|href=/);
     assert.match(footer, /class="container site-footer__secondary"/);
     assert.doesNotMatch(
@@ -493,7 +493,7 @@ if (app === 'estetica') {
   assert.ok(contactPage.includes('Ver en Google Maps'));
   assert.match(
     contactPage,
-    /<iframe class="google-map-panel__iframe" src="https:\/\/www\.google\.com\/maps\/embed\?pb=!1m17!1m12!1m3!1d3401\.297756485471!2d-68\.567944!3d-31\.515980999999996[^"]*" title="Mapa interactivo: Ubicación de VIORA" loading="lazy" referrerpolicy="no-referrer-when-downgrade"><\/iframe>/,
+    /<iframe class="google-map-panel__iframe" src="https:\/\/www\.google\.com\/maps\/embed\?pb=!1m17!1m12!1m3!1d3401\.297756485471!2d-68\.567944!3d-31\.515980999999996[^"]*" title="Mapa interactivo: Ubicación de VIORA" loading="lazy" allowfullscreen referrerpolicy="strict-origin-when-cross-origin"><\/iframe>/,
   );
   assert.match(contactPage, /href="https:\/\/www\.instagram\.com\/vioramasajes\.ok\/"/);
   assert.doesNotMatch(contactPage, /href="(?:tel:|mailto:)/i);
@@ -555,8 +555,14 @@ if (app === 'estetica') {
     contactBuildCheck,
     /href="https:\/\/maps\.app\.goo\.gl\/H4jmqTGKicDse2iS7">\s*Ver en Google Maps/,
   );
-  assert.match(contactBuildCheck, /<iframe[^>]*title="Mapa interactivo:[^>]*loading="lazy"/);
-  assert.match(contactBuildCheck, /referrerpolicy="no-referrer-when-downgrade"/);
+  assert.match(
+    contactBuildCheck,
+    /<iframe[^>]*title="Mapa interactivo:[^>]*loading="lazy"[^>]*allowfullscreen/,
+  );
+  assert.match(
+    contactBuildCheck,
+    /allowfullscreen referrerpolicy="strict-origin-when-cross-origin"/,
+  );
   const robots = await readFile(
     new URL('../apps/estetica/dist/robots.txt', import.meta.url),
     'utf8',
@@ -671,7 +677,7 @@ if (app === 'estetica') {
     /<a\b|href=/,
     'Attribution remains non-interactive without an approved URL',
   );
-  assert.match(attribution, /src="\/littzite\/horizontal\.svg"/);
+  assert.match(attribution, /src="\/littzite\/horizontal-dark\.svg"/);
   assert.ok(
     html.includes('href="https://www.instagram.com/juanjo.tattoos/"'),
     'Approved Instagram link missing',
@@ -679,9 +685,9 @@ if (app === 'estetica') {
   assert.ok(
     html.includes('href="/trabajos/"') &&
       html.includes('href="/guia/"') &&
-      html.includes('href="/estudio/"') &&
+      !html.includes('href="/estudio/"') &&
       html.includes('href="/contacto/"'),
-    'Juanjo routes missing',
+    'Juanjo routes incorrect or retired Estudio route remains',
   );
   assert.ok(
     !html.includes('wa.me/') && !html.includes('api.whatsapp.com/'),
@@ -705,7 +711,6 @@ if (app === 'estetica') {
   for (const route of [
     'trabajos',
     'guia',
-    'estudio',
     'contacto',
     'privacidad',
     'terminos-y-condiciones',
@@ -721,6 +726,7 @@ if (app === 'estetica') {
     assert.match(routeHtml, /Powered by/);
     assert.match(routeHtml, /Littzite/);
   }
+  await assert.rejects(access(new URL('../apps/tattoo/dist/estudio/index.html', import.meta.url)));
   const notFound = await readFile(new URL('../apps/tattoo/dist/404.html', import.meta.url), 'utf8');
   assert.match(notFound, /<meta name="robots" content="noindex, nofollow">/);
   assert.match(notFound, /Esta página no existe/);
@@ -748,7 +754,12 @@ if (app === 'estetica') {
   assert.match(guidePage, /Cuidá el tatuaje\./);
   assert.match(guidePage, /Preguntas frecuentes/i);
   assert.equal((guidePage.match(/<details>/g) ?? []).length, 7);
-  assert.match(guidePage, /<svg[^>]*role="img" aria-labelledby=/);
+  assert.equal((guidePage.match(/class="tattoo-size-example__mark"/g) ?? []).length, 3);
+  assert.equal((guidePage.match(/src="\/guide\/body-front\.webp"/g) ?? []).length, 4);
+  assert.equal((guidePage.match(/src="\/guide\/body-back\.webp"/g) ?? []).length, 1);
+  assert.equal((guidePage.match(/class="tattoo-size-example__mark"/g) ?? []).length, 3);
+  assert.equal((guidePage.match(/src="\/guide\/body-front\.webp"/g) ?? []).length, 4);
+  assert.equal((guidePage.match(/src="\/guide\/body-back\.webp"/g) ?? []).length, 1);
   assert.doesNotMatch(guidePage, /[0-9]\/10|diagnóstico|garantiza|\$|seña|horarios ficticios/i);
   const tattooStyles = await readFile(
     new URL('../apps/tattoo/src/styles/juanjo.css', import.meta.url),
@@ -769,10 +780,19 @@ if (app === 'estetica') {
     contact,
     /class="button-link button-link--secondary button-link--compact google-map-panel__directions" href="https:\/\/maps\.app\.goo\.gl\/SrLiJA1dutozzdKn7">Cómo llegar<svg/,
   );
-  assert.doesNotMatch(
+  assert.match(
     contact,
-    /<iframe\b|google-map-panel__pending|mapa ilustrativo|agenda de prueba|dirección exacta se confirma/i,
+    /<iframe class="google-map-panel__iframe" src="https:\/\/www\.google\.com\/maps\/embed\?pb=/,
   );
+  assert.match(
+    contact,
+    /loading="lazy" allowfullscreen referrerpolicy="strict-origin-when-cross-origin"/,
+  );
+  assert.ok(
+    contact.indexOf('class="tattoo-contact-location"') <
+      contact.indexOf('class="tattoo-contact-paths"'),
+  );
+  assert.equal((contact.match(/class="tattoo-contact-path"/g) ?? []).length, 2);
   assert.match(contact, /href="https:\/\/cal\.com\/gonzalo-linares-rfbhnf\/prueba"/);
   assert.match(contact, /href="https:\/\/www\.instagram\.com\/juanjo\.tattoos\/"/);
   assert.doesNotMatch(html + contact, /wa\.me|api\.whatsapp|Reserva tu turno|Agendá ahora/i);

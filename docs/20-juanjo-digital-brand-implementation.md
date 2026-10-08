@@ -8,13 +8,15 @@ Kit auditado: `C:\Users\gonza\Downloads\Kit-Marca-Juanjo-Tattoo-Studio-Premium\J
 
 Los cinco PNG maestros de `logos/` están copiados sin cambios en `apps/tattoo/public/brand/`. Sus roles, proporciones y SHA-256 se declaran en `src/brand.config.ts`: Principal para identidad de estudio, Sello para el estado vacío, Oni en hero, JT en cabecera compacta/favicon y Firma en cabecera/pie. Se preservan color, forma y proporción.
 
-La carpeta `destacadas/` contiene símbolos independientes y portadas listas para perfiles sociales; `redes/`, `tarjetas/` e `indumentaria/` contienen composiciones finales o mockups. Esta web usa los maestros de `logos/`, además de formas geométricas CSS/SVG originales para sus guías. No presenta composiciones de redes, tarjetas o merch como controles de interfaz, ni las presenta como fotografías de tatuajes.
+La carpeta `destacadas/` contiene símbolos independientes y portadas listas para perfiles sociales; `redes/`, `tarjetas/` e `indumentaria/` contienen composiciones finales o mockups. Esta web usa los maestros de `logos/` y, para los cuerpos de su guía, las fotos front/back de MuscleMap distribuidas localmente bajo MIT y registradas en `THIRD_PARTY_NOTICES.md`. No presenta composiciones de redes, tarjetas o merch como controles de interfaz, ni las presenta como fotografías de tatuajes.
 
 Paleta oficial: tinta `#0E0E0E`, rojo `#A61E1E`, marfil `#EADCC6`, dorado `#C9A96B` y carbón `#2C2C2C`. Rye se reserva para titulares breves; DejaVu Serif para apoyo editorial; DejaVu Sans para lectura y controles. Las fuentes y sus avisos de licencia se distribuyen localmente. Ver `THIRD_PARTY_NOTICES.md`.
 
+La atribución de Littzite en ambas aplicaciones usa el archivo exacto aprobado por el titular, `horizontal_oscuro_transparente.svg`, copiado sin cambios a `apps/tattoo/public/littzite/horizontal-dark.svg` y `apps/estetica/public/littzite/horizontal-dark.svg`. SHA-256 de los originales y ambas copias: `1F720FDFFFB7F1D53E05054E67A9C292C9D7B52C266D9D0108BED2D36A487E11`.
+
 ## Rutas y acciones
 
-`TattooSiteLayout.astro` mantiene una única cabecera/pie y la atribución neutral preexistente de `packages/ui`. La navegación es Inicio, Trabajos, Guía, Estudio y Contacto, con icono SVG de Instagram y CTA Turnos. El perfil `https://www.instagram.com/juanjo.tattoos/` es el único destino social aprobado.
+`TattooSiteLayout.astro` mantiene una única cabecera/pie y la atribución neutral preexistente de `packages/ui`. La navegación es Inicio, Trabajos, Guía y Contacto, con icono SVG de Instagram y CTA Turnos. El perfil `https://www.instagram.com/juanjo.tattoos/` es el único destino social aprobado. “Sobre Juanjo / Estudio podrá reincorporarse cuando existan bio, fotografías del estudio, especialidades, historia y datos reales aprobados.”
 
 `tattooActions` centraliza el enlace UAT de Cal.com autorizado para evaluar la experiencia y el perfil de Instagram. Los botones “Sacar turno” usan una sola URL. `bookingTargets`, `quoteTargets` y servicios permanecen vacíos; no se publican teléfono, WhatsApp, precios, horarios, señas ni políticas de agenda.
 
@@ -32,13 +34,13 @@ El fixture local cubre 0, 1, 2 y 5 items con SVG geométricos de prueba cuya alt
 
 `tattooActions.turnsHref` apunta a `https://cal.com/gonzalo-linares-rfbhnf/prueba`, enlace temporal de UAT autorizado por el titular. `tattooReleaseState.bookingUrlIsPlaceholder` bloquea el release mientras siga configurado. `bookingTargets`, `quoteTargets` y las acciones de servicios siguen vacíos. Instagram queda disponible para consultas y proyectos personalizados.
 
-`/contacto/` presenta dos opciones balanceadas para turnos y consultas y una dirección de navegación confirmada por el titular en Google Maps (`https://maps.app.goo.gl/SrLiJA1dutozzdKn7`). No se infieren calle, número ni dirección textual. El `embedUrl` de Juanjo sigue sin configurarse hasta recibir el `src` oficial de “Insertar mapa”. Las páginas legales son específicas de la app y requieren revisión del titular y asesoramiento correspondiente antes de uso comercial.
+`/contacto/` presenta primero el mapa oficial de Google Maps, luego el botón de indicaciones (`https://maps.app.goo.gl/SrLiJA1dutozzdKn7`) y debajo dos opciones balanceadas para turnos y consultas. `tattooLocation.embedUrl` contiene el `src` extraído de “Compartir → Insertar un mapa”; no se infiere una dirección textual. Las páginas legales son específicas de la app y requieren revisión del titular y asesoramiento correspondiente antes de uso comercial.
 
-El footer de Juanjo centra la firma horizontal aprobada de Littzite y mantiene el asset claro compartido con VIORA. `SiteAttribution`, el enlace SVG de Instagram y el panel neutral de Google Maps se comparten desde `packages/ui`; cada app conserva sus URLs, copy y ubicación locales. El panel solo muestra un iframe para URLs `https://www.google.com/maps/embed` validadas, o el botón de indicaciones cuando no hay iframe.
+El footer de Juanjo muestra el wordmark oficial, la atribución central de Littzite y los enlaces de navegación y legales. La atribución de ambas apps usa el asset suministrado `horizontal_oscuro_transparente.svg`, copiado sin cambios como `horizontal-dark.svg`. `SiteAttribution`, el enlace SVG de Instagram y el panel neutral de Google Maps se comparten desde `packages/ui`; cada app conserva sus URLs, copy y ubicación locales. El panel acepta únicamente HTTPS de `www.google.com/maps/embed` con parámetro `pb` y renderiza el iframe con carga diferida, pantalla completa y política de referencia recomendada.
 
 ## Guía de preparación y cuidados
 
-`/guia/` contiene preparación breve, sensibilidad orientativa, escala, cuidados generales y siete preguntas frecuentes. Sus siluetas frontal/trasera son SVG originales de formas anatómicas simplificadas. La comparación de tamaño usa la misma marca en muñeca, antebrazo y brazo. La sensibilidad no da puntajes ni pretende evaluar clínicamente: presenta zonas como orientación para conversar, muestra leyenda textual además del color y reconoce variación personal. La base de la clasificación cualitativa es un estudio piloto con entrevistas, no una escala validada: [estudio piloto sobre la experiencia de dolor durante tatuajes](https://www.frontiersin.org/journals/virtual-reality/articles/10.3389/frvir.2021.643938/full).
+`/guia/` contiene preparación breve, sensibilidad orientativa, escala, cuidados generales y siete preguntas frecuentes. La sensibilidad usa fotos anatómicas front/back de MuscleMap con overlays suaves y leyenda textual; reconoce variación personal y no da puntajes ni pretende evaluar clínicamente. La comparación de tamaño repite la misma foto frontal y el mismo motivo en tres posiciones, con escalas relativas 1:2:4 para 5, 10 y 20 cm. La fuente, revisión y licencia MIT de las dos imágenes vendorizadas constan en `THIRD_PARTY_NOTICES.md`.
 
 Los cuidados son generales, sin plazos rígidos, medicamentos, diagnósticos ni tratamientos. Las indicaciones particulares que Juanjo entregue después de la sesión prevalecen. Ante signos importantes de infección, reacción intensa o empeoramiento inesperado, la guía orienta a buscar evaluación médica; no diagnostica. La recomendación de seguir la instrucción del tatuador coincide con la [guía de tatuajes y cuidados de UCLH](https://www.uclh.nhs.uk/patients-and-visitors/patient-information-pages/tattoos-and-cosmetic-procedures).
 
@@ -54,7 +56,7 @@ La atribución de Littzite y las primitives neutrales de Instagram y mapa sí se
 - Definición de proveedor/alcance de turnos directos para piezas pequeñas (D-01C/D-02B).
 - Número, texto aprobado y destino de consultas por WhatsApp para presupuesto grande (D-04B); no hay CTA de WhatsApp activo.
 - Aprobación de contenido visual y guía de cuidados por Juanjo; verificar recomendaciones locales antes de publicarlas.
-- URL de reservas comercial definitiva, dirección oficial `src` para insertar Google Maps, dominio, revisión/aprobación de privacidad y textos legales, y autorización de indexación.
+- URL de reservas comercial definitiva, dominio, revisión/aprobación de privacidad y textos legales, y autorización de indexación.
 
 `pnpm --filter @littzite/tattoo check:release` es el guard explícito previo al release. Debe fallar mientras las banderas temporales o el enlace UAT estén activos; hoy se esperan cuatro bloqueos.
 
