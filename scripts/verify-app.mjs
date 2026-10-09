@@ -166,7 +166,7 @@ if (app === 'estetica') {
     assert.ok(attribution, `${page}: developer attribution missing`);
     assert.match(attribution, /Powered by/);
     assert.match(attribution, /Littzite/);
-    assert.match(attribution, /src="\/littzite\/horizontal-dark\.svg" alt="Littzite"/);
+    assert.match(attribution, /src="\/littzite\/horizontal\.svg" alt="Littzite"/);
     assert.doesNotMatch(attribution, /<a\b|href=/);
     assert.match(footer, /class="container site-footer__secondary"/);
     assert.doesNotMatch(
