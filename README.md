@@ -62,7 +62,7 @@ La app `tattoo` implementa el manual oficial en `apps/tattoo/src/brand.config.ts
 
 ## Preparación de Cloudflare Pages (PR-20)
 
-Cada app puede construirse independientemente desde la raíz del monorepo con `corepack pnpm build:estetica` o `corepack pnpm build:tattoo`; los artefactos quedan separados en `apps/estetica/dist` y `apps/tattoo/dist`. La publicación indexable sigue desactivada hasta resolver los bloqueos reales de cada negocio. Revisar [configuración y checklist de deployment](docs/21-production-deployment.md), [readiness VIORA](docs/19-viora-release-readiness.md) y [readiness Juanjo](docs/20-juanjo-digital-brand-implementation.md). No hay dominios Cloudflare confirmados ni un lanzamiento autorizado.
+GitHub `Gonzalo-Linares/Littzite` sigue siendo el único monorepo canónico. Cada app se construye independientemente (`corepack pnpm build:estetica` o `corepack pnpm build:tattoo`) y se publica mediante Direct Upload de su `dist` a un Pages project en la cuenta Cloudflare propia de ese cliente. No se usa Cloudflare Pages Git Integration. La publicación indexable sigue desactivada hasta resolver los bloqueos reales de cada negocio. Revisar [configuración y checklist de deployment](docs/21-production-deployment.md), [readiness VIORA](docs/19-viora-release-readiness.md) y [readiness Juanjo](docs/20-juanjo-digital-brand-implementation.md). Los nombres de proyectos, dominios y cuentas aún no están confirmados; no hay lanzamiento autorizado.
 
 ## Atribución del desarrollador
 

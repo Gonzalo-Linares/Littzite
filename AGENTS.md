@@ -17,6 +17,7 @@ Leer `README.md`, `docs/01-vision-scope.md`, `docs/02-architecture.md`, `docs/09
 11. D-08B: el repositorio es público, pero el código original de Littzite **no tiene licencia de reutilización**. No crear `LICENSE` con MIT, GPL, Apache, Creative Commons ni otra licencia sin decisión nueva. Identificar el código y assets de terceros, conservar sus avisos, registrar origen, versión, rutas y obligaciones antes de copiarlos. No asumir que una imagen, fuente, marca o contribución externa pasa a ser propiedad de Littzite.
 12. D-09: el contenido inicial de ambas apps es exclusivamente español de Argentina (`es-AR`); `SiteConfig.defaultLocale` se valida en el esquema común y se consume en SEO, `<html lang>` y formato regional. Sin rutas `/es/`, selector de idiomas, catálogos de traducción ni `hreflang` para un único idioma. No hardcodear `lang` o formatos contradictorios en múltiples componentes; cualquier expansión requiere ADR.
 13. `SiteConfig.iconHref`, cuando exista, es una ruta local root-relative; el layout común no contiene identidad de app. Mantener branding y motion específico dentro de la app. Las transiciones son progresivas, la navegación HTML normal siempre funciona y todo movimiento respeta `prefers-reduced-motion`.
+14. Hosting productivo aislado por cliente. No conectar el monorepo canónico a Cloudflare Pages Git Integration entre cuentas de clientes; usar Direct Upload del artefacto específico de cada app a su cuenta y proyecto.
 
 ## Antes de cada PR
 

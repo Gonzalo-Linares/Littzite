@@ -1,102 +1,167 @@
 # PR-20 — Production readiness y Cloudflare Pages
 
-**Estado del código:** preparado para builds estáticos independientes; no es una autorización de lanzamiento. Ambos sitios permanecen en preview no indexable por defecto. GitHub Actions continúa desactivado.
+**Estado:** la arquitectura de publicación queda definida para Direct Upload. Esto no autoriza el lanzamiento: los dos sitios siguen protegidos por sus release gates, sin indexación productiva ni despliegues automáticos. GitHub Actions permanece desactivado.
 
-## A. Estado del código
+## A. Architecture
 
-- VIORA conserva su gate app-local y cambia la URL canónica a `VIORA_PUBLIC_SITE_URL`.
-- Juanjo agrega un gate app-local con canonical por ruta, JSON-LD `LocalBusiness`, `robots.txt` y sitemap. La publicación exige `JUANJO_PUBLIC_RELEASE=true` y validaciones completas.
-- BaseLayout compartido ya soporta canonical, robots y JSON-LD; no se amplía la API ni se modifica la presentación visual.
-- Los endpoints estáticos de robots y sitemap existen en ambas apps. En preview, `robots.txt` declara `Disallow: /` y el sitemap no contiene páginas.
-- `tattooActions.turnsHref` sigue siendo la única fuente del Cal.com aprobado de Juanjo. No hay booking targets para Juanjo.
+El monorepo `Gonzalo-Linares/Littzite` es la única fuente de código. Cada app se construye por separado y el artefacto resultante se carga al proyecto Pages de la cuenta que pertenece a ese cliente:
 
-## B. Datos reales pendientes y gates
+```text
+Littzite/
+├── apps/estetica → build:estetica → apps/estetica/dist → Cloudflare VIORA
+├── apps/tattoo   → build:tattoo   → apps/tattoo/dist   → Cloudflare Juanjo
+└── packages/*    → código fuente compartido; no se publica por separado
 
-### VIORA
+GitHub Littzite
+      │
+  build app
+      │
+     dist
+      │
+ ┌────┴─────┐
+ │          │
+CF VIORA   CF Juanjo
+```
 
-El build con release habilitado falla hasta que estén configurados y verificados razón social, CUIT válido, email legal, teléfono E.164, domicilio legal requerido, URL pública HTTPS, URL Cal.com de producción, y todas las aprobaciones de booking presencial, duración, términos, flujo y ubicación del acceso de arrepentimiento. La URL actual `https://cal.com/gonzalo-linares-rfbhnf/prueba` es UAT y bloquea producción. No cambiarla por una dirección inventada. El detalle y responsables están en [docs/19](19-viora-release-readiness.md).
+VIORA usa una cuenta Cloudflare y un Pages project propios. Juanjo Tattoo Studio usa otra cuenta y otro Pages project. Cada artefacto contiene solo la app construida para ese cliente; la otra app y el código fuente no se cargan a su cuenta.
 
-### Juanjo Tattoo Studio
+## B. Why client-owned Cloudflare accounts
 
-El build productivo permanece bloqueado por los tres assets marcados en `tattooReleaseState`: hero temporal, portfolio temporal y cuidados temporales. Requiere reemplazos originales/autorizados, datos legales configurados y aprobados, URL HTTPS, aprobación expresa de booking, términos, flujo de arrepentimiento y revisión/aprobación de la ubicación footer-only (`JUANJO_WITHDRAWAL_PLACEMENT_APPROVED`). Las páginas de términos, privacidad y arrepentimiento y el gate consumen la misma fuente `tattooLegal`; en preview muestra placeholders y en release esos placeholders son bloqueantes. El link aprobado de Cal.com ya está centralizado en `tattooActions`; no se duplica en variables o componentes. La ubicación y el `embedUrl` actual no se alteran. No se agregan dirección, teléfono ni razón social a metadata estructurada sin datos confirmados.
+El modelo recomendado es que cada cliente sea titular de su cuenta Cloudflare y de su proyecto Pages. Esto permite ownership claro, aislamiento de configuración y credenciales, transferencia sencilla y menor blast radius ante un incidente.
 
-## C. Configuración Cloudflare Pages
+La separación de cuentas **no** busca sortear límites comerciales de Cloudflare. Los límites cambian; se verifican antes de escalar y no determinan esta arquitectura.
 
-Crear dos proyectos Pages conectados al mismo repositorio privado/público `Gonzalo-Linares/Littzite`. Para cada proyecto:
+## C. Source vs hosting ownership
 
-| Ajuste | VIORA | Juanjo Tattoo Studio |
-|---|---|---|
-| Production branch | `main` | `main` |
-| Root directory | `/` (raíz del repositorio) | `/` (raíz del repositorio) |
-| Build command | `corepack pnpm install --frozen-lockfile && corepack pnpm build:estetica` | `corepack pnpm install --frozen-lockfile && corepack pnpm build:tattoo` |
-| Build output directory | `apps/estetica/dist` | `apps/tattoo/dist` |
-| Node.js | `24` (compatible con `engines`) | `24` (compatible con `engines`) |
-| pnpm | `12.6.0` | `12.6.0` |
+- **GitHub:** Littzite mantiene el repositorio y el código fuente canónico. Los clientes no necesitan acceso al repositorio.
+- **Cloudflare:** cada cliente controla su cuenta, su Pages project, sus dominios, sus variables y sus despliegues.
+- **Littzite:** desarrolla y, con credenciales separadas autorizadas, carga el artefacto estático de la app correspondiente.
 
-Configurar `NODE_VERSION=24`, `PNPM_VERSION=12.6.0` y `SKIP_DEPENDENCY_INSTALL=1` para que el build command controle la instalación congelada desde la raíz. No configurar nombres de proyecto ni dominios hasta que Cloudflare los asigne. Cada app produce un artefacto autocontenido; no hay copias de código ni dependencia de la otra app.
+Source ownership y hosting ownership son responsabilidades distintas. La cuenta Cloudflare de un cliente recibe el resultado compilado y no obtiene acceso al monorepo.
 
-Cloudflare Pages permite proyectos distintos sobre un mismo repositorio y comandos/rutas de salida diferentes. Los proyectos pueden construir ante cambios en todo el monorepo; watch paths es una optimización posterior opcional, no requisito de corrección. Revisar la configuración vigente de [builds](https://developers.cloudflare.com/pages/configuration/build-configuration/), [monorepos](https://developers.cloudflare.com/pages/configuration/monorepos/) y [build image](https://developers.cloudflare.com/pages/configuration/build-image/).
+## D. Direct Upload
 
-## D. Variables de entorno
+El mecanismo de deployment elegido es Cloudflare Pages Direct Upload de artefactos precompilados. No se usa Pages Git Integration: Cloudflare no permite usar el mismo repositorio GitHub/GitLab en proyectos Pages de cuentas separadas. No autorizar el repositorio en las cuentas de clientes ni duplicarlo para satisfacer esa integración.
 
-Usar `.env.example` como catálogo no secreto. No copiar valores personales al repositorio. Configurar las variables por separado para cada Pages project, en Production y Preview environments.
+Build de VIORA, desde la raíz del monorepo:
+
+```sh
+corepack pnpm install --frozen-lockfile
+corepack pnpm build:estetica
+```
+
+El artefacto es `apps/estetica/dist`. Con el ID, token y nombre del proyecto VIORA seleccionados explícitamente para esa sesión:
+
+```sh
+CLOUDFLARE_ACCOUNT_ID="$VIORA_ACCOUNT_ID" \
+CLOUDFLARE_API_TOKEN="$VIORA_CLOUDFLARE_API_TOKEN" \
+npx wrangler pages deploy apps/estetica/dist --project-name="$VIORA_PROJECT_NAME"
+```
+
+Build de Juanjo:
+
+```sh
+corepack pnpm install --frozen-lockfile
+corepack pnpm build:tattoo
+```
+
+El artefacto es `apps/tattoo/dist`. Con las credenciales y el nombre del proyecto Juanjo seleccionados explícitamente:
+
+```sh
+CLOUDFLARE_ACCOUNT_ID="$JUANJO_ACCOUNT_ID" \
+CLOUDFLARE_API_TOKEN="$JUANJO_CLOUDFLARE_API_TOKEN" \
+npx wrangler pages deploy apps/tattoo/dist --project-name="$JUANJO_PROJECT_NAME"
+```
+
+Los nombres de proyectos, IDs y dominios reales quedan sin definir hasta que los titulares creen sus cuentas. Estos ejemplos usan Wrangler externo: Wrangler no se agrega como dependencia, no se crea un script `deploy` y el lockfile no cambia en este trabajo. Al ejecutar el comando, comprobar visualmente que el ID, token y nombre corresponden al mismo cliente. No depender de una cuenta implícita recordada por un login anterior.
+
+Un proyecto Pages creado como Direct Upload no puede convertirse luego a Git Integration. Esta elección es deliberada; si una arquitectura futura exigiera otra modalidad, se creará un proyecto nuevo y se migrará de forma controlada.
+
+## E. Create client project
+
+Para cada cliente, su titular crea una cuenta Cloudflare y un Pages project mediante **Direct Upload**. Cada proyecto usa solo la cuenta de ese cliente y un nombre elegido por su titular. No configurar conexión a GitHub/GitLab, acceso al repositorio, build command ni credenciales del otro cliente. El primer artifact se carga con el comando de la sección D y publica la URL estable `<project>.pages.dev`.
+
+## F. Preview deployment
+
+El primer deployment sirve como preview de UAT en la URL estable `.pages.dev`, con la publicación protegida:
+
+1. Mantener `VIORA_PUBLIC_RELEASE=false` o `JUANJO_PUBLIC_RELEASE=false`, según la app. Dejar `*_PUBLIC_SITE_URL` vacío hasta aprobar un hostname público.
+2. Ejecutar quality y el build de la app correspondiente con solo sus variables de negocio `VIORA_*` o `JUANJO_*`.
+3. Cargar únicamente su carpeta `dist` a su propio Pages project mediante Direct Upload.
+4. Abrir la URL estable asignada por Cloudflare y verificar `noindex, nofollow`, ausencia de canonical y JSON-LD productivos, `robots.txt` con `Disallow: /` y sitemap vacío.
+5. Completar UAT de enlaces, contenido, legales, Maps, Cal.com cuando aplique, responsive, navegación y páginas 404 antes de aprobar la publicación.
+
+Direct Upload no crea previews automáticos a partir de ramas o PRs; este paso es un deployment manual de prueba con release apagado.
+
+## G. Production activation
+
+Una vez aprobado el UAT y el hostname estable, `https://<project>.pages.dev` puede ser la URL pública inicial. No es obligatorio comprar un dominio propio antes del lanzamiento. Resolver todos los blockers reales de esa app y recibir aprobación explícita de indexación antes de activar el release.
+
+Configurar solo para la app correspondiente, por ejemplo `VIORA_PUBLIC_SITE_URL=https://<viora-project>.pages.dev` o `JUANJO_PUBLIC_SITE_URL=https://<juanjo-project>.pages.dev`. Establecer `*_PUBLIC_RELEASE=true`, volver a construir desde el monorepo y volver a cargar su artifact con Direct Upload. Verificar `index, follow`, canonical por ruta, datos estructurados, `robots.txt` permitido y sitemap correcto. El build debe pasar los guards existentes sin datos ficticios ni bypasses.
+
+Las URLs específicas de deployments de prueba nunca se usan como canonical. Los bloqueos vigentes y sus responsables se describen en [readiness VIORA](19-viora-release-readiness.md) y [la implementación digital de Juanjo](20-juanjo-digital-brand-implementation.md).
+
+## H. Environment variables
+
+La configuración de negocio que consume el build y las credenciales de deployment son cosas distintas:
+
+- VIORA se construye exclusivamente con variables `VIORA_*`.
+- Juanjo se construye exclusivamente con variables `JUANJO_*`.
+- `CLOUDFLARE_ACCOUNT_ID` y `CLOUDFLARE_API_TOKEN` seleccionan y autentican el deployment; no son variables comerciales ni se incluyen en el HTML.
+
+Las variables de negocio se suministran al proceso que construye la app; en este modelo Direct Upload, Cloudflare recibe `dist` y no ejecuta ese build. Las variables requeridas por los gates de release permanecen enumeradas en `.env.example` y en la documentación de cada app. Mantener sus valores reales fuera del repositorio y no usar variables de la otra marca al construir.
 
 **VIORA:** `VIORA_PUBLIC_RELEASE`, `VIORA_PUBLIC_SITE_URL`, `VIORA_LEGAL_NAME`, `VIORA_LEGAL_CUIT`, `VIORA_LEGAL_EMAIL`, `VIORA_LEGAL_PHONE`, `VIORA_LEGAL_DOMICILE`, `VIORA_BOOKING_URL`, `VIORA_BOOKING_APPROVED`, `VIORA_BOOKING_IN_PERSON_APPROVED`, `VIORA_BOOKING_DURATION_REVIEWED`, `VIORA_TERMS_APPROVED`, `VIORA_WITHDRAWAL_APPROVED` y `VIORA_WITHDRAWAL_PLACEMENT_APPROVED`.
 
 **Juanjo:** `JUANJO_PUBLIC_RELEASE`, `JUANJO_PUBLIC_SITE_URL`, `JUANJO_LEGAL_NAME`, `JUANJO_LEGAL_CUIT`, `JUANJO_LEGAL_EMAIL`, `JUANJO_LEGAL_PHONE`, `JUANJO_LEGAL_DOMICILE`, `JUANJO_BOOKING_APPROVED`, `JUANJO_TERMS_APPROVED`, `JUANJO_WITHDRAWAL_APPROVED` y `JUANJO_WITHDRAWAL_PLACEMENT_APPROVED`.
 
-En preview mantener ambas flags `*_PUBLIC_RELEASE=false` o ausentes y las URLs públicas vacías. No permitir que una preview branch herede un `*_PUBLIC_RELEASE=true` de producción. Tras crear el proyecto y desplegar con release apagado, Cloudflare asigna la URL productiva gratuita `https://<project>.pages.dev`; no hace falta comprar un dominio propio antes de lanzar. Esa URL puede ser la URL pública inicial si el titular aprueba utilizarla. Las URLs de preview identifican un deployment concreto por branch/hash y nunca deben usarse como canonical productivo.
+## I. Credentials/security
 
-## E. Preview deployment
+Usar API Tokens de mínimo privilegio con permiso **Pages Write**, limitados a la cuenta correspondiente cuando Cloudflare lo permita. No usar Global API Key. Nunca commitear tokens, incluir valores reales en `.env.example` o documentación, ni guardarlos en el repositorio.
 
-1. Conectar primero los dos proyectos con la configuración anterior y release apagado.
-2. Mantener el root directory en la raíz y no colocar `PUBLIC_SITE_URL` genérico.
-3. Distinguir la URL productiva estable `https://<project>.pages.dev` de las URLs de preview específicas de branch/deployment.
-4. Confirmar en el deployment preview `noindex, nofollow`, ausencia de canonical y JSON-LD, `robots.txt` con bloqueo y sitemap vacío.
-5. Completar UAT sobre el deployment preview antes de definir la URL pública inicial.
-6. Si el titular aprueba el hostname productivo `.pages.dev` como URL pública inicial, ponerlo en el `*_PUBLIC_SITE_URL` del environment Production. Nunca usar un hostname preview en esa variable.
+La credencial VIORA solo despliega VIORA; la de Juanjo solo despliega Juanjo. Una credencial de hosting nunca debe poder desplegar dos clientes independientes. Un incidente en una cuenta no debe conceder acceso a la otra. La cuenta del cliente recibe solo el artefacto de build, nunca acceso al código fuente.
 
-## F. Production deployment e indexación
+## J. Custom domain migration
 
-`main` es el production branch de cada proyecto. Luego del UAT, aprobar qué hostname productivo usar; puede ser directamente el `.pages.dev` asignado o, si se compra/configura más adelante, el dominio propio. Configurar `*_PUBLIC_SITE_URL` con ese origin HTTPS limpio (sin path, query o fragmento; se admite slash final), resolver datos/revisiones pendientes y ejecutar los gates. La secuencia es: desplegar con release apagado → conocer el `project.pages.dev` → UAT → aprobación del titular para usarlo como URL pública inicial → configurar el origin en Production → resolver blockers → activar `*_PUBLIC_RELEASE=true` → rebuild → verificar canonical/robots/sitemap. Las URLs de preview branch/hash nunca se ponen como canonical. Si luego se conecta un dominio propio, cambiar la URL de esa app y reconstruir. El build falla cerrado si falta un dato o autorización.
+Cuando un cliente tenga un dominio propio, asociarlo a su proyecto Pages y a su propia cuenta. Actualizar solo el `*_PUBLIC_SITE_URL` de esa app con el origin HTTPS aprobado, reconstruir esa app y desplegar de nuevo su `dist`. Verificar canonical, robots, sitemap y redirects; opcionalmente redirigir el hostname `.pages.dev` al dominio propio. No se hardcodea ningún dominio mientras no haya sido confirmado.
 
-Con release aprobado, páginas indexables reciben canonical por ruta, `index, follow`, JSON-LD y sitemap solo de rutas declaradas. Las rutas especiales de error permanecen noindex y el 404 queda fuera del sitemap. El tipo de esquema de Juanjo es `LocalBusiness`, el cual se limita a nombre público, URL e Instagram verificado; no deduce dirección desde Maps. Ver [Schema.org LocalBusiness](https://schema.org/LocalBusiness).
+## K. UAT
 
-## G. Smoke/UAT post-deploy
+Completar revisión de navegador en desktop y mobile antes de activar indexación. Registrar las URLs reales de UAT en el handoff, sin incorporarlas como URL canónica.
 
-Completar con URLs reales en una revisión de navegador, desktop y mobile. Confirmar enlaces externos, headers y dominio; revisar noindex, canonical, robots, sitemap y 404. Probar mapa y reserva en una sesión sin cuenta cuando aplique. Comparar visualmente con la UI aprobada.
+**VIORA:** home, `/servicios/`, cada ficha, `/viora/`, `/contacto/` y `/reservar/`; Cal.com presencial, duración y confirmación aprobadas; Instagram, Google Maps, términos, privacidad, arrepentimiento, robots, sitemap y 404.
 
-### VIORA
+**Juanjo:** home, `/trabajos/`, carrusel, galería, lightbox, `/guia/` y `/contacto/`; Cal.com e Instagram; Google Maps, términos, privacidad, arrepentimiento, robots, sitemap y 404. Mantener bloqueados los assets temporales hasta su reemplazo y autorización.
 
-- Home, `/servicios/`, cada ficha `/servicios/[slug]/`, `/viora/`, `/contacto/` y `/reservar/`.
-- Depilación: destino de Cal.com productivo, ubicación presencial, duración y flujo de confirmación aprobados.
-- Instagram, Google Maps, privacidad, términos, arrepentimiento y 404.
-- Desktop/mobile, overflow, canonical por ruta, robots, sitemap y headers.
+Revisar enlaces externos, teclado/foco, headers, responsive, overflow, metadata y Lighthouse. No declarar revisión de navegador, Lighthouse o release si no se ejecutaron.
 
-### Juanjo
+## L. Rollback
 
-- Home, `/trabajos/`, carrusel, galería completa y lightbox; `/guia/`, FAQ y `/contacto/`.
-- Cal.com aprobado, Instagram, Google Maps, privacidad, términos, arrepentimiento y 404.
-- Desktop/mobile, canonical por ruta, robots, sitemap y headers.
+Ante una regresión, dejar `*_PUBLIC_RELEASE=false`, reconstruir la app afectada y cargar ese artifact para volver a noindex. Para revertir una versión, recuperar el commit o artifact aprobado, ejecutar de nuevo sus gates/build y hacer Direct Upload al Pages project correcto. Confirmar robots, canonical, sitemap y páginas públicas después del rollback. No modificar el otro proyecto.
 
-## H. Lighthouse y revisión final
+## M. Future automation
 
-Después del deployment, revisar Performance, Accessibility, Best Practices y SEO en Lighthouse para mobile y desktop. No se define un score arbitrario como condición de salida. Investigar y corregir problemas reales sin rediseñar la UI aprobada. También revisar navegación por teclado, foco, contraste, carga de mapa y contenido legal.
+Los despliegues no son automáticos. Un merge a `main` **no** implica un deployment. GitHub Actions permanece deliberadamente desactivado; cada publicación requiere acción explícita: actualizar checkout, ejecutar quality, construir una app, confirmar cuenta/proyecto/credencial y cargar su artifact.
 
-## I. Rollback
+Si se aprueba automatización futura, debe separar permisos y secretos por cliente, fijar deliberadamente la versión de Wrangler y requerir selección explícita de app, cuenta y proyecto. Ese trabajo no forma parte de este cambio. No crear `pnpm deploy` ni otro comando que pueda publicar la app o cuenta equivocada.
 
-Cloudflare Pages permite volver al último deployment correcto desde el dashboard. Ante problemas de indexación o datos, primero apagar `*_PUBLIC_RELEASE` y reconstruir; un cambio de variable requiere un nuevo build. Para revertir código, revertir el commit en una rama/PR posterior y desplegar el commit estable. Verificar otra vez robots, canonical y acceso a las páginas.
+## N. Future client onboarding
 
-## Checklist de activación
+Repetir el mismo modelo para cada cliente: `apps/<business>` → build específico → `dist` → cuenta Cloudflare propia → Pages project propio. No crear otro repositorio, duplicar apps/packages, ni cargar otras apps al cliente. Revisar límites y condiciones vigentes antes de escalar.
 
-- [ ] Hostname público elegido y aprobado por cada negocio (`project.pages.dev` o dominio propio); las URLs de preview están excluidas.
-- [ ] Datos legales/productivos y textos revisados por sus responsables.
-- [ ] UAT de booking completado con configuración productiva.
-- [ ] Para Juanjo: reemplazo y permiso de todos los assets temporales.
-- [ ] `*_PUBLIC_SITE_URL` es el origin HTTPS real de ese sitio.
-- [ ] Build de release pasa sin desactivar guards ni usar datos ficticios.
-- [ ] Smoke UAT, desktop/mobile, metadata, robots, sitemap y Lighthouse revisados.
-- [ ] Aprobación explícita de indexación registrada antes de cambiar `*_PUBLIC_RELEASE=true`.
+Cloudflare Pages Free documenta actualmente hasta **100 Pages projects por cuenta**, **500 builds al mes**, **20.000 archivos por sitio** y **25 MiB por asset**. Son límites sujetos a cambios; verificar la [documentación oficial de límites](https://developers.cloudflare.com/pages/platform/limits/) antes de planificar escala. El máximo de cinco proyectos por repositorio que figura en la documentación de monorepos aplica a proyectos Pages conectados por Git Integration, que Littzite no utiliza. Estos números no son el motivo para aislar cuentas por cliente.
+
+## Rollout checklist
+
+- [ ] Cuenta y titular Cloudflare correctos para el cliente.
+- [ ] Pages project creado como Direct Upload, sin conexión a GitHub/GitLab.
+- [ ] ID, token Pages Write y nombre de proyecto pertenecen al mismo cliente.
+- [ ] Artifact construido con las variables de esa app y nada de la otra.
+- [ ] UAT completado con release desactivado.
+- [ ] Aprobaciones de contenido, datos legales, booking y assets completos.
+- [ ] Hostname público aprobado; `*_PUBLIC_SITE_URL` configurado para esa app.
+- [ ] Gates pasan con `*_PUBLIC_RELEASE=true` y se desplegó el nuevo artifact.
+- [ ] Canonical, robots, sitemap, datos estructurados, redirects y 404 verificados.
 
 ## Portfolio de Juanjo: flujo para agregar fotos
 
