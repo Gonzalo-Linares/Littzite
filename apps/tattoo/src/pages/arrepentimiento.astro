@@ -1,6 +1,8 @@
 ---
 import TattooLegalPage from '../components/TattooLegalPage.astro';
 import TattooSiteLayout from '../layouts/TattooSiteLayout.astro';
+import Link from '@littzite/ui/Link.astro';
+import { tattooLegal, tattooLegalEmailHref } from '../release-readiness.ts';
 ---
 
 <TattooSiteLayout
@@ -14,15 +16,23 @@ import TattooSiteLayout from '../layouts/TattooSiteLayout.astro';
     <section>
       <h2>Cómo iniciar una consulta</h2>
       <p>
-        El sitio no cuenta con correo ni formulario propio para solicitudes. Podés comunicarte con
-        el estudio desde la sección Contacto para conocer el canal adecuado según tu caso.
+        Prestador: {tattooLegal.providerName}. Para enviar una consulta relacionada con el
+        arrepentimiento, podés escribir a{' '}
+        {tattooLegalEmailHref ? (
+          <Link href={tattooLegalEmailHref}>{tattooLegal.contactEmail}</Link>
+        ) : (
+          tattooLegal.contactEmail
+        )}
+        . El teléfono informado es {tattooLegal.phone}.
       </p>
     </section>
     <section>
       <h2>Solicitudes de consumidores</h2>
       <p>
-        Los derechos aplicables se rigen por la normativa vigente. Esta página no limita los
-        derechos que pudieran corresponder.
+        Cancelar o reprogramar una cita desde Cal.com no necesariamente equivale a ejercer el
+        derecho de arrepentimiento. Los derechos aplicables se rigen por la normativa vigente y esta
+        página no limita derechos obligatorios que pudieran corresponder. La información y el canal
+        publicados requieren revisión legal para el caso comercial concreto.
       </p>
     </section>
   </TattooLegalPage>

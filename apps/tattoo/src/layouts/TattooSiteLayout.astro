@@ -8,14 +8,20 @@ import ButtonLink from '@littzite/ui/ButtonLink.astro';
 import TattooInstagramLink from '../components/TattooInstagramLink.astro';
 import { tattooActions, tattooBrand } from '../brand.config';
 import { siteContent } from '../site.config';
+import {
+  tattooCanonicalFor,
+  tattooPublicRelease,
+  tattooStructuredData,
+} from '../release-readiness.ts';
 import '../styles/juanjo.css';
 
 interface Props {
   title: string;
   description: string;
+  indexable?: boolean;
 }
 
-const { title, description } = Astro.props;
+const { title, description, indexable = true } = Astro.props;
 const { site } = siteContent;
 ---
 
@@ -23,9 +29,11 @@ const { site } = siteContent;
   locale={site.defaultLocale}
   theme={site.theme}
   seo={{ title, description }}
-  noindex={true}
+  noindex={!tattooPublicRelease || !indexable}
+  canonicalUrl={indexable ? tattooCanonicalFor(Astro.url.pathname) : undefined}
   iconHref={site.iconHref}
   siteName={tattooBrand.name}
+  structuredData={indexable ? tattooStructuredData() : undefined}
   bodyClass="juanjo-site"
 >
   <SiteHeader

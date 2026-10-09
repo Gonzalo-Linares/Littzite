@@ -1,6 +1,8 @@
 ---
 import TattooLegalPage from '../components/TattooLegalPage.astro';
 import TattooSiteLayout from '../layouts/TattooSiteLayout.astro';
+import Link from '@littzite/ui/Link.astro';
+import { tattooLegal, tattooLegalEmailHref } from '../release-readiness.ts';
 ---
 
 <TattooSiteLayout
@@ -11,6 +13,27 @@ import TattooSiteLayout from '../layouts/TattooSiteLayout.astro';
     title="Términos y condiciones"
     description="Información general de uso del sitio y de los servicios externos enlazados."
   >
+    <section>
+      <h2>Prestador y contacto</h2>
+      <dl>
+        <dt>Prestador</dt>
+        <dd>{tattooLegal.providerName}</dd>
+        <dt>CUIT</dt>
+        <dd>{tattooLegal.taxId}</dd>
+        <dt>Domicilio legal</dt>
+        <dd>{tattooLegal.legalDomicile}</dd>
+        <dt>Contacto</dt>
+        <dd>
+          {tattooLegalEmailHref ? (
+            <Link href={tattooLegalEmailHref}>{tattooLegal.contactEmail}</Link>
+          ) : (
+            tattooLegal.contactEmail
+          )}
+          <br />
+          {tattooLegal.phone}
+        </dd>
+      </dl>
+    </section>
     <section>
       <h2>Uso del sitio</h2>
       <p>
@@ -24,6 +47,14 @@ import TattooSiteLayout from '../layouts/TattooSiteLayout.astro';
       <p>
         Los enlaces a Cal.com, Instagram y Google Maps conducen a servicios gestionados por
         terceros, sujetos a sus propias condiciones y políticas de privacidad.
+      </p>
+    </section>
+    <section>
+      <h2>Alcance y derechos</h2>
+      <p>
+        Este sitio es informativo. Las consultas o reservas pueden continuar en servicios externos;
+        sus condiciones no reemplazan la información que corresponda para cada proyecto. Nada de lo
+        indicado aquí limita derechos irrenunciables que puedan corresponder.
       </p>
     </section>
   </TattooLegalPage>

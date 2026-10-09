@@ -86,12 +86,12 @@ test('release fails closed for a CUIT with an invalid check digit', () => {
 test('release fails closed for missing or non-HTTPS canonical origins', () => {
   assert.ok(
     releaseBlockers({ ...validFixture, publicSiteUrl: undefined }).includes(
-      'PUBLIC_SITE_URL.missing',
+      'VIORA_PUBLIC_SITE_URL.missing',
     ),
   );
   assert.ok(
     releaseBlockers({ ...validFixture, publicSiteUrl: 'http://viora.example' }).includes(
-      'PUBLIC_SITE_URL.invalid',
+      'VIORA_PUBLIC_SITE_URL.invalid',
     ),
   );
 });
@@ -117,7 +117,8 @@ test('release fixture build emits canonical, social metadata and truthful non-me
     ...process.env,
     ASTRO_TELEMETRY_DISABLED: '1',
     VIORA_PUBLIC_RELEASE: 'true',
-    PUBLIC_SITE_URL: 'https://viora.fixture.test',
+    VIORA_PUBLIC_SITE_URL: 'https://viora.fixture.test',
+    PUBLIC_SITE_URL: 'https://legacy-generic.fixture.test',
     VIORA_LEGAL_NAME: 'Prestador Fixture',
     VIORA_LEGAL_CUIT: '30-10000000-4',
     VIORA_LEGAL_EMAIL: 'legal@viora.fixture.test',
@@ -147,6 +148,7 @@ test('release fixture build emits canonical, social metadata and truthful non-me
   );
   assert.match(html, /<meta name="robots" content="index, follow">/);
   assert.match(html, /<link rel="canonical" href="https:\/\/viora\.fixture\.test\/">/);
+  assert.doesNotMatch(html, /legacy-generic\.fixture\.test/);
   assert.match(html, /<meta property="og:url" content="https:\/\/viora\.fixture\.test\/">/);
   assert.match(html, /<meta property="og:title" content="VIORA fixture">/);
   assert.match(html, /<meta property="og:locale" content="es_AR">/);

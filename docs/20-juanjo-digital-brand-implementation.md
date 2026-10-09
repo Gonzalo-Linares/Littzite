@@ -1,6 +1,6 @@
 # Juanjo Tattoo Studio: identidad y experiencia digital
 
-El manual oficial de marca suministrado por el titular es la fuente de verdad. Esta implementación vive en `apps/tattoo`, mantiene `es-AR`, `noindex, nofollow` y no activa booking.
+El manual oficial de marca suministrado por el titular es la fuente de verdad. Esta implementación vive en `apps/tattoo`, mantiene `es-AR` y `noindex, nofollow` por defecto; el modelo productivo y sus gates se detallan en [PR-20 deployment readiness](21-production-deployment.md). La agenda externa no equivale a una aprobación de release.
 
 ## Manual y recursos
 
@@ -60,6 +60,12 @@ La atribución de Littzite y las primitives neutrales de Instagram y mapa sí se
 - Aprobación de contenido visual y guía de cuidados por Juanjo; verificar recomendaciones locales antes de publicarlas.
 - Dominio, revisión/aprobación de privacidad y textos legales, y autorización de indexación.
 
-`pnpm --filter @littzite/tattoo check:release` es el guard explícito previo al release. Debe fallar mientras las tres banderas de assets editoriales temporales estén activas; hoy se esperan tres bloqueos.
+`pnpm --filter @littzite/tattoo check:release` es el guard explícito previo al release. Falla mientras los tres assets editoriales temporales o cualquier requisito legal/productivo sigan pendientes; el número de bloqueos reportados refleja el estado actual de la configuración.
 
 GitHub Actions siguen desactivadas. El prototipo no es un release productivo.
+
+## Preparación de publicación
+
+`release-readiness.ts` es la autoridad local de `JUANJO_PUBLIC_RELEASE`, URL de producción y `tattooLegal`, que consumen tanto el gate como las páginas de términos, privacidad y arrepentimiento. Preview muestra placeholders explícitos solo en esas páginas no indexables. Un release habilitado valida origen HTTPS, CUIT, email, teléfono, Cal.com, aprobaciones y `JUANJO_WITHDRAWAL_PLACEMENT_APPROVED`; este último exige revisión responsable de la ubicación del acceso de arrepentimiento en el footer. La bandera de publicación sigue apagada. Los tres bloqueos de assets permanecen activos mientras hero, portfolio y cuidados usen imágenes temporales; resolverlos requiere reemplazar por originales autorizados.
+
+El `LocalBusiness` productivo incluye solamente nombre público, URL e Instagram. No agrega domicilio, teléfono ni razón social al JSON-LD. `robots.txt` bloquea previews y el sitemap de preview está vacío; las rutas candidatas del sitemap productivo excluyen 404. La configuración exacta de los dos proyectos Cloudflare y el checklist de UAT están en `docs/21-production-deployment.md`.
