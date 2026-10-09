@@ -1,6 +1,8 @@
 ---
 import TattooLegalPage from '../components/TattooLegalPage.astro';
 import TattooSiteLayout from '../layouts/TattooSiteLayout.astro';
+import Link from '@littzite/ui/Link.astro';
+import { tattooLegal, tattooLegalEmailHref } from '../release-readiness.ts';
 ---
 
 <TattooSiteLayout
@@ -28,10 +30,25 @@ import TattooSiteLayout from '../layouts/TattooSiteLayout.astro';
       </p>
     </section>
     <section>
+      <h2>Google Maps</h2>
+      <p>
+        La página de Contacto incorpora un mapa de Google Maps y un enlace de indicaciones. Al
+        cargar el mapa o abrir el enlace, Google puede recibir datos técnicos de conexión conforme a
+        sus políticas y a la configuración del servicio.
+      </p>
+    </section>
+    <section>
       <h2>Responsable y consultas</h2>
       <p>
-        Este sitio no incluye un formulario propio para solicitudes de privacidad. Podés iniciar una
-        consulta desde la sección Contacto.
+        El prestador responsable informado para este sitio es {tattooLegal.providerName}. Para
+        consultas sobre privacidad, escribí a{' '}
+        {tattooLegalEmailHref ? (
+          <Link href={tattooLegalEmailHref}>{tattooLegal.contactEmail}</Link>
+        ) : (
+          tattooLegal.contactEmail
+        )}
+        . Este sitio no tiene formularios ni base de datos propios; los datos que compartas con
+        Cal.com, Instagram o Google Maps quedan sujetos a las políticas de cada servicio.
       </p>
     </section>
   </TattooLegalPage>

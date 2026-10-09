@@ -18,7 +18,7 @@ El build con release habilitado falla hasta que estén configurados y verificado
 
 ### Juanjo Tattoo Studio
 
-El build productivo permanece bloqueado por los tres assets marcados en `tattooReleaseState`: hero temporal, portfolio temporal y cuidados temporales. Requiere reemplazos originales/autorizados, datos legales configurados y aprobados, URL HTTPS, aprobación expresa de booking, términos y flujo de arrepentimiento. El link aprobado de Cal.com ya está centralizado en `tattooActions`; no se duplica en variables o componentes. La ubicación y el `embedUrl` actual no se alteran. No se agregan dirección, teléfono ni razón social a metadata estructurada sin datos confirmados.
+El build productivo permanece bloqueado por los tres assets marcados en `tattooReleaseState`: hero temporal, portfolio temporal y cuidados temporales. Requiere reemplazos originales/autorizados, datos legales configurados y aprobados, URL HTTPS, aprobación expresa de booking, términos, flujo de arrepentimiento y revisión/aprobación de la ubicación footer-only (`JUANJO_WITHDRAWAL_PLACEMENT_APPROVED`). Las páginas de términos, privacidad y arrepentimiento y el gate consumen la misma fuente `tattooLegal`; en preview muestra placeholders y en release esos placeholders son bloqueantes. El link aprobado de Cal.com ya está centralizado en `tattooActions`; no se duplica en variables o componentes. La ubicación y el `embedUrl` actual no se alteran. No se agregan dirección, teléfono ni razón social a metadata estructurada sin datos confirmados.
 
 ## C. Configuración Cloudflare Pages
 
@@ -43,21 +43,22 @@ Usar `.env.example` como catálogo no secreto. No copiar valores personales al r
 
 **VIORA:** `VIORA_PUBLIC_RELEASE`, `VIORA_PUBLIC_SITE_URL`, `VIORA_LEGAL_NAME`, `VIORA_LEGAL_CUIT`, `VIORA_LEGAL_EMAIL`, `VIORA_LEGAL_PHONE`, `VIORA_LEGAL_DOMICILE`, `VIORA_BOOKING_URL`, `VIORA_BOOKING_APPROVED`, `VIORA_BOOKING_IN_PERSON_APPROVED`, `VIORA_BOOKING_DURATION_REVIEWED`, `VIORA_TERMS_APPROVED`, `VIORA_WITHDRAWAL_APPROVED` y `VIORA_WITHDRAWAL_PLACEMENT_APPROVED`.
 
-**Juanjo:** `JUANJO_PUBLIC_RELEASE`, `JUANJO_PUBLIC_SITE_URL`, `JUANJO_LEGAL_NAME`, `JUANJO_LEGAL_CUIT`, `JUANJO_LEGAL_EMAIL`, `JUANJO_LEGAL_PHONE`, `JUANJO_LEGAL_DOMICILE`, `JUANJO_BOOKING_APPROVED`, `JUANJO_TERMS_APPROVED` y `JUANJO_WITHDRAWAL_APPROVED`.
+**Juanjo:** `JUANJO_PUBLIC_RELEASE`, `JUANJO_PUBLIC_SITE_URL`, `JUANJO_LEGAL_NAME`, `JUANJO_LEGAL_CUIT`, `JUANJO_LEGAL_EMAIL`, `JUANJO_LEGAL_PHONE`, `JUANJO_LEGAL_DOMICILE`, `JUANJO_BOOKING_APPROVED`, `JUANJO_TERMS_APPROVED`, `JUANJO_WITHDRAWAL_APPROVED` y `JUANJO_WITHDRAWAL_PLACEMENT_APPROVED`.
 
-En preview mantener ambas flags `*_PUBLIC_RELEASE=false` o ausentes y las URLs públicas vacías. Para la primera publicación no indexable, dejar release apagado también en Production. Luego del primer deployment, usar la URL realmente asignada por Pages sólo como base técnica de preview; la URL pública definitiva debe quedar verificada por el titular antes de activar canonical/indexación. No permitir que una preview branch herede un `*_PUBLIC_RELEASE=true` de producción.
+En preview mantener ambas flags `*_PUBLIC_RELEASE=false` o ausentes y las URLs públicas vacías. No permitir que una preview branch herede un `*_PUBLIC_RELEASE=true` de producción. Tras crear el proyecto y desplegar con release apagado, Cloudflare asigna la URL productiva gratuita `https://<project>.pages.dev`; no hace falta comprar un dominio propio antes de lanzar. Esa URL puede ser la URL pública inicial si el titular aprueba utilizarla. Las URLs de preview identifican un deployment concreto por branch/hash y nunca deben usarse como canonical productivo.
 
 ## E. Preview deployment
 
 1. Conectar primero los dos proyectos con la configuración anterior y release apagado.
 2. Mantener el root directory en la raíz y no colocar `PUBLIC_SITE_URL` genérico.
-3. Abrir las URLs de preview que Cloudflare asigne; no escribirlas como dominios permanentes en el repo.
-4. Confirmar en HTML `noindex, nofollow`, ausencia de canonical y JSON-LD, `robots.txt` con bloqueo y sitemap vacío.
-5. Confirmar que no existen páginas vacías o errores de build. Las vistas aprobadas deben mantener el mismo diseño.
+3. Distinguir la URL productiva estable `https://<project>.pages.dev` de las URLs de preview específicas de branch/deployment.
+4. Confirmar en el deployment preview `noindex, nofollow`, ausencia de canonical y JSON-LD, `robots.txt` con bloqueo y sitemap vacío.
+5. Completar UAT sobre el deployment preview antes de definir la URL pública inicial.
+6. Si el titular aprueba el hostname productivo `.pages.dev` como URL pública inicial, ponerlo en el `*_PUBLIC_SITE_URL` del environment Production. Nunca usar un hostname preview en esa variable.
 
 ## F. Production deployment e indexación
 
-`main` es el production branch de cada proyecto. Antes de crear dominios propios, resolver datos/revisiones pendientes, poner las variables del proyecto, ejecutar los gates localmente y revisar cada dominio/certificado/DNS real. Configurar cada `*_PUBLIC_SITE_URL` como origin HTTPS limpio (sin path, query o fragmento). La activación requiere aprobación explícita y un build de release satisfactorio. El build falla cerrado si falta un dato o autorización. No activar release para probar una URL de producción.
+`main` es el production branch de cada proyecto. Luego del UAT, aprobar qué hostname productivo usar; puede ser directamente el `.pages.dev` asignado o, si se compra/configura más adelante, el dominio propio. Configurar `*_PUBLIC_SITE_URL` con ese origin HTTPS limpio (sin path, query o fragmento; se admite slash final), resolver datos/revisiones pendientes y ejecutar los gates. La secuencia es: desplegar con release apagado → conocer el `project.pages.dev` → UAT → aprobación del titular para usarlo como URL pública inicial → configurar el origin en Production → resolver blockers → activar `*_PUBLIC_RELEASE=true` → rebuild → verificar canonical/robots/sitemap. Las URLs de preview branch/hash nunca se ponen como canonical. Si luego se conecta un dominio propio, cambiar la URL de esa app y reconstruir. El build falla cerrado si falta un dato o autorización.
 
 Con release aprobado, páginas indexables reciben canonical por ruta, `index, follow`, JSON-LD y sitemap solo de rutas declaradas. Las rutas especiales de error permanecen noindex y el 404 queda fuera del sitemap. El tipo de esquema de Juanjo es `LocalBusiness`, el cual se limita a nombre público, URL e Instagram verificado; no deduce dirección desde Maps. Ver [Schema.org LocalBusiness](https://schema.org/LocalBusiness).
 
@@ -88,7 +89,7 @@ Cloudflare Pages permite volver al último deployment correcto desde el dashboar
 
 ## Checklist de activación
 
-- [ ] Dominio y titularidad confirmados por cada negocio.
+- [ ] Hostname público elegido y aprobado por cada negocio (`project.pages.dev` o dominio propio); las URLs de preview están excluidas.
 - [ ] Datos legales/productivos y textos revisados por sus responsables.
 - [ ] UAT de booking completado con configuración productiva.
 - [ ] Para Juanjo: reemplazo y permiso de todos los assets temporales.

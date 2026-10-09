@@ -3,36 +3,45 @@ import { tattooActions, tattooBrand, tattooReleaseState } from './brand.config.t
 export interface TattooReleaseReadiness {
   enabled: boolean;
   publicSiteUrl?: string;
-  legal: {
-    name: string;
-    cuit: string;
-    email: string;
-    phone: string;
-    domicile: string;
-  };
+  legal: TattooLegalData;
   bookingApproved: boolean;
   termsApproved: boolean;
   withdrawalApproved: boolean;
+  withdrawalPlacementApproved: boolean;
+}
+
+export interface TattooLegalData {
+  providerName: string;
+  taxId: string;
+  contactEmail: string;
+  phone: string;
+  legalDomicile: string;
 }
 
 const environment =
   (import.meta as ImportMeta & { env?: Record<string, string | undefined> }).env ?? {};
-const envValue = (key: string) => environment[key] ?? '';
+const envValue = (key: string, fallback = '') => environment[key] || fallback;
 const envFlag = (key: string) => environment[key] === 'true';
 
-export const tattooReadiness: TattooReleaseReadiness = {
+export const tattooLegal: TattooLegalData = {
+  providerName: envValue('JUANJO_LEGAL_NAME', '[PENDIENTE — NOMBRE / RAZÓN SOCIAL]'),
+  taxId: envValue('JUANJO_LEGAL_CUIT', '[PENDIENTE — CUIT]'),
+  contactEmail: envValue('JUANJO_LEGAL_EMAIL', '[PENDIENTE — EMAIL DE CONTACTO]'),
+  phone: envValue('JUANJO_LEGAL_PHONE', '[PENDIENTE — TELÉFONO]'),
+  legalDomicile: envValue('JUANJO_LEGAL_DOMICILE', '[PENDIENTE — DOMICILIO LEGAL]'),
+};
+export const tattooLegalEmailHref = tattooLegal.contactEmail.startsWith('[PENDIENTE')
+  ? undefined
+  : `mailto:${tattooLegal.contactEmail}`;
+
+const releaseConfiguration = {
   enabled: envFlag('JUANJO_PUBLIC_RELEASE'),
   publicSiteUrl: envValue('JUANJO_PUBLIC_SITE_URL') || undefined,
-  legal: {
-    name: envValue('JUANJO_LEGAL_NAME'),
-    cuit: envValue('JUANJO_LEGAL_CUIT'),
-    email: envValue('JUANJO_LEGAL_EMAIL'),
-    phone: envValue('JUANJO_LEGAL_PHONE'),
-    domicile: envValue('JUANJO_LEGAL_DOMICILE'),
-  },
+  legal: tattooLegal,
   bookingApproved: envFlag('JUANJO_BOOKING_APPROVED'),
   termsApproved: envFlag('JUANJO_TERMS_APPROVED'),
   withdrawalApproved: envFlag('JUANJO_WITHDRAWAL_APPROVED'),
+  withdrawalPlacementApproved: envFlag('JUANJO_WITHDRAWAL_PLACEMENT_APPROVED'),
 };
 
 function hasPlaceholder(value: string) {
@@ -57,7 +66,7 @@ function validPublicOrigin(value: string) {
     const url = new URL(value);
     return (
       url.protocol === 'https:' &&
-      url.origin === value &&
+      url.origin === value.replace(/\/$/, '') &&
       !url.username &&
       !url.password &&
       !url.search &&
@@ -98,17 +107,19 @@ export function tattooReleaseBlockersFor(
   for (const [field, value] of Object.entries(readiness.legal)) {
     if (hasPlaceholder(value)) blockers.push(`legal.${field}.missing`);
   }
-  if (!validCuit(readiness.legal.cuit)) blockers.push('legal.cuit.invalid');
-  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(readiness.legal.email))
+  if (!validCuit(readiness.legal.taxId)) blockers.push('legal.taxId.invalid');
+  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(readiness.legal.contactEmail))
     blockers.push('legal.email.invalid');
   if (!/^\+[1-9]\d{1,14}$/.test(readiness.legal.phone)) blockers.push('legal.phone.invalid');
   if (!isValidTattooBookingUrl(tattooActions.turnsHref)) blockers.push('booking.url.invalid');
   if (!readiness.bookingApproved) blockers.push('booking.approval');
   if (!readiness.termsApproved) blockers.push('terms.approval');
   if (!readiness.withdrawalApproved) blockers.push('withdrawal.approval');
+  if (!readiness.withdrawalPlacementApproved) blockers.push('withdrawal.placement-approval');
   return blockers;
 }
 
+export const tattooReadiness: TattooReleaseReadiness = releaseConfiguration;
 export const tattooPublicRelease = tattooReadiness.enabled;
 export const tattooPublicSiteUrl = tattooReadiness.publicSiteUrl;
 export const tattooReleaseBlockers = tattooReleaseBlockersFor(tattooReadiness);
