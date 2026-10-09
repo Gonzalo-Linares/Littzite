@@ -28,6 +28,18 @@ function section(id) {
   assert.ok(markup, `fixture ${id} missing`);
   return markup;
 }
+test('VIORA uses its dark-lettering Littzite mark on the light footer', () => {
+  const config = readFileSync(path.join(root, 'apps/estetica/src/site-attribution.ts'), 'utf8');
+  const logo = readFileSync(
+    path.join(root, 'apps/estetica/public/littzite/horizontal.svg'),
+    'utf8',
+  );
+
+  assert.match(config, /logoSrc: '\/littzite\/horizontal\.svg'/);
+  assert.match(config, /href: undefined/);
+  assert.match(logo, /fill="#111216"/);
+});
+
 before(() => {
   build();
   html = readFileSync(path.join(fixtureRoot, 'dist/index.html'), 'utf8');
