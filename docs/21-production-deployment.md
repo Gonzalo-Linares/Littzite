@@ -41,7 +41,7 @@ Source ownership y hosting ownership son responsabilidades distintas. La cuenta 
 
 ## D. Direct Upload
 
-El mecanismo de deployment elegido es Cloudflare Pages Direct Upload de artefactos precompilados. No se usa Pages Git Integration: Cloudflare no permite usar el mismo repositorio GitHub/GitLab en proyectos Pages de cuentas separadas. No autorizar el repositorio en las cuentas de clientes ni duplicarlo para satisfacer esa integración.
+El mecanismo de deployment elegido es [Cloudflare Pages Direct Upload](https://developers.cloudflare.com/pages/get-started/direct-upload/) de artefactos precompilados. No se usa Pages Git Integration: Cloudflare no permite usar el mismo repositorio GitHub/GitLab en proyectos Pages de cuentas separadas. No autorizar el repositorio en las cuentas de clientes ni duplicarlo para satisfacer esa integración.
 
 Build de VIORA, desde la raíz del monorepo:
 
@@ -50,13 +50,7 @@ corepack pnpm install --frozen-lockfile
 corepack pnpm build:estetica
 ```
 
-El artefacto es `apps/estetica/dist`. Con el ID, token y nombre del proyecto VIORA seleccionados explícitamente para esa sesión:
-
-```sh
-CLOUDFLARE_ACCOUNT_ID="$VIORA_ACCOUNT_ID" \
-CLOUDFLARE_API_TOKEN="$VIORA_CLOUDFLARE_API_TOKEN" \
-npx wrangler pages deploy apps/estetica/dist --project-name="$VIORA_PROJECT_NAME"
-```
+El artefacto es `apps/estetica/dist`.
 
 Build de Juanjo:
 
@@ -65,39 +59,47 @@ corepack pnpm install --frozen-lockfile
 corepack pnpm build:tattoo
 ```
 
-El artefacto es `apps/tattoo/dist`. Con las credenciales y el nombre del proyecto Juanjo seleccionados explícitamente:
+El artefacto es `apps/tattoo/dist`.
 
-```sh
-CLOUDFLARE_ACCOUNT_ID="$JUANJO_ACCOUNT_ID" \
-CLOUDFLARE_API_TOKEN="$JUANJO_CLOUDFLARE_API_TOKEN" \
-npx wrangler pages deploy apps/tattoo/dist --project-name="$JUANJO_PROJECT_NAME"
-```
-
-Los nombres de proyectos, IDs y dominios reales quedan sin definir hasta que los titulares creen sus cuentas. Estos ejemplos usan Wrangler externo: Wrangler no se agrega como dependencia, no se crea un script `deploy` y el lockfile no cambia en este trabajo. Al ejecutar el comando, comprobar visualmente que el ID, token y nombre corresponden al mismo cliente. No depender de una cuenta implícita recordada por un login anterior.
+Los nombres de proyectos, IDs y dominios reales quedan sin definir hasta que los titulares creen sus cuentas. Wrangler se ejecuta externamente: no se agrega como dependencia y no se crea un script `deploy`. Antes de cada release, fijar en el entorno `WRANGLER_VERSION` a una versión exacta revisada; no invocar `npx wrangler` sin versión. Todos los comandos de deployment de este documento usan esa versión, identifican cuenta/proyecto y declaran explícitamente `--branch=uat` o `--branch=main`. Comprobar que el ID, token, proyecto y rama corresponden al mismo cliente; no depender de una cuenta o branch local detectado implícitamente.
 
 Un proyecto Pages creado como Direct Upload no puede convertirse luego a Git Integration. Esta elección es deliberada; si una arquitectura futura exigiera otra modalidad, se creará un proyecto nuevo y se migrará de forma controlada.
 
 ## E. Create client project
 
-Para cada cliente, su titular crea una cuenta Cloudflare y un Pages project mediante **Direct Upload**. Cada proyecto usa solo la cuenta de ese cliente y un nombre elegido por su titular. No configurar conexión a GitHub/GitLab, acceso al repositorio, build command ni credenciales del otro cliente. El primer artifact se carga con el comando de la sección D y publica la URL estable `<project>.pages.dev`.
+Para cada cliente, su titular crea una cuenta Cloudflare y un Pages project mediante **Direct Upload**. Cada proyecto usa solo la cuenta de ese cliente y un nombre elegido por su titular. Configurar `main` como production branch al crear el proyecto; no inferirlo de la rama Git local. Si se crea con Wrangler, el paso equivalente es `npx "wrangler@$WRANGLER_VERSION" pages project create "$PROJECT_NAME" --production-branch=main`, con el ID/token de esa cuenta definidos explícitamente en el entorno. Cloudflare solicita el nombre de production branch al crear el proyecto; la [guía Direct Upload](https://developers.cloudflare.com/pages/get-started/direct-upload/) describe este flujo. No configurar conexión a GitHub/GitLab, acceso al repositorio, build command ni credenciales del otro cliente. `main` sirve la URL estable `<project>.pages.dev`; `uat` sirve `uat.<project>.pages.dev`.
 
 ## F. Preview deployment
 
-El primer deployment sirve como preview de UAT en la URL estable `.pages.dev`, con la publicación protegida:
+El primer deployment de UAT se publica en el branch alias `uat.<project>.pages.dev`, no en el hostname estable de producción:
 
-1. Mantener `VIORA_PUBLIC_RELEASE=false` o `JUANJO_PUBLIC_RELEASE=false`, según la app. Dejar `*_PUBLIC_SITE_URL` vacío hasta aprobar un hostname público.
+1. Mantener `VIORA_PUBLIC_RELEASE=false` o `JUANJO_PUBLIC_RELEASE=false`, según la app. No configurar `*_PUBLIC_SITE_URL` con el hostname UAT.
 2. Ejecutar quality y el build de la app correspondiente con solo sus variables de negocio `VIORA_*` o `JUANJO_*`.
-3. Cargar únicamente su carpeta `dist` a su propio Pages project mediante Direct Upload.
-4. Abrir la URL estable asignada por Cloudflare y verificar `noindex, nofollow`, ausencia de canonical y JSON-LD productivos, `robots.txt` con `Disallow: /` y sitemap vacío.
+3. Cargar únicamente su carpeta `dist` a su propio Pages project mediante Direct Upload y `--branch=uat`.
+4. Abrir `https://uat.<project>.pages.dev` y verificar `noindex, nofollow`, ausencia de canonical y JSON-LD productivos, `robots.txt` con `Disallow: /` y sitemap vacío.
 5. Completar UAT de enlaces, contenido, legales, Maps, Cal.com cuando aplique, responsive, navegación y páginas 404 antes de aprobar la publicación.
 
-Direct Upload no crea previews automáticos a partir de ramas o PRs; este paso es un deployment manual de prueba con release apagado.
+El alias `uat.<project>.pages.dev` representa el deployment más reciente publicado con `--branch=uat`. La URL UAT nunca se configura como `*_PUBLIC_SITE_URL` ni aparece como canonical.
+
+Comandos de preview (establecer antes `WRANGLER_VERSION` a una versión exacta revisada y el ID/token de la cuenta correspondiente):
+
+```sh
+CLOUDFLARE_ACCOUNT_ID="$VIORA_ACCOUNT_ID" CLOUDFLARE_API_TOKEN="$VIORA_CLOUDFLARE_API_TOKEN" npx "wrangler@$WRANGLER_VERSION" pages deploy apps/estetica/dist --project-name="$VIORA_PROJECT_NAME" --branch=uat
+CLOUDFLARE_ACCOUNT_ID="$JUANJO_ACCOUNT_ID" CLOUDFLARE_API_TOKEN="$JUANJO_CLOUDFLARE_API_TOKEN" npx "wrangler@$WRANGLER_VERSION" pages deploy apps/tattoo/dist --project-name="$JUANJO_PROJECT_NAME" --branch=uat
+```
 
 ## G. Production activation
 
-Una vez aprobado el UAT y el hostname estable, `https://<project>.pages.dev` puede ser la URL pública inicial. No es obligatorio comprar un dominio propio antes del lanzamiento. Resolver todos los blockers reales de esa app y recibir aprobación explícita de indexación antes de activar el release.
+Una vez aprobado el UAT, `https://<project>.pages.dev` es el hostname estable de producción y puede ser la URL pública inicial. No es obligatorio comprar un dominio propio antes del lanzamiento. Resolver todos los blockers reales de esa app y recibir aprobación explícita de indexación antes de activar el release.
 
-Configurar solo para la app correspondiente, por ejemplo `VIORA_PUBLIC_SITE_URL=https://<viora-project>.pages.dev` o `JUANJO_PUBLIC_SITE_URL=https://<juanjo-project>.pages.dev`. Establecer `*_PUBLIC_RELEASE=true`, volver a construir desde el monorepo y volver a cargar su artifact con Direct Upload. Verificar `index, follow`, canonical por ruta, datos estructurados, `robots.txt` permitido y sitemap correcto. El build debe pasar los guards existentes sin datos ficticios ni bypasses.
+Para la app aprobada, configurar `VIORA_PUBLIC_SITE_URL=https://<viora-project>.pages.dev` o `JUANJO_PUBLIC_SITE_URL=https://<juanjo-project>.pages.dev`, y `*_PUBLIC_RELEASE=true`. Rebuild con sus variables, ejecutar el release gate y confirmar PASS. Desplegar explícitamente con `--branch=main`; no confiar en la rama Git detectada por Wrangler. Verificar `index, follow`, canonical por ruta, datos estructurados, `robots.txt` permitido y sitemap correcto. El build debe pasar los guards existentes sin datos ficticios ni bypasses.
+
+Comandos de producción (establecer antes `WRANGLER_VERSION` a una versión exacta revisada y el ID/token de la cuenta correspondiente):
+
+```sh
+CLOUDFLARE_ACCOUNT_ID="$VIORA_ACCOUNT_ID" CLOUDFLARE_API_TOKEN="$VIORA_CLOUDFLARE_API_TOKEN" npx "wrangler@$WRANGLER_VERSION" pages deploy apps/estetica/dist --project-name="$VIORA_PROJECT_NAME" --branch=main
+CLOUDFLARE_ACCOUNT_ID="$JUANJO_ACCOUNT_ID" CLOUDFLARE_API_TOKEN="$JUANJO_CLOUDFLARE_API_TOKEN" npx "wrangler@$WRANGLER_VERSION" pages deploy apps/tattoo/dist --project-name="$JUANJO_PROJECT_NAME" --branch=main
+```
 
 Las URLs específicas de deployments de prueba nunca se usan como canonical. Los bloqueos vigentes y sus responsables se describen en [readiness VIORA](19-viora-release-readiness.md) y [la implementación digital de Juanjo](20-juanjo-digital-brand-implementation.md).
 
@@ -134,6 +136,28 @@ Completar revisión de navegador en desktop y mobile antes de activar indexació
 **Juanjo:** home, `/trabajos/`, carrusel, galería, lightbox, `/guia/` y `/contacto/`; Cal.com e Instagram; Google Maps, términos, privacidad, arrepentimiento, robots, sitemap y 404. Mantener bloqueados los assets temporales hasta su reemplazo y autorización.
 
 Revisar enlaces externos, teclado/foco, headers, responsive, overflow, metadata y Lighthouse. No declarar revisión de navegador, Lighthouse o release si no se ejecutaron.
+
+### Preview/UAT
+
+- [ ] `*_PUBLIC_RELEASE=false`.
+- [ ] Deployment Direct Upload con `--branch=uat` y Wrangler fijado a versión revisada.
+- [ ] URL `https://uat.<project>.pages.dev`.
+- [ ] `noindex` presente y sin canonical productivo.
+- [ ] `robots.txt` con `Disallow: /`.
+- [ ] Sitemap vacío.
+- [ ] URL UAT ausente de `*_PUBLIC_SITE_URL`.
+
+### Production
+
+- [ ] Blockers reales resueltos y aprobación de lanzamiento registrada.
+- [ ] `*_PUBLIC_SITE_URL=https://<project>.pages.dev` (hostname estable de producción).
+- [ ] `*_PUBLIC_RELEASE=true`.
+- [ ] Rebuild y release gate: PASS.
+- [ ] Deployment Direct Upload explícito con `--branch=main`.
+- [ ] Canonical correcto.
+- [ ] `robots.txt` permite indexación.
+- [ ] Sitemap correcto.
+- [ ] Handoff registra versión Wrangler, account ID, nombre de proyecto, app, commit SHA y artifact construido.
 
 ## L. Rollback
 
