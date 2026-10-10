@@ -6,12 +6,20 @@ interface Props {
   className?: string;
   describedBy?: string;
   ariaLabel?: string;
+  newTab?: boolean;
 }
 
-const { href, className = 'action-link', describedBy, ariaLabel } = Astro.props;
+const { href, className = 'action-link', describedBy, ariaLabel, newTab = false } = Astro.props;
 if (!isAllowedHref(href)) throw new Error('Unsupported link URL');
 ---
 
-<a class={className} href={href} aria-describedby={describedBy} aria-label={ariaLabel}>
+<a
+  class={className}
+  href={href}
+  aria-describedby={describedBy}
+  aria-label={ariaLabel}
+  target={newTab ? '_blank' : undefined}
+  rel={newTab ? 'noopener noreferrer' : undefined}
+>
   <slot />
 </a>

@@ -4,23 +4,29 @@ import { readFileSync } from 'node:fs';
 import path from 'node:path';
 import test from 'node:test';
 import { fileURLToPath } from 'node:url';
-import { isValidCuit, normalizeCuit, releaseBlockers } from '../apps/estetica/src/viora-release.ts';
+import {
+  isValidCuil,
+  normalizeCuil,
+  releaseBlockers,
+  vioraBookingReadiness,
+  vioraWhatsAppHref,
+} from '../apps/estetica/src/viora-release.ts';
 
 const root = fileURLToPath(new URL('../', import.meta.url));
-
 const validFixture = {
   enabled: true,
   publicSiteUrl: 'https://viora.example',
   legal: {
-    providerName: 'Prestador Real',
-    // Synthetic checksum-valid fixture; it is not assigned to a real person or business.
-    taxId: '30-10000000-4',
+    providerName: 'Prestador Fixture',
+    // Synthetic checksum-valid CUIL fixture; it is not assigned to a real person.
+    cuil: '20-00000000-1',
     contactEmail: 'legal@viora.example',
     phone: '+5492641234567',
-    legalDomicile: 'Domicilio confirmado',
+    legalDomicile: 'Domicilio fixture',
   },
   booking: {
-    productionUrl: 'https://cal.com/viora/consulta',
+    generalUrl: 'https://cal.com/viora/booking-general',
+    depilacionUrl: 'https://cal.com/viora/booking-depilacion',
     productionApproval: true,
     inPersonLocationApproved: true,
     durationReviewed: true,
@@ -30,57 +36,84 @@ const validFixture = {
   },
 };
 
-test('preview permits placeholders without enabling publication', () => {
+test('preview permits empty placeholders while public release remains disabled', () => {
   assert.deepEqual(
     releaseBlockers({ enabled: false, legal: {}, booking: {}, publicSiteUrl: undefined }),
     [],
   );
 });
 
-test('complete approved release fixture passes', () => {
+test('complete approved release fixture passes with both Cal.com agendas', () => {
   assert.deepEqual(releaseBlockers(validFixture), []);
 });
 
-test('normalizes CUIT formats and validates the Argentine check digit', () => {
-  assert.equal(normalizeCuit('30-10000000-4'), '30100000004');
-  assert.equal(normalizeCuit('30100000004'), '30100000004');
-  assert.equal(normalizeCuit('30 10000000 4'), undefined);
-  assert.equal(isValidCuit('30-10000000-4'), true);
-  assert.equal(isValidCuit('30100000004'), true);
-  assert.equal(isValidCuit('30-10000000-5'), false);
-  assert.equal(isValidCuit('20-12345678-9'), false);
+test('normalizes CUIL formats and validates the Argentine check digit', () => {
+  assert.equal(normalizeCuil('20-00000000-1'), '20000000001');
+  assert.equal(normalizeCuil('20000000001'), '20000000001');
+  assert.equal(normalizeCuil('20 00000000 1'), undefined);
+  assert.equal(isValidCuil('20-00000000-1'), true);
+  assert.equal(isValidCuil('20000000001'), true);
+  assert.equal(isValidCuil('20-00000000-2'), false);
+  assert.equal(isValidCuil('30-10000000-4'), true);
 });
 
-test('release fails closed for legal placeholders and the UAT booking URL', () => {
-  const blockers = releaseBlockers({
-    ...validFixture,
-    legal: { ...validFixture.legal, providerName: '[PENDIENTE — NOMBRE O RAZÓN SOCIAL]' },
-    booking: {
-      ...validFixture.booking,
-      productionUrl: 'https://cal.com/gonzalo-linares-rfbhnf/prueba',
-    },
-  });
-  assert.ok(blockers.includes('legal.providerName'));
-  assert.ok(blockers.includes('booking.uat-url'));
-});
-
-test('release fails closed for missing, placeholder or invalid commercial phone', () => {
-  for (const phone of ['', '[PENDIENTE — TELÉFONO / WHATSAPP COMERCIAL]', '264 123 4567']) {
+test('a missing or placeholder CUIL blocks release', () => {
+  for (const cuil of ['', '[PENDIENTE — CUIL]']) {
     const blockers = releaseBlockers({
       ...validFixture,
-      legal: { ...validFixture.legal, phone },
+      legal: { ...validFixture.legal, cuil },
     });
-    assert.ok(blockers.includes('legal.phone.invalid'), phone);
-    if (!phone || phone.includes('[PENDIENTE')) assert.ok(blockers.includes('legal.phone'));
+    assert.ok(blockers.includes('legal.cuil'), cuil);
+    assert.ok(blockers.includes('legal.cuil.invalid'), cuil);
   }
 });
 
-test('release fails closed for a CUIT with an invalid check digit', () => {
+test('release fails closed for each missing production agenda URL', () => {
+  assert.ok(
+    releaseBlockers({
+      ...validFixture,
+      booking: { ...validFixture.booking, generalUrl: '' },
+    }).includes('booking.general-url.missing'),
+  );
+  assert.ok(
+    releaseBlockers({
+      ...validFixture,
+      booking: { ...validFixture.booking, depilacionUrl: '[PENDIENTE]' },
+    }).includes('booking.depilacion-url.missing'),
+  );
+});
+
+test('the preview agenda fallbacks are treated as missing production URLs', () => {
   const blockers = releaseBlockers({
     ...validFixture,
-    legal: { ...validFixture.legal, taxId: '30-10000000-5' },
+    booking: {
+      ...validFixture.booking,
+      generalUrl: vioraBookingReadiness.generalUrl,
+      depilacionUrl: vioraBookingReadiness.depilacionUrl,
+    },
   });
-  assert.ok(blockers.includes('legal.taxId.invalid'));
+  assert.ok(blockers.includes('booking.general-url.missing'));
+  assert.ok(blockers.includes('booking.depilacion-url.missing'));
+});
+
+test('release validates both Cal.com agenda URLs and rejects temporary event URLs', () => {
+  const invalidGeneral = releaseBlockers({
+    ...validFixture,
+    booking: { ...validFixture.booking, generalUrl: 'https://evil.example/booking' },
+  });
+  assert.ok(invalidGeneral.includes('booking.general-url.invalid'));
+
+  const invalidDepilacion = releaseBlockers({
+    ...validFixture,
+    booking: { ...validFixture.booking, depilacionUrl: 'http://cal.com/viora/depilacion' },
+  });
+  assert.ok(invalidDepilacion.includes('booking.depilacion-url.invalid'));
+
+  const temporaryGeneral = releaseBlockers({
+    ...validFixture,
+    booking: { ...validFixture.booking, generalUrl: 'https://cal.com/viora/prueba-general' },
+  });
+  assert.ok(temporaryGeneral.includes('booking.general-url.temporary'));
 });
 
 test('release fails closed for missing or non-HTTPS canonical origins', () => {
@@ -96,23 +129,65 @@ test('release fails closed for missing or non-HTTPS canonical origins', () => {
   );
 });
 
-test('release fails closed while any booking/legal approval is pending', () => {
+test('release remains blocked while human booking and legal approvals are pending', () => {
   const blockers = releaseBlockers({
     ...validFixture,
-    booking: { ...validFixture.booking, inPersonLocationApproved: false },
+    booking: {
+      ...validFixture.booking,
+      productionApproval: false,
+      inPersonLocationApproved: false,
+      durationReviewed: false,
+      commercialTermsApproved: false,
+      withdrawalWorkflowApproved: false,
+      withdrawalPlacementApproved: false,
+    },
   });
-  assert.ok(blockers.includes('booking.in-person-location'));
+  for (const blocker of [
+    'booking.production-approval',
+    'booking.in-person-location',
+    'booking.duration-review',
+    'commercial.terms-approval',
+    'legal.withdrawal-workflow-review',
+    'legal.withdrawal-placement-approval',
+  ])
+    assert.ok(blockers.includes(blocker), blocker);
 });
 
-test('release fails closed until footer-only withdrawal placement receives legal review', () => {
-  const blockers = releaseBlockers({
-    ...validFixture,
-    booking: { ...validFixture.booking, withdrawalPlacementApproved: false },
-  });
-  assert.ok(blockers.includes('legal.withdrawal-placement-review'));
+test('WhatsApp is omitted without a valid E.164 number and safely encodes the approved message', () => {
+  assert.equal(vioraWhatsAppHref('[PENDIENTE — TELÉFONO / WHATSAPP COMERCIAL]'), undefined);
+  assert.equal(vioraWhatsAppHref('264 123 4567'), undefined);
+  assert.equal(
+    vioraWhatsAppHref('+5492641234567'),
+    'https://wa.me/5492641234567?text=Hola%2C%20vi%20VIORA%20en%20la%20web%20y%20quer%C3%ADa%20consultar%20el%20precio%20de%20un%20servicio%20antes%20de%20reservar.',
+  );
 });
 
-test('release fixture build emits canonical, social metadata and truthful non-medical JSON-LD', () => {
+test('env example keeps VIORA personal and booking values blank and release flags false', () => {
+  const envExample = readFileSync(path.join(root, '.env.example'), 'utf8');
+  for (const key of [
+    'VIORA_LEGAL_NAME',
+    'VIORA_LEGAL_CUIL',
+    'VIORA_LEGAL_EMAIL',
+    'VIORA_LEGAL_PHONE',
+    'VIORA_LEGAL_DOMICILE',
+    'VIORA_BOOKING_GENERAL_URL',
+    'VIORA_BOOKING_DEPILACION_URL',
+  ])
+    assert.match(envExample, new RegExp(`^${key}=$`, 'm'));
+  for (const key of [
+    'VIORA_PUBLIC_RELEASE',
+    'VIORA_BOOKING_APPROVED',
+    'VIORA_BOOKING_IN_PERSON_APPROVED',
+    'VIORA_BOOKING_DURATION_REVIEWED',
+    'VIORA_TERMS_APPROVED',
+    'VIORA_WITHDRAWAL_APPROVED',
+    'VIORA_WITHDRAWAL_PLACEMENT_APPROVED',
+  ])
+    assert.match(envExample, new RegExp(`^${key}=false$`, 'm'));
+  assert.doesNotMatch(envExample, /VIORA_LEGAL_CUIT|VIORA_BOOKING_URL/);
+});
+
+test('release fixture emits canonical metadata only with synthetic environment values', () => {
   const env = {
     ...process.env,
     ASTRO_TELEMETRY_DISABLED: '1',
@@ -120,11 +195,12 @@ test('release fixture build emits canonical, social metadata and truthful non-me
     VIORA_PUBLIC_SITE_URL: 'https://viora.fixture.test',
     PUBLIC_SITE_URL: 'https://legacy-generic.fixture.test',
     VIORA_LEGAL_NAME: 'Prestador Fixture',
-    VIORA_LEGAL_CUIT: '30-10000000-4',
+    VIORA_LEGAL_CUIL: '20-00000000-1',
     VIORA_LEGAL_EMAIL: 'legal@viora.fixture.test',
     VIORA_LEGAL_PHONE: '+5492641234567',
     VIORA_LEGAL_DOMICILE: 'Domicilio fixture',
-    VIORA_BOOKING_URL: 'https://cal.com/viora/consulta',
+    VIORA_BOOKING_GENERAL_URL: 'https://cal.com/viora/booking-general',
+    VIORA_BOOKING_DEPILACION_URL: 'https://cal.com/viora/booking-depilacion',
     VIORA_BOOKING_APPROVED: 'true',
     VIORA_BOOKING_IN_PERSON_APPROVED: 'true',
     VIORA_BOOKING_DURATION_REVIEWED: 'true',

@@ -78,12 +78,8 @@ test('both demo apps validate independently and use different themes', () => {
     assert.ok(contrastRatio(accent, accentText) >= 4.5);
     assert.ok(contrastRatio(surface, focus) >= 3);
   }
-  assert.equal(estetica.bookingTargets.length, 1);
-  assert.equal(estetica.bookingTargets[0].providerKey, 'cal-com');
-  assert.equal(
-    estetica.bookingTargets[0].fallbackUrl,
-    'https://cal.com/gonzalo-linares-rfbhnf/prueba',
-  );
+  assert.equal(estetica.bookingTargets.length, 2);
+  assert.ok(estetica.bookingTargets.every(({ providerKey }) => providerKey === 'cal-com'));
   assert.deepEqual(tattoo.quoteTargets, []);
 });
 
@@ -356,24 +352,41 @@ test('VIORA theme, voice and four named services match its brand manual', () => 
       ['Reiki', 'reiki'],
     ],
   );
-  const depilation = estetica.services.find(({ id }) => id === 'depilacion-definitiva');
-  assert.deepEqual(depilation.actions, [
+  const actions = Object.fromEntries(estetica.services.map(({ id, actions }) => [id, actions]));
+  assert.deepEqual(actions['limpieza-facial'], [
     {
       id: 'reservar',
       type: 'direct-booking',
-      label: 'Sacar turno',
+      label: 'Solicitar turno',
+      targetId: 'booking-general',
+    },
+  ]);
+  assert.deepEqual(actions.masajes, actions['limpieza-facial']);
+  assert.deepEqual(actions['depilacion-definitiva'], [
+    {
+      id: 'reservar',
+      type: 'direct-booking',
+      label: 'Solicitar turno',
       targetId: 'booking-depilacion-definitiva',
     },
   ]);
-  assert.ok(
-    estetica.services
-      .filter(({ id }) => id !== 'depilacion-definitiva')
-      .every(({ actions }) => actions.length === 0),
-  );
+  assert.deepEqual(actions.reiki, []);
   assert.equal(validateBookingTargets(estetica.bookingTargets), undefined);
+  const targets = Object.fromEntries(
+    estetica.bookingTargets.map(({ id, fallbackUrl }) => [id, fallbackUrl]),
+  );
   assert.equal(
-    resolveDirectBookingAction(depilation.actions[0], estetica.bookingTargets).href,
-    'https://cal.com/gonzalo-linares-rfbhnf/prueba',
+    resolveDirectBookingAction(actions['limpieza-facial'][0], estetica.bookingTargets).targetId,
+    'booking-general',
+  );
+  assert.equal(
+    resolveDirectBookingAction(actions['masajes'][0], estetica.bookingTargets).href,
+    targets['booking-general'],
+  );
+  assert.equal(
+    resolveDirectBookingAction(actions['depilacion-definitiva'][0], estetica.bookingTargets)
+      .targetId,
+    'booking-depilacion-definitiva',
   );
   assert.deepEqual(estetica.quoteTargets, []);
 });

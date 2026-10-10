@@ -8,7 +8,7 @@
 | --- | --- | --- | --- |
 | D-01A | **Acordada** | Estética: una sola profesional con servicios de duración fija. | Modelo de servicios; acciones de reserva directa por tratamiento sin agenda propia. |
 | D-01B | **Acordada** | Tatuador: turnos directos para trabajos pequeños; presupuesto previo para trabajos grandes. | Un servicio/página puede tener varias `ServiceAction` tipadas. |
-| D-01C-VIORA | **Acordada para piloto** (30/09/2026); UAT técnico acotado en PR-15 | Probar Cal.com Individual Gratis para la única profesional de VIORA. Volumen estimado, no contractual: unos 15 turnos/mes. Para UAT se habilita solo depilación definitiva con la URL de cuenta de prueba `https://cal.com/gonzalo-linares-rfbhnf/prueba`; no es el enlace comercial final. | UAT manual completado. Reemplazar la URL UAT por la URL final de Victoria/VIORA y corregir `Cal Video` en la Location del Event Type a modalidad presencial antes de merge/producción. No habilita otros servicios, embed de agenda ni manejo propio de reservas. |
+| D-01C-VIORA | **Cal.com elegido** para la única profesional de VIORA; preparación app-local de dos agendas en PR-21 | Agenda general para limpieza facial y masajes; agenda separada y exclusiva para depilación definitiva. El titular de la cuenta controla eventos, disponibilidad y citas. | Las URLs productivas y la aprobación de ambas agendas se configuran por environment, nunca en Git. La configuración de targets no activa `VIORA_PUBLIC_RELEASE` ni autoriza deployment. La Location presencial y las duraciones deben quedar verificadas en Cal.com. |
 | D-02A-TRIAL | **Acordada para piloto** (30/09/2026) | Configuración inicial independiente de **60 minutos para cada uno** de los cuatro event types VIORA previstos en Cal.com. | Valores de prueba, no duraciones técnicas definitivas ni publicables hasta la revisión profesional; Victoria debe revisar la duración del Event Type de depilación. Cal.com será la fuente operacional. |
 | D-03A | **Pendiente explícito** | No está definido si habrá señas para ninguno de los negocios. | No implementar ni publicitar pagos, política de cobro ni señalización de cita pagada. |
 | D-04A | **Acordada** | Tatuajes grandes: presupuestos por WhatsApp directo, inicialmente solo texto, sin formulario ni carga de imágenes propios. | `QuoteTarget` de WhatsApp con número obtenido de `ContactConfig`; sin backend ni base de datos para presupuestos. |
@@ -26,15 +26,15 @@
 
 | ID | Qué falta | Responsable previsto | Bloquea |
 | --- | --- | --- | --- |
-| D-01C | **VIORA: Cal.com elegido para prueba**, pendiente crear cuenta, verificar cuatro URLs individuales, políticas y modo de integración. **Tatuajes: proveedor sin definir.** | Titular de cada negocio + equipo técnico | Activación de reserva real; no bloquea contenidos informativos |
+| D-01C | **VIORA: Cal.com elegido**; faltan las dos URLs productivas, revisión de ambas agendas y sus aprobaciones humanas. **Tatuajes: proveedor sin definir.** | Titular de cada negocio + equipo técnico | Activación de reserva real; no bloquea contenidos informativos |
 | D-02A | Estética: **duración provisional de 60 min por tratamiento para prueba**. Falta validación profesional de duración definitiva por servicio/zona, horario, ubicación y reglas de disponibilidad | Profesional de estética | Publicación de turnos reales |
 | D-02B | Tatuador: número de artistas, definición comercial de trabajo pequeño/grande, servicios reservables y reglas de agenda | Tatuador | Clasificación pública, duración de eventos y lanzamiento del CTA |
 | D-03 | Señas, pagos en ARS, cancelación, reprogramación y recordatorios, **si se requieren** | Cada negocio | Configuración final del proveedor y textos comerciales |
-| D-04B | Número comercial de WhatsApp verificado, mensaje inicial y texto informativo de salida a tercero aprobados | Tatuador + equipo técnico | Publicación del CTA real de presupuesto (el canal y alcance texto-only están acordados en D-04A) |
+| D-04B | **Juanjo:** número comercial de WhatsApp verificado y aviso de salida aprobado. **VIORA:** copy de consulta previa aprobado; el CTA aparece únicamente cuando `VIORA_LEGAL_PHONE` tenga un E.164 válido. | Titular de cada negocio + equipo técnico | Activar cada CTA solo en la aplicación cuyo dato esté confirmado |
 | D-05 | Nombre comercial del tatuador y dominio, dirección y ubicación verificable de ambos; **el nombre VIORA se confirmó mediante su manual** | Cada negocio | Canonical, schema, Search Console y lanzamiento |
 | D-06 | Fotografías originales de VIORA, permisos de retratos de terceras personas y responsables de edición; para Juanjo, obtener los originales de calidad publicable y acordar su selección | Cada negocio | Publicación del portfolio final y proceso editorial |
 | D-07 | Hosting y titularidad de dominios y cuentas | Cada negocio + equipo técnico | Despliegue de producción; Cloudflare Pages sigue siendo una propuesta |
-| D-10C | VIORA: revisar duración y ubicación del Event Type de depilación; cambiar `Cal Video` a `In-person` o ubicación física personalizada, reemplazar link UAT por el final y confirmar los datos comerciales restantes | Profesional de estética | Producción bloqueada hasta corregir la Location en Cal.com y aprobar el link final. UAT manual ya completado |
+| D-10C | VIORA: configurar y revisar las dos URLs de agenda; corregir `Cal Video` a `In-person` o ubicación física personalizada y revisar duración y datos comerciales restantes | Profesional de estética | Producción bloqueada hasta validar la configuración de Cal.com y los datos de release |
 | D-11B | Selección de archivos originales para el portfolio de Juanjo, resolución apta para web, orden de las piezas y confirmación del tratamiento editorial del logotipo del perfil | Tatuador + equipo técnico | Publicación del portfolio final; no bloquea la exploración visual basada en las capturas |
 
 ## Criterios para cerrar una decisión
@@ -47,11 +47,11 @@
 
 ## Próxima validación comercial
 
-**D-04B:** confirmar número comercial real en formato internacional E.164, texto de apertura aprobado y aviso de salida a WhatsApp. D-01C y D-02A están parcialmente resueltos **solo para el piloto VIORA** (Cal.com, una URL de UAT de cuenta de prueba solo para depilación y duración operativa en Cal.com). El UAT manual confirmó reserva sin cuenta, selección de horario, confirmación/email y cancelación/reprogramación. La confirmación mostró `Dónde: Cal Video`: corregir la Location del Event Type a `In-person` o ubicación física personalizada apropiada; este dato lo configura Cal.com y no se debe ocultar en Littzite. La URL final debe reemplazar UAT y Victoria debe revisar la duración antes de producción. La disponibilidad se mantiene en Cal.com mediante un link permanente y Date Overrides puntuales. D-02B y D-03 siguen pendientes. No inferir duración del tatuador, señas ni política de cancelación.
+**D-04B:** Juanjo aún requiere número comercial y aviso de salida aprobados. Para VIORA, el product owner aprobó el copy de consulta previa; el número permanece fuera del repositorio y se configurará por environment, y el enlace solo se genera con E.164 válido. D-01C y D-02A mantienen pendientes las dos URLs de Cal.com, la revisión de la Location presencial y la duración operativa. Cal.com es fuente de verdad para disponibilidad y citas. D-02B y D-03 siguen pendientes; no inferir duración del tatuador, señas ni políticas de cancelación.
 # VIORA — bloqueos de release PR-17
 
-- Identidad legal del prestador, CUIT, email de privacidad/reclamos y domicilio legal si corresponde.
+- Identidad legal del prestador como persona física (CUIL), email de privacidad/reclamos y domicilio legal si corresponde.
 - Datos comerciales que deban informarse antes de contratar: precio y condiciones aplicables; validar con asesoría jurídica. No inventar señas, medios de pago, cancelaciones, reintegros ni duración.
-- Reemplazar la URL UAT Cal.com, aprobar Location presencial, revisar duración y repetir UAT focal.
+- Configurar las dos URLs Cal.com, aprobar ambas agendas, Location presencial y duración; completar revisión focal antes de publicar.
 - Confirmar suficiencia jurídica del flujo estático de arrepentimiento por email y completar contacto real.
 - URL real de producción (incluido `pages.dev` tras primer deploy) antes de definir `VIORA_PUBLIC_SITE_URL` y `JUANJO_PUBLIC_SITE_URL` por separado.

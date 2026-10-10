@@ -1173,6 +1173,42 @@
 .viora-booking-intro {
   padding-block: clamp(2.25rem, 4vw, 3.5rem) 1.5rem;
 }
+.viora-booking-inquiry {
+  padding-block: 0.75rem 1.75rem;
+  background: color-mix(in srgb, var(--viora-soft-rose) 17%, var(--viora-ivory));
+}
+.viora-booking-inquiry__inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1.5rem 2rem;
+  padding: clamp(1.25rem, 3vw, 2rem);
+  border: 1px solid color-mix(in srgb, var(--viora-plum) 18%, transparent);
+  border-radius: 1rem;
+  background: var(--viora-ivory);
+}
+.viora-booking-inquiry__copy {
+  max-width: 37rem;
+}
+.viora-booking-inquiry__copy h2 {
+  margin: 0;
+  color: var(--viora-plum);
+  font:
+    400 clamp(1.5rem, 2.6vw, 2rem)/1.15 'Nimbus Roman',
+    'Times New Roman',
+    Georgia,
+    serif;
+}
+.viora-booking-inquiry__copy p {
+  margin: 0.55rem 0 0;
+  line-height: 1.6;
+}
+.viora-booking-inquiry__actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.6rem;
+}
 .viora-booking {
   padding-block: 1rem clamp(3.5rem, 7vw, 6rem);
   background: color-mix(in srgb, var(--viora-soft-rose) 17%, var(--viora-ivory));
@@ -1250,15 +1286,6 @@
 .viora-booking-card__actions .button-link {
   min-height: 2.9rem;
 }
-.viora-booking__note {
-  max-width: 48rem;
-  margin: 2rem auto 0;
-  padding-inline: 1.5rem;
-  color: color-mix(in srgb, var(--viora-ink) 76%, transparent);
-  text-align: center;
-  line-height: 1.7;
-}
-
 @media (max-width: 740px) {
   .viora-regret-access__inner {
     align-items: flex-start;
@@ -1274,6 +1301,14 @@
   }
   .viora-booking__grid {
     grid-template-columns: minmax(0, 1fr);
+  }
+  .viora-booking-inquiry__inner,
+  .viora-booking-inquiry__actions {
+    align-items: stretch;
+    flex-direction: column;
+  }
+  .viora-booking-inquiry__actions .button-link {
+    width: 100%;
   }
   .viora-booking-card__actions {
     align-items: stretch;
