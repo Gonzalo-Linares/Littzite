@@ -6,6 +6,7 @@ import ServiceVisual from '../components/ServiceVisual.astro';
 import VioraPageIntro from '../components/VioraPageIntro.astro';
 import VioraSiteLayout from '../layouts/VioraSiteLayout.astro';
 import { siteContent } from '../site.config';
+import { vioraCommercial, vioraPriceInquiryWhatsAppHref } from '../viora-release.ts';
 import { serviceVisuals } from '../service-visuals';
 import { resolveServiceVisual } from '../service-visuals.validation';
 
@@ -18,7 +19,7 @@ const services = siteContent.services.map((service) => {
       const resolved = resolveDirectBookingAction(action, siteContent.bookingTargets);
       return {
         id: resolved.actionId,
-        label: resolved.label || 'Sacar turno',
+        label: resolved.label || 'Solicitar turno',
         href: resolved.href,
         note: resolved.eligibilityNote,
         icon: 'external' as const,
@@ -42,6 +43,37 @@ const services = siteContent.services.map((service) => {
       lead="Elegí la experiencia que querés coordinar."
       className="viora-booking-intro"
     />
+    <section class="viora-booking-inquiry" aria-labelledby="viora-booking-inquiry-title">
+      <div class="container viora-booking-inquiry__inner">
+        <div class="viora-booking-inquiry__copy">
+          <h2 id="viora-booking-inquiry-title">¿Querés consultar antes de reservar?</h2>
+          <p>
+            Si querés conocer el precio o resolver una duda sobre un servicio, escribinos antes de
+            solicitar tu turno.
+          </p>
+        </div>
+        <div class="viora-booking-inquiry__actions">
+          {vioraPriceInquiryWhatsAppHref && (
+            <ButtonLink
+              href={vioraPriceInquiryWhatsAppHref}
+              variant="primary"
+              icon="external"
+              newTab
+            >
+              Consultar por WhatsApp
+            </ButtonLink>
+          )}
+          <ButtonLink
+            href={vioraCommercial.instagramHref}
+            variant="secondary"
+            icon="external"
+            newTab
+          >
+            Escribir por Instagram
+          </ButtonLink>
+        </div>
+      </div>
+    </section>
     <section class="viora-booking" aria-label="Experiencias disponibles">
       <div class="container viora-booking__grid">
         {services.map(({ service, visual, actions }) => (
@@ -68,9 +100,6 @@ const services = siteContent.services.map((service) => {
           </article>
         ))}
       </div>
-      <p class="viora-booking__note">
-        Estamos terminando de configurar los horarios para habilitar la reserva online.
-      </p>
     </section>
   </section>
 </VioraSiteLayout>

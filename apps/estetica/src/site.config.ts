@@ -1,14 +1,11 @@
 import { siteContentSchema } from '@littzite/content-schema';
 import { validateBookingTargets } from '@littzite/booking';
-import { vioraBookingReadiness, vioraCommercial } from './viora-release.ts';
+import { vioraBookingTargetUrls, vioraCommercial } from './viora-release.ts';
 
 // D-09 / VIORA manual de marca, edición 01 (septiembre de 2026).
-// Los servicios del manual son líneas editoriales: disponibilidad, técnicas,
-// precios, duración y política de turnos deben confirmarse antes del lanzamiento.
-// La URL temporal de Cal.com configurada abajo pertenece a una cuenta de prueba.
-// Solo habilita UAT de depilación en PR-15; debe sustituirse por la URL final
-// aprobada de Victoria/VIORA antes de producción. UAT manual completado.
-// La duración del Event Type es operacional en Cal.com y debe revisarla Victoria.
+// Los servicios del manual son líneas editoriales. Las dos agendas y sus URLs
+// productivas se configuran fuera del repositorio; Cal.com mantiene horarios,
+// disponibilidad y duración de cada Event Type.
 const parsedContent = siteContentSchema.parse({
   site: {
     defaultLocale: 'es-AR',
@@ -30,7 +27,14 @@ const parsedContent = siteContentSchema.parse({
       displayName: 'Limpieza facial',
       description:
         'Una l\u00ednea de cuidado facial de VIORA. La t\u00e9cnica y el alcance de la propuesta se confirmar\u00e1n antes de ofrecer turnos.',
-      actions: [],
+      actions: [
+        {
+          id: 'reservar',
+          type: 'direct-booking',
+          label: 'Solicitar turno',
+          targetId: 'booking-general',
+        },
+      ],
     },
     {
       id: 'depilacion-definitiva',
@@ -42,7 +46,7 @@ const parsedContent = siteContentSchema.parse({
         {
           id: 'reservar',
           type: 'direct-booking',
-          label: 'Sacar turno',
+          label: 'Solicitar turno',
           targetId: 'booking-depilacion-definitiva',
         },
       ],
@@ -53,7 +57,14 @@ const parsedContent = siteContentSchema.parse({
       displayName: 'Masajes',
       description:
         'Una l\u00ednea de bienestar de VIORA. Las modalidades y el alcance de la propuesta se confirmar\u00e1n antes de ofrecer turnos.',
-      actions: [],
+      actions: [
+        {
+          id: 'reservar',
+          type: 'direct-booking',
+          label: 'Solicitar turno',
+          targetId: 'booking-general',
+        },
+      ],
     },
     {
       id: 'reiki',
@@ -68,7 +79,12 @@ const parsedContent = siteContentSchema.parse({
     {
       id: 'booking-depilacion-definitiva',
       providerKey: 'cal-com',
-      fallbackUrl: vioraBookingReadiness.productionUrl,
+      fallbackUrl: vioraBookingTargetUrls.depilacion,
+    },
+    {
+      id: 'booking-general',
+      providerKey: 'cal-com',
+      fallbackUrl: vioraBookingTargetUrls.general,
     },
   ],
   quoteTargets: [],

@@ -1,3 +1,5 @@
+import { validateBookingTargets } from '@littzite/booking';
+
 export const vioraCommercial = {
   name: 'VIORA',
   description: 'Estética integral',
@@ -11,10 +13,14 @@ export const vioraCommercial = {
 const buildEnvironment =
   (import.meta as ImportMeta & { env?: Record<string, string | undefined> }).env ?? {};
 const configured = (key: string, placeholder: string) => buildEnvironment[key] || placeholder;
+const bookingPlaceholders = {
+  general: 'https://cal.com/viora/booking-general-pending',
+  depilacion: 'https://cal.com/viora/booking-depilacion-pending',
+} as const;
 
 export const vioraLegal = {
   providerName: configured('VIORA_LEGAL_NAME', '[PENDIENTE — NOMBRE O RAZÓN SOCIAL]'),
-  taxId: configured('VIORA_LEGAL_CUIT', '[PENDIENTE — CUIT]'),
+  cuil: configured('VIORA_LEGAL_CUIL', '[PENDIENTE — CUIL]'),
   contactEmail: configured('VIORA_LEGAL_EMAIL', '[PENDIENTE — EMAIL LEGAL Y PRIVACIDAD]'),
   phone: configured('VIORA_LEGAL_PHONE', '[PENDIENTE — TELÉFONO / WHATSAPP COMERCIAL]'),
   legalDomicile: configured(
@@ -24,7 +30,8 @@ export const vioraLegal = {
 } as const;
 
 export const vioraBookingReadiness = {
-  productionUrl: configured('VIORA_BOOKING_URL', 'https://cal.com/gonzalo-linares-rfbhnf/prueba'),
+  generalUrl: configured('VIORA_BOOKING_GENERAL_URL', bookingPlaceholders.general),
+  depilacionUrl: configured('VIORA_BOOKING_DEPILACION_URL', bookingPlaceholders.depilacion),
   productionApproval: buildEnvironment.VIORA_BOOKING_APPROVED === 'true',
   inPersonLocationApproved: buildEnvironment.VIORA_BOOKING_IN_PERSON_APPROVED === 'true',
   durationReviewed: buildEnvironment.VIORA_BOOKING_DURATION_REVIEWED === 'true',
@@ -34,7 +41,8 @@ export const vioraBookingReadiness = {
 } as const;
 
 export interface BookingReadiness {
-  productionUrl: string;
+  generalUrl: string;
+  depilacionUrl: string;
   productionApproval: boolean;
   inPersonLocationApproved: boolean;
   durationReviewed: boolean;
@@ -50,17 +58,20 @@ export interface ReleaseReadiness {
   booking: BookingReadiness;
 }
 
+const legalFields = ['providerName', 'cuil', 'contactEmail', 'phone', 'legalDomicile'] as const;
 const isPlaceholder = (value: string) => !value.trim() || value.includes('[PENDIENTE');
 
-export function normalizeCuit(value: string): string | undefined {
+export function normalizeCuil(value: string): string | undefined {
   if (/^\d{11}$/.test(value)) return value;
   if (/^\d{2}-\d{8}-\d$/.test(value)) return value.replaceAll('-', '');
   return undefined;
 }
 
-export function isValidCuit(value: string): boolean {
-  const normalized = normalizeCuit(value);
+export function isValidCuil(value: string): boolean {
+  const normalized = normalizeCuil(value);
   if (!normalized) return false;
+  // Release guard whitelist for currently admitted human-person CUIL prefixes; update if regulations change.
+  if (!['20', '23', '24', '27'].includes(normalized.slice(0, 2))) return false;
   const weights = [5, 4, 3, 2, 7, 6, 5, 4, 3, 2];
   const sum = [...normalized.slice(0, 10)].reduce(
     (total, digit, index) => total + Number(digit) * weights[index],
@@ -71,16 +82,48 @@ export function isValidCuit(value: string): boolean {
   return checkDigit === Number(normalized[10]);
 }
 
+const isTemporaryBookingUrl = (value: string) => {
+  try {
+    return new URL(value).pathname
+      .split('/')
+      .filter(Boolean)
+      .some((segment) => /^(?:prueba|test|demo|preview)(?:-|$)/i.test(segment));
+  } catch {
+    return false;
+  }
+};
+
+function isValidBookingTarget(id: string, fallbackUrl: string): boolean {
+  try {
+    validateBookingTargets([{ id, providerKey: 'cal-com', fallbackUrl }]);
+    return true;
+  } catch {
+    return false;
+  }
+}
+
+function releaseBookingUrlBlockers(
+  blockers: string[],
+  target: { id: string; key: 'general' | 'depilacion'; url: string },
+) {
+  const prefix = `booking.${target.key}-url`;
+  if (isPlaceholder(target.url) || target.url === bookingPlaceholders[target.key])
+    blockers.push(`${prefix}.missing`);
+  if (isTemporaryBookingUrl(target.url)) blockers.push(`${prefix}.temporary`);
+  if (!isValidBookingTarget(target.id, target.url)) blockers.push(`${prefix}.invalid`);
+}
+
 export function releaseBlockers(readiness: ReleaseReadiness): string[] {
   if (!readiness.enabled) return [];
   const blockers: string[] = [];
-  for (const [field, value] of Object.entries(readiness.legal)) {
+  for (const field of legalFields) {
+    const value = readiness.legal[field] ?? '';
     if (isPlaceholder(value)) blockers.push(`legal.${field}`);
   }
-  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(readiness.legal.contactEmail))
+  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(readiness.legal.contactEmail ?? ''))
     blockers.push('legal.email.invalid');
-  if (!isValidCuit(readiness.legal.taxId)) blockers.push('legal.taxId.invalid');
-  if (!/^\+[1-9]\d{1,14}$/.test(readiness.legal.phone)) blockers.push('legal.phone.invalid');
+  if (!isValidCuil(readiness.legal.cuil ?? '')) blockers.push('legal.cuil.invalid');
+  if (!/^\+[1-9]\d{1,14}$/.test(readiness.legal.phone ?? '')) blockers.push('legal.phone.invalid');
   if (!readiness.publicSiteUrl) blockers.push('VIORA_PUBLIC_SITE_URL.missing');
   else {
     try {
@@ -98,20 +141,16 @@ export function releaseBlockers(readiness: ReleaseReadiness): string[] {
       blockers.push('VIORA_PUBLIC_SITE_URL.invalid');
     }
   }
-  if (readiness.booking.productionUrl === 'https://cal.com/gonzalo-linares-rfbhnf/prueba')
-    blockers.push('booking.uat-url');
-  try {
-    const bookingUrl = new URL(readiness.booking.productionUrl);
-    if (
-      bookingUrl.origin !== 'https://cal.com' ||
-      bookingUrl.pathname === '/' ||
-      bookingUrl.username ||
-      bookingUrl.password
-    )
-      blockers.push('booking.production-url.invalid');
-  } catch {
-    blockers.push('booking.production-url.invalid');
-  }
+  releaseBookingUrlBlockers(blockers, {
+    id: 'booking-general',
+    key: 'general',
+    url: readiness.booking.generalUrl,
+  });
+  releaseBookingUrlBlockers(blockers, {
+    id: 'booking-depilacion-definitiva',
+    key: 'depilacion',
+    url: readiness.booking.depilacionUrl,
+  });
   if (!readiness.booking.productionApproval) blockers.push('booking.production-approval');
   if (!readiness.booking.inPersonLocationApproved) blockers.push('booking.in-person-location');
   if (!readiness.booking.durationReviewed) blockers.push('booking.duration-review');
@@ -119,9 +158,33 @@ export function releaseBlockers(readiness: ReleaseReadiness): string[] {
   if (!readiness.booking.withdrawalWorkflowApproved)
     blockers.push('legal.withdrawal-workflow-review');
   if (!readiness.booking.withdrawalPlacementApproved)
-    blockers.push('legal.withdrawal-placement-review');
+    blockers.push('legal.withdrawal-placement-approval');
   return blockers;
 }
+
+function configuredBookingUrl(key: 'general' | 'depilacion', id: string, url: string): string {
+  return !isPlaceholder(url) && !isTemporaryBookingUrl(url) && isValidBookingTarget(id, url)
+    ? url
+    : bookingPlaceholders[key];
+}
+
+export const vioraBookingTargetUrls = {
+  general: configuredBookingUrl('general', 'booking-general', vioraBookingReadiness.generalUrl),
+  depilacion: configuredBookingUrl(
+    'depilacion',
+    'booking-depilacion-definitiva',
+    vioraBookingReadiness.depilacionUrl,
+  ),
+} as const;
+
+const whatsappMessage =
+  'Hola, vi VIORA en la web y quería consultar el precio de un servicio antes de reservar.';
+export function vioraWhatsAppHref(phone: string): string | undefined {
+  if (!/^\+[1-9]\d{1,14}$/.test(phone)) return undefined;
+  return `https://wa.me/${phone.replace(/\D/g, '')}?text=${encodeURIComponent(whatsappMessage)}`;
+}
+
+export const vioraPriceInquiryWhatsAppHref = vioraWhatsAppHref(vioraLegal.phone);
 
 export const vioraPublicRelease = buildEnvironment.VIORA_PUBLIC_RELEASE === 'true';
 export const publicSiteUrl = buildEnvironment.VIORA_PUBLIC_SITE_URL;

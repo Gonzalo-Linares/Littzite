@@ -2,9 +2,7 @@
 import VioraContact from '../components/VioraContact.astro';
 import VioraSiteLayout from '../layouts/VioraSiteLayout.astro';
 import { siteContent } from '../site.config';
-import VioraPageIntro from '../components/VioraPageIntro.astro';
 import { vioraLocation } from '../viora-location';
-import VioraInstagramLink from '../components/VioraInstagramLink.astro';
 ---
 
 <VioraSiteLayout
@@ -14,19 +12,6 @@ import VioraInstagramLink from '../components/VioraInstagramLink.astro';
   }}
 >
   <div class="viora-contact-page">
-    <VioraPageIntro
-      eyebrow="VIORA / contacto"
-      title="Contacto"
-      titleId="viora-contact-page-title"
-      lead="Rivadavia, San Juan, Argentina. Encontrá las indicaciones y el Instagram oficial de VIORA."
-    />
-    <VioraContact
-      contact={siteContent.site.contact}
-      location={siteContent.site.locations[0]}
-      map={vioraLocation}
-    />
-    <div class="container viora-contact__social">
-      <VioraInstagramLink showHandle />
-    </div>
+    <VioraContact location={siteContent.site.locations[0]} map={vioraLocation} />
   </div>
 </VioraSiteLayout>

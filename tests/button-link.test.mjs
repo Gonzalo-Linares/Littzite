@@ -52,6 +52,10 @@ test('ButtonLink exposes three visual variants and describedBy through the safe 
   );
   assert.match(
     html,
+    /<a class="button-link button-link--primary button-link--default" href="https:\/\/wa\.me\/5492641234567" target="_blank" rel="noopener noreferrer">\s*Consultar por WhatsApp\s*<\/a>/,
+  );
+  assert.match(
+    html,
     /<a class="button-link button-link--primary button-link--default" href="\/servicios\/"><svg class="button-link__icon"[^>]*aria-hidden="true"[^>]*>.*?<\/svg>\s*Volver a servicios\s*<\/a>/s,
   );
   assert.match(

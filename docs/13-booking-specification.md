@@ -1,6 +1,6 @@
 # Especificación funcional: reservas y presupuestos — v0.4
 
-**Estado:** recorridos comerciales básicos confirmados el 29/09/2026; integraciones reales y reglas de disponibilidad/pagos aún pendientes. D-04 define **WhatsApp directo, inicialmente solo texto**, para presupuestos de tatuajes grandes. Esta especificación **no** autoriza producción con contenido ficticio.
+**Estado:** recorridos comerciales básicos confirmados; VIORA prepara dos targets Cal.com app-locales y consulta previa por canales externos en PR-21. Las URLs productivas, datos legales y aprobaciones siguen fuera del repositorio y bloquean release. D-04 define **WhatsApp directo, inicialmente solo texto**, para presupuestos de tatuajes grandes; VIORA habilita una consulta previa de precio solo si su teléfono E.164 está configurado. Esta especificación **no** autoriza producción con datos ficticios.
 
 ## Matriz de recorridos aprobados
 
@@ -22,7 +22,7 @@ Si una página de tatuajes ofrece ambas alternativas, la misma página referenci
 
 ## Invariantes de negocio
 
-1. La estética ofrece una **única** agenda profesional mientras D-02A no indique lo contrario. Para publicar un tratamiento con reserva directa, el event type del proveedor debe tener una duración revisada por el negocio y disponibilidad real; Littzite no replica esa duración en `Service` ni la valida desde el resolver local.
+1. VIORA tiene una profesional y dos targets Cal.com: agenda general para limpieza facial y masajes, y agenda exclusiva para depilación definitiva. Cada evento mantiene duración y disponibilidad en Cal.com; Littzite no replica esos datos en `Service`. Los futuros servicios de VIORA que no sean depilación usarán el target general cuando se incorporen al catálogo mediante el PR correspondiente.
 2. Los trabajos pequeños del tatuador **pueden** reservarse directamente; la duración, las categorías concretas y el número de artistas son pendientes. No usar reglas automáticas de centímetros/precio no aprobadas.
 3. Los trabajos grandes llevan a presupuesto previo; una consulta de presupuesto **no constituye** cita ni pago ni obliga a ofrecer un turno automático tras su aceptación.
 4. Una página puede tener 0, 1 o más acciones. Las páginas sin target real de reserva/presupuesto muestran contacto **solo si** el negocio aprobó ese destino.
@@ -63,7 +63,7 @@ Véanse [registro de decisiones](09-open-decisions.md), [modelo de dominio](03-d
 
 **Pruebas previstas:** número en E.164 y perteneciente al negocio; codificación del texto y acentos; plantillas con datos únicamente públicos; bloqueo si falta configuración; enlace funcional en móvil y escritorio; aviso de tercero; analítica de clic sin mensajes ni identificadores privados; ausencia de código de formularios/archivos propios.
 
-## Decisión de piloto VIORA (30/09/2026)
+## Configuración de agendas VIORA (PR-21)
 
 ### Fundación compartida (PR-09)
 
@@ -73,11 +73,11 @@ El único proveedor admitido es `cal-com`: URL HTTPS con origen exacto `https://
 
 Juanjo consume la misma validación general de destinos, pero no configura proveedor ni target. La regla de agenda directa para trabajos pequeños sigue sin activarse hasta aprobar proveedor y URLs reales. Véase [ADR-013](adr/013-booking-provider-foundation.md).
 
-El titular eligió **Cal.com Individual Gratis** para probar los turnos de una profesional de VIORA, con un volumen estimado de alrededor de **15 citas mensuales**, sujeto a variación. La configuración prevista para el piloto asigna provisionalmente 60 minutos a cada uno de los cuatro event types de Cal.com. Esos valores requieren revisión profesional y no son reglas técnicas ni comerciales aprobadas para el público. La duración operacional será propiedad de cada event type del proveedor, no de `Service`; la profesional debe revisar especialmente los tiempos de depilación según zona antes de habilitar clientes reales.
+El titular eligió **Cal.com Individual Gratis** para los turnos de una profesional de VIORA. Las URLs generales y de depilación se inyectan con `VIORA_BOOKING_GENERAL_URL` y `VIORA_BOOKING_DEPILACION_URL`; no se guardan datos reales ni rutas temporales en el repositorio. El guard productivo exige ambas URLs válidas y aprobaciones explícitas. La duración operacional pertenece a cada event type del proveedor, no a `Service`; la profesional debe revisar la ubicación presencial y las duraciones antes de habilitar clientes reales.
 
-La profesional es titular de la cuenta y gestiona sus tipos de evento, disponibilidad efectiva, calendario de conflictos y mensajes; Cal.com es la fuente de verdad de citas. No almacenar datos de clientes ni credenciales de proveedor en Littzite. En PR-15, solo `depilacion-definitiva` configura una acción y un target de **UAT** usando `https://cal.com/gonzalo-linares-rfbhnf/prueba`, una URL de cuenta de prueba suministrada para validación. No es el booking link comercial final y no puede llegar a producción: debe reemplazarse antes del merge por la URL final de Victoria/VIORA. `limpieza-facial`, `masajes` y `reiki` mantienen `actions: []` y “Agenda próximamente”.
+La profesional es titular de la cuenta y gestiona sus tipos de evento, disponibilidad efectiva, calendario de conflictos y mensajes; Cal.com es la fuente de verdad de citas. No almacenar datos de clientes ni credenciales de proveedor en Littzite. PR-21 modela `booking-general` para limpieza facial y masajes, y `booking-depilacion-definitiva` exclusivamente para depilación definitiva; las tres acciones usan el label “Solicitar turno”. Reiki conserva `actions: []` hasta el PR de catálogo. Las URLs que aparecen en preview son placeholders explícitos y nunca satisfacen el guard de producción.
 
-El modelo operativo de depilación usa un único booking link permanente. La disponibilidad semanal puede permanecer cerrada y los días puntuales de máquina se agregan en Cal.com como Date Overrides; no se crean links mensuales ni se codifican fechas en Littzite. Cal.com conserva la fuente de verdad de disponibilidad. Victoria debe revisar la duración del Event Type antes de producción; Littzite no agrega ni duplica `durationMinutes`.
+La agenda general y la de depilación son links permanentes diferentes. La disponibilidad semanal puede permanecer cerrada y los días puntuales de máquina se agregan en Cal.com como Date Overrides; no se crean links mensuales ni se codifican fechas en Littzite. Cal.com conserva la fuente de verdad de disponibilidad. Victoria debe revisar ubicación y duración de ambos grupos de eventos antes de producción; Littzite no agrega ni duplica `durationMinutes`.
 
 ### UAT manual realizado y bloqueo de configuración
 
@@ -85,8 +85,8 @@ El titular confirmó la prueba manual de UAT: el visitante pudo reservar sin cre
 
 **Hallazgo bloqueante para producción:** la confirmación mostró `Dónde: Cal Video`. Es el valor de `Location` del Event Type configurado en Cal.com, no un defecto de Littzite. Antes de producción, Victoria debe cambiar el Event Type de depilación definitiva a `In-person` o a un texto de ubicación física personalizada apropiado. No ocultar ni reemplazar ese campo desde el frontend, y no agregar una ubicación al schema de Littzite sin confirmación comercial.
 
-Antes de cerrar el bloqueo también se debe reemplazar la URL UAT por el booking link final de Victoria/VIORA y revisar la duración del Event Type. El dato de zona horaria no se da por validado si no consta en el resultado del UAT.
+La validación manual previa encontró `Dónde: Cal Video` en la configuración de prueba. Antes de producción, la profesional debe comprobar que los Event Types de ambas agendas usan una ubicación presencial adecuada y duraciones revisadas. Ese valor lo configura Cal.com y no se debe ocultar en Littzite.
 
-Luego de crear los cuatro eventos, pedir únicamente sus cuatro URLs públicas HTTPS de Cal.com, una por servicio. Verificar la pertenencia a la cuenta real de VIORA, el host legítimo, la duración revisada y la disponibilidad común de la profesional; rechazar URLs o datos ficticios. Evaluar enlace externo como primer fallback estable y embed solo tras comprobar consentimiento/privacidad, experiencia móvil y carga diferida. Ni un clic ni callbacks visuales del embed constituyen confirmación verificable de la cita.
+Obtener del titular de la cuenta solo las dos URLs públicas HTTPS aprobadas y verificar su host, asignación, ubicación, duración y disponibilidad. El guard reutiliza la policy del paquete `booking` para exigir HTTPS, origen exacto `https://cal.com`, path no raíz y ausencia de credenciales; además bloquea rutas temporales. Ni un clic ni callbacks visuales constituyen confirmación verificable de la cita. No hay embed de agenda ni integración propia.
 
 Cal.com Individual informa actualmente 1 usuario con eventos, calendarios y reservas ilimitados: [página oficial de precios](https://cal.com/es/pricing). Soporta inline/popup: [documentación oficial de embed](https://cal.com/embed). Esto no implica que sus políticas, servicios y distribución móvil se mantengan invariables; verificar de nuevo al lanzar.

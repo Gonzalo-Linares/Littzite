@@ -8,15 +8,25 @@ interface Props {
   icon?: 'external' | 'back';
   describedBy?: string;
   className?: string;
+  newTab?: boolean;
 }
 
-const { href, variant = 'primary', size = 'default', icon, describedBy, className } = Astro.props;
+const {
+  href,
+  variant = 'primary',
+  size = 'default',
+  icon,
+  describedBy,
+  className,
+  newTab = false,
+} = Astro.props;
 ---
 
 <Link
   href={href}
   className={`button-link button-link--${variant} button-link--${size}${className ? ` ${className}` : ''}`}
   describedBy={describedBy}
+  newTab={newTab}
 >
   {icon === 'back' && (
     <svg class="button-link__icon" viewBox="0 0 20 20" aria-hidden="true" focusable="false">

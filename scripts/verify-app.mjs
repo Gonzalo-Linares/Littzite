@@ -56,38 +56,62 @@ assert.equal(
 assert.ok(html.includes('class="site-header"'), 'Shared header missing');
 assert.ok(html.includes('class="site-footer"'), 'Shared footer missing');
 if (app === 'estetica') {
-  const uatBookingUrl = 'https://cal.com/gonzalo-linares-rfbhnf/prueba';
-  const bookingTarget = siteContent.bookingTargets.find(
+  const generalBookingTarget = siteContent.bookingTargets.find(
+    ({ id }) => id === 'booking-general',
+  );
+  const depilationBookingTarget = siteContent.bookingTargets.find(
     ({ id }) => id === 'booking-depilacion-definitiva',
   );
-  assert.equal(siteContent.bookingTargets.length, 1, 'VIORA must have only the UAT target');
-  assert.deepEqual(bookingTarget, {
+  assert.equal(siteContent.bookingTargets.length, 2, 'VIORA must have two production targets');
+  assert.deepEqual(generalBookingTarget, {
+    id: 'booking-general',
+    providerKey: 'cal-com',
+    fallbackUrl: generalBookingTarget?.fallbackUrl,
+  });
+  assert.match(generalBookingTarget?.fallbackUrl ?? '', /^https:\/\/cal\.com\//);
+  assert.deepEqual(depilationBookingTarget, {
     id: 'booking-depilacion-definitiva',
     providerKey: 'cal-com',
-    fallbackUrl: uatBookingUrl,
+    fallbackUrl: depilationBookingTarget?.fallbackUrl,
   });
-  const depilation = siteContent.services.find(({ id }) => id === 'depilacion-definitiva');
-  assert.deepEqual(depilation?.actions, [
-    {
-      id: 'reservar',
-      type: 'direct-booking',
-      label: 'Sacar turno',
-      targetId: 'booking-depilacion-definitiva',
-    },
-  ]);
+  assert.match(depilationBookingTarget?.fallbackUrl ?? '', /^https:\/\/cal\.com\//);
   assert.ok(
-    siteContent.services
-      .filter(({ id }) => id !== 'depilacion-definitiva')
-      .every(({ actions }) => actions.length === 0),
-    'Only depilación definitiva may have a UAT booking action',
+    !/\b(?:prueba|test|demo|preview)(?:-|\/|$)/i.test(
+      `${generalBookingTarget?.fallbackUrl} ${depilationBookingTarget?.fallbackUrl}`,
+    ),
+    'VIORA targets must not include temporary booking URLs',
   );
   const { resolveDirectBookingAction } = await import('../packages/booking/src/index.ts');
-  const resolvedUatAction = resolveDirectBookingAction(
-    depilation.actions[0],
-    siteContent.bookingTargets,
-  );
-  assert.equal(resolvedUatAction.providerKey, 'cal-com');
-  assert.equal(resolvedUatAction.href, uatBookingUrl);
+  const actionTargets = {
+    'limpieza-facial': 'booking-general',
+    masajes: 'booking-general',
+    'depilacion-definitiva': 'booking-depilacion-definitiva',
+  };
+  for (const service of siteContent.services) {
+    if (service.id === 'reiki') {
+      assert.deepEqual(service.actions, [], 'Reiki stays inactive until the next catalog PR');
+      continue;
+    }
+    assert.deepEqual(service.actions, [
+      {
+        id: 'reservar',
+        type: 'direct-booking',
+        label: 'Solicitar turno',
+        targetId: actionTargets[service.id],
+      },
+    ]);
+    const resolvedAction = resolveDirectBookingAction(
+      service.actions[0],
+      siteContent.bookingTargets,
+    );
+    assert.equal(resolvedAction.providerKey, 'cal-com');
+    assert.equal(
+      resolvedAction.href,
+      actionTargets[service.id] === 'booking-general'
+        ? generalBookingTarget?.fallbackUrl
+        : depilationBookingTarget?.fallbackUrl,
+    );
+  }
   const railSource = await readFile(
     new URL('../apps/estetica/src/components/VioraServiceRail.astro', import.meta.url),
     'utf8',
@@ -396,21 +420,26 @@ if (app === 'estetica') {
       !/<a[^>]*>[^<]*(Reservar|Agendar|Consultar)[^<]*<\/a>/i.test(detail),
       `${service.slug}: unapproved conversion CTA`,
     );
-    if (service.id === 'depilacion-definitiva') {
+    if (service.id !== 'reiki') {
       assert.match(detail, /class="viora-service-actions"/);
       assert.match(
         detail,
-        /class="button-link button-link--primary button-link--compact" href="https:\/\/cal\.com\/gonzalo-linares-rfbhnf\/prueba">\s*Sacar turno/,
+        /class="button-link button-link--primary button-link--compact" href="https:\/\/cal\.com\/[^" ]+">\s*Solicitar turno/,
       );
-      assert.ok(detail.indexOf('Sacar turno') < detail.indexOf('viora-service-detail__media'));
-      assert.equal((detail.match(/Sacar turno/g) ?? []).length, 1);
-      assert.equal((detail.match(/gonzalo-linares-rfbhnf\/prueba/g) ?? []).length, 1);
+      assert.ok(detail.indexOf('Solicitar turno') < detail.indexOf('viora-service-detail__media'));
+      assert.equal((detail.match(/Solicitar turno/g) ?? []).length, 1);
+      const targetId = actionTargets[service.id];
+      const expectedTargetUrl =
+        targetId === 'booking-general'
+          ? generalBookingTarget?.fallbackUrl
+          : depilationBookingTarget?.fallbackUrl;
+      assert.ok(detail.includes(`href="${expectedTargetUrl}"`));
     } else {
       assert.ok(
         !detail.includes('class="viora-service-actions"'),
         `${service.slug}: empty service actions must not render a section`,
       );
-      assert.doesNotMatch(detail, /cal\.com|<a[^>]*>[^<]*Sacar turno/);
+      assert.doesNotMatch(detail, /cal\.com|<a[^>]*>[^<]*Solicitar turno/);
     }
     assert.ok(
       !/(?:\$\s?\d|ARS\s?\d|\d+\s?(?:minutos|min))/i.test(detail),
@@ -420,7 +449,7 @@ if (app === 'estetica') {
       !/60\s*(?:minutos|min\b)/i.test(detail),
       `${service.slug}: pilot duration must not be presented as a technical duration`,
     );
-    if (service.id !== 'depilacion-definitiva')
+    if (service.id === 'reiki')
       assert.ok(
         !/(?:cal\.com|booking\.example|wa\.me|api\.whatsapp)/i.test(detail),
         `${service.slug}: unexpected commercial URL`,
@@ -485,23 +514,33 @@ if (app === 'estetica') {
     },
     'VIORA contact',
   );
-  assert.match(contactPage, /<h1 id="[^"]+">Contacto<\/h1>/);
+  assert.match(contactPage, /<h1 id="[^"]+">Encontranos<\/h1>/);
   assert.match(contactPage, /Rivadavia, San Juan, Argentina/);
   assert.doesNotMatch(contactPage, /más adelante|próximamente|se confirmarán/);
   assert.match(
     contactPage,
-    /class="button-link button-link--secondary button-link--compact viora-map__directions" href="https:\/\/maps\.app\.goo\.gl\/H4jmqTGKicDse2iS7">/,
+    /class="button-link button-link--primary button-link--default viora-contact__action" href="https:\/\/maps\.app\.goo\.gl\/H4jmqTGKicDse2iS7" target="_blank" rel="noopener noreferrer">\s*Cómo llegar/,
   );
-  assert.ok(contactPage.includes('Ver en Google Maps'));
   assert.match(
     contactPage,
     /<iframe class="google-map-panel__iframe" src="https:\/\/www\.google\.com\/maps\/embed\?pb=!1m17!1m12!1m3!1d3401\.297756485471!2d-68\.567944!3d-31\.515980999999996[^"]*" title="Mapa interactivo: Ubicación de VIORA" loading="lazy" allowfullscreen referrerpolicy="strict-origin-when-cross-origin"><\/iframe>/,
   );
-  assert.match(contactPage, /href="https:\/\/www\.instagram\.com\/vioramasajes\.ok\/"/);
-  assert.doesNotMatch(contactPage, /href="(?:tel:|mailto:)/i);
+  assert.match(
+    contactPage,
+    /VIORA \/ Instagram[\s\S]*?Seguinos de cerca\.[\s\S]*?Novedades, trabajos y momentos VIORA[\s\S]*?@vioramasajes\.ok[\s\S]*?href="https:\/\/www\.instagram\.com\/vioramasajes\.ok\/" target="_blank" rel="noopener noreferrer">\s*Ver Instagram/,
+  );
+  assert.match(
+    contactPage,
+    /href="https:\/\/www\.instagram\.com\/vioramasajes\.ok\/" target="_blank" rel="noopener noreferrer">\s*Escribir por Instagram/,
+  );
+  assert.doesNotMatch(
+    contactPage,
+    /<blockquote[^>]*instagram-media|<iframe[^>]+instagram\.com|<script[^>]+instagram/i,
+  );
+  assert.doesNotMatch(contactPage, /href="(?:tel:|mailto:)|cal\.com/i);
   assert.equal((contactPage.match(/H4jmqTGKicDse2iS7/g) ?? []).length, 1);
   assert.equal((contactPage.match(/<iframe\b/g) ?? []).length, 1);
-  assert.doesNotMatch(contactPage, /cal\.com|<a[^>]*>[^<]*(?:Reservar|Agendar)[^<]*<\/a>/i);
+  assert.doesNotMatch(contactPage, /<a[^>]*>[^<]*(?:Reservar|Agendar)[^<]*<\/a>/i);
 
   const notFound = await readFile(
     new URL('../apps/estetica/dist/404.html', import.meta.url),
@@ -531,9 +570,9 @@ if (app === 'estetica') {
     'VIORA 404 must not publish a commercial action',
   );
   assert.doesNotMatch(
-    catalog + story + contactPage,
+    catalog + story,
     /(?:cal\.com|wa\.me|api\.whatsapp)/i,
-    'VIORA routes must not publish unapproved commercial actions',
+    'VIORA catalog and story routes must not publish commercial actions',
   );
   const booking = await readFile(
     new URL('../apps/estetica/dist/reservar/index.html', import.meta.url),
@@ -541,21 +580,39 @@ if (app === 'estetica') {
   );
   assertVioraFrame(booking, 'booking');
   assert.match(booking, /<h1 id="viora-booking-title">Reservá tu momento\.<\/h1>/);
+  assert.match(
+    booking,
+    /<h2 id="viora-booking-inquiry-title">¿Querés consultar antes de reservar\?<\/h2>/,
+  );
+  assert.match(booking, /Si querés conocer el precio o resolver una duda sobre un servicio/);
+  assert.match(
+    booking,
+    /href="https:\/\/www\.instagram\.com\/vioramasajes\.ok\/" target="_blank" rel="noopener noreferrer">\s*Escribir por Instagram/,
+  );
+  assert.doesNotMatch(booking, /Estamos terminando de configurar los horarios/);
+  assert.doesNotMatch(booking, /Agenda próximamente.*(?:Limpieza facial|Masajes|Depilación)/s);
   assert.equal((booking.match(/class="viora-booking-card"/g) ?? []).length, 4);
   assert.equal(
     (booking.match(/class="viora-booking-card__status">Agenda próximamente/g) ?? []).length,
-    3,
+    1,
   );
-  assert.match(booking, /Estamos terminando de configurar los horarios/);
   const contactBuildCheck = await readFile(
     new URL('../apps/estetica/dist/contacto/index.html', import.meta.url),
     'utf8',
   );
   assert.match(contactBuildCheck, /Rivadavia, San Juan, Argentina/);
-  assert.match(contactBuildCheck, /href="https:\/\/www\.instagram\.com\/vioramasajes\.ok\/"/);
   assert.match(
     contactBuildCheck,
-    /href="https:\/\/maps\.app\.goo\.gl\/H4jmqTGKicDse2iS7">\s*Ver en Google Maps/,
+    /href="https:\/\/maps\.app\.goo\.gl\/H4jmqTGKicDse2iS7" target="_blank" rel="noopener noreferrer">\s*Cómo llegar/,
+  );
+  assert.match(
+    contactBuildCheck,
+    /href="https:\/\/www\.instagram\.com\/vioramasajes\.ok\/" target="_blank" rel="noopener noreferrer">\s*Ver Instagram/,
+  );
+  assert.match(contactBuildCheck, /@vioramasajes\.ok/);
+  assert.doesNotMatch(
+    contactBuildCheck,
+    /<blockquote[^>]*instagram-media|<iframe[^>]+instagram\.com|<script[^>]+instagram/i,
   );
   assert.match(
     contactBuildCheck,
@@ -607,22 +664,36 @@ if (app === 'estetica') {
     ([markup]) => markup,
   );
   assert.equal(bookingCards.length, 4);
-  const bookingCtas =
-    booking.match(
-      /class="button-link button-link--primary button-link--compact" href="https:\/\/cal\.com\/gonzalo-linares-rfbhnf\/prueba">\s*Sacar turno/g,
-    ) ?? [];
-  assert.equal(bookingCtas.length, 1);
-  assert.equal((booking.match(/gonzalo-linares-rfbhnf\/prueba/g) ?? []).length, 1);
+  assert.doesNotMatch(booking, /\b(?:prueba|test|demo|preview)(?:-|\/|$)|agenda de prueba/i);
   for (const card of bookingCards) {
-    if (card.includes('Depilación definitiva')) {
-      assert.match(card, /Sacar turno/);
-      assert.match(card, /href="https:\/\/cal\.com\/gonzalo-linares-rfbhnf\/prueba"/);
-      assert.doesNotMatch(card, /Agenda próximamente/);
-    } else {
-      assert.doesNotMatch(card, /button-link--primary|cal\.com/);
+    if (card.includes('Reiki')) {
+      assert.doesNotMatch(card, /Solicitar turno|href="https:\/\/cal\.com/);
       assert.match(card, /Agenda próximamente/);
+    } else {
+      assert.match(card, /Solicitar turno/);
+      assert.match(card, /href="https:\/\/cal\.com\/[^" ]+"/);
+      assert.doesNotMatch(card, /Agenda próximamente/);
     }
   }
+  const terms = await readFile(
+    new URL('../apps/estetica/dist/terminos-y-condiciones/index.html', import.meta.url),
+    'utf8',
+  );
+  const termsBody = terms.match(/<main\b[^>]*>([\s\S]*?)<\/main>/)?.[1] ?? '';
+  assert.match(termsBody, /CUIL:/);
+  assert.doesNotMatch(
+    termsBody,
+    /CUIT|agenda pública sigue en preparación|URL temporal de prueba/i,
+  );
+  assert.match(termsBody, /WhatsApp o Instagram antes de solicitar un turno/);
+  assert.match(termsBody, /no procesa pagos ni señas/);
+  assert.match(termsBody, /deberá informarse claramente antes de concretar la contratación/);
+  const regret = await readFile(
+    new URL('../apps/estetica/dist/arrepentimiento/index.html', import.meta.url),
+    'utf8',
+  );
+  assert.doesNotMatch(regret, /agenda de prueba/i);
+  assert.match(regret, /distinta de cancelar o reprogramar un turno en Cal\.com/);
   assert.equal((booking.match(/class="viora-booking-card__media"/g) ?? []).length, 4);
   assert.equal((booking.match(/class="viora-booking-card__body"/g) ?? []).length, 4);
   for (const card of bookingCards) {

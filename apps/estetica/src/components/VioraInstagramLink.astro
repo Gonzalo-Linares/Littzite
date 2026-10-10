@@ -1,5 +1,6 @@
 ---
 import InstagramIconLink from '@littzite/ui/InstagramIconLink.astro';
+import { vioraCommercial } from '../viora-release.ts';
 
 interface Props {
   showHandle?: boolean;
@@ -11,7 +12,7 @@ const linkClassName = ['viora-instagram-link', className].filter(Boolean).join('
 ---
 
 <InstagramIconLink
-  href="https://www.instagram.com/vioramasajes.ok/"
+  href={vioraCommercial.instagramHref}
   ariaLabel="VIORA en Instagram"
   className={linkClassName}
   iconClassName="viora-instagram-link__icon"
