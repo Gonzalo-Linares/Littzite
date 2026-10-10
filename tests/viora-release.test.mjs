@@ -47,14 +47,20 @@ test('complete approved release fixture passes with both Cal.com agendas', () =>
   assert.deepEqual(releaseBlockers(validFixture), []);
 });
 
-test('normalizes CUIL formats and validates the Argentine check digit', () => {
+test('normalizes supported CUIL formats and validates current human-person prefixes and checksum', () => {
   assert.equal(normalizeCuil('20-00000000-1'), '20000000001');
   assert.equal(normalizeCuil('20000000001'), '20000000001');
   assert.equal(normalizeCuil('20 00000000 1'), undefined);
   assert.equal(isValidCuil('20-00000000-1'), true);
   assert.equal(isValidCuil('20000000001'), true);
+  assert.equal(isValidCuil('23-00000000-0'), true);
+  assert.equal(isValidCuil('24-00000000-7'), true);
+  assert.equal(isValidCuil('27-00000000-6'), true);
   assert.equal(isValidCuil('20-00000000-2'), false);
-  assert.equal(isValidCuil('30-10000000-4'), true);
+  assert.equal(isValidCuil('30-10000000-4'), false);
+  assert.equal(isValidCuil('30-00000000-7'), false);
+  assert.equal(isValidCuil('20 00000000 1'), false);
+  assert.equal(isValidCuil('20-0000000-1'), false);
 });
 
 test('a missing or placeholder CUIL blocks release', () => {

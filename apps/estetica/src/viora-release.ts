@@ -70,6 +70,8 @@ export function normalizeCuil(value: string): string | undefined {
 export function isValidCuil(value: string): boolean {
   const normalized = normalizeCuil(value);
   if (!normalized) return false;
+  // Release guard whitelist for currently admitted human-person CUIL prefixes; update if regulations change.
+  if (!['20', '23', '24', '27'].includes(normalized.slice(0, 2))) return false;
   const weights = [5, 4, 3, 2, 7, 6, 5, 4, 3, 2];
   const sum = [...normalized.slice(0, 10)].reduce(
     (total, digit, index) => total + Number(digit) * weights[index],
