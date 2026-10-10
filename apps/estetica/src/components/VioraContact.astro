@@ -1,56 +1,87 @@
 ---
 import Container from '@littzite/ui/Container.astro';
 import ButtonLink from '@littzite/ui/ButtonLink.astro';
-import type { ContactConfig, Location } from '@littzite/content-schema';
+import type { Location } from '@littzite/content-schema';
 import VioraMap from './VioraMap.astro';
+import { vioraCommercial, vioraPriceInquiryWhatsAppHref } from '../viora-release.ts';
 
 interface Props {
-  contact?: ContactConfig;
   location?: Location;
   map?: { embedUrl?: string; directionsHref?: string; locationLabel?: string };
 }
 
-const { contact, location, map } = Astro.props;
+const { location, map } = Astro.props;
+const locationLabel = location?.city ?? vioraCommercial.publicLocation;
 ---
 
 <section id="contacto" class="viora-contact" aria-labelledby="viora-contact-title">
   <Container>
-    <div
-      class:list={['viora-contact__grid', { 'viora-contact__grid--map': Boolean(map?.embedUrl) }]}
-    >
+    <div class="viora-contact__grid">
       <div class="viora-contact__details">
-        <p class="viora-contact__eyebrow">Contacto y ubicación</p>
-        <h2 id="viora-contact-title">Encontranos</h2>
-        {location?.address && <p class="viora-contact__address">{location.address}</p>}
-        {location?.city && <p class="viora-contact__city">{location.city}</p>}
-        {contact?.phone && (
-          <p>
-            <a href={`tel:${contact.phone}`}>{contact.phone}</a>
-          </p>
-        )}
-        {contact?.email && (
-          <p>
-            <a href={`mailto:${contact.email}`}>{contact.email}</a>
-          </p>
-        )}
+        <p class="viora-contact__eyebrow">VIORA / ubicación</p>
+        <h1 id="viora-contact-title">Encontranos</h1>
+        <p class="viora-contact__location">{locationLabel}</p>
         {map?.directionsHref && (
           <ButtonLink
             href={map.directionsHref}
-            variant="secondary"
-            size="compact"
+            variant="primary"
             icon="external"
-            className="viora-map__directions"
+            newTab
+            className="viora-contact__action"
           >
-            Ver en Google Maps
+            Cómo llegar
           </ButtonLink>
         )}
+
+        <hr class="viora-contact__divider" />
+
+        <div class="viora-contact__inquiries">
+          <p class="viora-contact__eyebrow">Consultas y turnos</p>
+          <p>¿Querés consultar un servicio antes de reservar?</p>
+          <div class="viora-contact__actions">
+            {vioraPriceInquiryWhatsAppHref && (
+              <ButtonLink
+                href={vioraPriceInquiryWhatsAppHref}
+                variant="primary"
+                icon="external"
+                newTab
+                className="viora-contact__action"
+              >
+                Escribir por WhatsApp
+              </ButtonLink>
+            )}
+            <ButtonLink
+              href={vioraCommercial.instagramHref}
+              variant="secondary"
+              icon="external"
+              newTab
+              className="viora-contact__action"
+            >
+              Escribir por Instagram
+            </ButtonLink>
+          </div>
+        </div>
       </div>
+
       {map?.embedUrl && (
-        <VioraMap
-          embedUrl={map.embedUrl}
-          locationLabel={map.locationLabel ?? location?.address ?? 'Ubicación de VIORA'}
-        />
+        <div class="viora-contact__map">
+          <VioraMap embedUrl={map.embedUrl} locationLabel={map.locationLabel ?? locationLabel} />
+        </div>
       )}
     </div>
+
+    <aside class="viora-contact__instagram" aria-labelledby="viora-contact-instagram-title">
+      <div>
+        <p class="viora-contact__eyebrow">VIORA / Instagram</p>
+        <h2 id="viora-contact-instagram-title">Seguinos de cerca.</h2>
+        <p>Novedades, trabajos y momentos VIORA en nuestro Instagram.</p>
+      </div>
+      <div class="viora-contact__instagram-action">
+        <p class="viora-contact__handle">@vioramasajes.ok</p>
+        <ButtonLink href={vioraCommercial.instagramHref} variant="secondary" icon="external" newTab>
+          Ver Instagram
+        </ButtonLink>
+      </div>
+    </aside>
   </Container>
 </section>

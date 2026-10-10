@@ -514,23 +514,33 @@ if (app === 'estetica') {
     },
     'VIORA contact',
   );
-  assert.match(contactPage, /<h1 id="[^"]+">Contacto<\/h1>/);
+  assert.match(contactPage, /<h1 id="[^"]+">Encontranos<\/h1>/);
   assert.match(contactPage, /Rivadavia, San Juan, Argentina/);
   assert.doesNotMatch(contactPage, /más adelante|próximamente|se confirmarán/);
   assert.match(
     contactPage,
-    /class="button-link button-link--secondary button-link--compact viora-map__directions" href="https:\/\/maps\.app\.goo\.gl\/H4jmqTGKicDse2iS7">/,
+    /class="button-link button-link--primary button-link--default viora-contact__action" href="https:\/\/maps\.app\.goo\.gl\/H4jmqTGKicDse2iS7" target="_blank" rel="noopener noreferrer">\s*Cómo llegar/,
   );
-  assert.ok(contactPage.includes('Ver en Google Maps'));
   assert.match(
     contactPage,
     /<iframe class="google-map-panel__iframe" src="https:\/\/www\.google\.com\/maps\/embed\?pb=!1m17!1m12!1m3!1d3401\.297756485471!2d-68\.567944!3d-31\.515980999999996[^"]*" title="Mapa interactivo: Ubicación de VIORA" loading="lazy" allowfullscreen referrerpolicy="strict-origin-when-cross-origin"><\/iframe>/,
   );
-  assert.match(contactPage, /href="https:\/\/www\.instagram\.com\/vioramasajes\.ok\/"/);
-  assert.doesNotMatch(contactPage, /href="(?:tel:|mailto:)/i);
+  assert.match(
+    contactPage,
+    /VIORA \/ Instagram[\s\S]*?Seguinos de cerca\.[\s\S]*?Novedades, trabajos y momentos VIORA[\s\S]*?@vioramasajes\.ok[\s\S]*?href="https:\/\/www\.instagram\.com\/vioramasajes\.ok\/" target="_blank" rel="noopener noreferrer">\s*Ver Instagram/,
+  );
+  assert.match(
+    contactPage,
+    /href="https:\/\/www\.instagram\.com\/vioramasajes\.ok\/" target="_blank" rel="noopener noreferrer">\s*Escribir por Instagram/,
+  );
+  assert.doesNotMatch(
+    contactPage,
+    /<blockquote[^>]*instagram-media|<iframe[^>]+instagram\.com|<script[^>]+instagram/i,
+  );
+  assert.doesNotMatch(contactPage, /href="(?:tel:|mailto:)|cal\.com/i);
   assert.equal((contactPage.match(/H4jmqTGKicDse2iS7/g) ?? []).length, 1);
   assert.equal((contactPage.match(/<iframe\b/g) ?? []).length, 1);
-  assert.doesNotMatch(contactPage, /cal\.com|<a[^>]*>[^<]*(?:Reservar|Agendar)[^<]*<\/a>/i);
+  assert.doesNotMatch(contactPage, /<a[^>]*>[^<]*(?:Reservar|Agendar)[^<]*<\/a>/i);
 
   const notFound = await readFile(
     new URL('../apps/estetica/dist/404.html', import.meta.url),
@@ -560,9 +570,9 @@ if (app === 'estetica') {
     'VIORA 404 must not publish a commercial action',
   );
   assert.doesNotMatch(
-    catalog + story + contactPage,
+    catalog + story,
     /(?:cal\.com|wa\.me|api\.whatsapp)/i,
-    'VIORA routes must not publish unapproved commercial actions',
+    'VIORA catalog and story routes must not publish commercial actions',
   );
   const booking = await readFile(
     new URL('../apps/estetica/dist/reservar/index.html', import.meta.url),
@@ -591,10 +601,18 @@ if (app === 'estetica') {
     'utf8',
   );
   assert.match(contactBuildCheck, /Rivadavia, San Juan, Argentina/);
-  assert.match(contactBuildCheck, /href="https:\/\/www\.instagram\.com\/vioramasajes\.ok\/"/);
   assert.match(
     contactBuildCheck,
-    /href="https:\/\/maps\.app\.goo\.gl\/H4jmqTGKicDse2iS7">\s*Ver en Google Maps/,
+    /href="https:\/\/maps\.app\.goo\.gl\/H4jmqTGKicDse2iS7" target="_blank" rel="noopener noreferrer">\s*Cómo llegar/,
+  );
+  assert.match(
+    contactBuildCheck,
+    /href="https:\/\/www\.instagram\.com\/vioramasajes\.ok\/" target="_blank" rel="noopener noreferrer">\s*Ver Instagram/,
+  );
+  assert.match(contactBuildCheck, /@vioramasajes\.ok/);
+  assert.doesNotMatch(
+    contactBuildCheck,
+    /<blockquote[^>]*instagram-media|<iframe[^>]+instagram\.com|<script[^>]+instagram/i,
   );
   assert.match(
     contactBuildCheck,

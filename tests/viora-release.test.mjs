@@ -13,6 +13,7 @@ import {
 } from '../apps/estetica/src/viora-release.ts';
 
 const root = fileURLToPath(new URL('../', import.meta.url));
+const esteticaAstroBin = path.join(root, 'apps/estetica/node_modules/astro/bin/astro.mjs');
 const validFixture = {
   enabled: true,
   publicSiteUrl: 'https://viora.example',
@@ -35,6 +36,23 @@ const validFixture = {
     withdrawalPlacementApproved: true,
   },
 };
+
+function buildEsteticaPreview(extraEnv = {}) {
+  execFileSync(
+    process.execPath,
+    [esteticaAstroBin, 'build', '--root', path.join(root, 'apps/estetica')],
+    {
+      cwd: root,
+      env: {
+        ...process.env,
+        ASTRO_TELEMETRY_DISABLED: '1',
+        VIORA_PUBLIC_RELEASE: 'false',
+        ...extraEnv,
+      },
+      stdio: 'pipe',
+    },
+  );
+}
 
 test('preview permits empty placeholders while public release remains disabled', () => {
   assert.deepEqual(
@@ -166,6 +184,104 @@ test('WhatsApp is omitted without a valid E.164 number and safely encodes the ap
     vioraWhatsAppHref('+5492641234567'),
     'https://wa.me/5492641234567?text=Hola%2C%20vi%20VIORA%20en%20la%20web%20y%20quer%C3%ADa%20consultar%20el%20precio%20de%20un%20servicio%20antes%20de%20reservar.',
   );
+});
+
+test('configured booking URLs and WhatsApp render on VIORA pages; contact uses approved links without Instagram embeds', () => {
+  const generalUrl = 'https://cal.com/viora/fixture-general';
+  const depilacionUrl = 'https://cal.com/viora/fixture-depilacion';
+  buildEsteticaPreview({
+    VIORA_BOOKING_GENERAL_URL: generalUrl,
+    VIORA_BOOKING_DEPILACION_URL: depilacionUrl,
+    VIORA_LEGAL_PHONE: '+5492641234567',
+  });
+
+  const bookingHtml = readFileSync(
+    path.join(root, 'apps/estetica/dist/reservar/index.html'),
+    'utf8',
+  );
+  const bookingCards = [
+    ...bookingHtml.matchAll(/<article class="viora-booking-card">(.*?)<\/article>/gs),
+  ];
+  assert.equal(bookingCards.length, 4);
+  for (const [service, expectedUrl] of [
+    ['Limpieza facial', generalUrl],
+    ['Masajes', generalUrl],
+    ['Depilación definitiva', depilacionUrl],
+  ]) {
+    const card = bookingCards.find(([, html]) => html.includes(`<h2>${service}</h2>`))?.[1];
+    assert.ok(card, `${service} booking card exists`);
+    assert.ok(card.includes(`href="${expectedUrl}"`), `${service} resolves to ${expectedUrl}`);
+    assert.ok(
+      !card.includes('booking-general-pending') && !card.includes('booking-depilacion-pending'),
+    );
+  }
+  const whatsappHref =
+    'https://wa.me/5492641234567?text=Hola%2C%20vi%20VIORA%20en%20la%20web%20y%20quer%C3%ADa%20consultar%20el%20precio%20de%20un%20servicio%20antes%20de%20reservar.';
+  assert.ok(
+    bookingHtml.includes(`href="${whatsappHref}" target="_blank" rel="noopener noreferrer"`),
+  );
+  assert.match(bookingHtml, />\s*Consultar por WhatsApp\s*</);
+
+  const contactHtml = readFileSync(
+    path.join(root, 'apps/estetica/dist/contacto/index.html'),
+    'utf8',
+  );
+  assert.match(
+    contactHtml,
+    /VIORA \/ ubicación[\s\S]*?Encontranos[\s\S]*?Rivadavia, San Juan, Argentina/,
+  );
+  assert.ok(
+    contactHtml.includes(
+      'href="https://maps.app.goo.gl/H4jmqTGKicDse2iS7" target="_blank" rel="noopener noreferrer"',
+    ),
+  );
+  assert.match(contactHtml, />\s*Cómo llegar\s*</);
+  assert.match(contactHtml, /src="https:\/\/www\.google\.com\/maps\/embed\?pb=/);
+  assert.match(
+    contactHtml,
+    /VIORA \/ Instagram[\s\S]*?Seguinos de cerca\.[\s\S]*?@vioramasajes\.ok[\s\S]*?Ver Instagram/,
+  );
+  assert.ok(
+    contactHtml.includes(
+      'href="https://www.instagram.com/vioramasajes.ok/" target="_blank" rel="noopener noreferrer"',
+    ),
+  );
+  assert.doesNotMatch(
+    contactHtml,
+    /<blockquote[^>]*instagram-media|<iframe[^>]+instagram\.com|<script[^>]+instagram/i,
+  );
+  assert.doesNotMatch(
+    readFileSync(path.join(root, 'apps/estetica/src/pages/contacto.astro'), 'utf8'),
+    /VioraInstagramLink|showHandle/,
+  );
+
+  const css = readFileSync(path.join(root, 'apps/estetica/src/styles/viora.css'), 'utf8');
+  assert.match(css, /grid-template-areas:\s*'map details'/);
+  assert.match(css, /\.viora-contact__map \.viora-map iframe\s*\{[^}]*aspect-ratio:\s*16 \/ 10/s);
+  const responsiveCss = css.slice(css.lastIndexOf('@media (max-width: 900px)'));
+  assert.match(responsiveCss, /grid-template-areas:\s*'details'\s*'map'/);
+  assert.match(
+    responsiveCss,
+    /\.viora-contact__map \.viora-map iframe\s*\{[^}]*aspect-ratio:\s*4 \/ 3/s,
+  );
+});
+
+test('VIORA omits WhatsApp CTAs when the phone is not configured', () => {
+  buildEsteticaPreview({
+    VIORA_BOOKING_GENERAL_URL: 'https://cal.com/viora/fixture-general',
+    VIORA_BOOKING_DEPILACION_URL: 'https://cal.com/viora/fixture-depilacion',
+    VIORA_LEGAL_PHONE: '',
+  });
+  const bookingHtml = readFileSync(
+    path.join(root, 'apps/estetica/dist/reservar/index.html'),
+    'utf8',
+  );
+  const contactHtml = readFileSync(
+    path.join(root, 'apps/estetica/dist/contacto/index.html'),
+    'utf8',
+  );
+  assert.doesNotMatch(bookingHtml, /Consultar por WhatsApp|PENDIENTE[^<]*TELÉFONO/);
+  assert.doesNotMatch(contactHtml, /Escribir por WhatsApp|PENDIENTE[^<]*TELÉFONO/);
 });
 
 test('env example keeps VIORA personal and booking values blank and release flags false', () => {
