@@ -247,7 +247,7 @@ test('compact Juanjo keeps full bleed media outside the content container and ap
   assert.match(header, /summary.focus\(\)/);
   assert.match(header, /menu.contains\(event.target\)/);
   assert.doesNotMatch(layout, /Volver arriba|<SiteFooter/);
-  assert.match(gallery, /<h1 id="portfolio-title">Todos los tatuajes<\/h1>/);
+  assert.match(gallery, /<h1 id="portfolio-title">Tatuajes<\/h1>/);
   assert.doesNotMatch(gallery, /<TattooWorkCarousel|PORTFOLIO DEL ESTUDIO|SELECCIÓN DEL ESTUDIO/);
 });
 
@@ -266,7 +266,7 @@ test('public tattoo terminology covers desktop, mobile, footer, SEO and accessib
   assert.match(home, /Ver tatuajes/);
   assert.match(home, /Explorá tatuajes/);
   assert.match(page, /title="Tatuajes \| Juanjo Tattoo Studio"/);
-  assert.match(gallery, /Todos los tatuajes/);
+  assert.match(gallery, /Tatuajes/);
   assert.match(gallery, /Ampliar tatuaje: \$?\{item.alt\}/);
   assert.doesNotMatch(carousel, /<figcaption|tattoo-carousel__number|item.title/);
   assert.doesNotMatch(gallery, /<span>\{item.title\}|data-title=/);

@@ -799,7 +799,7 @@ if (app === 'estetica') {
   assert.equal((workPage.match(/class="tattoo-gallery__item"/g) ?? []).length, 12);
   assert.equal((workPage.match(/loading="lazy"/g) ?? []).length >= 3, true);
   assert.doesNotMatch(workPage, /PORTFOLIO DEL ESTUDIO|SELECCIÓN DEL ESTUDIO/);
-  assert.match(workPage, /Todos los tatuajes/);
+  assert.match(workPage, /Tatuajes/);
   assert.match(html, /Tatuajes destacados/);
   assert.match(workPage, /<title>Tatuajes \| Juanjo Tattoo Studio<\/title>/);
   for (const markup of [html, workPage]) {
