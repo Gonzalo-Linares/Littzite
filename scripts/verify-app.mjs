@@ -175,6 +175,10 @@ if (app === 'estetica') {
       markup,
       /class="button-link button-link--primary button-link--compact site-header__badge" href="\/servicios\/">\s*Turnos/,
     );
+    assert.match(markup, /<details class="viora-mobile-menu">/);
+    assert.match(markup, /<summary aria-controls="viora-mobile-navigation">/);
+    assert.match(markup, /<nav id="viora-mobile-navigation" aria-label="Navegación móvil">/);
+    assert.doesNotMatch(markup, /viora-reveal-pending/);
     const footerNav = markup.match(
       /<nav class="viora-footer-links" aria-label="Navegación del pie de página">(.*?)<\/nav>/s,
     )?.[1];

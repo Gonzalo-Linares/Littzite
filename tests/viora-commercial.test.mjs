@@ -2,7 +2,7 @@ import { createHash } from 'node:crypto';
 import { execFileSync } from 'node:child_process';
 import { fileURLToPath } from 'node:url';
 import assert from 'node:assert/strict';
-import { readFileSync } from 'node:fs';
+import { readFileSync, existsSync } from 'node:fs';
 import test from 'node:test';
 import {
   validateCommercialContent,
@@ -195,19 +195,74 @@ test('preview labels are non-approved structural samples and cannot carry numeri
   assert.throws(() => validateCommercialContent([{ id: invalid.serviceId }], [invalid]));
 });
 
-test('reveal is progressive, scroll-gated for services and honors reduced motion without dependencies', () => {
-  const source = readFileSync(
-    new URL('../apps/estetica/src/components/VioraReveal.astro', import.meta.url),
+test('first-paint reveal regression: no late JS hide, CSS view timeline only with visible fallback', () => {
+  assert.equal(
+    existsSync(new URL('../apps/estetica/src/components/VioraReveal.astro', import.meta.url)),
+    false,
+  );
+  const home = readFileSync(
+    new URL('../apps/estetica/src/pages/index.astro', import.meta.url),
     'utf8',
   );
   const css = readFileSync(
     new URL('../apps/estetica/src/styles/viora-experience.css', import.meta.url),
     'utf8',
   );
-  assert.match(source, /IntersectionObserver/);
-  assert.match(source, /startedScrolling/);
-  assert.match(source, /motion.matches/);
+  assert.doesNotMatch(home, /VioraReveal|viora-reveal-pending|style="[^"]*opacity:\s*0/);
+  assert.match(css, /@supports \(animation-timeline: view\(\)\)/);
+  assert.match(css, /animation-timeline: view\(block\)/);
+  assert.match(css, /animation-range: entry/);
+  assert.doesNotMatch(css, /viora-reveal-pending|visibility:\s*hidden/);
   assert.match(css, /@media \(prefers-reduced-motion: reduce\)/);
+  assert.match(css, /animation: none/);
   assert.match(css, /opacity: 1/);
-  assert.doesNotMatch(source, /setTimeout|setInterval|preventDefault/);
+});
+
+test('mobile header is app-local, native without JS, and supports synchronized disclosure and dismissal', () => {
+  const source = readFileSync(
+    new URL('../apps/estetica/src/components/VioraHeader.astro', import.meta.url),
+    'utf8',
+  );
+  const css = readFileSync(
+    new URL('../apps/estetica/src/styles/viora-mobile.css', import.meta.url),
+    'utf8',
+  );
+  assert.match(source, /<details class="viora-mobile-menu">/);
+  assert.match(source, /<summary aria-controls="viora-mobile-navigation">/);
+  assert.match(source, /setAttribute\('aria-expanded', String\(menu.open\)\)/);
+  assert.match(source, /event.key === 'Escape'/);
+  assert.match(source, /trigger.focus\(\)/);
+  assert.match(source, /pointerdown/);
+  assert.match(source, /removeEventListener/);
+  assert.match(source, /astro:before-swap/);
+  assert.match(css, /height: 64px/);
+  assert.match(css, /position: sticky/);
+  assert.match(css, /position: absolute/);
+  assert.match(css, /focus-visible/);
+});
+
+test('botanical frame is decorative SVG and footer meta remains separate from legal navigation', () => {
+  const botanical = readFileSync(
+    new URL('../apps/estetica/src/components/VioraBotanical.astro', import.meta.url),
+    'utf8',
+  );
+  const layout = readFileSync(
+    new URL('../apps/estetica/src/layouts/VioraSiteLayout.astro', import.meta.url),
+    'utf8',
+  );
+  const css = readFileSync(
+    new URL('../apps/estetica/src/styles/viora-experience.css', import.meta.url),
+    'utf8',
+  );
+  assert.match(botanical, /aria-hidden="true"/);
+  assert.match(botanical, /focusable="false"/);
+  assert.match(botanical, /viora-botanical__flowers/);
+  assert.doesNotMatch(botanical, /<image|https?:/);
+  const legal = layout.match(/<nav class="viora-footer-legal"[\s\S]*?<\/nav>/)?.[0];
+  assert.ok(legal);
+  assert.doesNotMatch(legal, /Vista previa|No indexable/);
+  assert.match(layout, /class="viora-footer-preview"/);
+  assert.match(css, /viora-portrait-frame/);
+  assert.match(css, /--viora-plum/);
+  assert.match(css, /--viora-rose/);
 });

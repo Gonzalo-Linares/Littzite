@@ -1,5 +1,5 @@
 import assert from 'node:assert/strict';
-import { readFileSync } from 'node:fs';
+import { readFileSync, readdirSync } from 'node:fs';
 import path from 'node:path';
 import test from 'node:test';
 import { execFileSync } from 'node:child_process';
@@ -20,6 +20,17 @@ test('VIORA service rail handles 0, 1, 4, 5, 7 and 10 items progressively', () =
     { cwd: root, env: { ...process.env, ASTRO_TELEMETRY_DISABLED: '1' }, stdio: 'pipe' },
   );
   const html = readFileSync(path.join(fixtureRoot, 'dist/index.html'), 'utf8');
+  const cssDirectory = path.join(fixtureRoot, 'dist/_astro');
+  const builtCss = readdirSync(cssDirectory)
+    .filter((name) => name.endsWith('.css'))
+    .map((name) => readFileSync(path.join(cssDirectory, name), 'utf8'))
+    .join('\n');
+  assert.match(builtCss, /animation-timeline:--viora-services/);
+  assert.doesNotMatch(
+    builtCss,
+    /animation:[^;{}]*(?:viora-scroll-entry[^;{}]*view\(|view\([^;{}]*viora-scroll-entry)/,
+    'optimizer must not fold the view timeline into an unsupported animation shorthand',
+  );
   const counts = [0, 1, 4, 5, 7, 10];
 
   for (const count of counts) {

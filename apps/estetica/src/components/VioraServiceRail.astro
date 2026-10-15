@@ -46,7 +46,10 @@ const pageCount = Math.ceil(services.length / pageSize);
         <h2 id={`${id}-title`} data-viora-reveal={reveal ? 'services' : undefined}>
           {title}
         </h2>
-        <p data-viora-reveal={reveal ? 'services' : undefined} style="--viora-reveal-delay: 70ms">
+        <p
+          data-viora-reveal={reveal ? 'services' : undefined}
+          style="--viora-reveal-start: 4%; --viora-reveal-end: 42%"
+        >
           {description}
         </p>
       </div>
@@ -90,7 +93,7 @@ const pageCount = Math.ceil(services.length / pageSize);
               class="viora-service-rail__card"
               data-service-rail-card
               data-viora-reveal={reveal ? 'services' : undefined}
-              style={`--viora-reveal-delay: ${Math.min(index % pageSize, 3) * 55 + 100}ms`}
+              style={`--viora-reveal-start: ${32 + (index % pageSize) * 4}%; --viora-reveal-end: ${70 + (index % pageSize) * 4}%`}
             >
               <a class="viora-service-rail__link" href={`/servicios/${service.slug}/`}>
                 {visual && (

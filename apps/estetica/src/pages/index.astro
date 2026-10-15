@@ -2,7 +2,6 @@
 import ButtonLink from '@littzite/ui/ButtonLink.astro';
 import VioraServiceRail from '../components/VioraServiceRail.astro';
 import VioraSiteLayout from '../layouts/VioraSiteLayout.astro';
-import VioraReveal from '../components/VioraReveal.astro';
 import VioraBotanical from '../components/VioraBotanical.astro';
 import VioraProfessional from '../components/VioraProfessional.astro';
 import { siteContent } from '../site.config';
@@ -29,26 +28,28 @@ if (!home || !intro) throw new Error('Incomplete VIORA home');
         <h1 id="titulo-principal">{intro.heading}</h1>
       </div>
       <div class="viora-commercial-hero__visual">
+        <div class="viora-portrait-frame">
+          {victoriaMedia.src ? (
+            <img
+              src={victoriaMedia.src}
+              alt={victoriaMedia.alt}
+              style={{ objectPosition: victoriaMedia.focalPosition }}
+              width="900"
+              height="1100"
+              fetchpriority="high"
+            />
+          ) : (
+            <div
+              class="viora-photo-placeholder viora-photo-placeholder--hero"
+              role="img"
+              aria-label="Composición de marca VIORA"
+            >
+              <img src="/brand/viora-simbolo.png" alt="" width="915" height="1080" />
+            </div>
+          )}
+          <span class="viora-commercial-hero__location">{vioraCommercial.publicLocation}</span>
+        </div>
         <VioraBotanical />
-        {victoriaMedia.src ? (
-          <img
-            src={victoriaMedia.src}
-            alt={victoriaMedia.alt}
-            style={{ objectPosition: victoriaMedia.focalPosition }}
-            width="900"
-            height="1100"
-            fetchpriority="high"
-          />
-        ) : (
-          <div
-            class="viora-photo-placeholder viora-photo-placeholder--hero"
-            role="img"
-            aria-label="Composición de marca VIORA"
-          >
-            <img src="/brand/viora-simbolo.png" alt="" width="915" height="1080" />
-          </div>
-        )}
-        <span class="viora-commercial-hero__location">{vioraCommercial.publicLocation}</span>
       </div>
     </div>
   </section>
@@ -112,5 +113,4 @@ if (!home || !intro) throw new Error('Incomplete VIORA home');
       </div>
     </div>
   </section>
-  <VioraReveal />
 </VioraSiteLayout>

@@ -1,13 +1,11 @@
 ---
 import BaseLayout from '@littzite/ui/BaseLayout.astro';
-import SiteHeader from '@littzite/ui/SiteHeader.astro';
+import VioraHeader from '../components/VioraHeader.astro';
 import SiteFooter from '@littzite/ui/SiteFooter.astro';
 import SiteAttribution from '@littzite/ui/SiteAttribution.astro';
 import { vioraAttribution } from '../site-attribution';
 import Link from '@littzite/ui/Link.astro';
-import ButtonLink from '@littzite/ui/ButtonLink.astro';
 import type { SeoMetadata } from '@littzite/content-schema';
-import VioraInstagramLink from '../components/VioraInstagramLink.astro';
 import { siteContent } from '../site.config';
 import {
   canonicalFor,
@@ -18,6 +16,7 @@ import {
 import '../styles/viora.css';
 import '../styles/viora-commercial.css';
 import '../styles/viora-experience.css';
+import '../styles/viora-mobile.css';
 
 interface Props {
   seo: SeoMetadata;
@@ -39,38 +38,7 @@ const { site } = siteContent;
   siteName="VIORA · Estética integral"
   structuredData={indexable ? vioraStructuredData() : undefined}
 >
-  <SiteHeader
-    slot="header"
-    brand={'VIORA, est\u00e9tica integral'}
-    descriptor="Tu momento, tu bienestar"
-    links={[
-      { label: 'Inicio', href: '/' },
-      { label: 'Servicios', href: '/servicios/' },
-      { label: 'VIORA', href: '/viora/' },
-      { label: 'Contacto', href: '/contacto/' },
-    ]}
-  >
-    <img
-      slot="brand"
-      class="viora-header-logo"
-      src="/brand/viora-horizontal.png"
-      width="1600"
-      height="480"
-      alt=""
-      decoding="async"
-    />
-    <div slot="actions" class="viora-header-actions">
-      <VioraInstagramLink className="viora-header-instagram" />
-      <ButtonLink
-        href="/servicios/"
-        variant="primary"
-        size="compact"
-        className="site-header__badge"
-      >
-        Turnos
-      </ButtonLink>
-    </div>
-  </SiteHeader>
+  <VioraHeader slot="header" />
 
   <slot />
 
