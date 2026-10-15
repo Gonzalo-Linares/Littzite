@@ -2,7 +2,6 @@
 import ButtonLink from '@littzite/ui/ButtonLink.astro';
 import TattooSiteLayout from '../layouts/TattooSiteLayout.astro';
 import TattooHeroMedia from '../components/TattooHeroMedia.astro';
-import TattooInstagramLink from '../components/TattooInstagramLink.astro';
 import TattooWorkCarousel from '../components/TattooWorkCarousel.astro';
 import { tattooActions } from '../brand.config';
 import { featuredTattooWorks } from '../portfolio';
@@ -13,6 +12,7 @@ import { featuredTattooWorks } from '../portfolio';
   description="Explorá trabajos, elegí el estilo que te representa y sacá tu turno con Juanjo Tattoo Studio en San Juan."
 >
   <section class="tattoo-home-hero" aria-labelledby="home-hero-title">
+    <TattooHeroMedia />
     <div class="container tattoo-home-hero__grid">
       <div class="tattoo-home-hero__copy">
         <h1 id="home-hero-title">Tu próximo tatuaje empieza acá.</h1>
@@ -25,7 +25,6 @@ import { featuredTattooWorks } from '../portfolio';
           </ButtonLink>
         </div>
       </div>
-      <TattooHeroMedia />
     </div>
   </section>
 
@@ -34,15 +33,11 @@ import { featuredTattooWorks } from '../portfolio';
       <div class="tattoo-section-heading tattoo-section-heading--split">
         <div>
           <h2 id="home-work-title">Trabajos destacados</h2>
-          <p>Una selección de trabajos del estudio.</p>
         </div>
         <div class="tattoo-work-section__actions">
           <ButtonLink href="/trabajos/" variant="secondary" size="compact">
-            Ver todos los trabajos
+            Ver todos
           </ButtonLink>
-          <TattooInstagramLink showHandle={false} className="tattoo-inline-instagram">
-            Ver Instagram
-          </TattooInstagramLink>
         </div>
       </div>
       <TattooWorkCarousel items={featuredTattooWorks} id="inicio-trabajos-carousel" />

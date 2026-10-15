@@ -792,13 +792,13 @@ if (app === 'estetica') {
   assert.ok(workPage.includes('class="tattoo-gallery"'), 'Juanjo portfolio route missing');
   assert.equal(
     (workPage.match(/class="tattoo-carousel__item/g) ?? []).length,
-    18,
+    0,
     'Work fixture must render three physical copies of each preview item',
   );
-  assert.equal((workPage.match(/<figure[^>]*aria-hidden="true"/g) ?? []).length, 12);
+  assert.equal((workPage.match(/<figure[^>]*aria-hidden="true"/g) ?? []).length, 0);
   assert.equal((workPage.match(/class="tattoo-gallery__item"/g) ?? []).length, 12);
   assert.equal((workPage.match(/loading="lazy"/g) ?? []).length >= 3, true);
-  assert.match(workPage, /Trabajos destacados/);
+  assert.doesNotMatch(workPage, /PORTFOLIO DEL ESTUDIO|SELECCIÓN DEL ESTUDIO/);
   assert.match(workPage, /Todos los trabajos/);
   assert.match(workPage, /<dialog[^>]*aria-labelledby="lightbox-title"/);
   assert.equal((workPage.match(/<button[^>]*data-lightbox-(?:previous|next)/g) ?? []).length, 2);

@@ -91,7 +91,7 @@ test('Juanjo footer and navigation retain the owner logo and omit Estudio and In
     new URL('apps/tattoo/src/layouts/TattooSiteLayout.astro', root),
     'utf8',
   );
-  const footer = layout.slice(layout.indexOf('<SiteFooter'));
+  const footer = layout.slice(layout.indexOf('<footer'));
   assert.match(layout, /tattoo-footer-brand/);
   assert.match(layout, /tattooBrand\.marks\.signature\.src/);
   assert.doesNotMatch(layout, /href="\/estudio\//);

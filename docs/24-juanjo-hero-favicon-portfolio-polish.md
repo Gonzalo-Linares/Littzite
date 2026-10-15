@@ -52,3 +52,20 @@ Install frozen, format, lint, boundaries, contratos, Astro check, build, HTML, t
 
 Por instrucción expresa del usuario no se hizo QA con navegador, Playwright ni recorridos visuales automatizados. Sólo se inspeccionaron los dos archivos originales con visor de imágenes y se ejecutaron los checks del repo. No se afirma validación visual responsive ni prueba manual de gestos/focus de esta ronda; accesibilidad/lightbox se conservan y cubren por tests.
 GitHub Actions sigue desactivado; no se declara CI verde. Draft contra main, sin Ready, merge ni deploy.
+
+
+## Actualización del mismo PR #44: composición compacta y favicon VIORA
+
+Previous HEAD: 4409ad98b988282e0c33b7f5c168805cb73ffc09. Esta sección reemplaza las decisiones visuales anteriores que indicaban copy izquierdo, dos filas de header mobile o floating actions mobile.
+
+Hero: TattooHeroMedia es ahora hijo directo de la sección full-width, fuera del container de copy. Imagen cover sin deformación; altura desktop guiada por 809/1942 del ancho viewport, sin max-width visual. Copy y CTAs centrados, overlay radial sin caja. Móvil hasta 700px: foco 75% y altura clamp(28rem,70svh,36rem), centrado y contraste localizado. Asset fuente inalterado.
+
+Home: sólo título Trabajos destacados y Ver todos, padding 2rem/2.5rem. /trabajos/: único título Todos los trabajos y grilla inmediata, sin carrusel duplicado ni eyebrows. Grilla 3 columnas por encima de 1024px, 2 hasta 1024, 1 hasta 700. Previews desktop 320–448px y carrusel 320–432px; móvil clamp(300px,85vw,384px). Metadatos focalPoint/fit/orientation conservados; originales y lógica de lightbox intactos.
+
+TattooHeader app-local conserva desktop y usa una fila de 64px hasta 700px con marca compacta, Turnos y Menú nativo details/summary. aria-controls, aria-expanded sincronizado, Escape con devolución de foco, cierre fuera/enlace y limpieza de listeners. Sin cambios nuevos en shared packages.
+
+Footer app-local elimina Volver arriba de todo el HTML. Mobile oculta logo Juanjo, centra Powered by/Littzite, links agrupados, legales y copyright; padding 1rem y gaps breves. Floating actions permanecen desktop y display:none en móvil hasta 700px, sin reserva inferior adicional. Contacto incorpora un enlace normal al WhatsApp ya aprobado para conservar el canal en móvil; no modifica agenda ni mapa.
+
+Excepción VIORA expresamente añadida por el usuario en este pedido: sólo favicon. Fuente Downloads/Monograma V botánico en ciruela.png, 1254×1254, SHA-256 8c7cb221d6ee85b79727ec8f8b02a0ae016414a3bfdee1a712be2ec405c5f36b. Bounding box alfa completo (0,0,1254,1254): no había margen alfa exterior recortable. Reducción LANCZOS proporcional a 60×60 sobre canvas transparente 64×64 (2px safe area), conservando fondo ciruela propio. Único tamaño consumido por iconHref; no se generan variantes sin uso. Archivo viora-botanical-icon.png SHA-256 3fac5ae91790c27313d12b68be746eb4a799ac4763af1e014b81776348057e52. SVG anterior sin referencias runtime eliminado; configuración, avisos y prueba de checksum actualizados. Ningún otro contenido/estilo VIORA cambia.
+
+No browser QA, Playwright, screenshots ni recorridos automatizados. Se inspeccionó únicamente el archivo fuente del nuevo icono. Revisión visual manual a cargo del usuario. Checks locales y resultado final en el mismo Draft PR; no se afirma CI. Lockfile, flags de release, fotos, metadata, Cal.com, Maps y legales sin cambios. PR #43 intacto; sin Ready, merge ni deploy.

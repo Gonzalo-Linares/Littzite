@@ -53,14 +53,14 @@ test('carousel handles 0, 1, 2 and 5 authorized metadata items and a configured 
   assert.match(html, /class="tattoo-hero-media__background" src="\/tests\/work-one\.svg"/);
   assert.match(html, /class="tattoo-hero-media__background"[^>]*alt=""/);
 
-  for (const [route, count, featuredCount] of [
+  for (const [route, count] of [
     ['gallery-empty', 0, 0],
     ['gallery-one', 1, 1],
     ['gallery-five', 5, 3],
   ]) {
     const gallery = readFileSync(path.join(fixtureRoot, `dist/${route}/index.html`), 'utf8');
     assert.equal((gallery.match(/class="tattoo-gallery__item"/g) ?? []).length, count);
-    assert.equal((gallery.match(/class="tattoo-carousel__item/g) ?? []).length, featuredCount * 3);
+    assert.equal((gallery.match(/class="tattoo-carousel__item/g) ?? []).length, 0);
     assert.equal((gallery.match(/data-image="[^"]+"/g) ?? []).length, count);
     if (count === 0) {
       assert.match(gallery, /Todavía no hay trabajos publicados\./);

@@ -157,19 +157,16 @@ test('confirmed synthetic groups render ARS and canonical booking immediately af
   );
 });
 
-test('favicon embeds the original white VIORA symbol unchanged on a brand-plum backdrop', () => {
+test('VIORA favicon uses the approved botanical monogram PNG derivative', () => {
   const icon = readFileSync(
-    new URL('../apps/estetica/public/brand/viora-favicon.svg', import.meta.url),
-    'utf8',
+    new URL('../apps/estetica/public/brand/viora-botanical-icon.png', import.meta.url),
   );
-  assert.match(icon, /fill="#7B4655"/);
-  const embedded = icon.match(/data:image\/png;base64,([^"]+)/)?.[1];
-  assert.ok(embedded);
   assert.equal(
-    createHash('sha256').update(Buffer.from(embedded, 'base64')).digest('hex'),
-    '2c9e8920aa913a8f0d6a4cede272f002d246b34058260298a4537d2c61d633a9',
+    createHash('sha256').update(icon).digest('hex'),
+    '3fac5ae91790c27313d12b68be746eb4a799ac4763af1e014b81776348057e52',
   );
-  assert.doesNotMatch(icon, /<text|<path/);
+  assert.equal(icon.readUInt32BE(16), 64);
+  assert.equal(icon.readUInt32BE(20), 64);
 });
 
 test('preview labels are non-approved structural samples and cannot carry numeric amounts or release', () => {

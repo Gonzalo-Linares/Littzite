@@ -141,7 +141,7 @@ test('SiteConfig accepts an optional root-relative local browser icon only', () 
     false,
   );
   assert.equal(siteConfigSchema.safeParse({ ...base, iconHref: '/../icon.png' }).success, false);
-  assert.equal(estetica.site.iconHref, '/brand/viora-favicon.svg');
+  assert.equal(estetica.site.iconHref, '/brand/viora-botanical-icon.png');
   assert.equal(tattoo.site.iconHref, '/brand/oni-icon-64.png');
 });
 

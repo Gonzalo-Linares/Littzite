@@ -10,7 +10,7 @@ import { vioraBookingTargetUrls, vioraCommercial } from './viora-release.ts';
 const parsedContent = siteContentSchema.parse({
   site: {
     defaultLocale: 'es-AR',
-    iconHref: '/brand/viora-favicon.svg',
+    iconHref: '/brand/viora-botanical-icon.png',
     locations: [{ id: 'viora-public-location', city: vioraCommercial.publicLocation }],
     theme: {
       surface: '#FAF5F0', // Marfil

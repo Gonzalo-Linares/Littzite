@@ -20,7 +20,7 @@ const root = new URL('../', import.meta.url);
 const read = (file) => readFile(new URL(file, root), 'utf8');
 
 test('Juanjo uses the approved Cal.com booking link and keeps Instagram available', async () => {
-  const layout = await read('apps/tattoo/src/layouts/TattooSiteLayout.astro');
+  const layout = await read('apps/tattoo/src/components/TattooHeader.astro');
   const social = await read('apps/tattoo/src/components/TattooInstagramLink.astro');
   assert.match(layout, /label: 'Guía', href: '\/guia\//);
   assert.match(layout, /href=\{tattooActions\.turnsHref\}/);
@@ -225,4 +225,28 @@ test('retired guide illustrations and their third-party body-photo assets are re
     await read('apps/tattoo/src/styles/juanjo.css'),
     /tattoo-sensitivity|tattoo-size-map|tattoo-body-map/,
   );
+});
+
+test('compact Juanjo keeps full bleed media outside the content container and app-local mobile disclosure', async () => {
+  const home = await read('apps/tattoo/src/pages/index.astro');
+  const header = await read('apps/tattoo/src/components/TattooHeader.astro');
+  const layout = await read('apps/tattoo/src/layouts/TattooSiteLayout.astro');
+  const gallery = await read('apps/tattoo/src/components/TattooGallery.astro');
+  assert.ok(
+    home.indexOf('<TattooHeroMedia />') <
+      home.indexOf('<div class="container tattoo-home-hero__grid">'),
+  );
+  assert.doesNotMatch(
+    home,
+    /Una selección de trabajos|PORTFOLIO DEL ESTUDIO|SELECCIÓN DEL ESTUDIO/,
+  );
+  assert.match(header, /<details class="tattoo-mobile-menu">/);
+  assert.match(header, /aria-controls="tattoo-mobile-navigation"/);
+  assert.match(header, /setAttribute\('aria-expanded'/);
+  assert.match(header, /event.key === 'Escape'/);
+  assert.match(header, /summary.focus\(\)/);
+  assert.match(header, /menu.contains\(event.target\)/);
+  assert.doesNotMatch(layout, /Volver arriba|<SiteFooter/);
+  assert.match(gallery, /<h1 id="portfolio-title">Todos los trabajos<\/h1>/);
+  assert.doesNotMatch(gallery, /<TattooWorkCarousel|PORTFOLIO DEL ESTUDIO|SELECCIÓN DEL ESTUDIO/);
 });

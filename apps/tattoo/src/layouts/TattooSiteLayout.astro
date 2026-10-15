@@ -1,12 +1,9 @@
 ---
 import BaseLayout from '@littzite/ui/BaseLayout.astro';
-import SiteHeader from '@littzite/ui/SiteHeader.astro';
-import SiteFooter from '@littzite/ui/SiteFooter.astro';
+import TattooHeader from '../components/TattooHeader.astro';
 import Link from '@littzite/ui/Link.astro';
 import SiteAttribution from '@littzite/ui/SiteAttribution.astro';
-import ButtonLink from '@littzite/ui/ButtonLink.astro';
-import TattooInstagramLink from '../components/TattooInstagramLink.astro';
-import { tattooActions, tattooBrand } from '../brand.config';
+import { tattooBrand } from '../brand.config';
 import { siteContent } from '../site.config';
 import {
   tattooCanonicalFor,
@@ -43,79 +40,49 @@ const { site } = siteContent;
     <link rel="icon" type="image/png" sizes="32x32" href="/brand/oni-icon-32.png" />
     <link rel="apple-touch-icon" sizes="180x180" href="/brand/oni-icon-180.png" />
   </Fragment>
-  <SiteHeader
-    slot="header"
-    brand={tattooBrand.name}
-    descriptor=""
-    links={[
-      { label: 'Inicio', href: '/' },
-      { label: 'Trabajos', href: '/trabajos/' },
-      { label: 'Guía', href: '/guia/' },
-      { label: 'Contacto', href: '/contacto/' },
-    ]}
-  >
-    <picture slot="brand" class="tattoo-brand-mark" aria-hidden="true">
-      <source media="(max-width: 600px)" srcset={tattooBrand.marks.jt.src} type="image/png" />
-      <img
-        class="tattoo-brand-mark__image"
-        src={tattooBrand.marks.signature.src}
-        width="1774"
-        height="887"
-        alt=""
-        loading="eager"
-        decoding="async"
-      />
-    </picture>
-    <div slot="actions" class="tattoo-header-actions">
-      <TattooInstagramLink className="tattoo-header-instagram" />
-      <ButtonLink
-        href={tattooActions.turnsHref}
-        variant="primary"
-        size="compact"
-        icon="external"
-        className="tattoo-header-turns"
-      >
-        Turnos
-      </ButtonLink>
-    </div>
-  </SiteHeader>
+  <TattooHeader slot="header" />
 
   <slot />
   <TattooContactActions />
 
-  <SiteFooter
-    slot="footer"
-    brand={tattooBrand.name}
-    note="Tinta con carácter · San Juan, Argentina."
-  >
-    <span slot="brand" class="tattoo-footer-brand">
-      <img
-        src={tattooBrand.marks.signature.src}
-        width="1774"
-        height="887"
-        alt=""
-        loading="lazy"
-        decoding="async"
+  <footer slot="footer" class="site-footer">
+    <div class="container site-footer__inner">
+      <span class="tattoo-footer-brand">
+        <img
+          src={tattooBrand.marks.signature.src}
+          width="1774"
+          height="887"
+          alt=""
+          loading="lazy"
+          decoding="async"
+        />
+      </span>
+      <nav class="tattoo-footer-nav" aria-label="Navegación del pie de página">
+        <Link className="tattoo-footer-nav__link" href="/">
+          Inicio
+        </Link>
+        <Link className="tattoo-footer-nav__link" href="/trabajos/">
+          Trabajos
+        </Link>
+        <Link className="tattoo-footer-nav__link" href="/guia/">
+          Guía
+        </Link>
+        <Link className="tattoo-footer-nav__link" href="/contacto/">
+          Contacto
+        </Link>
+        <Link className="tattoo-footer-nav__link" href="/guia/#preguntas">
+          Preguntas frecuentes
+        </Link>
+      </nav>
+      <SiteAttribution
+        label={tattooBrand.attribution.label}
+        brand={tattooBrand.attribution.brand}
+        href={tattooBrand.attribution.href}
+        logoSrc={tattooBrand.attribution.logoSrc}
+        className="tattoo-attribution"
       />
-    </span>
-    <nav slot="links" class="tattoo-footer-nav" aria-label="Navegación del pie de página">
-      <Link className="tattoo-footer-nav__link" href="/">
-        Inicio
-      </Link>
-      <Link className="tattoo-footer-nav__link" href="/trabajos/">
-        Trabajos
-      </Link>
-      <Link className="tattoo-footer-nav__link" href="/guia/">
-        Guía
-      </Link>
-      <Link className="tattoo-footer-nav__link" href="/contacto/">
-        Contacto
-      </Link>
-      <Link className="tattoo-footer-nav__link" href="/guia/#preguntas">
-        Preguntas frecuentes
-      </Link>
-    </nav>
-    <div slot="bottom" class="tattoo-footer-bottom">
+    </div>
+    <div class="container site-footer__bottom tattoo-footer-bottom">
       <p>© {new Date().getFullYear()} Juanjo Tattoo Studio. Todos los derechos reservados.</p>
       <nav class="tattoo-footer-legal" aria-label="Información legal">
         <Link className="tattoo-footer-legal__link" href="/privacidad/">
@@ -129,13 +96,5 @@ const { site } = siteContent;
         </Link>
       </nav>
     </div>
-    <SiteAttribution
-      slot="attribution"
-      label={tattooBrand.attribution.label}
-      brand={tattooBrand.attribution.brand}
-      href={tattooBrand.attribution.href}
-      logoSrc={tattooBrand.attribution.logoSrc}
-      className="tattoo-attribution"
-    />
-  </SiteFooter>
+  </footer>
 </BaseLayout>
