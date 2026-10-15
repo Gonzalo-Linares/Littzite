@@ -1,0 +1,32 @@
+---
+import ButtonLink from '@littzite/ui/ButtonLink.astro';
+import { vioraCommercial, vioraPriceInquiryWhatsAppHref } from '../viora-release.ts';
+interface Props {
+  showBooking?: boolean;
+}
+const { showBooking = true } = Astro.props;
+---
+
+<section class="viora-inquiry viora-commercial-section" aria-labelledby="viora-inquiry-title">
+  <div class="container viora-inquiry__inner">
+    <div>
+      <h2 id="viora-inquiry-title">¿No sabés qué servicio elegir?</h2>
+      <p>Escribinos y te ayudamos a encontrar la opción adecuada antes de reservar.</p>
+    </div>
+    <div class="viora-commercial-actions">
+      {vioraPriceInquiryWhatsAppHref && (
+        <ButtonLink href={vioraPriceInquiryWhatsAppHref} variant="primary" newTab icon="external">
+          Consultar por WhatsApp
+        </ButtonLink>
+      )}
+      <ButtonLink href={vioraCommercial.instagramHref} variant="secondary" newTab icon="external">
+        Consultar por Instagram
+      </ButtonLink>
+      {showBooking && (
+        <ButtonLink href="/reservar/" variant="primary">
+          Reservar turno
+        </ButtonLink>
+      )}
+    </div>
+  </div>
+</section>

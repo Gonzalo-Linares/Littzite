@@ -14,3 +14,10 @@
 - Copyright and license: Bitstream Vera/DejaVu notices retained at `apps/tattoo/public/fonts/LICENCIA-DejaVu.txt`.
 
 These font files are bundled with the static Juanjo site. The official Juanjo logos are client brand assets authorized for this site by the supplied owner request; they are not reusable Littzite assets. Their source and checksums are recorded in [the digital brand implementation note](docs/20-juanjo-digital-brand-implementation.md).
+
+## VIORA commercial experience assets
+
+- Official symbol: `apps/estetica/public/brand/viora-simbolo.png` is the unchanged VIORA_simbolo_ciruela.png supplied in the VIORA brand kit. Use as neutral brand composition explicitly requested by the owner; no reconstructed glyph or artificial portrait. Client brand rights remain with their owner.
+- Favicon: `apps/estetica/public/brand/viora-favicon.svg` embeds the unchanged official VIORA_simbolo_blanco.png on a ciruela (#7B4655) vector backdrop, preserving proportions. The embedded PNG checksum is covered by tests. No tracing or re-created V.
+- DejaVu Sans: unchanged DejaVuSans.ttf supplied in that kit, distributed in apps/estetica/public/fonts with its full LICENCIA_DejaVu_Sans.txt. The font name/version can be read from the original binary. License: Bitstream Vera with DejaVu changes in the public domain; notices retained. Source: https://dejavu-fonts.github.io/. No font code was added as a package dependency.
+- Nimbus Roman: named local font only, with Times New Roman fallback as the manual permits. The kit's AGPL-3 font binary is not redistributed as a webfont; this PR does not assume its document-embedding exception grants webfont distribution rights.

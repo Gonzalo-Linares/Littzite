@@ -1,77 +1,142 @@
 ---
-import LandingHero from '@littzite/sections/LandingHero.astro';
 import ButtonLink from '@littzite/ui/ButtonLink.astro';
 import VioraServiceRail from '../components/VioraServiceRail.astro';
 import VioraSiteLayout from '../layouts/VioraSiteLayout.astro';
+import VioraProfessional from '../components/VioraProfessional.astro';
+import VioraInquiry from '../components/VioraInquiry.astro';
 import { siteContent } from '../site.config';
 import { serviceVisuals } from '../service-visuals';
-import heroImage from '../assets/viora-hero.jpg';
-import heroImageSmall from '../assets/viora-hero-small.jpg';
-
-const { pages } = siteContent;
-const home = pages.find((page) => page.slug === '');
+import { victoriaMedia, vioraSpaceMedia, serviceDetailFor } from '../viora-commercial-content';
+import { vioraCommercial } from '../viora-release.ts';
+import { vioraLocation } from '../viora-location';
+const home = siteContent.pages.find((page) => page.slug === '');
 const intro = home?.sections.find((section) => section.type === 'intro');
-if (!home || !intro) throw new Error('Incomplete VIORA preview content');
+if (!home || !intro) throw new Error('Incomplete VIORA home');
+const summaries = Object.fromEntries(
+  siteContent.services.map((service) => [service.id, serviceDetailFor(service.id).summary]),
+);
+const steps = [
+  { title: 'Elegí tu servicio', text: 'Conocé qué incluye y las opciones disponibles.' },
+  { title: 'Reservá', text: 'Elegí el día y horario disponible en la agenda.' },
+  { title: 'Vení a VIORA', text: 'Te esperamos en Rivadavia, San Juan.' },
+];
 ---
 
 <VioraSiteLayout seo={home.seo}>
-  <LandingHero
-    section={intro}
-    variant="serene"
-    ctaLabel="Conocé nuestras experiencias"
-    ctaHref="/servicios/"
-    artLabel="UN RESPIRO PARA VOS"
-  >
-    <picture slot="artwork" class="viora-hero-photo-frame">
-      <img
-        class="viora-hero-photo"
-        src={heroImage.src}
-        srcset={`${heroImageSmall.src} ${heroImageSmall.width}w, ${heroImage.src} ${heroImage.width}w`}
-        sizes="(min-width: 1180px) 48vw, (min-width: 741px) 45vw, calc(100vw - 2rem)"
-        width={heroImage.width}
-        height={heroImage.height}
-        alt=""
-        decoding="async"
-        fetchpriority="high"
-      />
-    </picture>
-  </LandingHero>
-
+  <section class="viora-commercial-hero" aria-labelledby="titulo-principal">
+    <div class="container viora-commercial-hero__inner">
+      <div class="viora-commercial-hero__copy">
+        <img
+          class="viora-commercial-hero__wordmark"
+          src="/brand/viora-palabra.png"
+          alt="VIORA"
+          width="1310"
+          height="275"
+        />
+        <h1 id="titulo-principal">{intro.heading}</h1>
+        <p>{intro.body}</p>
+        <div class="viora-commercial-actions">
+          <ButtonLink href="#servicios" variant="primary">
+            Ver servicios
+          </ButtonLink>
+          <ButtonLink href="/reservar/" variant="secondary">
+            Reservar turno
+          </ButtonLink>
+        </div>
+        <span class="viora-commercial-hero__location">{vioraCommercial.publicLocation}</span>
+      </div>
+      <div class="viora-commercial-hero__visual">
+        {victoriaMedia.src ? (
+          <img
+            src={victoriaMedia.src}
+            alt={victoriaMedia.alt}
+            style={{ objectPosition: victoriaMedia.focalPosition }}
+            width="900"
+            height="1100"
+            fetchpriority="high"
+          />
+        ) : (
+          <div
+            class="viora-photo-placeholder viora-photo-placeholder--hero"
+            role="img"
+            aria-label="Composición de marca VIORA"
+          >
+            <img src="/brand/viora-simbolo.png" alt="" width="915" height="1080" />
+            <span>Tu momento, tu bienestar.</span>
+          </div>
+        )}
+      </div>
+    </div>
+  </section>
   <VioraServiceRail
-    id="alcance"
-    eyebrow="Nuestro universo"
-    title="Cada cuidado tiene su momento."
-    description="Conocé las líneas de VIORA y explorá cada experiencia."
+    id="servicios"
+    eyebrow="Servicios"
+    title="¿Qué servicio estás buscando?"
+    description="Explorá cada servicio, conocé qué incluye y revisá sus opciones antes de reservar."
     services={siteContent.services}
     visuals={serviceVisuals}
+    summaries={summaries}
   />
-
-  <section
-    class="viora-home-teaser viora-home-teaser--story"
-    aria-labelledby="viora-home-story-title"
-  >
-    <div class="container viora-home-teaser__inner">
-      <div>
-        <p class="viora-home-teaser__eyebrow">Una forma de cuidar</p>
-        <h2 id="viora-home-story-title">Una identidad para cuidar.</h2>
-        <p>Una propuesta cercana, atenta y honesta para acompañar tus momentos de bienestar.</p>
-      </div>
-      <ButtonLink href="/viora/" variant="secondary">
-        Conocé VIORA
-      </ButtonLink>
+  <VioraProfessional />
+  <section class="viora-how viora-commercial-section" aria-labelledby="viora-how-title">
+    <div class="container">
+      <h2 id="viora-how-title">Tu turno, sin vueltas.</h2>
+      <ol class="viora-how__steps">
+        {steps.map((step, index) => (
+          <li>
+            <span aria-hidden="true">{String(index + 1).padStart(2, '0')}</span>
+            <h3>{step.title}</h3>
+            <p>{step.text}</p>
+          </li>
+        ))}
+      </ol>
     </div>
   </section>
-
-  <section class="viora-contact-teaser" aria-labelledby="viora-contact-teaser-title">
-    <div class="container viora-contact-teaser__inner">
-      <div>
-        <p class="viora-home-teaser__eyebrow">Encontranos</p>
-        <h2 id="viora-contact-teaser-title">Un espacio para tu bienestar.</h2>
-        <p>Rivadavia, San Juan, Argentina. Encontrá las indicaciones y el Instagram oficial.</p>
+  <section class="viora-space viora-commercial-section" aria-labelledby="viora-space-title">
+    <div class="container">
+      <div class="viora-space__heading">
+        <div>
+          <h2 id="viora-space-title">Nuestro espacio</h2>
+          <p>{vioraCommercial.publicLocation}</p>
+        </div>
+        <div class="viora-commercial-actions">
+          <ButtonLink
+            href={vioraLocation.directionsHref}
+            variant="secondary"
+            newTab
+            icon="external"
+          >
+            Cómo llegar
+          </ButtonLink>
+          <ButtonLink href="/contacto/" variant="quiet">
+            Ver contacto
+          </ButtonLink>
+        </div>
       </div>
-      <ButtonLink href="/contacto/" variant="secondary">
-        Ver contacto
-      </ButtonLink>
+      <div class="viora-space__gallery">
+        {vioraSpaceMedia.map((media) =>
+          media.src ? (
+            <img
+              src={media.src}
+              alt={media.alt}
+              style={{ objectPosition: media.focalPosition }}
+              width="900"
+              height="650"
+              loading="lazy"
+            />
+          ) : (
+            <div
+              class="viora-space__placeholder"
+              role="img"
+              aria-label="Espacio reservado para una futura fotografía real"
+            >
+              <img src="/brand/viora-simbolo.png" alt="" width="915" height="1080" loading="lazy" />
+              <span>Pronto, una mirada a nuestro espacio.</span>
+            </div>
+          ),
+        )}
+      </div>
     </div>
   </section>
+  <VioraInquiry />
 </VioraSiteLayout>

@@ -29,6 +29,11 @@ const { brand, note, meta } = Astro.props;
       <slot name="secondary-links" />
     </div>
   )}
+  {Astro.slots.has('bottom') && (
+    <div class="container site-footer__bottom">
+      <slot name="bottom" />
+    </div>
+  )}
   {meta && (
     <div class="container site-footer__meta">
       <span>{meta[0]}</span>

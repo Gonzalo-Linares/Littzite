@@ -16,6 +16,7 @@ import {
   vioraStructuredData,
 } from '../viora-release.ts';
 import '../styles/viora.css';
+import '../styles/viora-commercial.css';
 
 interface Props {
   seo: SeoMetadata;
@@ -67,15 +68,7 @@ const { site } = siteContent;
 
   <slot />
 
-  <SiteFooter
-    slot="footer"
-    brand="VIORA"
-    note="Tu momento, tu bienestar."
-    meta={[
-      vioraPublicRelease ? 'VIORA · Estética integral' : 'Vista previa · No indexable',
-      vioraCommercial.publicLocation,
-    ]}
-  >
+  <SiteFooter slot="footer" brand="VIORA" note="Tu momento, tu bienestar.">
     <img
       slot="brand"
       class="viora-footer-logo"
@@ -108,6 +101,9 @@ const { site } = siteContent;
           Turnos
         </Link>
       </nav>
+    </div>
+    <div slot="bottom" class="viora-footer-bottom">
+      <p>© {new Date().getFullYear()} VIORA. Todos los derechos reservados.</p>
       <nav class="viora-footer-legal" aria-label="Información legal">
         <Link href="/privacidad/" className="viora-footer-link">
           Privacidad
@@ -121,7 +117,8 @@ const { site } = siteContent;
           BOTÓN DE ARREPENTIMIENTO
         </Link>
       </nav>
+      <span>{vioraCommercial.publicLocation}</span>
+      {!vioraPublicRelease && <span>Vista previa · No indexable</span>}
     </div>
-    <p slot="copyright">© {new Date().getFullYear()} VIORA. Todos los derechos reservados.</p>
   </SiteFooter>
 </BaseLayout>

@@ -11,9 +11,10 @@ interface Props {
   description: string;
   services: readonly Service[];
   visuals: readonly VioraServiceVisual[];
+  summaries?: Readonly<Record<string, string>>;
 }
 
-const { id, eyebrow, title, description, services, visuals } = Astro.props;
+const { id, eyebrow, title, description, services, visuals, summaries } = Astro.props;
 const pageSize = 4;
 const pageCount = Math.ceil(services.length / pageSize);
 ---
@@ -82,8 +83,8 @@ const pageCount = Math.ceil(services.length / pageSize);
                 )}
                 <div class="viora-service-rail__copy">
                   <h3>{service.displayName}</h3>
-                  <p>{service.description}</p>
-                  <span class="viora-service-rail__affordance">Ver experiencia</span>
+                  <p>{summaries?.[service.id] ?? service.description}</p>
+                  <span class="viora-service-rail__affordance">Ver servicio</span>
                 </div>
               </a>
             </article>

@@ -1,0 +1,42 @@
+---
+import { victoriaMedia, victoriaIntroduction } from '../viora-commercial-content';
+interface Props {
+  compact?: boolean;
+}
+const { compact = false } = Astro.props;
+---
+
+<section
+  class:list={[
+    'viora-professional',
+    'viora-commercial-section',
+    { 'viora-professional--compact': compact },
+  ]}
+  aria-labelledby="victoria-title"
+>
+  <div class="container viora-professional__inner">
+    {!compact && (
+      <div class="viora-professional__visual">
+        {victoriaMedia.src ? (
+          <img
+            src={victoriaMedia.src}
+            alt={victoriaMedia.alt}
+            style={{ objectPosition: victoriaMedia.focalPosition }}
+            width="900"
+            height="1100"
+            loading="lazy"
+          />
+        ) : (
+          <div class="viora-photo-placeholder">
+            <img src="/brand/viora-simbolo.png" alt="" width="915" height="1080" loading="lazy" />
+            <span>Un espacio para conocernos.</span>
+          </div>
+        )}
+      </div>
+    )}
+    <div class="viora-professional__copy">
+      <h2 id="victoria-title">Hola, soy Victoria.</h2>
+      <p>{victoriaIntroduction}</p>
+    </div>
+  </div>
+</section>

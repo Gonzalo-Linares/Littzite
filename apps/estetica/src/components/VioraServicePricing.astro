@@ -1,0 +1,60 @@
+---
+import ButtonLink from '@littzite/ui/ButtonLink.astro';
+import type { Service } from '@littzite/content-schema';
+import { resolveDirectBookingAction } from '@littzite/booking';
+import { siteContent } from '../site.config';
+import { formatArs, type VioraPricing } from '../viora-commercial-content';
+interface Props {
+  service: Service;
+  pricing: VioraPricing;
+}
+const { service, pricing } = Astro.props;
+const actions = service.actions
+  .filter((action) => action.type === 'direct-booking')
+  .map((action) => resolveDirectBookingAction(action, siteContent.bookingTargets));
+---
+
+<section class="viora-pricing" id="opciones" aria-labelledby="viora-pricing-title">
+  <h2 id="viora-pricing-title">Opciones y precios</h2>
+  {pricing.status === 'pending' ? (
+    <p class="viora-pricing__pending">Valores a confirmar.</p>
+  ) : (
+    pricing.priceGroups.map((group) => (
+      <div class="viora-pricing__group">
+        <h3>{group.title}</h3>
+        <dl>
+          {group.items.map((item) => (
+            <div class="viora-pricing__item">
+              <dt>
+                {item.label}
+                {item.detail && <small>{item.detail}</small>}
+              </dt>
+              <dd>
+                {item.amountArs !== undefined ? (
+                  <>
+                    {item.prefix && <span>{item.prefix} </span>}
+                    {formatArs(item.amountArs)}
+                  </>
+                ) : (
+                  'Consultar valor'
+                )}
+              </dd>
+            </div>
+          ))}
+        </dl>
+      </div>
+    ))
+  )}
+  {actions.length ? (
+    <div class="viora-service-actions">
+      {actions.map((action) => (
+        <ButtonLink href={action.href} variant="primary" icon="external">
+          Reservar turno
+        </ButtonLink>
+      ))}
+      <p>Vas a ver los horarios disponibles y elegir el que mejor te quede.</p>
+    </div>
+  ) : (
+    <p>Consultá por este servicio antes de coordinar un turno.</p>
+  )}
+</section>

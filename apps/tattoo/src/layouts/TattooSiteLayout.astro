@@ -107,17 +107,20 @@ const { site } = siteContent;
         Preguntas frecuentes
       </Link>
     </nav>
-    <nav slot="secondary-links" class="tattoo-footer-legal" aria-label="Información legal">
-      <Link className="tattoo-footer-legal__link" href="/privacidad/">
-        Privacidad
-      </Link>
-      <Link className="tattoo-footer-legal__link" href="/terminos-y-condiciones/">
-        Términos
-      </Link>
-      <Link className="tattoo-footer-legal__link" href="/arrepentimiento/">
-        Arrepentimiento
-      </Link>
-    </nav>
+    <div slot="bottom" class="tattoo-footer-bottom">
+      <p>© {new Date().getFullYear()} Juanjo Tattoo Studio. Todos los derechos reservados.</p>
+      <nav class="tattoo-footer-legal" aria-label="Información legal">
+        <Link className="tattoo-footer-legal__link" href="/privacidad/">
+          Privacidad
+        </Link>
+        <Link className="tattoo-footer-legal__link" href="/terminos-y-condiciones/">
+          Términos
+        </Link>
+        <Link className="tattoo-footer-legal__link" href="/arrepentimiento/">
+          Arrepentimiento
+        </Link>
+      </nav>
+    </div>
     <SiteAttribution
       slot="attribution"
       label={tattooBrand.attribution.label}
@@ -126,8 +129,5 @@ const { site } = siteContent;
       logoSrc={tattooBrand.attribution.logoSrc}
       className="tattoo-attribution"
     />
-    <p slot="copyright">
-      © {new Date().getFullYear()} Juanjo Tattoo Studio. Todos los derechos reservados.
-    </p>
   </SiteFooter>
 </BaseLayout>
