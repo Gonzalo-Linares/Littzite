@@ -1092,7 +1092,6 @@
   gap: clamp(1.25rem, 3vw, 2.5rem);
 }
 .viora-contact__details {
-  grid-area: details;
   min-width: 0;
   padding: clamp(1.5rem, 3vw, 2.5rem);
   border: 1px solid color-mix(in srgb, var(--viora-plum) 16%, transparent);
@@ -1127,7 +1126,6 @@
   margin-top: 1rem;
 }
 .viora-contact__map {
-  grid-area: map;
   min-width: 0;
   align-self: start;
   padding: 0.55rem;
@@ -1418,6 +1416,7 @@
 }
 .viora-footer-groups {
   display: flex;
+  flex-direction: column;
   justify-content: center;
   align-items: center;
   flex-wrap: wrap;
@@ -1727,5 +1726,37 @@
   .viora-instagram-link {
     transform: none !important;
     transition: none !important;
+  }
+}
+
+.viora-site .viora-footer-attribution .site-attribution__logo {
+  width: clamp(9rem, 12vw, 13rem);
+  max-height: 2.6rem;
+}
+.viora-site .viora-footer-attribution .site-attribution__label {
+  font-size: 0.62rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+.viora-contact__paths {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1.5rem;
+  margin-top: 2rem;
+}
+.viora-contact__paths h2 {
+  font-size: clamp(1.8rem, 3vw, 2.5rem);
+}
+.viora-contact__map .viora-map iframe {
+  aspect-ratio: 16 / 7;
+  min-height: 24rem;
+}
+@media (max-width: 740px) {
+  .viora-contact__paths {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .viora-contact__map .viora-map iframe {
+    aspect-ratio: 4 / 3;
+    min-height: 18rem;
   }
 }

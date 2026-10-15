@@ -108,7 +108,6 @@ const { site } = siteContent;
           Turnos
         </Link>
       </nav>
-      <span aria-hidden="true">·</span>
       <nav class="viora-footer-legal" aria-label="Información legal">
         <Link href="/privacidad/" className="viora-footer-link">
           Privacidad
@@ -123,5 +122,6 @@ const { site } = siteContent;
         </Link>
       </nav>
     </div>
+    <p slot="copyright">© {new Date().getFullYear()} VIORA. Todos los derechos reservados.</p>
   </SiteFooter>
 </BaseLayout>

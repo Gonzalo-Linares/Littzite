@@ -366,3 +366,12 @@ button:focus-visible {
     animation-duration: 0.01ms !important;
   }
 }
+
+.site-footer__copyright {
+  padding-block: 1rem;
+  font-size: 0.75rem;
+  opacity: 0.8;
+}
+.site-footer__copyright p {
+  margin: 0;
+}

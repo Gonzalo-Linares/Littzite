@@ -62,13 +62,13 @@ La app `tattoo` implementa el manual oficial en `apps/tattoo/src/brand.config.ts
 
 ## Preparación de Cloudflare Pages (PR-20)
 
-GitHub `Gonzalo-Linares/Littzite` sigue siendo el único monorepo canónico. Cada app se construye independientemente (`corepack pnpm build:estetica` o `corepack pnpm build:tattoo`) y se publica mediante Direct Upload de su `dist` a un Pages project en la cuenta Cloudflare propia de ese cliente. No se usa Cloudflare Pages Git Integration. La publicación indexable sigue desactivada hasta resolver los bloqueos reales de cada negocio. Revisar [configuración y checklist de deployment](docs/21-production-deployment.md), [readiness VIORA](docs/19-viora-release-readiness.md) y [readiness Juanjo](docs/20-juanjo-digital-brand-implementation.md). Los nombres de proyectos, dominios y cuentas aún no están confirmados; no hay lanzamiento autorizado.
+GitHub `Gonzalo-Linares/Littzite` sigue siendo el único monorepo canónico. Cada app se construye independientemente (`corepack pnpm build:estetica` o `corepack pnpm build:tattoo`) y se publica mediante Direct Upload de su `dist` a un Pages project en la cuenta Cloudflare propia de ese cliente. No se usa Cloudflare Pages Git Integration. Mergear en GitHub no actualiza UAT ni producción: cada publicación requiere build y deploy manual del artefacto de la app correspondiente. La publicación indexable sigue desactivada hasta resolver los bloqueos reales de cada negocio. Revisar [configuración y checklist de deployment](docs/21-production-deployment.md), [readiness VIORA](docs/19-viora-release-readiness.md) y [readiness Juanjo](docs/20-juanjo-digital-brand-implementation.md). Los nombres de proyectos, dominios y cuentas aún no están confirmados; no hay lanzamiento autorizado.
 
 ## Atribución del desarrollador
 
-La firma del desarrollador se compone con `@littzite/ui/SiteAttribution.astro`: `label`, `brand`, `href?`, `logoSrc?` y `className?`. Es una primitive neutral; cada app configura “Powered by / Littzite” localmente, sin URL ni logo hasta recibir datos reales. La firma es texto no interactivo mientras falta `href`; una URL futura utiliza el `Link` seguro. No reserva un espacio de imagen cuando falta `logoSrc`. `SiteFooter` ofrece slots opcionales `attribution` y `secondary-links`.
+La firma del desarrollador se compone con `@littzite/ui/SiteAttribution.astro`: `label`, `brand`, `href?`, `logoSrc?` y `className?`. Es una primitive neutral; cada app configura “Powered by / Littzite” localmente con sus logos y el perfil de Instagram aprobado de Littzite. La firma completa abre ese perfil en una pestaña nueva mediante `Link` con `noopener noreferrer`; sin `href` conserva el fallback no interactivo. No reserva un espacio de imagen cuando falta `logoSrc`. `SiteFooter` ofrece slots opcionales `attribution` y `secondary-links`.
 
-Cuando exista el sitio real de Littzite, se podrá configurar su URL con `?utm_source=viora&utm_medium=footer&utm_campaign=powered_by`. Esta posibilidad no habilita analytics ni instala tracking; hoy no se publica una URL ficticia ni un logo provisional.
+Ambas apps enlazan a `https://www.instagram.com/litt.zite/?utm_source=ig_web_button_share_sheet`. Esto no incorpora analytics ni tracking propio.
 
 ## Condiciones de uso del repositorio
 

@@ -165,7 +165,7 @@ Ante una regresión, dejar `*_PUBLIC_RELEASE=false`, reconstruir la app afectada
 
 ## M. Future automation
 
-Los despliegues no son automáticos. Un merge a `main` **no** implica un deployment. GitHub Actions permanece deliberadamente desactivado; cada publicación requiere acción explícita: actualizar checkout, ejecutar quality, construir una app, confirmar cuenta/proyecto/credencial y cargar su artifact.
+Los despliegues no son automáticos. Un merge a `main` **no** actualiza UAT ni producción: ambas apps usan Direct Upload y requieren build + deploy manual. GitHub Actions permanece deliberadamente desactivado; cada publicación requiere acción explícita: actualizar checkout, ejecutar quality, construir una app, confirmar cuenta/proyecto/credencial y cargar su artifact.
 
 Si se aprueba automatización futura, debe separar permisos y secretos por cliente, fijar deliberadamente la versión de Wrangler y requerir selección explícita de app, cuenta y proyecto. Ese trabajo no forma parte de este cambio. No crear `pnpm deploy` ni otro comando que pueda publicar la app o cuenta equivocada.
 

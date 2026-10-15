@@ -2721,6 +2721,11 @@
 .tattoo-contact-paths {
   grid-template-columns: repeat(2, minmax(0, 1fr));
 }
+@media (max-width: 480px) {
+  .tattoo-contact-paths {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
 .tattoo-contact-path {
   min-width: 0;
   height: 100%;

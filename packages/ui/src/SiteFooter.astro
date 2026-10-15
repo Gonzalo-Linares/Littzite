@@ -35,4 +35,9 @@ const { brand, note, meta } = Astro.props;
       <span>{meta[1]}</span>
     </div>
   )}
+  {Astro.slots.has('copyright') && (
+    <div class="container site-footer__copyright">
+      <slot name="copyright" />
+    </div>
+  )}
 </footer>

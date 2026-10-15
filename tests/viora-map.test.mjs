@@ -39,7 +39,7 @@ test('VioraMap supports directions without an embed and renders a lazy titled Go
   const directionsOnly = html.match(/<div data-case="directions-only">(.*?)<\/div>/s)?.[1];
   assert.match(
     directionsOnly,
-    /class="button-link button-link--secondary button-link--compact google-map-panel__directions" href="https:\/\/maps\.app\.goo\.gl\/H4jmqTGKicDse2iS7">Ver en Google Maps/,
+    /class="button-link button-link--secondary button-link--compact google-map-panel__directions" href="https:\/\/maps\.app\.goo\.gl\/H4jmqTGKicDse2iS7">Cómo llegar/,
   );
   assert.doesNotMatch(directionsOnly, /<iframe\b/);
   assert.match(
@@ -48,7 +48,7 @@ test('VioraMap supports directions without an embed and renders a lazy titled Go
   );
   assert.match(
     html,
-    /class="button-link button-link--secondary button-link--compact google-map-panel__directions" href="https:\/\/www\.google\.com\/maps\/dir\/\?api=1">Ver en Google Maps/,
+    /class="button-link button-link--secondary button-link--compact google-map-panel__directions" href="https:\/\/www\.google\.com\/maps\/dir\/\?api=1">Cómo llegar/,
   );
 });
 

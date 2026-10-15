@@ -3,7 +3,6 @@ import Container from '@littzite/ui/Container.astro';
 import ButtonLink from '@littzite/ui/ButtonLink.astro';
 
 interface Props {
-  eyebrow: string;
   title: string;
   lead?: string;
   backHref?: string;
@@ -14,7 +13,6 @@ interface Props {
 }
 
 const {
-  eyebrow,
   title,
   lead,
   backHref,
@@ -32,7 +30,6 @@ const {
         {backLabel}
       </ButtonLink>
     )}
-    <p class="viora-page-intro__eyebrow">{eyebrow}</p>
     <h1 id={titleId} style={titleStyle}>
       {title}
     </h1>
