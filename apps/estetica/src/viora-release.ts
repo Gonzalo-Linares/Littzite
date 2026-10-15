@@ -18,7 +18,12 @@ export const vioraCommercial = {
 const buildEnvironment =
   (import.meta as ImportMeta & { env?: Record<string, string | undefined> }).env ?? {};
 const configured = (key: string, placeholder: string) => buildEnvironment[key] || placeholder;
-const bookingPlaceholders = {
+const approvedBookingUrls = {
+  general: 'https://cal.com/maria-victoria-linares-b6rvoz/lashista',
+  depilacion: 'https://cal.com/maria-victoria-linares-b6rvoz/depilacion?overlayCalendar=true',
+} as const;
+// Retired preview URLs remain rejected by the release guard, never used as destinations.
+const retiredBookingUrls = {
   general: 'https://cal.com/viora/booking-general-pending',
   depilacion: 'https://cal.com/viora/booking-depilacion-pending',
 } as const;
@@ -35,8 +40,8 @@ export const vioraLegal = {
 } as const;
 
 export const vioraBookingReadiness = {
-  generalUrl: configured('VIORA_BOOKING_GENERAL_URL', bookingPlaceholders.general),
-  depilacionUrl: configured('VIORA_BOOKING_DEPILACION_URL', bookingPlaceholders.depilacion),
+  generalUrl: configured('VIORA_BOOKING_GENERAL_URL', approvedBookingUrls.general),
+  depilacionUrl: configured('VIORA_BOOKING_DEPILACION_URL', approvedBookingUrls.depilacion),
   productionApproval: buildEnvironment.VIORA_BOOKING_APPROVED === 'true',
   inPersonLocationApproved: buildEnvironment.VIORA_BOOKING_IN_PERSON_APPROVED === 'true',
   durationReviewed: buildEnvironment.VIORA_BOOKING_DURATION_REVIEWED === 'true',
@@ -113,7 +118,7 @@ function releaseBookingUrlBlockers(
   target: { id: string; key: 'general' | 'depilacion'; url: string },
 ) {
   const prefix = `booking.${target.key}-url`;
-  if (isPlaceholder(target.url) || target.url === bookingPlaceholders[target.key])
+  if (isPlaceholder(target.url) || target.url === retiredBookingUrls[target.key])
     blockers.push(`${prefix}.missing`);
   if (isTemporaryBookingUrl(target.url)) blockers.push(`${prefix}.temporary`);
   if (!isValidBookingTarget(target.id, target.url)) blockers.push(`${prefix}.invalid`);
@@ -171,9 +176,12 @@ export function releaseBlockers(readiness: ReleaseReadiness): string[] {
 }
 
 function configuredBookingUrl(key: 'general' | 'depilacion', id: string, url: string): string {
-  return !isPlaceholder(url) && !isTemporaryBookingUrl(url) && isValidBookingTarget(id, url)
+  return !isPlaceholder(url) &&
+    url !== retiredBookingUrls[key] &&
+    !isTemporaryBookingUrl(url) &&
+    isValidBookingTarget(id, url)
     ? url
-    : bookingPlaceholders[key];
+    : approvedBookingUrls[key];
 }
 
 export const vioraBookingTargetUrls = {

@@ -12,8 +12,8 @@ const { count, item } = Astro.props;
 <dialog class="tattoo-lightbox" aria-labelledby="lightbox-title" data-gallery-lightbox>
   <div class="tattoo-lightbox__panel">
     <header class="tattoo-lightbox__header">
-      <h2 id="lightbox-title" data-lightbox-title>
-        {item.title}
+      <h2 id="lightbox-title" data-lightbox-title style="visibility: hidden">
+        Tatuaje
       </h2>
       <button
         class="tattoo-lightbox__close"
@@ -29,7 +29,7 @@ const { count, item } = Astro.props;
         <button
           class="tattoo-lightbox__step"
           type="button"
-          aria-label="Trabajo anterior"
+          aria-label="Tatuaje anterior"
           data-lightbox-previous
         >
           <span aria-hidden="true">←</span>
@@ -47,7 +47,7 @@ const { count, item } = Astro.props;
         <button
           class="tattoo-lightbox__step"
           type="button"
-          aria-label="Trabajo siguiente"
+          aria-label="Tatuaje siguiente"
           data-lightbox-next
         >
           <span aria-hidden="true">→</span>
@@ -55,7 +55,7 @@ const { count, item } = Astro.props;
       )}
     </div>
     <p class="tattoo-lightbox__hint">
-      Usá las flechas del teclado para recorrer los trabajos. Escape para cerrar.
+      Usá las flechas del teclado para recorrer los tatuajes. Escape para cerrar.
     </p>
   </div>
 </dialog>

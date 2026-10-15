@@ -39,7 +39,7 @@ test('home contains only the definitive Oni hero and real featured portfolio', a
   const home = await read('apps/tattoo/src/pages/index.astro');
   const hero = await read('apps/tattoo/src/components/TattooHeroMedia.astro');
   assert.match(home, /Tu próximo tatuaje empieza acá\./);
-  assert.match(home, /Ver trabajos/);
+  assert.match(home, /Ver tatuajes/);
   assert.match(home, /Sacar turno/);
   assert.equal((home.match(/<section\b/g) ?? []).length, 2);
   assert.doesNotMatch(
@@ -171,8 +171,8 @@ test('native gallery lightbox supports circular navigation, close, focus and scr
 test('the work carousel has three accessible physical copies and manual horizontal controls', async () => {
   const carousel = await read('apps/tattoo/src/components/TattooWorkCarousel.astro');
   const css = await read('apps/tattoo/src/styles/juanjo.css');
-  assert.match(carousel, /aria-label="Trabajo anterior"/);
-  assert.match(carousel, /aria-label="Trabajo siguiente"/);
+  assert.match(carousel, /aria-label="Tatuaje anterior"/);
+  assert.match(carousel, /aria-label="Tatuaje siguiente"/);
   assert.match(carousel, /<svg viewBox="0 0 24 24"/);
   assert.match(carousel, /ArrowLeft/);
   assert.match(carousel, /ArrowRight/);
@@ -247,6 +247,34 @@ test('compact Juanjo keeps full bleed media outside the content container and ap
   assert.match(header, /summary.focus\(\)/);
   assert.match(header, /menu.contains\(event.target\)/);
   assert.doesNotMatch(layout, /Volver arriba|<SiteFooter/);
-  assert.match(gallery, /<h1 id="portfolio-title">Todos los trabajos<\/h1>/);
+  assert.match(gallery, /<h1 id="portfolio-title">Todos los tatuajes<\/h1>/);
   assert.doesNotMatch(gallery, /<TattooWorkCarousel|PORTFOLIO DEL ESTUDIO|SELECCIÓN DEL ESTUDIO/);
+});
+
+test('public tattoo terminology covers desktop, mobile, footer, SEO and accessible controls without captions', async () => {
+  const header = await read('apps/tattoo/src/components/TattooHeader.astro');
+  const footer = await read('apps/tattoo/src/layouts/TattooSiteLayout.astro');
+  const home = await read('apps/tattoo/src/pages/index.astro');
+  const page = await read('apps/tattoo/src/pages/trabajos/index.astro');
+  const carousel = await read('apps/tattoo/src/components/TattooWorkCarousel.astro');
+  const gallery = await read('apps/tattoo/src/components/TattooGallery.astro');
+  const lightbox = await read('apps/tattoo/src/components/TattooLightbox.astro');
+  assert.match(header, /label: 'Tatuajes', href: '\/trabajos\//);
+  assert.match(header, /href="\/trabajos\/">Tatuajes/);
+  assert.match(footer, /href="\/trabajos\/">\s*Tatuajes/);
+  assert.match(home, /Tatuajes destacados/);
+  assert.match(home, /Ver tatuajes/);
+  assert.match(home, /Explorá tatuajes/);
+  assert.match(page, /title="Tatuajes \| Juanjo Tattoo Studio"/);
+  assert.match(gallery, /Todos los tatuajes/);
+  assert.match(gallery, /Ampliar tatuaje: \$?\{item.alt\}/);
+  assert.doesNotMatch(carousel, /<figcaption|tattoo-carousel__number|item.title/);
+  assert.doesNotMatch(gallery, /<span>\{item.title\}|data-title=/);
+  assert.doesNotMatch(lightbox, /item.title/);
+  assert.match(lightbox, /data-lightbox-title style="visibility: hidden"/);
+  for (const source of [carousel, lightbox]) {
+    assert.match(source, /Tatuaje anterior/);
+    assert.match(source, /Tatuaje siguiente/);
+  }
+  assert.match(lightbox, /recorrer los tatuajes/);
 });

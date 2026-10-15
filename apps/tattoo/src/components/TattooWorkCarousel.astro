@@ -14,7 +14,7 @@ const canMove = items.length > 1;
 <section
   class="tattoo-carousel"
   id={id}
-  aria-label="Trabajos de Juanjo Tattoo Studio"
+  aria-label="Tatuajes de Juanjo Tattoo Studio"
   data-tattoo-carousel
   data-count={items.length}
 >
@@ -24,7 +24,7 @@ const canMove = items.length > 1;
         class="tattoo-carousel__viewport"
         role="group"
         tabindex="0"
-        aria-label="Carrusel de trabajos. Usá las flechas izquierda y derecha para recorrer los trabajos."
+        aria-label="Carrusel de tatuajes. Usá las flechas izquierda y derecha para recorrer los tatuajes."
       >
         <div class="tattoo-carousel__track">
           {[0, 1, 2].map((copy) =>
@@ -49,23 +49,19 @@ const canMove = items.length > 1;
                     decoding="async"
                   />
                 </div>
-                <figcaption>
-                  <span class="tattoo-carousel__number">{String(index + 1).padStart(2, '0')}</span>
-                  <span>{item.title}</span>
-                </figcaption>
               </figure>
             )),
           )}
         </div>
       </div>
       {canMove && (
-        <div class="tattoo-carousel__controls" role="group" aria-label="Controles de trabajos">
-          <button type="button" data-carousel-prev aria-label="Trabajo anterior">
+        <div class="tattoo-carousel__controls" role="group" aria-label="Controles de tatuajes">
+          <button type="button" data-carousel-prev aria-label="Tatuaje anterior">
             <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
               <path d="m14.5 5-7 7 7 7" />
             </svg>
           </button>
-          <button type="button" data-carousel-next aria-label="Trabajo siguiente">
+          <button type="button" data-carousel-next aria-label="Tatuaje siguiente">
             <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
               <path d="m9.5 5 7 7-7 7" />
             </svg>
@@ -88,11 +84,11 @@ const canMove = items.length > 1;
         <span>OBRA · OFICIO · IDENTIDAD</span>
       </div>
       <div class="tattoo-carousel__empty-copy">
-        <p class="tattoo-eyebrow">TRABAJOS DEL ESTUDIO</p>
-        <h3>TRABAJOS</h3>
+        <p class="tattoo-eyebrow">TATUAJES DEL ESTUDIO</p>
+        <h3>TATUAJES</h3>
         <p>Una selección de tatuajes y estilos.</p>
         <a class="tattoo-text-link" href="/trabajos/">
-          Explorar trabajos <span aria-hidden="true">↗</span>
+          Explorar tatuajes <span aria-hidden="true">↗</span>
         </a>
       </div>
       <img

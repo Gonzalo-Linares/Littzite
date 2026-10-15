@@ -702,7 +702,7 @@ if (app === 'estetica') {
   assert.ok(html.includes('Tu próximo tatuaje empieza acá.'), 'Approved Juanjo H1 missing');
   assert.ok(html.includes(`href="${tattooBookingUrl}"`), 'Test booking URL missing');
   assert.ok(!html.includes('agenda de prueba'), 'UAT wording must not appear in public copy');
-  assert.ok(html.includes('Ver trabajos'), 'Work CTA missing');
+  assert.ok(html.includes('Ver tatuajes'), 'Work CTA missing');
   assert.ok(html.includes('href="/guia/"'), 'Guide route missing');
   assert.ok(
     html.includes('aria-label="Juanjo Tattoo Studio en Instagram"'),
@@ -799,7 +799,19 @@ if (app === 'estetica') {
   assert.equal((workPage.match(/class="tattoo-gallery__item"/g) ?? []).length, 12);
   assert.equal((workPage.match(/loading="lazy"/g) ?? []).length >= 3, true);
   assert.doesNotMatch(workPage, /PORTFOLIO DEL ESTUDIO|SELECCIÓN DEL ESTUDIO/);
-  assert.match(workPage, /Todos los trabajos/);
+  assert.match(workPage, /Todos los tatuajes/);
+  assert.match(html, /Tatuajes destacados/);
+  assert.match(workPage, /<title>Tatuajes \| Juanjo Tattoo Studio<\/title>/);
+  for (const markup of [html, workPage]) {
+    const publicText = markup
+      .replace(/<script\b[\s\S]*?<\/script>/gi, '')
+      .replace(/<style\b[\s\S]*?<\/style>/gi, '')
+      .replace(/<[^>]*>/g, ' ');
+    assert.doesNotMatch(publicText, /\btrabajos?\b/i);
+    assert.doesNotMatch(markup, /Trabajo \d{2}|<figcaption|tattoo-carousel__number/);
+    for (const [, label] of markup.matchAll(/aria-label="([^"]+)"/g))
+      assert.doesNotMatch(label, /\btrabajos?\b/i);
+  }
   assert.match(workPage, /<dialog[^>]*aria-labelledby="lightbox-title"/);
   assert.equal((workPage.match(/<button[^>]*data-lightbox-(?:previous|next)/g) ?? []).length, 2);
   assert.equal((workPage.match(/data-image="[^"]+"/g) ?? []).length, 12);

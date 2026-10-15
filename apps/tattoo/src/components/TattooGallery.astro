@@ -12,7 +12,7 @@ const { items } = Astro.props;
 <section class="tattoo-gallery" aria-labelledby="portfolio-title">
   <div class="container">
     <header class="tattoo-gallery__heading">
-      <h1 id="portfolio-title">Todos los trabajos</h1>
+      <h1 id="portfolio-title">Todos los tatuajes</h1>
     </header>
     <div class="tattoo-gallery__all">
       {items.length > 0 ? (
@@ -21,14 +21,13 @@ const { items } = Astro.props;
             <button
               class="tattoo-gallery__item"
               type="button"
-              aria-label={`Ampliar ${item.title}`}
+              aria-label={`Ampliar tatuaje: ${item.alt}`}
               data-orientation={item.preview?.orientation}
               style={`--work-position: ${item.preview?.focalPoint.x ?? 50}% ${item.preview?.focalPoint.y ?? 50}%; --work-fit: ${item.preview?.fit ?? 'cover'}`}
               data-gallery-item
               data-index={index}
               data-image={item.image.src}
               data-alt={item.alt}
-              data-title={item.title}
             >
               <img
                 src={item.image.src}
@@ -38,12 +37,11 @@ const { items } = Astro.props;
                 loading="lazy"
                 decoding="async"
               />
-              <span>{item.title}</span>
             </button>
           ))}
         </div>
       ) : (
-        <p class="tattoo-gallery__empty">Todavía no hay trabajos publicados.</p>
+        <p class="tattoo-gallery__empty">Todavía no hay tatuajes publicados.</p>
       )}
     </div>
   </div>
@@ -72,7 +70,7 @@ const { items } = Astro.props;
     activeIndex = index;
     image.src = trigger.dataset.image ?? '';
     image.alt = trigger.dataset.alt ?? '';
-    title.textContent = trigger.dataset.title ?? '';
+    title.textContent = 'Tatuaje';
   };
 
   const close = () => {
