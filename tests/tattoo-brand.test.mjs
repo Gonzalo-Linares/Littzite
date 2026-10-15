@@ -77,7 +77,10 @@ test('the official Instagram and neutral Littzite attribution have no unapproved
   assert.equal(tattooBrand.social.instagram, 'https://www.instagram.com/juanjo.tattoos/');
   assert.equal(tattooBrand.attribution.label, 'Powered by');
   assert.equal(tattooBrand.attribution.brand, 'Littzite');
-  assert.equal(tattooBrand.attribution.href, undefined);
+  assert.equal(
+    tattooBrand.attribution.href,
+    'https://www.instagram.com/litt.zite/?utm_source=ig_web_button_share_sheet',
+  );
   assert.equal(tattooBrand.attribution.logoSrc, '/littzite/horizontal-dark.svg');
   assert.equal(siteContent.bookingTargets.length, 0);
   assert.equal(siteContent.quoteTargets.length, 0);

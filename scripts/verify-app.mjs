@@ -184,6 +184,10 @@ if (app === 'estetica') {
     assert.match(footerNav, /href="\/reservar\/"[^>]*>\s*Turnos/);
     const footer = markup.match(/<footer class="site-footer">([\s\S]*?)<\/footer>/)?.[1];
     assert.ok(footer, `${page}: footer missing`);
+    assert.ok(
+      footer.includes(`© ${new Date().getFullYear()} VIORA. Todos los derechos reservados.`),
+    );
+    assert.doesNotMatch(markup, /VIORA \/ [^<]*/);
     const attribution = footer.match(
       /<div class="site-attribution viora-footer-attribution">([\s\S]*?)<\/div>/,
     )?.[1];
@@ -191,12 +195,16 @@ if (app === 'estetica') {
     assert.match(attribution, /Powered by/);
     assert.match(attribution, /Littzite/);
     assert.match(attribution, /src="\/littzite\/horizontal\.svg" alt="Littzite"/);
-    assert.doesNotMatch(attribution, /<a\b|href=/);
+    assert.ok(
+      attribution.includes(
+        'href="https://www.instagram.com/litt.zite/?utm_source=ig_web_button_share_sheet" target="_blank" rel="noopener noreferrer"',
+      ),
+    );
     assert.match(footer, /class="container site-footer__secondary"/);
     assert.doesNotMatch(
       footer,
-      /instagram|vioramasajes/i,
-      `${page}: footer must not contain Instagram`,
+      /vioramasajes/i,
+      `${page}: footer must not contain the business Instagram profile`,
     );
     const legalFooter = markup.match(
       /<nav class="viora-footer-legal" aria-label="Información legal">([\s\S]*?)<\/nav>/,
@@ -514,20 +522,21 @@ if (app === 'estetica') {
     },
     'VIORA contact',
   );
-  assert.match(contactPage, /<h1 id="[^"]+">Encontranos<\/h1>/);
+  assert.match(contactPage, /<h1 id="[^"]+">Contacto<\/h1>/);
   assert.match(contactPage, /Rivadavia, San Juan, Argentina/);
   assert.doesNotMatch(contactPage, /más adelante|próximamente|se confirmarán/);
   assert.match(
     contactPage,
-    /class="button-link button-link--primary button-link--default viora-contact__action" href="https:\/\/maps\.app\.goo\.gl\/H4jmqTGKicDse2iS7" target="_blank" rel="noopener noreferrer">\s*Cómo llegar/,
+    /class="button-link button-link--secondary button-link--default" href="https:\/\/maps\.app\.goo\.gl\/H4jmqTGKicDse2iS7" target="_blank" rel="noopener noreferrer">\s*Cómo llegar/,
   );
   assert.match(
     contactPage,
     /<iframe class="google-map-panel__iframe" src="https:\/\/www\.google\.com\/maps\/embed\?pb=!1m17!1m12!1m3!1d3401\.297756485471!2d-68\.567944!3d-31\.515980999999996[^"]*" title="Mapa interactivo: Ubicación de VIORA" loading="lazy" allowfullscreen referrerpolicy="strict-origin-when-cross-origin"><\/iframe>/,
   );
+  assert.doesNotMatch(contactPage, /VIORA \/|Encontranos|Ver en Google Maps/);
   assert.match(
     contactPage,
-    /VIORA \/ Instagram[\s\S]*?Seguinos de cerca\.[\s\S]*?Novedades, trabajos y momentos VIORA[\s\S]*?@vioramasajes\.ok[\s\S]*?href="https:\/\/www\.instagram\.com\/vioramasajes\.ok\/" target="_blank" rel="noopener noreferrer">\s*Ver Instagram/,
+    /<h1[^>]*>Contacto<\/h1>[\s\S]*?<iframe[\s\S]*?Rivadavia, San Juan, Argentina[\s\S]*?Cómo llegar[\s\S]*?<h2>Turnos<\/h2>/,
   );
   assert.match(
     contactPage,
@@ -607,9 +616,9 @@ if (app === 'estetica') {
   );
   assert.match(
     contactBuildCheck,
-    /href="https:\/\/www\.instagram\.com\/vioramasajes\.ok\/" target="_blank" rel="noopener noreferrer">\s*Ver Instagram/,
+    /href="https:\/\/www\.instagram\.com\/vioramasajes\.ok\/" target="_blank" rel="noopener noreferrer">\s*Escribir por Instagram/,
   );
-  assert.match(contactBuildCheck, /@vioramasajes\.ok/);
+  assert.match(contactBuildCheck, /href="\/reservar\/"[^>]*>\s*Solicitar turno/);
   assert.doesNotMatch(
     contactBuildCheck,
     /<blockquote[^>]*instagram-media|<iframe[^>]+instagram\.com|<script[^>]+instagram/i,
@@ -742,10 +751,10 @@ if (app === 'estetica') {
     /<div class="site-attribution tattoo-attribution">([\s\S]*?)<\/div>/,
   )?.[1];
   assert.ok(attribution, 'Juanjo attribution wrapper missing');
-  assert.doesNotMatch(
-    attribution,
-    /<a\b|href=/,
-    'Attribution remains non-interactive without an approved URL',
+  assert.ok(
+    attribution.includes(
+      'href="https://www.instagram.com/litt.zite/?utm_source=ig_web_button_share_sheet" target="_blank" rel="noopener noreferrer"',
+    ),
   );
   assert.match(attribution, /src="\/littzite\/horizontal-dark\.svg"/);
   assert.ok(
@@ -774,7 +783,7 @@ if (app === 'estetica') {
   );
   assert.ok(!html.includes('href="/servicios/"'), 'VIORA navigation must not leak into Juanjo');
   assert.ok(html.includes('aria-label="Navegación del pie de página"'));
-  assert.ok(html.includes('href="/brand/monograma-jt.png"'), 'Official JT favicon missing');
+  assert.ok(html.includes('href="/brand/favicon.svg"'), 'High-contrast JT favicon missing');
   assert.ok(
     html.includes('class="tattoo-brand-mark__image"'),
     'Official signature header mark missing',
@@ -798,6 +807,11 @@ if (app === 'estetica') {
     assert.equal((routeHtml.match(/<footer class="site-footer">/g) ?? []).length, 1);
     assert.match(routeHtml, /Powered by/);
     assert.match(routeHtml, /Littzite/);
+    assert.ok(
+      routeHtml.includes(
+        `© ${new Date().getFullYear()} Juanjo Tattoo Studio. Todos los derechos reservados.`,
+      ),
+    );
   }
   await assert.rejects(access(new URL('../apps/tattoo/dist/estudio/index.html', import.meta.url)));
   const notFound = await readFile(new URL('../apps/tattoo/dist/404.html', import.meta.url), 'utf8');

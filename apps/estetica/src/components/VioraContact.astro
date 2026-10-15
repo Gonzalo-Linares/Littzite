@@ -4,84 +4,56 @@ import ButtonLink from '@littzite/ui/ButtonLink.astro';
 import type { Location } from '@littzite/content-schema';
 import VioraMap from './VioraMap.astro';
 import { vioraCommercial, vioraPriceInquiryWhatsAppHref } from '../viora-release.ts';
-
 interface Props {
   location?: Location;
   map?: { embedUrl?: string; directionsHref?: string; locationLabel?: string };
 }
-
 const { location, map } = Astro.props;
 const locationLabel = location?.city ?? vioraCommercial.publicLocation;
 ---
 
 <section id="contacto" class="viora-contact" aria-labelledby="viora-contact-title">
   <Container>
-    <div class="viora-contact__grid">
-      <div class="viora-contact__details">
-        <p class="viora-contact__eyebrow">VIORA / ubicación</p>
-        <h1 id="viora-contact-title">Encontranos</h1>
-        <p class="viora-contact__location">{locationLabel}</p>
-        {map?.directionsHref && (
-          <ButtonLink
-            href={map.directionsHref}
-            variant="primary"
-            icon="external"
-            newTab
-            className="viora-contact__action"
-          >
-            Cómo llegar
-          </ButtonLink>
-        )}
-
-        <hr class="viora-contact__divider" />
-
-        <div class="viora-contact__inquiries">
-          <p class="viora-contact__eyebrow">Consultas y turnos</p>
-          <p>¿Querés consultar un servicio antes de reservar?</p>
-          <div class="viora-contact__actions">
-            {vioraPriceInquiryWhatsAppHref && (
-              <ButtonLink
-                href={vioraPriceInquiryWhatsAppHref}
-                variant="primary"
-                icon="external"
-                newTab
-                className="viora-contact__action"
-              >
-                Escribir por WhatsApp
-              </ButtonLink>
-            )}
-            <ButtonLink
-              href={vioraCommercial.instagramHref}
-              variant="secondary"
-              icon="external"
-              newTab
-              className="viora-contact__action"
-            >
-              Escribir por Instagram
-            </ButtonLink>
-          </div>
-        </div>
-      </div>
-
-      {map?.embedUrl && (
-        <div class="viora-contact__map">
-          <VioraMap embedUrl={map.embedUrl} locationLabel={map.locationLabel ?? locationLabel} />
-        </div>
+    <h1 id="viora-contact-title">Contacto</h1>
+    <div class="viora-contact__map">
+      <VioraMap embedUrl={map?.embedUrl} locationLabel={map?.locationLabel ?? locationLabel} />
+      <p class="viora-contact__location">{locationLabel}</p>
+      {map?.directionsHref && (
+        <ButtonLink href={map.directionsHref} variant="secondary" icon="external" newTab>
+          Cómo llegar
+        </ButtonLink>
       )}
     </div>
-
-    <aside class="viora-contact__instagram" aria-labelledby="viora-contact-instagram-title" hidden>
-      <div>
-        <p class="viora-contact__eyebrow">VIORA / Instagram</p>
-        <h2 id="viora-contact-instagram-title">Seguinos de cerca.</h2>
-        <p>Novedades, trabajos y momentos VIORA en nuestro Instagram.</p>
-      </div>
-      <div class="viora-contact__instagram-action">
-        <p class="viora-contact__handle">@vioramasajes.ok</p>
-        <ButtonLink href={vioraCommercial.instagramHref} variant="secondary" icon="external" newTab>
-          Ver Instagram
+    <div class="viora-contact__paths">
+      <article class="viora-contact__details">
+        <h2>Turnos</h2>
+        <ButtonLink href="/reservar/" variant="primary" className="viora-contact__action">
+          Solicitar turno
         </ButtonLink>
-      </div>
-    </aside>
+      </article>
+      <article class="viora-contact__details">
+        <h2>Consultas</h2>
+        <div class="viora-contact__actions">
+          {vioraPriceInquiryWhatsAppHref && (
+            <ButtonLink
+              href={vioraPriceInquiryWhatsAppHref}
+              variant="primary"
+              icon="external"
+              newTab
+            >
+              Escribir por WhatsApp
+            </ButtonLink>
+          )}
+          <ButtonLink
+            href={vioraCommercial.instagramHref}
+            variant="secondary"
+            icon="external"
+            newTab
+          >
+            Escribir por Instagram
+          </ButtonLink>
+        </div>
+      </article>
+    </div>
   </Container>
 </section>

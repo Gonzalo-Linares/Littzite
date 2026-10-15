@@ -46,7 +46,7 @@ export const tattooBrand = {
     },
     jt: {
       src: '/brand/monograma-jt.png',
-      role: 'Mobile header mark and favicon',
+      role: 'Mobile header mark',
       width: 1489,
       height: 1056,
       sha256: '971090d517b7ad5236be56e2010e864b03b18826091ae63197b22c48aa0ca002',
@@ -62,7 +62,7 @@ export const tattooBrand = {
   attribution: {
     label: 'Powered by',
     brand: 'Littzite',
-    href: undefined,
+    href: 'https://www.instagram.com/litt.zite/?utm_source=ig_web_button_share_sheet',
     logoSrc: '/littzite/horizontal-dark.svg',
   },
 } as const;

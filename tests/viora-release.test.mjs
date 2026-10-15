@@ -228,7 +228,7 @@ test('configured booking URLs and WhatsApp render on VIORA pages; contact uses a
   );
   assert.match(
     contactHtml,
-    /VIORA \/ ubicación[\s\S]*?Encontranos[\s\S]*?Rivadavia, San Juan, Argentina/,
+    /<h1[^>]*>Contacto<\/h1>[\s\S]*?<iframe[\s\S]*?Rivadavia, San Juan, Argentina/,
   );
   assert.ok(
     contactHtml.includes(
@@ -239,7 +239,7 @@ test('configured booking URLs and WhatsApp render on VIORA pages; contact uses a
   assert.match(contactHtml, /src="https:\/\/www\.google\.com\/maps\/embed\?pb=/);
   assert.match(
     contactHtml,
-    /VIORA \/ Instagram[\s\S]*?Seguinos de cerca\.[\s\S]*?@vioramasajes\.ok[\s\S]*?Ver Instagram/,
+    /href="https:\/\/www\.instagram\.com\/vioramasajes\.ok\/"[^>]*>[\s\S]*?Escribir por Instagram/,
   );
   assert.ok(
     contactHtml.includes(

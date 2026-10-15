@@ -36,7 +36,11 @@ test('VIORA uses its dark-lettering Littzite mark on the light footer', () => {
   );
 
   assert.match(config, /logoSrc: '\/littzite\/horizontal\.svg'/);
-  assert.match(config, /href: undefined/);
+  assert.ok(
+    config.includes(
+      "href: 'https://www.instagram.com/litt.zite/?utm_source=ig_web_button_share_sheet'",
+    ),
+  );
   assert.match(logo, /fill="#111216"/);
 });
 
@@ -53,9 +57,9 @@ test('SiteAttribution without href is noninteractive content', () => {
 test('SiteAttribution links an HTTPS destination through safe Link', () => {
   assert.match(
     section('linked'),
-    /<a class="site-attribution__identity" href="https:\/\/studio\.example\.test\/\?utm_source=fixture">/,
+    /<a class="site-attribution__identity" href="https:\/\/studio\.example\.test\/\?utm_source=fixture" target="_blank" rel="noopener noreferrer">/,
   );
-  assert.doesNotMatch(section('linked'), /target="_blank"/);
+  assert.match(section('linked'), /target="_blank" rel="noopener noreferrer"/);
 });
 test('SiteAttribution fails closed for unsafe hrefs', () => {
   for (const href of ['http://unsafe.example/', 'javascript:alert(1)']) {

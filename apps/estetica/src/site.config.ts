@@ -9,7 +9,7 @@ import { vioraBookingTargetUrls, vioraCommercial } from './viora-release.ts';
 const parsedContent = siteContentSchema.parse({
   site: {
     defaultLocale: 'es-AR',
-    iconHref: '/brand/viora-principal.png',
+    iconHref: '/brand/favicon.svg',
     locations: [{ id: 'viora-public-location', city: vioraCommercial.publicLocation }],
     theme: {
       surface: '#FAF5F0', // Marfil
@@ -100,7 +100,6 @@ const parsedContent = siteContentSchema.parse({
         {
           id: 'intro',
           type: 'intro',
-          eyebrow: 'VIORA / estética integral',
           heading: 'Regalate una pausa.',
           body: 'Tu momento, tu bienestar. Un espacio donde el cuidado personal se encuentra con una atención cercana, serena y profesional.',
           visualCaption: 'Tu momento, tu bienestar.',

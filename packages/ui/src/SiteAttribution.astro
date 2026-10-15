@@ -14,9 +14,9 @@ const contentClass = 'site-attribution__identity';
 ---
 
 <div class:list={['site-attribution', className]}>
-  <span class="site-attribution__label">{label}</span>
   {href !== undefined ? (
-    <Link href={href} className={contentClass}>
+    <Link href={href} className={contentClass} newTab>
+      <span class="site-attribution__label">{label}</span>
       {logoSrc ? (
         <img class="site-attribution__logo" src={logoSrc} alt={brand} loading="lazy" />
       ) : (
@@ -25,6 +25,7 @@ const contentClass = 'site-attribution__identity';
     </Link>
   ) : (
     <span class={contentClass}>
+      <span class="site-attribution__label">{label}</span>
       {logoSrc ? (
         <img class="site-attribution__logo" src={logoSrc} alt={brand} loading="lazy" />
       ) : (
@@ -50,6 +51,7 @@ const contentClass = 'site-attribution__identity';
   .site-attribution__identity {
     display: inline-flex;
     align-items: center;
+    flex-direction: column;
     gap: 0.35rem;
     font-size: 1.12rem;
     font-weight: 600;
