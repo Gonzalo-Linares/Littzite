@@ -1,49 +1,59 @@
-# VIORA commercial experience
+# VIORA — experiencia comercial (Draft PR #42)
 
-Base: PR #41 merged as 5c700b3a026b56a505509219f17eab451718e774. This work starts from main and does not modify PR #41.
+## Alcance y estado
 
-## Content and responsibilities
+Rama única: `feat/viora-commercial-experience`. Base main/PR #41 merged: `5c700b3a026b56a505509219f17eab451718e774`. HEAD anterior a esta ronda: `d35a5bf8966b7d28e84db8a88f993e0001e4ec40`. Se actualiza exclusivamente el mismo Draft PR #42; no nueva rama, PR, Ready, merge ni deploy. Copia local: `C:\Users\gonza\Documents\Littzite`.
 
-The canonical service IDs, names, slugs and booking actions remain in site.config.ts. The app-local viora-commercial-content.ts associates each ID with a short card summary, optional intro/purpose/includes/session/FAQ, content review state and pricing. validateCommercialContent rejects unknown, duplicate and missing IDs, malformed groups/items, unsafe IDs and invalid amounts. No booking URL or target is duplicated. The existing booking resolver supplies the CTA immediately below pricing; Reiki keeps no booking action.
+Esta ronda no modifica Juanjo ni packages. El diff acumulado del PR conserva la compactación del footer Juanjo y el slot neutral compartido solicitados explícitamente al inicio; sus flujos comerciales permanecen intactos. Sin dependencias nuevas ni cambios en pnpm-lock.yaml. GitHub Actions continúa desactivado.
 
-Home: compact editorial hero (“Un momento para vos.”), without paragraph or buttons → wide compact service rail → brief Victoria introduction → compact space/location → existing frame. The header and contact composition remain intact. Editorial history stays on /viora/.
+## Recorrido y navegación
 
-Detail: two columns from the start: canonical title, explanation and illustrative media on the left; options/prices and canonical booking on the right. The panel is sticky on desktop. Mobile stacks one primary image and the pricing panel; secondary media is desktop-only. Victoria and generic consultation blocks are removed. Empty optional sections are omitted; current service details remain pending instead of invented.
+Home: hero → servicios → Victoria → nuestro espacio → footer. No hay pasos de reserva, cierre comercial genérico ni teasers abstractos. Header, footer y contacto apuntan a `/servicios/` para explorar/comenzar un turno. El usuario elige una ficha y reserva desde su acción canónica junto a los precios.
 
-## Prices
+`/reservar/` deja de tener página comercial. `astro.config.mjs` declara el redirect estático nativo `/reservar/` → `/servicios/`. Astro genera HTML con meta refresh inmediato (0 segundos), noindex y enlace de respaldo, sin JS ni reglas Cloudflare. Es una compatibilidad técnica, no un HTTP 301 garantizado por el hosting estático. No aparece en el sitemap ni en enlaces internos de UI. Se auditaron las referencias de `src`; la única definición remanente está en la configuración del alias.
 
-All four services currently use pricing.status=pending and empty priceGroups; preview shows “Valores a confirmar.” only on details. Future confirmed groups support a single price, Desde, options, zones and combos; items have stable IDs, labels, optional detail and positive integer amountArs. A required price must include every amount. One formatArs helper uses es-AR / ARS without decimals. Synthetic amounts exist only in tests. No promotions, discounts or price claims are published.
+El validador conserva todas las reglas semánticas. Sólo acepta el doctype en minúsculas que emite el template nativo de redirect de Astro, identificado por su encabezado y meta refresh; páginas normales siguen exigiendo mayúsculas. Un test comprueba que un redirect con imagen sin alt falla igualmente.
 
-## Media and release
+## Hero, Victoria y marca
 
-Victoria and the two space slots have no src and are explicitly temporary/required. The UI uses only a neutral VIORA composition, never a simulated person or interior. Replacing src, alt and focalPosition in app-local data changes media without layout edits. Every final local photo requires authorization.
+El copy hero usa el símbolo oficial V, sin repetir el wordmark completo del header, y “Un momento para vos.”. Mantiene el frame responsive de retrato y la franja inferior de ubicación. `VioraBotanical.astro` aporta trazos botánicos originales, decorativos, aria-hidden, sin assets externos ni fotografías inventadas. No recrea el logo.
 
-VIORA releaseBlockers now combines existing legal/booking approvals with professional/space media, required service content and required pricing. Preview remains permitted. There is no environment bypass for the pending editorial state. Complete legal/booking variables alone cannot release the current app. Confirmed content must include introduction, purpose, includes and session; pricing must validate. Existing environment flags, providers, guards and noindex defaults remain.
+Victoria tiene título, slot de fotografía real y descripción breve, sin credenciales inventadas. Se reutiliza `victoriaMedia`: src, alt y focalPosition permiten reemplazar la composición neutra tanto en hero como en presentación. Las dos fotos del espacio siguen como slots explícitos. No se exige una segunda foto profesional.
 
-## Brand and footer
+Se conservan paleta y fuentes del manual: marfil, ciruela, rosas, tinta/salvia, Nimbus Roman local con fallback Times autorizado y DejaVu Sans con licencia. Favicon con la V original intacta. Footer mantiene legales centrados, preview separado, copyright y powered by.
 
-The supplied manual was reviewed in full. Exact palette: ivory, plum, rose, soft rose, ink and optional sage; Nimbus Roman heading stack and DejaVu Sans body. The original ciruela symbol is copied unchanged for neutral compositions. The favicon embeds the original white symbol PNG unchanged over a ciruela SVG backdrop for contrast at small sizes, preserving its aspect ratio. DejaVu Sans is served with its license; Nimbus uses local resolution and the manual's Times fallback pending a web distribution decision. No external design, text, code or photographs were copied.
+## Rail y superficies interactivas
 
-VIORA footer centers legal links in a dedicated middle column, with balanced side columns for copyright and location. Preview status occupies a separate centered line and cannot shift legal alignment. At narrow widths the row wraps without hiding content. Juanjo changes are strictly limited to this requested footer compaction; its commercial behavior, booking, routes, assets and release state remain unchanged.
+Servicios canónicos, orden, slugs y acciones siguen en site.config.ts. Home utiliza un anchor por card completa; catálogo hace lo mismo mediante viora-catalog__surface, incluyendo imagen y contenido, sin enlaces anidados. Intro del catálogo compacta: “Elegí tu momento.”.
 
-## Verification
+Rail desktop: cuatro cards visibles; controles sólo si la geometría real indica overflow. Cada flecha se oculta/deshabilita al alcanzar su extremo. Scroll snapping, foco visible y navegación de teclado; mouse/trackpad y desplazamiento horizontal nativo. Mobile/tablet preservan swipe/scroll natural sin depender de flechas. ResizeObserver recalcula el estado y los observers/listeners se limpian al cambiar de página. `viora-service-rail.ts` concentra únicamente el cálculo geométrico testeable; no duplica contenido ni mantiene páginas comerciales.
 
-Run the existing quality gates, plus tests/viora-commercial.test.mjs through test:contracts. Visual QA: home, catalog, limpieza-facial, depilacion-definitiva, reservar and contacto at 390/768/1440; also inspect 320/375/1024 responsiveness, keyboard focus, reduced motion and both compact footers. GitHub Actions remains disabled. No deploy, release activation, merge or Ready.
+Fixtures: 0/1/4/5/7/10 servicios. QA adicional de controles al inicio, grupo intermedio y extremo final de diez servicios, con vuelta por teclado. Las fichas ficticias y sus rutas existen sólo en el fixture de test.
 
-## QA de la primera versión (antes del ajuste compacto)
+## Motion progresivo
 
-Revisión local en navegador del build estático: /, /servicios/, /servicios/limpieza-facial/, /servicios/depilacion-definitiva/, /reservar/ y /contacto/ a 390, 768 y 1440 px. Sin overflow horizontal de documento en las 18 combinaciones. Revisión adicional de home y depilación a 320, 375 y 1024 px, también sin overflow. El rail conserva cuatro servicios y cards enteras en desktop, con desplazamiento horizontal intencional en tamaños menores.
+Hero: copy 550 ms, imagen 650 ms con demora de 90 ms. `VioraReveal.astro` usa IntersectionObserver pequeño y local: servicios espera el primer desplazamiento y la entrada real al viewport; título primero, subtítulo 70 ms después y cards con stagger moderado de 55 ms. Victoria y espacio se revelan al entrar. Transiciones de 650 ms, sin autoplay, parallax ni scroll hijacking.
 
-Se probó “Ver servicios” y “Ver opciones y precios”, así como Tab entre cards: el segundo servicio recibe foco visible sólido y se mantiene accesible. El CTA de Instagram de /reservar/ se revisó de nuevo a 768 px tras corregir su compresión. CSS reduced-motion se verifica por tests/inspección; no se afirma una emulación manual del sistema operativo. Ambos footers se revisaron a 1440 y 390 px; la fila inferior es única en desktop y envuelve su contenido en móvil. El favicon definitivo se revisó a 16, 24, 32 y 64 px. Los mapas externos se mantienen sin cambios. No se completó ninguna reserva real ni se enviaron mensajes.
+Sin JS/IntersectionObserver, todo permanece visible. Reduced motion muestra todo inmediatamente y elimina animaciones/transiciones. Cambiar esa preferencia durante la visita también revela los elementos pendientes. Teclado conserva visibilidad al enfocar cards. El comportamiento de scroll se comprobó en navegador; reduced-motion se verifica mediante tests/CSS, sin afirmar cambio manual del sistema operativo.
 
-Los estados temporales activos son: foto de Victoria, dos fotos del espacio, detalle comercial de los cuatro servicios y sus precios. Bloquean public release hasta su reemplazo/revisión; no hay cifras sintéticas en el sitio. Nimbus Roman conserva el fallback Times permitido por el manual; no se distribuye el binario AGPL del kit como webfont.
+## Fichas y pricing
 
-## Ajuste compacto solicitado
+Desktop: izquierda 57,5% con nombre, frase breve e imágenes ilustrativas; derecha 42,5% con listado escaneable y CTA. Panel sticky con límite de altura respecto del viewport y scroll interno sólo si hace falta. Mobile: título → frase → una imagen → opciones/precios → reserva → información opcional; segunda imagen oculta. No hay bio de Victoria ni CTA “Ver opciones y precios”.
 
-Se actualiza el mismo Draft PR #42. No se crea una rama apilada. Este ajuste no modifica apps/tattoo ni paquetes compartidos. Se retiran los CTA del hero, el bloque de tres pasos, el cierre de consulta genérico y la presentación profesional de las fichas. Cards sin descripción visible, título de catálogo centrado y menor altura mobile. La foto real de Victoria no está disponible (confirmado por el titular); se conserva el marco neutro y el blocker de release. Colores, logos y fuentes siguen el kit oficial, sin recursos nuevos ni dependencias.
+`viora-commercial-content.ts` mantiene la asociación validada serviceId → detalle, sin duplicar nombres/slugs/targets. El pricing aprobado usa priceGroups y montos ARS enteros positivos; un formatter Intl es-AR/ARS centraliza el formato sin centavos. Admite precio único, Desde, opciones, zonas y combos. CTA resuelto siempre por packages/booking: general para limpieza/masajes y específico para depilación; Reiki sigue sin booking.
 
-### QA del ajuste compacto
+Para ver el diseño ahora, el estado pending admite previewGroups separados de priceGroups. Son muestras estructurales solicitadas por el titular: limpieza (tres opciones), depilación (zonas/combos), masajes (dos opciones), Reiki (una muestra mínima). Labels y categorías NO están aprobados como catálogo. No contienen amountArs ni números reales; una máscara centralizada muestra `$00.000` o `Desde $00.000`, con aviso visible de muestra y “Valores a confirmar.”. No se usan imágenes de precios, select, descuentos ni promociones. Por ser pocas opciones se muestran todos los grupos, sin tabs innecesarias.
 
-Build final revisado localmente: landing, limpieza facial y depilación definitiva en 1440/1280/1024/768/390/320 px, sin overflow de documento. Catálogo, reservas y contacto revisados además en 1440/768/390. El panel queda visible desde la primera pantalla en desktop y móvil; una sola imagen visible por ficha en móvil. El contenido editorial ampliado queda después del panel en móvil para no retrasar la reserva cuando se completen los datos. Navegación desde card a ficha y foco sólido con Tab comprobados. Legales centrados con preview separado; copyright y powered by conservados.
+Validación rechaza importes numéricos en previewGroups, grupos/items duplicados, asociaciones huérfanas y mezcla de pricing confirmado con preview. Es imposible promover las muestras a confirmed sin completar los datos reales y retirar los grupos de muestra.
 
-Instalación frozen-lockfile y quality completos: PASS (119 tests, ambas apps sin errores/advertencias Astro, 21 HTML, 215/129 enlaces internos VIORA/Juanjo). Reduced motion comprobado por CSS, sin afirmar emulación del sistema operativo. Lockfile intacto, sin dependencias nuevas y sin cambios adicionales en Juanjo ni packages en este ajuste. GitHub Actions permanece desactivado; no se declara CI verde. No merge, Ready, release ni deploy.
+## Release fail-closed
+
+Foto profesional y fotos del espacio siguen temporales/obligatorias. Contenido de servicios y precios siguen pending. Todos bloquean public release, junto con las aprobaciones legales y booking existentes. Cualquier previewGroups activo bloquea release incluso si pricing.required fuese false; no hay bypass por environment. Preview/noindex construye normalmente. Las muestras sólo se renderizan mientras public release esté desactivado.
+
+## Validación y QA de esta ronda
+
+Instalación frozen-lockfile y todos los gates del quality se ejecutan localmente, sin declarar CI verde. El informe final del PR registra resultados concretos y HEAD publicado. Tests cubren máscara y grupos visibles, no aprobación de muestras, release bloqueado, booking canónico, ausencia de bio en fichas, alias único, superficies sin anchors anidados, estados del rail y reduced motion.
+
+Se revisaron `/`, `/servicios/`, limpieza facial, depilación definitiva, masajes y contacto en 1440/1280/1024/768/390/320: 36 combinaciones sin overflow horizontal del documento ni enlaces anidados. Pricing comienza en torno a 193 px en desktop, 231 px en tablet y 471–506 px en móvil. Una sola imagen visible por ficha en móvil; 3/6/2 opciones de muestra para limpieza/depilación/masajes. Se verificaron capturas de hero/rail, catálogo compacto, pricing mobile/desktop, navegación al tocar la imagen y panel sticky (top 24 px después de scroll). No se completaron reservas ni se enviaron mensajes.
+
+Resultados finales: install --frozen-lockfile PASS; quality PASS (123 tests, ambas apps con 0 errores y 0 warnings Astro, 21 HTML, 197/129 enlaces internos VIORA/Juanjo); lint y format:check repetidos después del último ajuste de listeners, PASS. git diff --check PASS. Alias /reservar/ verificado en navegador: termina en /servicios/.

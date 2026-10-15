@@ -6,7 +6,6 @@ const routes = [
   '/servicios/',
   '/viora/',
   '/contacto/',
-  '/reservar/',
   '/terminos-y-condiciones/',
   '/privacidad/',
   '/arrepentimiento/',

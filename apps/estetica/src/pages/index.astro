@@ -2,6 +2,8 @@
 import ButtonLink from '@littzite/ui/ButtonLink.astro';
 import VioraServiceRail from '../components/VioraServiceRail.astro';
 import VioraSiteLayout from '../layouts/VioraSiteLayout.astro';
+import VioraReveal from '../components/VioraReveal.astro';
+import VioraBotanical from '../components/VioraBotanical.astro';
 import VioraProfessional from '../components/VioraProfessional.astro';
 import { siteContent } from '../site.config';
 import { serviceVisuals } from '../service-visuals';
@@ -18,15 +20,16 @@ if (!home || !intro) throw new Error('Incomplete VIORA home');
     <div class="container viora-commercial-hero__inner">
       <div class="viora-commercial-hero__copy">
         <img
-          class="viora-commercial-hero__wordmark"
-          src="/brand/viora-palabra.png"
+          class="viora-commercial-hero__symbol"
+          src="/brand/viora-simbolo.png"
           alt="VIORA"
-          width="1310"
-          height="275"
+          width="915"
+          height="1080"
         />
         <h1 id="titulo-principal">{intro.heading}</h1>
       </div>
       <div class="viora-commercial-hero__visual">
+        <VioraBotanical />
         {victoriaMedia.src ? (
           <img
             src={victoriaMedia.src}
@@ -56,9 +59,14 @@ if (!home || !intro) throw new Error('Incomplete VIORA home');
     services={siteContent.services}
     visuals={serviceVisuals}
     compact
+    reveal
   />
-  <VioraProfessional compact />
-  <section class="viora-space viora-commercial-section" aria-labelledby="viora-space-title">
+  <VioraProfessional />
+  <section
+    class="viora-space viora-commercial-section"
+    data-viora-reveal
+    aria-labelledby="viora-space-title"
+  >
     <div class="container">
       <div class="viora-space__heading">
         <div>
@@ -104,4 +112,5 @@ if (!home || !intro) throw new Error('Incomplete VIORA home');
       </div>
     </div>
   </section>
+  <VioraReveal />
 </VioraSiteLayout>

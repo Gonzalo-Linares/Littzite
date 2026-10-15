@@ -8,7 +8,7 @@ import { fileURLToPath } from 'node:url';
 const root = fileURLToPath(new URL('../', import.meta.url));
 const fixtureRoot = path.join(root, 'apps/estetica/tests/viora-service-rail-fixture');
 
-test('VIORA service rail handles 0, 1, 4, 5, 8 and 9 items progressively', () => {
+test('VIORA service rail handles 0, 1, 4, 5, 7 and 10 items progressively', () => {
   execFileSync(
     process.execPath,
     [
@@ -20,7 +20,7 @@ test('VIORA service rail handles 0, 1, 4, 5, 8 and 9 items progressively', () =>
     { cwd: root, env: { ...process.env, ASTRO_TELEMETRY_DISABLED: '1' }, stdio: 'pipe' },
   );
   const html = readFileSync(path.join(fixtureRoot, 'dist/index.html'), 'utf8');
-  const counts = [0, 1, 4, 5, 8, 9];
+  const counts = [0, 1, 4, 5, 7, 10];
 
   for (const count of counts) {
     const section = new RegExp(`<section[^>]*id="rail-${count}"[\\s\\S]*?<\\/section>`).exec(
@@ -42,7 +42,7 @@ test('VIORA service rail handles 0, 1, 4, 5, 8 and 9 items progressively', () =>
     const controlCount = (section.match(/data-service-rail-(?:previous|next)/g) ?? []).length;
     assert.equal(controlCount, count > 4 ? 2 : 0, 'controls only exist for multiple groups');
     if (count > 4) {
-      assert.match(section, /aria-label="Servicios anteriores"[^>]*disabled/);
+      assert.match(section, /aria-label="Servicios anteriores"/);
       assert.match(section, /aria-label="Servicios siguientes"/);
     }
 
@@ -73,4 +73,29 @@ test('VIORA service rail handles 0, 1, 4, 5, 8 and 9 items progressively', () =>
   assert.match(styles, /@media \(prefers-reduced-motion: reduce\)/);
   assert.match(styles, /flex-basis: 88%/);
   assert.match(styles, /flex-basis: calc\(\(100% - clamp\(0\.8rem, 1\.5vw, 1\.25rem\)\) \/ 2\)/);
+});
+
+test('rail controls follow actual geometry at both ends, including partial final groups', async () => {
+  const { railScrollState, railTargetOffset } =
+    await import('../apps/estetica/src/viora-service-rail.ts');
+  assert.deepEqual(railScrollState(0, 1000, 1000), {
+    overflow: false,
+    previous: false,
+    next: false,
+  });
+  assert.deepEqual(railScrollState(0, 1000, 2500), { overflow: true, previous: false, next: true });
+  assert.deepEqual(railScrollState(1000, 1000, 2500), {
+    overflow: true,
+    previous: true,
+    next: true,
+  });
+  assert.deepEqual(railScrollState(1500, 1000, 2500), {
+    overflow: true,
+    previous: true,
+    next: false,
+  });
+  const offsets = Array.from({ length: 10 }, (_, i) => i * 250);
+  assert.equal(railTargetOffset(0, 1000, offsets, 1), 1000);
+  assert.equal(railTargetOffset(1500, 1000, offsets, -1), 500);
+  assert.equal(railTargetOffset(0, 1000, [], 1), 0);
 });

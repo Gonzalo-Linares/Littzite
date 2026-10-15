@@ -2,13 +2,21 @@
 import ButtonLink from '@littzite/ui/ButtonLink.astro';
 import type { Service } from '@littzite/content-schema';
 import { resolveDirectBookingAction } from '@littzite/booking';
+import { vioraPublicRelease } from '../viora-release.ts';
 import { siteContent } from '../site.config';
-import { formatArs, type VioraPricing } from '../viora-commercial-content';
+import { formatArs, previewPriceLabel, type VioraPricing } from '../viora-commercial-content';
 interface Props {
   service: Service;
   pricing: VioraPricing;
 }
 const { service, pricing } = Astro.props;
+const isPreview = !vioraPublicRelease && pricing.status === 'pending';
+const groups =
+  pricing.status === 'confirmed'
+    ? pricing.priceGroups
+    : isPreview
+      ? (pricing.previewGroups ?? [])
+      : [];
 const actions = service.actions
   .filter((action) => action.type === 'direct-booking')
   .map((action) => resolveDirectBookingAction(action, siteContent.bookingTargets));
@@ -16,35 +24,39 @@ const actions = service.actions
 
 <section class="viora-pricing" id="opciones" aria-labelledby="viora-pricing-title">
   <h2 id="viora-pricing-title">Opciones y precios</h2>
-  {pricing.status === 'pending' ? (
-    <p class="viora-pricing__pending">Valores a confirmar.</p>
-  ) : (
-    pricing.priceGroups.map((group) => (
-      <div class="viora-pricing__group">
-        <h3>{group.title}</h3>
-        <dl>
-          {group.items.map((item) => (
-            <div class="viora-pricing__item">
-              <dt>
-                {item.label}
-                {item.detail && <small>{item.detail}</small>}
-              </dt>
-              <dd>
-                {item.amountArs !== undefined ? (
-                  <>
-                    {item.prefix && <span>{item.prefix} </span>}
-                    {formatArs(item.amountArs)}
-                  </>
-                ) : (
-                  'Consultar valor'
-                )}
-              </dd>
-            </div>
-          ))}
-        </dl>
-      </div>
-    ))
+  {pricing.status === 'pending' && <p class="viora-pricing__pending">Valores a confirmar.</p>}
+  {isPreview && groups.length > 0 && (
+    <p class="viora-pricing__notice">
+      Muestra de diseño: opciones e importes ilustrativos, sin confirmar.
+    </p>
   )}
+  {groups.map((group) => (
+    <div class="viora-pricing__group">
+      <h3>{group.title}</h3>
+      <dl>
+        {group.items.map((item) => (
+          <div class="viora-pricing__item">
+            <dt>
+              {item.label}
+              {item.detail && <small>{item.detail}</small>}
+            </dt>
+            <dd>
+              {isPreview ? (
+                previewPriceLabel(item.prefix)
+              ) : item.amountArs !== undefined ? (
+                <>
+                  {item.prefix && <span>{item.prefix} </span>}
+                  {formatArs(item.amountArs)}
+                </>
+              ) : (
+                'Consultar valor'
+              )}
+            </dd>
+          </div>
+        ))}
+      </dl>
+    </div>
+  ))}
   {actions.length ? (
     <div class="viora-service-actions">
       {actions.map((action) => (

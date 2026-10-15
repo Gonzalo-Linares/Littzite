@@ -21,31 +21,28 @@ const sectionId = 'catalogo-servicios';
   <Container>
     <div class="viora-catalog__intro">
       <div>
-        <h1 id={`${sectionId}-titulo`}>Nuestras experiencias.</h1>
+        <h1 id={`${sectionId}-titulo`}>Elegí tu momento.</h1>
       </div>
       <p>Cuidado pensado para distintos momentos. Conocé las propuestas de VIORA.</p>
     </div>
     <div class="viora-catalog__grid">
       {listedServices.map(({ service, visual }) => (
         <article class:list={['viora-catalog__card', { 'viora-catalog__card--visual': visual }]}>
-          {visual && (
-            <ServiceVisual
-              visual={visual}
-              context="card"
-              transitionName={`viora-service-image-${service.slug}`}
-            />
-          )}
-          <h3>
-            <a
-              class="viora-service-card__link"
-              href={`/servicios/${service.slug}/`}
-              style={`view-transition-name: viora-service-${service.slug}`}
-            >
-              <span>{service.displayName}</span>
-              <span class="viora-service-card__explore">Ver experiencia</span>
-            </a>
-          </h3>
-          <p>{service.description}</p>
+          <a class="viora-catalog__surface" href={`/servicios/${service.slug}/`}>
+            {visual && (
+              <ServiceVisual
+                visual={visual}
+                context="card"
+                transitionName={`viora-service-image-${service.slug}`}
+              />
+            )}
+            <div class="viora-catalog__copy">
+              <h3 style={`view-transition-name: viora-service-${service.slug}`}>
+                {service.displayName}
+              </h3>
+              <span class="viora-service-card__explore">Ver servicio</span>
+            </div>
+          </a>
         </article>
       ))}
     </div>

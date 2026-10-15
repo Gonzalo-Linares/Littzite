@@ -171,3 +171,43 @@ test('favicon embeds the original white VIORA symbol unchanged on a brand-plum b
   );
   assert.doesNotMatch(icon, /<text|<path/);
 });
+
+test('preview labels are non-approved structural samples and cannot carry numeric amounts or release', () => {
+  for (const detail of vioraServiceDetails) {
+    assert.ok(detail.pricing.previewGroups.length);
+    assert.ok(
+      detail.pricing.previewGroups.every((g) => g.items.every((i) => i.amountArs === undefined)),
+    );
+    const invalid = structuredClone(detail);
+    invalid.pricing.previewGroups[0].items[0].amountArs = 12345;
+    assert.throws(() => validateCommercialContent([{ id: invalid.serviceId }], [invalid]));
+  }
+  const readiness = approvedCommercialFixture();
+  readiness.services[0].pricing = structuredClone(vioraServiceDetails[0].pricing);
+  readiness.services[0].pricing.required = false;
+  assert.ok(
+    commercialReleaseBlockers(readiness).includes(
+      'commercial.preview-pricing.' + readiness.services[0].serviceId,
+    ),
+  );
+  const invalid = structuredClone(vioraServiceDetails[0]);
+  invalid.pricing.status = 'confirmed';
+  assert.throws(() => validateCommercialContent([{ id: invalid.serviceId }], [invalid]));
+});
+
+test('reveal is progressive, scroll-gated for services and honors reduced motion without dependencies', () => {
+  const source = readFileSync(
+    new URL('../apps/estetica/src/components/VioraReveal.astro', import.meta.url),
+    'utf8',
+  );
+  const css = readFileSync(
+    new URL('../apps/estetica/src/styles/viora-experience.css', import.meta.url),
+    'utf8',
+  );
+  assert.match(source, /IntersectionObserver/);
+  assert.match(source, /startedScrolling/);
+  assert.match(source, /motion.matches/);
+  assert.match(css, /@media \(prefers-reduced-motion: reduce\)/);
+  assert.match(css, /opacity: 1/);
+  assert.doesNotMatch(source, /setTimeout|setInterval|preventDefault/);
+});

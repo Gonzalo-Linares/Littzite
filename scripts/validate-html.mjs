@@ -1,4 +1,4 @@
-import { readdir, stat } from 'node:fs/promises';
+import { readdir, stat, readFile } from 'node:fs/promises';
 import { resolve, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { HtmlValidate } from 'html-validate';
@@ -44,7 +44,21 @@ export function formatValidationMessages(validationResults) {
 }
 
 export async function validateHtmlFiles(files, validator = new HtmlValidate(config)) {
-  const results = await Promise.all(files.map((file) => validator.validateFile(file)));
+  const results = await Promise.all(
+    files.map(async (file) => {
+      const html = await readFile(file, 'utf8');
+      // Astro owns the lowercase doctype of its generated static redirect template.
+      // Keep every semantic rule, and scope this style convention to that template only.
+      const nativeRedirect =
+        /^<!doctype html>\s*<title>Redirecting to:/.test(html) &&
+        /<meta http-equiv="refresh"/.test(html);
+      return nativeRedirect
+        ? validator.validateString(html, file, {
+            rules: { 'doctype-style': ['error', { style: 'lowercase' }] },
+          })
+        : validator.validateFile(file);
+    }),
+  );
   const valid = results.every((result) => result.valid);
 
   return {

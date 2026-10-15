@@ -17,6 +17,7 @@ import {
 } from '../viora-release.ts';
 import '../styles/viora.css';
 import '../styles/viora-commercial.css';
+import '../styles/viora-experience.css';
 
 interface Props {
   seo: SeoMetadata;
@@ -60,7 +61,12 @@ const { site } = siteContent;
     />
     <div slot="actions" class="viora-header-actions">
       <VioraInstagramLink className="viora-header-instagram" />
-      <ButtonLink href="/reservar/" variant="primary" size="compact" className="site-header__badge">
+      <ButtonLink
+        href="/servicios/"
+        variant="primary"
+        size="compact"
+        className="site-header__badge"
+      >
         Turnos
       </ButtonLink>
     </div>
@@ -97,7 +103,7 @@ const { site } = siteContent;
           Contacto
         </Link>
         <span aria-hidden="true">·</span>
-        <Link href="/reservar/" className="viora-footer-link">
+        <Link href="/servicios/" className="viora-footer-link">
           Turnos
         </Link>
       </nav>

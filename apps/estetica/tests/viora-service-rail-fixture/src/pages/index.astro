@@ -1,8 +1,9 @@
 ---
+import VioraSiteLayout from '../../../../src/layouts/VioraSiteLayout.astro';
 import type { Service } from '@littzite/content-schema';
 import VioraServiceRail from '../../../../src/components/VioraServiceRail.astro';
 
-const allServices: Service[] = Array.from({ length: 9 }, (_, index) => {
+const allServices: Service[] = Array.from({ length: 10 }, (_, index) => {
   const number = String(index + 1).padStart(2, '0');
   return {
     id: `servicio-${number}`,
@@ -12,20 +13,18 @@ const allServices: Service[] = Array.from({ length: 9 }, (_, index) => {
     actions: [],
   };
 });
-const counts = [0, 1, 4, 5, 8, 9];
+const counts = [0, 1, 4, 5, 7, 10];
 ---
 
-<html lang="es-AR">
-  <body>
-    {counts.map((count) => (
-      <VioraServiceRail
-        id={`rail-${count}`}
-        eyebrow="Fixture"
-        title={`Rail de ${count}`}
-        description="Fixture de rail adaptable."
-        services={allServices.slice(0, count)}
-        visuals={[]}
-      />
-    ))}
-  </body>
-</html>
+<VioraSiteLayout seo={{ title: 'VIORA rail QA', description: 'Fixture de navegación del rail.' }}>
+  {counts.map((count) => (
+    <VioraServiceRail
+      id={`rail-${count}`}
+      eyebrow="Fixture"
+      title={`Rail de ${count}`}
+      description="Fixture de rail adaptable."
+      services={allServices.slice(0, count)}
+      visuals={[]}
+    />
+  ))}
+</VioraSiteLayout>

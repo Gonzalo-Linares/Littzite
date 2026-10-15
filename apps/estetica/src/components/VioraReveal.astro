@@ -1,0 +1,56 @@
+<script>
+  let dispose = () => {};
+  function initVioraReveal() {
+    dispose();
+    const elements = [...document.querySelectorAll<HTMLElement>('[data-viora-reveal]')];
+    const motion = window.matchMedia('(prefers-reduced-motion: reduce)');
+    if (!elements.length || motion.matches || !('IntersectionObserver' in window)) return;
+    let startedScrolling = window.scrollY > 16;
+    const waiting = new Set<HTMLElement>();
+    const show = (element: HTMLElement) => {
+      element.classList.remove('viora-reveal-pending');
+      observer.unobserve(element);
+      waiting.delete(element);
+    };
+    const observer = new IntersectionObserver(
+      (entries) => {
+        for (const entry of entries) {
+          const element = entry.target as HTMLElement;
+          if (!entry.isIntersecting) {
+            waiting.delete(element);
+            continue;
+          }
+          if (element.dataset.vioraReveal === 'services' && !startedScrolling) waiting.add(element);
+          else show(element);
+        }
+      },
+      { threshold: 0.12, rootMargin: '0px 0px -8% 0px' },
+    );
+    const onScroll = () => {
+      if (window.scrollY <= 16) return;
+      startedScrolling = true;
+      waiting.forEach(show);
+      window.removeEventListener('scroll', onScroll);
+    };
+    const stop = () => {
+      observer.disconnect();
+      window.removeEventListener('scroll', onScroll);
+      elements.forEach((element) => element.classList.remove('viora-reveal-pending'));
+    };
+    const onMotionChange = () => {
+      if (motion.matches) stop();
+    };
+    elements.forEach((element) => {
+      element.classList.add('viora-reveal-pending');
+      observer.observe(element);
+    });
+    window.addEventListener('scroll', onScroll, { passive: true });
+    motion.addEventListener('change', onMotionChange);
+    dispose = () => {
+      stop();
+      motion.removeEventListener('change', onMotionChange);
+    };
+  }
+  initVioraReveal();
+  document.addEventListener('astro:page-load', initVioraReveal);
+</script>

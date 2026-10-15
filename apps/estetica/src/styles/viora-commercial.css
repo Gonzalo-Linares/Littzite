@@ -374,31 +374,6 @@
     grid-row: 1;
   }
 }
-@media (min-width: 741px) and (prefers-reduced-motion: no-preference) {
-  @supports (animation-timeline: view()) {
-    .viora-commercial-section > .container {
-      animation: viora-commercial-reveal both linear;
-      animation-timeline: view();
-      animation-range: entry 0% entry 25%;
-    }
-  }
-}
-@keyframes viora-commercial-reveal {
-  from {
-    opacity: 0.7;
-    transform: translateY(0.6rem);
-  }
-  to {
-    opacity: 1;
-    transform: none;
-  }
-}
-@media (prefers-reduced-motion: reduce) {
-  .viora-commercial-section > .container {
-    animation: none;
-    transform: none;
-  }
-}
 
 @media (min-width: 741px) and (max-width: 1000px) {
   .viora-booking-inquiry__inner {
@@ -715,39 +690,7 @@
     row-gap: 0;
   }
 }
-@media (prefers-reduced-motion: no-preference) {
-  .viora-commercial-hero__copy {
-    animation: viora-compact-entry 0.65s ease-out both;
-  }
-  @supports (animation-timeline: view()) {
-    .viora-service-rail__heading,
-    .viora-service-rail__card,
-    .viora-commercial-section > .container {
-      animation: viora-compact-entry linear both;
-      animation-timeline: view();
-      animation-range: entry 0% entry 30%;
-    }
-  }
-}
-@keyframes viora-compact-entry {
-  from {
-    opacity: 0.45;
-    transform: translateY(0.5rem);
-  }
-  to {
-    opacity: 1;
-    transform: none;
-  }
-}
-@media (prefers-reduced-motion: reduce) {
-  .viora-commercial-hero__copy,
-  .viora-service-rail__heading,
-  .viora-service-rail__card,
-  .viora-commercial-section > .container {
-    animation: none;
-    transform: none;
-  }
-}
+
 .viora-commercial-detail__information {
   grid-column: 1;
   grid-row: 2;

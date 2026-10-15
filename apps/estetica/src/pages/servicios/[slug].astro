@@ -40,7 +40,7 @@ const detail = serviceDetailFor(service.id);
           >
             {service.displayName}
           </h1>
-          <p>{detail.intro ?? service.description}</p>
+          <p>{detail.intro ?? detail.summary}</p>
         </div>
         {visual && (
           <div class="viora-service-detail__media">

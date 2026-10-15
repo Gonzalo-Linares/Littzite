@@ -201,32 +201,27 @@ test('configured booking URLs and WhatsApp render on VIORA pages; contact uses a
     path.join(root, 'apps/estetica/dist/reservar/index.html'),
     'utf8',
   );
-  const bookingCards = [
-    ...bookingHtml.matchAll(/<article class="viora-booking-card">(.*?)<\/article>/gs),
-  ];
-  assert.equal(bookingCards.length, 4);
-  for (const [service, expectedUrl] of [
-    ['Limpieza facial', generalUrl],
-    ['Masajes', generalUrl],
-    ['Depilación definitiva', depilacionUrl],
+  assert.match(bookingHtml, /http-equiv="refresh" content="0;url=\/servicios\/"/);
+  for (const [slug, expectedUrl] of [
+    ['limpieza-facial', generalUrl],
+    ['masajes', generalUrl],
+    ['depilacion-definitiva', depilacionUrl],
   ]) {
-    const card = bookingCards.find(([, html]) => html.includes(`<h2>${service}</h2>`))?.[1];
-    assert.ok(card, `${service} booking card exists`);
-    assert.ok(card.includes(`href="${expectedUrl}"`), `${service} resolves to ${expectedUrl}`);
-    assert.ok(
-      !card.includes('booking-general-pending') && !card.includes('booking-depilacion-pending'),
+    const detail = readFileSync(
+      path.join(root, 'apps/estetica/dist/servicios', slug, 'index.html'),
+      'utf8',
     );
+    assert.ok(detail.includes('href="' + expectedUrl + '"'), slug + ' keeps its canonical target');
+    assert.doesNotMatch(detail, /booking-general-pending|booking-depilacion-pending/);
   }
   const whatsappHref =
     'https://wa.me/5492641234567?text=Hola%2C%20vi%20VIORA%20en%20la%20web%20y%20quer%C3%ADa%20consultar%20el%20precio%20de%20un%20servicio%20antes%20de%20reservar.';
-  assert.ok(
-    bookingHtml.includes(`href="${whatsappHref}" target="_blank" rel="noopener noreferrer"`),
-  );
-  assert.match(bookingHtml, />\s*Consultar por WhatsApp\s*</);
-
   const contactHtml = readFileSync(
     path.join(root, 'apps/estetica/dist/contacto/index.html'),
     'utf8',
+  );
+  assert.ok(
+    contactHtml.includes('href="' + whatsappHref + '" target="_blank" rel="noopener noreferrer"'),
   );
   assert.match(
     contactHtml,
