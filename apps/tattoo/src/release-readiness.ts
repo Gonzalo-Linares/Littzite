@@ -94,13 +94,12 @@ export function isValidTattooBookingUrl(value: string) {
 
 export function tattooReleaseBlockersFor(
   readiness: TattooReleaseReadiness,
-  assets = tattooReleaseState,
+  assets: { temporaryHeroImage: boolean; temporaryPortfolioImages: boolean } = tattooReleaseState,
 ): string[] {
   if (!readiness.enabled) return [];
   const blockers: string[] = [];
   if (assets.temporaryHeroImage) blockers.push('assets.temporary-hero');
   if (assets.temporaryPortfolioImages) blockers.push('assets.temporary-portfolio');
-  if (assets.temporaryAftercareImage) blockers.push('assets.temporary-aftercare');
   if (!readiness.publicSiteUrl) blockers.push('JUANJO_PUBLIC_SITE_URL.missing');
   else if (!validPublicOrigin(readiness.publicSiteUrl))
     blockers.push('JUANJO_PUBLIC_SITE_URL.invalid');

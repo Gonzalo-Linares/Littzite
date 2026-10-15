@@ -80,9 +80,8 @@ export const tattooLocation = {
 } as const;
 
 export const tattooReleaseState = {
-  temporaryHeroImage: true,
-  temporaryPortfolioImages: true,
-  temporaryAftercareImage: true,
+  temporaryHeroImage: false,
+  temporaryPortfolioImages: false,
 } as const;
 
 export const tattooIdentity = {

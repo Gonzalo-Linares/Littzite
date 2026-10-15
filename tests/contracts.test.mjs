@@ -142,7 +142,7 @@ test('SiteConfig accepts an optional root-relative local browser icon only', () 
   );
   assert.equal(siteConfigSchema.safeParse({ ...base, iconHref: '/../icon.png' }).success, false);
   assert.equal(estetica.site.iconHref, '/brand/viora-favicon.svg');
-  assert.equal(tattoo.site.iconHref, '/brand/favicon.svg');
+  assert.equal(tattoo.site.iconHref, '/brand/favicon-jt.png');
 });
 
 test('VIORA visuals validate optional service references and image alternatives independently', () => {
@@ -459,7 +459,7 @@ test('Juanjo brand stays independent and its commercial targets remain inactive'
   const home = tattoo.pages.find((page) => page.slug === '');
   assert.equal(home.seo.title, 'Juanjo Tattoo Studio | Tu próximo tatuaje empieza acá');
   assert.deepEqual(home.sections, []);
-  assert.equal(tattoo.site.iconHref, '/brand/favicon.svg');
+  assert.equal(tattoo.site.iconHref, '/brand/favicon-jt.png');
   assert.equal(tattoo.services.length, 0);
   assert.equal(tattoo.bookingTargets.length, 0);
   assert.equal(tattoo.quoteTargets.length, 0);

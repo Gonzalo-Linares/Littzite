@@ -14,15 +14,15 @@ const item = () => ({
 
 test('featured works are a projection of the canonical portfolio in source order', () => {
   const featuredTattooWorkRecords = tattooPortfolioRecords.filter((work) => work.featured);
-  assert.equal(tattooPortfolioRecords.length, 3);
-  assert.equal(featuredTattooWorkRecords.length, 3);
+  assert.equal(tattooPortfolioRecords.length, 12);
+  assert.equal(featuredTattooWorkRecords.length, 6);
   assert.deepEqual(
     featuredTattooWorkRecords,
     tattooPortfolioRecords.filter((work) => work.featured),
   );
   assert.deepEqual(
     tattooPortfolioRecords.map((work) => work.featured),
-    [true, true, true],
+    [true, true, true, true, true, true, false, false, false, false, false, false],
   );
   assert.notEqual(featuredTattooWorkRecords, tattooPortfolioRecords);
   assert.ok(

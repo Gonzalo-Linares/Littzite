@@ -5,7 +5,7 @@ import { tattooBrand, tattooIdentity } from './brand.config.ts';
 const parsedContent = siteContentSchema.parse({
   site: {
     defaultLocale: tattooBrand.locale,
-    iconHref: '/brand/favicon.svg',
+    iconHref: '/brand/favicon-jt.png',
     theme: {
       surface: tattooIdentity.surface,
       text: tattooIdentity.text,

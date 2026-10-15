@@ -691,7 +691,7 @@ if (app === 'estetica') {
   assert.ok(html.includes('Tu próximo tatuaje empieza acá.'), 'Approved Juanjo H1 missing');
   assert.ok(html.includes(`href="${tattooBookingUrl}"`), 'Test booking URL missing');
   assert.ok(!html.includes('agenda de prueba'), 'UAT wording must not appear in public copy');
-  assert.ok(html.includes('Explorar trabajos'), 'Work CTA missing');
+  assert.ok(html.includes('Ver trabajos'), 'Work CTA missing');
   assert.ok(html.includes('href="/guia/"'), 'Guide route missing');
   assert.ok(
     html.includes('aria-label="Juanjo Tattoo Studio en Instagram"'),
@@ -699,7 +699,7 @@ if (app === 'estetica') {
   );
   assert.ok(!html.includes('>Contanos tu idea.<'), 'Legacy hero CTA must be removed');
   assert.ok(!html.includes('Una marca que deja huella'), 'Legacy brand-copy hero must be removed');
-  assert.ok(html.includes('id="como-trabajamos"'), 'Conceptual service paths missing');
+  assert.ok(!html.includes('id="como-trabajamos"'), 'Retired home section remains');
   assert.ok(
     html.includes('Powered by') && html.includes('alt="Littzite"'),
     'Powered by logo attribution missing',
@@ -735,12 +735,12 @@ if (app === 'estetica') {
   );
   assert.equal(
     (html.match(/class="tattoo-carousel__item/g) ?? []).length,
-    9,
-    'Juanjo preview carousel must render three physical copies of each item',
+    18,
+    'Juanjo real carousel must render three physical copies of each item',
   );
   assert.ok(!html.includes('href="/servicios/"'), 'VIORA navigation must not leak into Juanjo');
   assert.ok(html.includes('aria-label="Navegación del pie de página"'));
-  assert.ok(html.includes('href="/brand/favicon.svg"'), 'High-contrast JT favicon missing');
+  assert.ok(html.includes('href="/brand/favicon-jt.png"'), 'High-contrast JT favicon missing');
   assert.ok(
     html.includes('class="tattoo-brand-mark__image"'),
     'Official signature header mark missing',
@@ -781,17 +781,17 @@ if (app === 'estetica') {
   assert.ok(workPage.includes('class="tattoo-gallery"'), 'Juanjo portfolio route missing');
   assert.equal(
     (workPage.match(/class="tattoo-carousel__item/g) ?? []).length,
-    9,
+    18,
     'Work fixture must render three physical copies of each preview item',
   );
-  assert.equal((workPage.match(/<figure[^>]*aria-hidden="true"/g) ?? []).length, 6);
-  assert.equal((workPage.match(/class="tattoo-gallery__item"/g) ?? []).length, 3);
+  assert.equal((workPage.match(/<figure[^>]*aria-hidden="true"/g) ?? []).length, 12);
+  assert.equal((workPage.match(/class="tattoo-gallery__item"/g) ?? []).length, 12);
   assert.equal((workPage.match(/loading="lazy"/g) ?? []).length >= 3, true);
   assert.match(workPage, /Trabajos destacados/);
   assert.match(workPage, /Todos los trabajos/);
   assert.match(workPage, /<dialog[^>]*aria-labelledby="lightbox-title"/);
   assert.equal((workPage.match(/<button[^>]*data-lightbox-(?:previous|next)/g) ?? []).length, 2);
-  assert.equal((workPage.match(/data-image="[^"]+"/g) ?? []).length, 3);
+  assert.equal((workPage.match(/data-image="[^"]+"/g) ?? []).length, 12);
   assert.doesNotMatch(
     workPage.replace(/<script\b[\s\S]*?<\/script>/gi, ''),
     /referencia generada|imágenes generadas|no es un trabajo real/i,

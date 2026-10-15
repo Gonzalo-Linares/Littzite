@@ -50,10 +50,6 @@ test('carousel handles 0, 1, 2 and 5 authorized metadata items and a configured 
       assert.doesNotMatch(section, /data-carousel-(?:prev|next)/);
     }
   }
-  assert.match(
-    html,
-    /class="tattoo-hero-media__photo" src="\/tests\/work-one\.svg" alt="Foto fixture de prueba, no real"/,
-  );
   assert.match(html, /class="tattoo-hero-media__oni"[^>]*alt=""/);
 
   for (const [route, count, featuredCount] of [

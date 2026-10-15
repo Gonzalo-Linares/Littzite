@@ -102,3 +102,36 @@ test('Juanjo footer and navigation retain the owner logo and omit Estudio and In
   assert.match(css, /block-size:\s*44px/);
   assert.match(css, /place-items:\s*center/);
 });
+
+test('favicon is the recorded official PNG derivative, not the retired manual SVG', async () => {
+  const favicon = await readFile(new URL('apps/tattoo/public/brand/favicon-jt.png', root));
+  assert.equal(siteContent.site.iconHref, '/brand/favicon-jt.png');
+  assert.equal(
+    createHash('sha256').update(favicon).digest('hex'),
+    'a3f5196f801074f0a1ecb53f9d5fcbd2df9a46db654ccef4de8143d0e90b33cb',
+  );
+  assert.equal(favicon.readUInt32BE(16), 64);
+  assert.equal(favicon.readUInt32BE(20), 64);
+  assert.equal(
+    tattooBrand.marks.jt.sha256,
+    '971090d517b7ad5236be56e2010e864b03b18826091ae63197b22c48aa0ca002',
+  );
+  await assert.rejects(readFile(new URL('apps/tattoo/public/brand/favicon.svg', root)));
+});
+
+test('production motion is CSS progressive and JS only freezes completed reveals', async () => {
+  const css = await readFile(
+    new URL('apps/tattoo/src/styles/production-content.css', root),
+    'utf8',
+  );
+  const home = await readFile(new URL('apps/tattoo/src/pages/index.astro', root), 'utf8');
+  assert.match(css, /prefers-reduced-motion: reduce/);
+  assert.match(css, /@supports \(animation-timeline: view\(\)\)/);
+  assert.match(css, /animation-timeline: --tattoo-works/);
+  assert.match(css, /--work-order/);
+  assert.match(css, /\[data-revealed\]/);
+  assert.match(css, /position: sticky/);
+  assert.doesNotMatch(home, /style\.opacity|classList\.add|IntersectionObserver|pending/);
+  assert.match(home, /section\.dataset\.revealed = 'true'/);
+  assert.match(home, /removeEventListener\('scroll'/);
+});
