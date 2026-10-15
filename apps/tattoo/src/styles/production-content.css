@@ -424,6 +424,32 @@
 .juanjo-site .tattoo-footer-nav {
   justify-content: center;
 }
+.juanjo-site .tattoo-footer-bottom {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.25rem 1rem;
+  padding-block: 0.35rem 0.65rem;
+  font-size: 0.67rem;
+  line-height: 1.5;
+}
+.juanjo-site .tattoo-footer-bottom p {
+  margin: 0;
+  font-size: inherit;
+  line-height: inherit;
+}
+.juanjo-site .tattoo-footer-bottom nav {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.15rem 0.65rem;
+}
+.juanjo-site .tattoo-footer-bottom a {
+  min-height: 1.75rem;
+  font-size: inherit;
+  line-height: inherit;
+}
 @media (max-width: 1024px) {
   .juanjo-site .tattoo-gallery__grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -572,10 +598,6 @@
     padding: 0;
     line-height: 1.4;
     font-size: 0.7rem;
-  }
-  .juanjo-site .tattoo-footer-nav__link:last-child {
-    flex-basis: 100%;
-    text-align: center;
   }
   .juanjo-site .tattoo-footer-bottom {
     display: flex;
