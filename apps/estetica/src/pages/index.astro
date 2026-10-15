@@ -3,23 +3,14 @@ import ButtonLink from '@littzite/ui/ButtonLink.astro';
 import VioraServiceRail from '../components/VioraServiceRail.astro';
 import VioraSiteLayout from '../layouts/VioraSiteLayout.astro';
 import VioraProfessional from '../components/VioraProfessional.astro';
-import VioraInquiry from '../components/VioraInquiry.astro';
 import { siteContent } from '../site.config';
 import { serviceVisuals } from '../service-visuals';
-import { victoriaMedia, vioraSpaceMedia, serviceDetailFor } from '../viora-commercial-content';
+import { victoriaMedia, vioraSpaceMedia } from '../viora-commercial-content';
 import { vioraCommercial } from '../viora-release.ts';
 import { vioraLocation } from '../viora-location';
 const home = siteContent.pages.find((page) => page.slug === '');
 const intro = home?.sections.find((section) => section.type === 'intro');
 if (!home || !intro) throw new Error('Incomplete VIORA home');
-const summaries = Object.fromEntries(
-  siteContent.services.map((service) => [service.id, serviceDetailFor(service.id).summary]),
-);
-const steps = [
-  { title: 'Elegí tu servicio', text: 'Conocé qué incluye y las opciones disponibles.' },
-  { title: 'Reservá', text: 'Elegí el día y horario disponible en la agenda.' },
-  { title: 'Vení a VIORA', text: 'Te esperamos en Rivadavia, San Juan.' },
-];
 ---
 
 <VioraSiteLayout seo={home.seo}>
@@ -34,16 +25,6 @@ const steps = [
           height="275"
         />
         <h1 id="titulo-principal">{intro.heading}</h1>
-        <p>{intro.body}</p>
-        <div class="viora-commercial-actions">
-          <ButtonLink href="#servicios" variant="primary">
-            Ver servicios
-          </ButtonLink>
-          <ButtonLink href="/reservar/" variant="secondary">
-            Reservar turno
-          </ButtonLink>
-        </div>
-        <span class="viora-commercial-hero__location">{vioraCommercial.publicLocation}</span>
       </div>
       <div class="viora-commercial-hero__visual">
         {victoriaMedia.src ? (
@@ -62,36 +43,21 @@ const steps = [
             aria-label="Composición de marca VIORA"
           >
             <img src="/brand/viora-simbolo.png" alt="" width="915" height="1080" />
-            <span>Tu momento, tu bienestar.</span>
           </div>
         )}
+        <span class="viora-commercial-hero__location">{vioraCommercial.publicLocation}</span>
       </div>
     </div>
   </section>
   <VioraServiceRail
     id="servicios"
-    eyebrow="Servicios"
     title="¿Qué servicio estás buscando?"
-    description="Explorá cada servicio, conocé qué incluye y revisá sus opciones antes de reservar."
+    description="Conocé las opciones. Elegí tu momento."
     services={siteContent.services}
     visuals={serviceVisuals}
-    summaries={summaries}
+    compact
   />
-  <VioraProfessional />
-  <section class="viora-how viora-commercial-section" aria-labelledby="viora-how-title">
-    <div class="container">
-      <h2 id="viora-how-title">Tu turno, sin vueltas.</h2>
-      <ol class="viora-how__steps">
-        {steps.map((step, index) => (
-          <li>
-            <span aria-hidden="true">{String(index + 1).padStart(2, '0')}</span>
-            <h3>{step.title}</h3>
-            <p>{step.text}</p>
-          </li>
-        ))}
-      </ol>
-    </div>
-  </section>
+  <VioraProfessional compact />
   <section class="viora-space viora-commercial-section" aria-labelledby="viora-space-title">
     <div class="container">
       <div class="viora-space__heading">
@@ -138,5 +104,4 @@ const steps = [
       </div>
     </div>
   </section>
-  <VioraInquiry />
 </VioraSiteLayout>

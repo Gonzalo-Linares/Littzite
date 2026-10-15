@@ -3,8 +3,6 @@ import ButtonLink from '@littzite/ui/ButtonLink.astro';
 import VioraSiteLayout from '../../layouts/VioraSiteLayout.astro';
 import ServiceVisual from '../../components/ServiceVisual.astro';
 import VioraServicePricing from '../../components/VioraServicePricing.astro';
-import VioraProfessional from '../../components/VioraProfessional.astro';
-import VioraInquiry from '../../components/VioraInquiry.astro';
 import { siteContent } from '../../site.config';
 import { serviceVisuals } from '../../service-visuals';
 import { resolveServiceVisual } from '../../service-visuals.validation';
@@ -30,8 +28,8 @@ const detail = serviceDetailFor(service.id);
     class="viora-service-detail viora-commercial-detail"
     aria-labelledby="viora-service-title"
   >
-    <div class="container">
-      <article class="viora-service-detail__hero">
+    <div class="container viora-commercial-detail__columns">
+      <article class="viora-commercial-detail__main">
         <div class="viora-commercial-detail__intro">
           <ButtonLink href="/servicios/" variant="quiet" size="compact" icon="back">
             Servicios
@@ -43,9 +41,6 @@ const detail = serviceDetailFor(service.id);
             {service.displayName}
           </h1>
           <p>{detail.intro ?? service.description}</p>
-          <ButtonLink href="#opciones" variant="secondary">
-            Ver opciones y precios
-          </ButtonLink>
         </div>
         {visual && (
           <div class="viora-service-detail__media">
@@ -57,57 +52,45 @@ const detail = serviceDetailFor(service.id);
           </div>
         )}
       </article>
-      <div class="viora-commercial-detail__body">
-        <div class="viora-commercial-detail__information">
-          {detail.intro && (
-            <section>
-              <h2>Qué es</h2>
-              <p>{detail.intro}</p>
-            </section>
-          )}
-          {detail.purpose && (
-            <section>
-              <h2>Objetivo</h2>
-              <p>{detail.purpose}</p>
-            </section>
-          )}
-          {Boolean(detail.includes?.length) && (
-            <section>
-              <h2>Qué incluye</h2>
-              <ul>
-                {detail.includes?.map((item) => (
-                  <li>{item}</li>
-                ))}
-              </ul>
-            </section>
-          )}
-          {Boolean(detail.session?.length) && (
-            <section>
-              <h2>Cómo es la sesión</h2>
-              <ol>
-                {detail.session?.map((item) => (
-                  <li>{item}</li>
-                ))}
-              </ol>
-            </section>
-          )}
-          {detail.contentStatus === 'pending' && (
-            <p class="viora-commercial-detail__pending">
-              Estamos preparando los detalles de esta propuesta. Podés consultarnos antes de
-              reservar.
-            </p>
-          )}
-          {visual?.reveal && (
-            <div class="viora-service-detail__secondary-scene">
-              <ServiceVisual visual={visual} context="detail-secondary" />
-            </div>
-          )}
-        </div>
-        <VioraServicePricing service={service} pricing={detail.pricing} />
+      <VioraServicePricing service={service} pricing={detail.pricing} />
+      <div class="viora-commercial-detail__information">
+        {detail.purpose && (
+          <section>
+            <h2>Objetivo</h2>
+            <p>{detail.purpose}</p>
+          </section>
+        )}
+        {Boolean(detail.includes?.length) && (
+          <section>
+            <h2>Qué incluye</h2>
+            <ul>
+              {detail.includes?.map((item) => (
+                <li>{item}</li>
+              ))}
+            </ul>
+          </section>
+        )}
+        {Boolean(detail.session?.length) && (
+          <section>
+            <h2>Cómo es la sesión</h2>
+            <ol>
+              {detail.session?.map((item) => (
+                <li>{item}</li>
+              ))}
+            </ol>
+          </section>
+        )}
+        {detail.contentStatus === 'pending' && (
+          <p class="viora-commercial-detail__pending">Detalles del servicio a confirmar.</p>
+        )}
+        {visual?.reveal && (
+          <div class="viora-service-detail__secondary-scene viora-detail-desktop-image">
+            <ServiceVisual visual={visual} context="detail-secondary" />
+          </div>
+        )}
       </div>
     </div>
   </section>
-  <VioraProfessional compact />
   {Boolean(detail.faq?.length) && (
     <section
       class="viora-service-faq viora-commercial-section"
@@ -124,5 +107,4 @@ const detail = serviceDetailFor(service.id);
       </div>
     </section>
   )}
-  <VioraInquiry showBooking={service.actions.some((action) => action.type === 'direct-booking')} />
 </VioraSiteLayout>

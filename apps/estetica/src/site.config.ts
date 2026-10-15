@@ -101,8 +101,8 @@ const parsedContent = siteContentSchema.parse({
         {
           id: 'intro',
           type: 'intro',
-          heading: 'Estética y bienestar en Rivadavia, San Juan.',
-          body: 'Conocé los servicios de VIORA y elegí el turno que mejor te quede.',
+          heading: 'Un momento para vos.',
+          body: 'Estética y bienestar con el cuidado de VIORA.',
           visualCaption: 'Tu momento, tu bienestar.',
         },
       ],

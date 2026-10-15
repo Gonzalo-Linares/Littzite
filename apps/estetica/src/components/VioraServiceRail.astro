@@ -6,7 +6,8 @@ import { resolveServiceVisual, type VioraServiceVisual } from '../service-visual
 
 interface Props {
   id: string;
-  eyebrow: string;
+  eyebrow?: string;
+  compact?: boolean;
   title: string;
   description: string;
   services: readonly Service[];
@@ -14,7 +15,16 @@ interface Props {
   summaries?: Readonly<Record<string, string>>;
 }
 
-const { id, eyebrow, title, description, services, visuals, summaries } = Astro.props;
+const {
+  id,
+  eyebrow,
+  title,
+  description,
+  services,
+  visuals,
+  summaries,
+  compact = false,
+} = Astro.props;
 const pageSize = 4;
 const pageCount = Math.ceil(services.length / pageSize);
 ---
@@ -30,7 +40,7 @@ const pageCount = Math.ceil(services.length / pageSize);
   <Container>
     <div class="viora-service-rail__heading">
       <div class="viora-service-rail__intro">
-        <p class="viora-service-rail__eyebrow">{eyebrow}</p>
+        {eyebrow && <p class="viora-service-rail__eyebrow">{eyebrow}</p>}
         <h2 id={`${id}-title`}>{title}</h2>
         <p>{description}</p>
       </div>
@@ -83,7 +93,7 @@ const pageCount = Math.ceil(services.length / pageSize);
                 )}
                 <div class="viora-service-rail__copy">
                   <h3>{service.displayName}</h3>
-                  <p>{summaries?.[service.id] ?? service.description}</p>
+                  {!compact && <p>{summaries?.[service.id] ?? service.description}</p>}
                   <span class="viora-service-rail__affordance">Ver servicio</span>
                 </div>
               </a>

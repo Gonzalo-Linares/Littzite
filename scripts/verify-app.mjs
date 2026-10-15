@@ -51,9 +51,7 @@ const renderedHeading = html
   .trim();
 assert.equal(
   renderedHeading,
-  app === 'estetica'
-    ? 'Estética y bienestar en Rivadavia, San Juan.'
-    : 'Tu próximo tatuaje empieza acá.',
+  app === 'estetica' ? 'Un momento para vos.' : 'Tu próximo tatuaje empieza acá.',
   'Expected approved home heading',
 );
 assert.ok(html.includes('class="site-header"'), 'Shared header missing');
@@ -227,11 +225,13 @@ if (app === 'estetica') {
   assert.ok(html.includes('class="viora-site"'), 'VIORA-only body style missing');
   assert.ok(html.includes('/brand/viora-horizontal.png'), 'VIORA header asset missing');
   assert.match(html, /class="viora-commercial-hero"/);
-  assert.match(html, /href="#servicios"[^>]*>\s*Ver servicios/);
-  assert.match(html, /href="\/reservar\/"[^>]*>\s*Reservar turno/);
+  const hero = html.match(/<section class="viora-commercial-hero"[\s\S]*?<\/section>/)?.[0];
+  assert.ok(hero);
+  assert.doesNotMatch(hero, /<a\b|Conocé los servicios de VIORA/);
+
   assert.match(html, /¿Qué servicio estás buscando/);
   assert.match(html, /Hola, soy Victoria/);
-  assert.match(html, /Tu turno, sin vueltas/);
+  assert.doesNotMatch(html, /Tu turno, sin vueltas|¿No sabés qué servicio elegir/);
   assert.match(html, /Nuestro espacio/);
   assert.doesNotMatch(
     html,
@@ -314,8 +314,8 @@ if (app === 'estetica') {
       `${service.slug}: card title missing`,
     );
     assert.ok(
-      html.includes(serviceDetailFor(service.id).summary),
-      `${service.slug}: card summary missing`,
+      !html.includes(serviceDetailFor(service.id).summary),
+      `${service.slug}: compact card should omit the summary`,
     );
     assert.ok(
       html.includes(`href="/servicios/${service.slug}/"`),
@@ -370,7 +370,7 @@ if (app === 'estetica') {
     );
     assert.match(
       detail,
-      /class="viora-service-detail__secondary-scene"/,
+      /class="viora-service-detail__secondary-scene viora-detail-desktop-image"/,
       `${service.slug}: second scene must be separate from the primary`,
     );
     detailVisualImages.forEach((tag, index) =>
@@ -408,7 +408,11 @@ if (app === 'estetica') {
     assert.ok(detail.includes('href="/servicios/"'), `${service.slug}: return link missing`);
     assert.match(detail, /Opciones y precios/);
     assert.match(detail, /Valores a confirmar/);
-    assert.match(detail, /Hola, soy Victoria/);
+    assert.doesNotMatch(
+      detail,
+      /Hola, soy Victoria|Ver opciones y precios|¿No sabés qué servicio elegir/,
+    );
+    assert.match(detail, /viora-commercial-detail__columns/);
     if (service.id !== 'reiki') {
       const targetId = actionTargets[service.id];
       const expectedTargetUrl =
@@ -891,12 +895,10 @@ if (app === 'estetica') {
 }
 assert.ok(html.includes('class="skip-link" href="#contenido"'));
 assert.ok(html.includes('class="container"'));
-const expectedHeroHref = app === 'estetica' ? '#servicios' : tattooBookingUrl;
+const expectedHeroHref = app === 'estetica' ? '/reservar/' : tattooBookingUrl;
 assert.ok(
   app === 'estetica'
-    ? html.includes(
-        `class="button-link button-link--primary button-link--default" href="${expectedHeroHref}"`,
-      )
+    ? html.includes(`href="${expectedHeroHref}"`)
     : html.includes(
         `class="button-link button-link--primary button-link--default" href="${expectedHeroHref}"`,
       ),

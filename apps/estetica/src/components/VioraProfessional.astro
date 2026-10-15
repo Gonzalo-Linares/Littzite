@@ -36,7 +36,11 @@ const { compact = false } = Astro.props;
     )}
     <div class="viora-professional__copy">
       <h2 id="victoria-title">Hola, soy Victoria.</h2>
-      <p>{victoriaIntroduction}</p>
+      <p>
+        {compact
+          ? 'Soy quien está detrás de VIORA. Te acompaño a elegir con tranquilidad.'
+          : victoriaIntroduction}
+      </p>
     </div>
   </div>
 </section>

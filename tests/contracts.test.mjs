@@ -338,7 +338,7 @@ test('VIORA theme, voice and four named services match its brand manual', () => 
 
   const home = estetica.pages.find((page) => page.slug === '');
   const intro = home.sections.find((section) => section.type === 'intro');
-  assert.equal(intro.heading, 'Estética y bienestar en Rivadavia, San Juan.');
+  assert.equal(intro.heading, 'Un momento para vos.');
   assert.equal(
     home.sections.some((section) => section.type === 'service-list'),
     false,
