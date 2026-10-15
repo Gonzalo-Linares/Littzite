@@ -41,6 +41,7 @@ const themeStyle = {
 <html lang={locale} style={themeStyle}>
   <head>
     <meta charset="utf-8" />
+    <slot name="head" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="robots" content={noindex ? 'noindex, nofollow' : 'index, follow'} />
     {iconHref && <link rel="icon" href={iconHref} />}

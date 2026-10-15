@@ -6,8 +6,10 @@ export const tattooBrand = {
     handle: '@juanjo.tattoos',
   },
   heroMedia: {
-    src: undefined as string | undefined,
-    alt: undefined as string | undefined,
+    src: '/brand/oni-hero-approved.webp',
+    alt: 'Máscara oni roja entre humo y tinta.',
+    width: 1942,
+    height: 809,
   },
   palette: {
     ink: '#0E0E0E',
@@ -68,6 +70,7 @@ export const tattooBrand = {
 } as const;
 
 export const tattooActions = {
+  whatsAppHref: 'https://wa.me/5492645019502',
   turnsHref: 'https://cal.com/juanjo-pereyra-mkzgce/turnos-tattoos?overlayCalendar=true',
   consultHref: tattooBrand.social.instagram,
   instagramHref: tattooBrand.social.instagram,

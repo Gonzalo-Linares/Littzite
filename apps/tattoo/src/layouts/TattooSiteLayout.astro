@@ -14,6 +14,8 @@ import {
   tattooStructuredData,
 } from '../release-readiness.ts';
 import '../styles/juanjo.css';
+import '../styles/production-content.css';
+import TattooContactActions from '../components/TattooContactActions.astro';
 
 interface Props {
   title: string;
@@ -36,6 +38,11 @@ const { site } = siteContent;
   structuredData={indexable ? tattooStructuredData() : undefined}
   bodyClass="juanjo-site"
 >
+  <Fragment slot="head">
+    <link rel="icon" type="image/png" sizes="16x16" href="/brand/oni-icon-16.png" />
+    <link rel="icon" type="image/png" sizes="32x32" href="/brand/oni-icon-32.png" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/brand/oni-icon-180.png" />
+  </Fragment>
   <SiteHeader
     slot="header"
     brand={tattooBrand.name}
@@ -74,6 +81,7 @@ const { site } = siteContent;
   </SiteHeader>
 
   <slot />
+  <TattooContactActions />
 
   <SiteFooter
     slot="footer"

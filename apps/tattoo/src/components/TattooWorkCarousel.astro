@@ -36,7 +36,10 @@ const canMove = items.length > 1;
                 data-copy={copy}
                 aria-hidden={copy !== 1 ? 'true' : undefined}
               >
-                <div class="tattoo-carousel__image-wrap">
+                <div
+                  class="tattoo-carousel__image-wrap"
+                  style={`--work-order: ${index}; --work-position: ${item.preview?.focalPoint.x ?? 50}% ${item.preview?.focalPoint.y ?? 50}%; --work-fit: ${item.preview?.fit ?? 'cover'}`}
+                >
                   <img
                     src={item.image.src}
                     alt={copy === 1 ? item.alt : ''}

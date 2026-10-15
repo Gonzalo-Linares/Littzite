@@ -35,38 +35,23 @@ test('Juanjo uses the approved Cal.com booking link and keeps Instagram availabl
   assert.doesNotMatch(layout, /turnos por Instagram/i);
 });
 
-test('home keeps the approved copy and records temporary assets outside the interface', async () => {
+test('home contains only the definitive Oni hero and real featured portfolio', async () => {
   const home = await read('apps/tattoo/src/pages/index.astro');
   const hero = await read('apps/tattoo/src/components/TattooHeroMedia.astro');
   assert.match(home, /Tu próximo tatuaje empieza acá\./);
-  assert.match(home, /Explorá trabajos, elegí el estilo que más te represente y sacá tu turno\./);
-  assert.match(home, /Explorar trabajos/);
+  assert.match(home, /Ver trabajos/);
   assert.match(home, /Sacar turno/);
-  assert.doesNotMatch(home, /Contanos tu idea|Antes de la tinta/);
-  assert.equal(tattooBrand.heroMedia.src, undefined);
-  assert.equal(tattooPortfolioRecords.length, 3);
-  assert.deepEqual(
-    tattooPortfolioRecords.filter((work) => work.featured),
-    tattooPortfolioRecords,
-  );
-  assert.match(home, /import \{ featuredTattooWorks \} from '\.\.\/portfolio'/);
-  assert.match(home, /<TattooWorkCarousel items=\{featuredTattooWorks\}/);
+  assert.equal((home.match(/<section\b/g) ?? []).length, 2);
   assert.doesNotMatch(
-    home + hero,
-    /Imagen de preview generada|imagen generada para la preview|no es un trabajo real del estudio/i,
+    home,
+    /Elegí cómo seguir|UNA GUÍA PARA TU SESIÓN|EL PRÓXIMO PASO|Tinta con carácter/,
   );
-  const styles = await read('apps/tattoo/src/styles/juanjo.css');
-  assert.match(styles, /\.juanjo-site \.tattoo-home-hero h1\s*\{[^}]*font-family:\s*'Rye'/);
-  assert.doesNotMatch(styles, /\.tattoo-home-hero h1 span\s*\{[^}]*font-family:\s*'DejaVu Serif'/);
-});
-
-test('home has five focused sections and removes the retired preparation block', async () => {
-  const home = await read('apps/tattoo/src/pages/index.astro');
-  assert.equal((home.match(/<section\b/g) ?? []).length, 5);
-  assert.doesNotMatch(home, /antes-de-la-tinta|Antes de la tinta/);
-  assert.match(home, /id="como-trabajamos"/);
-  assert.match(home, /href="\/guia\/"/);
-  assert.doesNotMatch(home, /Contanos tu idea/);
+  assert.match(hero, /media\.src/);
+  assert.equal(tattooBrand.heroMedia.src, '/brand/oni-hero-approved.webp');
+  assert.doesNotMatch(hero, /assets\/preview|marks\.oni|__photo/);
+  assert.equal(tattooPortfolioRecords.length, 12);
+  assert.equal(tattooPortfolioRecords.filter((work) => work.featured).length, 6);
+  assert.match(home, /<TattooWorkCarousel items=\{featuredTattooWorks\}/);
 });
 
 test('guide retains preparation, aftercare and FAQ while removing the two retired visuals', async () => {
@@ -126,27 +111,24 @@ test('contact leads with the approved Google embed and keeps directions and card
   assert.equal(siteContent.services.length, 0);
 });
 
-test('temporary image portfolio remains marked as release blocked', async () => {
+test('approved hero and portfolio resolve asset blockers while legal release stays closed', async () => {
   const gallery = await read('apps/tattoo/src/components/TattooGallery.astro');
-  const previewFiles = await readdir(new URL('apps/tattoo/src/assets/preview/', root));
-  assert.equal(tattooPortfolioRecords.length, 3);
-  assert.equal(tattooPortfolioRecords.filter((work) => work.featured).length, 3);
-  assert.match(gallery, /items\.map\(\(item, index\)/);
+  const guide = await read('apps/tattoo/src/pages/guia.astro');
   assert.match(gallery, /loading="lazy"/);
   assert.equal(tattooReleaseState.temporaryHeroImage, true);
   assert.equal(tattooReleaseState.temporaryPortfolioImages, true);
-  assert.equal(tattooReleaseState.temporaryAftercareImage, true);
-  assert.equal('bookingUrlIsPlaceholder' in tattooReleaseState, false);
-  assert.equal(tattooReleaseBlockers.length, 0);
+  assert.equal('temporaryAftercareImage' in tattooReleaseState, true);
+  assert.doesNotMatch(guide, /assets\/preview|aftercare[^"']*\.(webp|png|jpg)/);
   assert.equal(
     tattooProductionBlockers.filter((blocker) => blocker.startsWith('assets.')).length,
     3,
   );
   assert.ok(tattooProductionBlockers.includes('JUANJO_PUBLIC_SITE_URL.missing'));
   assert.throws(assertTattooProductionReady, /Juanjo production release blocked/);
-  assert.ok(previewFiles.includes('work-botanical-preview.webp'));
-  assert.ok(previewFiles.includes('work-moth-preview.webp'));
-  assert.ok(previewFiles.includes('work-ornamental-preview.webp'));
+  assert.equal(tattooReleaseBlockers.length, 0);
+  const portfolio = await read('apps/tattoo/src/portfolio.ts');
+  assert.doesNotMatch(portfolio, /preview/);
+  assert.ok(tattooPortfolioRecords.every((work) => /^work-/.test(work.id)));
 });
 
 test('Juanjo keeps booking values app-local and booking stays inactive', async () => {

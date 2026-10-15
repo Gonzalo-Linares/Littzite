@@ -21,8 +21,19 @@ const { siteContent } = await import(`../apps/${app}/src/site.config.ts`);
 const html = await readFile(new URL(`../apps/${app}/dist/index.html`, import.meta.url), 'utf8');
 const assertBrowserIcon = (markup, href, label) => {
   const icons = markup.match(/<link\b(?=[^>]*\brel="icon")[^>]*>/g) ?? [];
-  assert.equal(icons.length, href ? 1 : 0, `${label}: unexpected browser icon count`);
-  if (href) assert.ok(icons[0].includes(`href="${href}"`), `${label}: wrong browser icon`);
+  const expected =
+    href === '/brand/oni-icon-64.png'
+      ? ['/brand/oni-icon-16.png', '/brand/oni-icon-32.png', href]
+      : href
+        ? [href]
+        : [];
+  assert.equal(icons.length, expected.length, `${label}: unexpected browser icon count`);
+  for (const icon of expected)
+    assert.equal(
+      icons.filter((tag) => tag.includes(`href="${icon}"`)).length,
+      1,
+      `${label}: missing or duplicate browser icon ${icon}`,
+    );
 };
 assert.equal(
   (html.match(/<header class="site-header">/g) ?? []).length,
@@ -691,7 +702,7 @@ if (app === 'estetica') {
   assert.ok(html.includes('Tu próximo tatuaje empieza acá.'), 'Approved Juanjo H1 missing');
   assert.ok(html.includes(`href="${tattooBookingUrl}"`), 'Test booking URL missing');
   assert.ok(!html.includes('agenda de prueba'), 'UAT wording must not appear in public copy');
-  assert.ok(html.includes('Explorar trabajos'), 'Work CTA missing');
+  assert.ok(html.includes('Ver trabajos'), 'Work CTA missing');
   assert.ok(html.includes('href="/guia/"'), 'Guide route missing');
   assert.ok(
     html.includes('aria-label="Juanjo Tattoo Studio en Instagram"'),
@@ -699,7 +710,7 @@ if (app === 'estetica') {
   );
   assert.ok(!html.includes('>Contanos tu idea.<'), 'Legacy hero CTA must be removed');
   assert.ok(!html.includes('Una marca que deja huella'), 'Legacy brand-copy hero must be removed');
-  assert.ok(html.includes('id="como-trabajamos"'), 'Conceptual service paths missing');
+  assert.ok(!html.includes('id="como-trabajamos"'), 'Retired home section remains');
   assert.ok(
     html.includes('Powered by') && html.includes('alt="Littzite"'),
     'Powered by logo attribution missing',
@@ -726,7 +737,7 @@ if (app === 'estetica') {
     'Juanjo routes incorrect or retired Estudio route remains',
   );
   assert.ok(
-    !html.includes('wa.me/') && !html.includes('api.whatsapp.com/'),
+    html.includes('https://wa.me/5492645019502') && !html.includes('api.whatsapp.com/'),
     'Unapproved WhatsApp CTA was published',
   );
   assert.ok(
@@ -735,12 +746,12 @@ if (app === 'estetica') {
   );
   assert.equal(
     (html.match(/class="tattoo-carousel__item/g) ?? []).length,
-    9,
-    'Juanjo preview carousel must render three physical copies of each item',
+    18,
+    'Juanjo real carousel must render three physical copies of each item',
   );
   assert.ok(!html.includes('href="/servicios/"'), 'VIORA navigation must not leak into Juanjo');
   assert.ok(html.includes('aria-label="Navegación del pie de página"'));
-  assert.ok(html.includes('href="/brand/favicon.svg"'), 'High-contrast JT favicon missing');
+  assert.ok(html.includes('href="/brand/oni-icon-64.png"'), 'High-contrast JT favicon missing');
   assert.ok(
     html.includes('class="tattoo-brand-mark__image"'),
     'Official signature header mark missing',
@@ -781,17 +792,17 @@ if (app === 'estetica') {
   assert.ok(workPage.includes('class="tattoo-gallery"'), 'Juanjo portfolio route missing');
   assert.equal(
     (workPage.match(/class="tattoo-carousel__item/g) ?? []).length,
-    9,
+    18,
     'Work fixture must render three physical copies of each preview item',
   );
-  assert.equal((workPage.match(/<figure[^>]*aria-hidden="true"/g) ?? []).length, 6);
-  assert.equal((workPage.match(/class="tattoo-gallery__item"/g) ?? []).length, 3);
+  assert.equal((workPage.match(/<figure[^>]*aria-hidden="true"/g) ?? []).length, 12);
+  assert.equal((workPage.match(/class="tattoo-gallery__item"/g) ?? []).length, 12);
   assert.equal((workPage.match(/loading="lazy"/g) ?? []).length >= 3, true);
   assert.match(workPage, /Trabajos destacados/);
   assert.match(workPage, /Todos los trabajos/);
   assert.match(workPage, /<dialog[^>]*aria-labelledby="lightbox-title"/);
   assert.equal((workPage.match(/<button[^>]*data-lightbox-(?:previous|next)/g) ?? []).length, 2);
-  assert.equal((workPage.match(/data-image="[^"]+"/g) ?? []).length, 3);
+  assert.equal((workPage.match(/data-image="[^"]+"/g) ?? []).length, 12);
   assert.doesNotMatch(
     workPage.replace(/<script\b[\s\S]*?<\/script>/gi, ''),
     /referencia generada|imágenes generadas|no es un trabajo real/i,
@@ -856,7 +867,9 @@ if (app === 'estetica') {
   assert.equal((contact.match(/class="tattoo-contact-path"/g) ?? []).length, 2);
   assert.ok(contact.includes(`href="${tattooBookingUrl}"`));
   assert.match(contact, /href="https:\/\/www\.instagram\.com\/juanjo\.tattoos\/"/);
-  assert.doesNotMatch(html + contact, /wa\.me|api\.whatsapp|Reserva tu turno|Agendá ahora/i);
+  assert.doesNotMatch(html + contact, /api\.whatsapp|Reserva tu turno|Agendá ahora/i);
+  for (const match of (html + contact).matchAll(/href="(https:\/\/wa\.me\/[^"]+)"/g))
+    assert.equal(match[1], 'https://wa.me/5492645019502');
   for (const route of ['privacidad', 'terminos-y-condiciones', 'arrepentimiento']) {
     const legal = await readFile(
       new URL(`../apps/tattoo/dist/${route}/index.html`, import.meta.url),

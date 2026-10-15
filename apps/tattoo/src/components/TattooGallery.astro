@@ -37,6 +37,8 @@ const { items, featuredItems } = Astro.props;
               class="tattoo-gallery__item"
               type="button"
               aria-label={`Ampliar ${item.title}`}
+              data-orientation={item.preview?.orientation}
+              style={`--work-position: ${item.preview?.focalPoint.x ?? 50}% ${item.preview?.focalPoint.y ?? 50}%; --work-fit: ${item.preview?.fit ?? 'cover'}`}
               data-gallery-item
               data-index={index}
               data-image={item.image.src}
