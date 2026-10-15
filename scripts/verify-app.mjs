@@ -1,3 +1,4 @@
+import { serviceDetailFor } from '../apps/estetica/src/viora-commercial-content.ts';
 import assert from 'node:assert/strict';
 import { fileURLToPath } from 'node:url';
 import { access, readFile } from 'node:fs/promises';
@@ -50,7 +51,7 @@ const renderedHeading = html
   .trim();
 assert.equal(
   renderedHeading,
-  app === 'estetica' ? 'Regalate una pausa.' : 'Tu próximo tatuaje empieza acá.',
+  app === 'estetica' ? 'Un momento para vos.' : 'Tu próximo tatuaje empieza acá.',
   'Expected approved home heading',
 );
 assert.ok(html.includes('class="site-header"'), 'Shared header missing');
@@ -172,8 +173,12 @@ if (app === 'estetica') {
     );
     assert.match(
       markup,
-      /class="button-link button-link--primary button-link--compact site-header__badge" href="\/reservar\/">\s*Turnos/,
+      /class="button-link button-link--primary button-link--compact site-header__badge" href="\/servicios\/">\s*Turnos/,
     );
+    assert.match(markup, /<details class="viora-mobile-menu">/);
+    assert.match(markup, /<summary aria-controls="viora-mobile-navigation">/);
+    assert.match(markup, /<nav id="viora-mobile-navigation" aria-label="Navegación móvil">/);
+    assert.doesNotMatch(markup, /viora-reveal-pending/);
     const footerNav = markup.match(
       /<nav class="viora-footer-links" aria-label="Navegación del pie de página">(.*?)<\/nav>/s,
     )?.[1];
@@ -181,7 +186,7 @@ if (app === 'estetica') {
     assert.match(footerNav, /href="\/servicios\/"[^>]*>\s*Servicios/);
     assert.match(footerNav, /href="\/viora\/"[^>]*>\s*VIORA/);
     assert.match(footerNav, /href="\/contacto\/"[^>]*>\s*Contacto/);
-    assert.match(footerNav, /href="\/reservar\/"[^>]*>\s*Turnos/);
+    assert.match(footerNav, /href="\/servicios\/"[^>]*>\s*Turnos/);
     const footer = markup.match(/<footer class="site-footer">([\s\S]*?)<\/footer>/)?.[1];
     assert.ok(footer, `${page}: footer missing`);
     assert.ok(
@@ -223,45 +228,27 @@ if (app === 'estetica') {
   assertVioraFrame(html, 'home');
   assert.ok(html.includes('class="viora-site"'), 'VIORA-only body style missing');
   assert.ok(html.includes('/brand/viora-horizontal.png'), 'VIORA header asset missing');
-  assert.match(html, /class="viora-hero-photo-frame"/, 'VIORA editorial hero photograph missing');
+  assert.match(html, /class="viora-commercial-hero"/);
+  const hero = html.match(/<section class="viora-commercial-hero"[\s\S]*?<\/section>/)?.[0];
+  assert.ok(hero);
+  assert.match(hero, /viora-commercial-hero__symbol/);
+  assert.doesNotMatch(hero, /viora-palabra\.png/);
+  assert.match(hero, /viora-botanical/);
+  assert.doesNotMatch(hero, /<a\b|Conocé los servicios de VIORA/);
+
+  assert.match(html, /¿Qué servicio estás buscando/);
+  assert.match(html, /Hola, soy Victoria/);
+  assert.doesNotMatch(html, /Tu turno, sin vueltas|¿No sabés qué servicio elegir/);
+  assert.match(html, /Nuestro espacio/);
   assert.doesNotMatch(
     html,
-    /class="viora-hero-logo"/,
-    'VIORA hero should not be a giant logo poster',
+    /Una identidad para cuidar|Un espacio para tu bienestar|VIORA \/|<iframe|viora-hero-photo/,
   );
-  const heroImageTag = html.match(/<img\b(?=[^>]*class="viora-hero-photo")[^>]*>/)?.[0];
-  assert.ok(heroImageTag, 'VIORA hero photo image missing');
-  assert.ok(html.includes('/brand/viora-palabra.png'), 'VIORA footer asset missing');
-  assert.ok(html.includes('class="viora-home-teaser viora-home-teaser--story"'));
-  assert.doesNotMatch(html, /viora-moment-teaser/);
-  assert.ok(html.includes('class="viora-contact-teaser"'));
-  assert.doesNotMatch(html, /class="viora-moment"/, 'Full moment narrative belongs on /viora/');
-  assert.doesNotMatch(html, /class="viora-contact__map"/, 'The map panel belongs on /contacto/');
-  assert.ok(html.includes('aria-label="Navegación del pie de página"'));
-  assert.ok(html.includes('href="/contacto/">Contacto</a>'));
-  assert.doesNotMatch(html, /Ver todos los servicios/);
-  assert.doesNotMatch(html, /viora-regret-access/);
-  assert.equal((html.match(/BOTÓN DE ARREPENTIMIENTO/g) ?? []).length, 1);
-  assert.match(html, /href="\/viora\/"[^>]*>\s*Conocé VIORA/);
-  assert.match(html, /href="\/contacto\/"[^>]*>\s*Ver contacto/);
-  assert.match(
-    html,
-    /class="button-link button-link--primary button-link--default" href="\/servicios\/"/,
-  );
-  assert.doesNotMatch(html, /VIORA \/ 01|viora-catalog__card-number|referencias ilustrativas/);
-  assert.match(html, /UN RESPIRO PARA VOS/);
-  assert.match(html, /<span class="viora-service-rail__affordance">Ver experiencia<\/span>/);
-  assert.doesNotMatch(html, /href="\/(?:#alcance|#esencia|#contacto|#viora-moment-title)"/);
-  assert.ok(!/<iframe\b/i.test(html), 'VIORA home must not embed a map');
-  assert.equal((html.match(/instagram\.com\/vioramasajes\.ok\//g) ?? []).length, 1);
-  assert.ok(
-    !/(?:cal\.com|booking\.example|wa\.me|api\.whatsapp)/i.test(html),
-    'No commercial destination may be published',
-  );
-  assert.ok(
-    !/<a[^>]*>[^<]*(Reservar|Agendar|Consultar)[^<]*<\/a>/i.test(html),
-    'VIORA home must not publish a commercial booking CTA',
-  );
+  assert.doesNotMatch(html, /(?:\$\s?\d|ARS\s?\d)/);
+  assert.ok(html.indexOf('viora-commercial-hero') < html.indexOf('data-service-rail'));
+  assert.ok(html.indexOf('data-service-rail') < html.indexOf('id="victoria-title"'));
+  for (const service of siteContent.services)
+    assert.ok(html.includes('href="/servicios/' + service.slug + '/"'));
   const { access } = await import('node:fs/promises');
   for (const asset of ['viora-horizontal.png', 'viora-principal.png', 'viora-palabra.png']) {
     await access(new URL(`../apps/estetica/dist/brand/${asset}`, import.meta.url));
@@ -302,7 +289,6 @@ if (app === 'estetica') {
     );
     assert.match(tag, /\bsizes="[^"]+"/, `${label}: srcset must declare rendered size hints`);
   };
-  assertResponsiveImage(heroImageTag, 'VIORA hero image');
   for (const [index, tag] of homeVisualImages.entries()) {
     assert.match(
       tag,
@@ -334,7 +320,10 @@ if (app === 'estetica') {
       html.includes(`<h3>${service.displayName}</h3>`),
       `${service.slug}: card title missing`,
     );
-    assert.ok(html.includes(service.description), `${service.slug}: card description missing`);
+    assert.ok(
+      !html.includes(serviceDetailFor(service.id).summary),
+      `${service.slug}: compact card should omit the summary`,
+    );
     assert.ok(
       html.includes(`href="/servicios/${service.slug}/"`),
       `${service.slug}: card link missing`,
@@ -388,7 +377,7 @@ if (app === 'estetica') {
     );
     assert.match(
       detail,
-      /class="viora-service-detail__secondary-scene"/,
+      /class="viora-service-detail__secondary-scene viora-detail-desktop-image"/,
       `${service.slug}: second scene must be separate from the primary`,
     );
     detailVisualImages.forEach((tag, index) =>
@@ -424,33 +413,33 @@ if (app === 'estetica') {
       `${service.slug}: accessible landmarks missing`,
     );
     assert.ok(detail.includes('href="/servicios/"'), `${service.slug}: return link missing`);
-    assert.ok(
-      !/<a[^>]*>[^<]*(Reservar|Agendar|Consultar)[^<]*<\/a>/i.test(detail),
-      `${service.slug}: unapproved conversion CTA`,
+    assert.match(detail, /Opciones y precios/);
+    assert.match(detail, /Valores a confirmar/);
+    assert.match(detail, /Muestra de diseño/);
+    assert.ok(detail.includes('$00.000'));
+    for (const group of serviceDetailFor(service.id).pricing.previewGroups ?? []) {
+      assert.ok(detail.includes(group.title));
+      for (const item of group.items) assert.ok(detail.includes(item.label));
+    }
+    assert.doesNotMatch(
+      detail,
+      /Hola, soy Victoria|Ver opciones y precios|¿No sabés qué servicio elegir/,
     );
+    assert.match(detail, /viora-commercial-detail__columns/);
     if (service.id !== 'reiki') {
-      assert.match(detail, /class="viora-service-actions"/);
-      assert.match(
-        detail,
-        /class="button-link button-link--primary button-link--compact" href="https:\/\/cal\.com\/[^" ]+">\s*Solicitar turno/,
-      );
-      assert.ok(detail.indexOf('Solicitar turno') < detail.indexOf('viora-service-detail__media'));
-      assert.equal((detail.match(/Solicitar turno/g) ?? []).length, 1);
       const targetId = actionTargets[service.id];
       const expectedTargetUrl =
         targetId === 'booking-general'
           ? generalBookingTarget?.fallbackUrl
           : depilationBookingTarget?.fallbackUrl;
-      assert.ok(detail.includes(`href="${expectedTargetUrl}"`));
-    } else {
+      assert.ok(detail.includes('href="' + expectedTargetUrl + '"'));
       assert.ok(
-        !detail.includes('class="viora-service-actions"'),
-        `${service.slug}: empty service actions must not render a section`,
+        detail.indexOf('Valores a confirmar') < detail.indexOf('href="' + expectedTargetUrl + '"'),
       );
-      assert.doesNotMatch(detail, /cal\.com|<a[^>]*>[^<]*Solicitar turno/);
-    }
+      assert.match(detail, /Vas a ver los horarios disponibles y elegir el que mejor te quede/);
+    } else assert.doesNotMatch(detail, /cal\.com/);
     assert.ok(
-      !/(?:\$\s?\d|ARS\s?\d|\d+\s?(?:minutos|min))/i.test(detail),
+      !/(?:\$\s?\d|ARS\s?\d|\d+\s?(?:minutos|min))/i.test(detail.replaceAll('$00.000', '')),
       `${service.slug}: unapproved price or duration`,
     );
     assert.ok(
@@ -468,6 +457,13 @@ if (app === 'estetica') {
     'utf8',
   );
   assertVioraFrame(catalog, 'services catalog');
+  const catalogCards = [
+    ...catalog.matchAll(/<article\b[^>]*viora-catalog__card[^>]*>([\s\S]*?)<\/article>/g),
+  ];
+  for (const [, card] of catalogCards) {
+    assert.equal((card.match(/<a\b/g) ?? []).length, 1);
+    assert.match(card, /<a class="viora-catalog__surface"[\s\S]*?<figure/);
+  }
   assertMetadata(
     catalog,
     {
@@ -476,7 +472,7 @@ if (app === 'estetica') {
     },
     'VIORA services',
   );
-  assert.match(catalog, /<h1 id="catalogo-servicios-titulo">Nuestras experiencias\.<\/h1>/);
+  assert.match(catalog, /<h1 id="catalogo-servicios-titulo">Elegí tu momento\.<\/h1>/);
   assert.equal((catalog.match(/class="viora-catalog__card(?:\s[^"]*)?"/g) ?? []).length, 4);
   assert.doesNotMatch(
     catalog,
@@ -587,24 +583,11 @@ if (app === 'estetica') {
     new URL('../apps/estetica/dist/reservar/index.html', import.meta.url),
     'utf8',
   );
-  assertVioraFrame(booking, 'booking');
-  assert.match(booking, /<h1 id="viora-booking-title">Reservá tu momento\.<\/h1>/);
-  assert.match(
-    booking,
-    /<h2 id="viora-booking-inquiry-title">¿Querés consultar antes de reservar\?<\/h2>/,
-  );
-  assert.match(booking, /Si querés conocer el precio o resolver una duda sobre un servicio/);
-  assert.match(
-    booking,
-    /href="https:\/\/www\.instagram\.com\/vioramasajes\.ok\/" target="_blank" rel="noopener noreferrer">\s*Escribir por Instagram/,
-  );
-  assert.doesNotMatch(booking, /Estamos terminando de configurar los horarios/);
-  assert.doesNotMatch(booking, /Agenda próximamente.*(?:Limpieza facial|Masajes|Depilación)/s);
-  assert.equal((booking.match(/class="viora-booking-card"/g) ?? []).length, 4);
-  assert.equal(
-    (booking.match(/class="viora-booking-card__status">Agenda próximamente/g) ?? []).length,
-    1,
-  );
+  assert.match(booking, /http-equiv="refresh" content="0;url=\/servicios\/"/);
+  assert.match(booking, /<a href="\/servicios\/"/);
+  assert.match(booking, /name="robots" content="noindex"/);
+  assert.doesNotMatch(booking, /viora-booking|cal\.com/);
+  assert.doesNotMatch(html + catalog, /href="\/reservar\/"/);
   const contactBuildCheck = await readFile(
     new URL('../apps/estetica/dist/contacto/index.html', import.meta.url),
     'utf8',
@@ -618,7 +601,7 @@ if (app === 'estetica') {
     contactBuildCheck,
     /href="https:\/\/www\.instagram\.com\/vioramasajes\.ok\/" target="_blank" rel="noopener noreferrer">\s*Escribir por Instagram/,
   );
-  assert.match(contactBuildCheck, /href="\/reservar\/"[^>]*>\s*Solicitar turno/);
+  assert.match(contactBuildCheck, /href="\/servicios\/"[^>]*>\s*Solicitar turno/);
   assert.doesNotMatch(
     contactBuildCheck,
     /<blockquote[^>]*instagram-media|<iframe[^>]+instagram\.com|<script[^>]+instagram/i,
@@ -668,22 +651,6 @@ if (app === 'estetica') {
   assert.match(html, /href="\/arrepentimiento\/"[^>]*>\s*BOTÓN DE ARREPENTIMIENTO/);
   assert.doesNotMatch(contactBuildCheck, /example\.com|John Doe|11-11111111-1/);
   assert.doesNotMatch(booking, /booking\.example|href="#"/);
-  const bookingCards = Array.from(
-    booking.matchAll(/<article class="viora-booking-card">.*?<\/article>/gs),
-    ([markup]) => markup,
-  );
-  assert.equal(bookingCards.length, 4);
-  assert.doesNotMatch(booking, /\b(?:prueba|test|demo|preview)(?:-|\/|$)|agenda de prueba/i);
-  for (const card of bookingCards) {
-    if (card.includes('Reiki')) {
-      assert.doesNotMatch(card, /Solicitar turno|href="https:\/\/cal\.com/);
-      assert.match(card, /Agenda próximamente/);
-    } else {
-      assert.match(card, /Solicitar turno/);
-      assert.match(card, /href="https:\/\/cal\.com\/[^" ]+"/);
-      assert.doesNotMatch(card, /Agenda próximamente/);
-    }
-  }
   const terms = await readFile(
     new URL('../apps/estetica/dist/terminos-y-condiciones/index.html', import.meta.url),
     'utf8',
@@ -703,16 +670,6 @@ if (app === 'estetica') {
   );
   assert.doesNotMatch(regret, /agenda de prueba/i);
   assert.match(regret, /distinta de cancelar o reprogramar un turno en Cal\.com/);
-  assert.equal((booking.match(/class="viora-booking-card__media"/g) ?? []).length, 4);
-  assert.equal((booking.match(/class="viora-booking-card__body"/g) ?? []).length, 4);
-  for (const card of bookingCards) {
-    assert.match(
-      card,
-      /<div class="viora-booking-card__media">\s*<figure[^>]*class="viora-service-visual viora-service-visual--card/,
-    );
-    assert.match(card, /<div class="viora-booking-card__body">/);
-    assert.ok(card.indexOf('viora-booking-card__media') < card.indexOf('viora-booking-card__body'));
-  }
   await assert.rejects(
     access(new URL('../apps/estetica/dist/servicios/no-existe/index.html', import.meta.url)),
   );
@@ -913,8 +870,8 @@ if (app === 'estetica') {
   }
 }
 if (app === 'estetica') {
-  assert.ok(html.includes('class="landing-hero landing-hero--'), 'Shared hero missing');
-  assert.ok(html.includes('id="alcance"'), 'Feature grid anchor missing');
+  assert.ok(html.includes('class="viora-commercial-hero"'), 'Commercial hero missing');
+  assert.ok(html.includes('id="servicios"'), 'Services anchor missing');
   assert.ok(!html.includes('feature-card__symbol'));
 }
 assert.ok(html.includes('class="skip-link" href="#contenido"'));
@@ -922,9 +879,7 @@ assert.ok(html.includes('class="container"'));
 const expectedHeroHref = app === 'estetica' ? '/servicios/' : tattooBookingUrl;
 assert.ok(
   app === 'estetica'
-    ? html.includes(
-        `class="button-link button-link--primary button-link--default" href="${expectedHeroHref}"`,
-      )
+    ? html.includes(`href="${expectedHeroHref}"`)
     : html.includes(
         `class="button-link button-link--primary button-link--default" href="${expectedHeroHref}"`,
       ),

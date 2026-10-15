@@ -6,14 +6,27 @@ import { resolveServiceVisual, type VioraServiceVisual } from '../service-visual
 
 interface Props {
   id: string;
-  eyebrow: string;
+  eyebrow?: string;
+  compact?: boolean;
+  reveal?: boolean;
   title: string;
   description: string;
   services: readonly Service[];
   visuals: readonly VioraServiceVisual[];
+  summaries?: Readonly<Record<string, string>>;
 }
 
-const { id, eyebrow, title, description, services, visuals } = Astro.props;
+const {
+  id,
+  eyebrow,
+  title,
+  description,
+  services,
+  visuals,
+  summaries,
+  compact = false,
+  reveal = false,
+} = Astro.props;
 const pageSize = 4;
 const pageCount = Math.ceil(services.length / pageSize);
 ---
@@ -29,9 +42,16 @@ const pageCount = Math.ceil(services.length / pageSize);
   <Container>
     <div class="viora-service-rail__heading">
       <div class="viora-service-rail__intro">
-        <p class="viora-service-rail__eyebrow">{eyebrow}</p>
-        <h2 id={`${id}-title`}>{title}</h2>
-        <p>{description}</p>
+        {eyebrow && <p class="viora-service-rail__eyebrow">{eyebrow}</p>}
+        <h2 id={`${id}-title`} data-viora-reveal={reveal ? 'services' : undefined}>
+          {title}
+        </h2>
+        <p
+          data-viora-reveal={reveal ? 'services' : undefined}
+          style="--viora-reveal-start: 4%; --viora-reveal-end: 42%"
+        >
+          {description}
+        </p>
       </div>
       {pageCount > 1 && (
         <div class="viora-service-rail__controls" data-service-rail-controls hidden>
@@ -66,10 +86,15 @@ const pageCount = Math.ceil(services.length / pageSize);
     </div>
     <div class="viora-service-rail__viewport" data-service-rail-viewport>
       <div class="viora-service-rail__track">
-        {services.map((service) => {
+        {services.map((service, index) => {
           const visual = resolveServiceVisual(visuals, service.id);
           return (
-            <article class="viora-service-rail__card" data-service-rail-card>
+            <article
+              class="viora-service-rail__card"
+              data-service-rail-card
+              data-viora-reveal={reveal ? 'services' : undefined}
+              style={`--viora-reveal-start: ${32 + (index % pageSize) * 4}%; --viora-reveal-end: ${70 + (index % pageSize) * 4}%`}
+            >
               <a class="viora-service-rail__link" href={`/servicios/${service.slug}/`}>
                 {visual && (
                   <div class="viora-service-rail__media">
@@ -82,8 +107,8 @@ const pageCount = Math.ceil(services.length / pageSize);
                 )}
                 <div class="viora-service-rail__copy">
                   <h3>{service.displayName}</h3>
-                  <p>{service.description}</p>
-                  <span class="viora-service-rail__affordance">Ver experiencia</span>
+                  {!compact && <p>{summaries?.[service.id] ?? service.description}</p>}
+                  <span class="viora-service-rail__affordance">Ver servicio</span>
                 </div>
               </a>
             </article>
@@ -95,53 +120,70 @@ const pageCount = Math.ceil(services.length / pageSize);
 </section>
 
 <script>
-  const rails = document.querySelectorAll<HTMLElement>('[data-service-rail]');
-
-  for (const rail of rails) {
-    const viewport = rail.querySelector<HTMLElement>('[data-service-rail-viewport]');
-    const cards = [...rail.querySelectorAll<HTMLElement>('[data-service-rail-card]')];
-    const controls = rail.querySelector<HTMLElement>('[data-service-rail-controls]');
-    const previous = rail.querySelector<HTMLButtonElement>('[data-service-rail-previous]');
-    const next = rail.querySelector<HTMLButtonElement>('[data-service-rail-next]');
-    const status = rail.querySelector<HTMLElement>('[data-service-rail-status]');
-    const pageSize = Number(rail.dataset.pageSize);
-    const pageCount = Number(rail.dataset.pageCount);
-
-    if (!viewport || !controls || !previous || !next || !cards.length || pageCount < 2) continue;
-
-    const desktop = window.matchMedia('(min-width: 961px)');
-    const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
-    let activePage = 0;
-
-    const update = () => {
-      controls.hidden = !desktop.matches;
-      if (!desktop.matches) return;
-
-      const viewportLeft = viewport.getBoundingClientRect().left + 1;
-      const firstVisibleIndex = Math.max(
-        0,
-        cards.findIndex((card) => card.getBoundingClientRect().right > viewportLeft),
-      );
-      activePage = Math.min(Math.floor(firstVisibleIndex / pageSize), pageCount - 1);
-      previous.disabled = activePage === 0;
-      next.disabled = activePage === pageCount - 1;
-      if (status) status.textContent = `Grupo ${activePage + 1} de ${pageCount}`;
-    };
-
-    const goToPage = (page: number) => {
-      const target = cards[Math.min(Math.max(page, 0), pageCount - 1) * pageSize];
-      if (!target) return;
-      const left = target.getBoundingClientRect().left - viewport.getBoundingClientRect().left;
-      viewport.scrollTo({
-        left: viewport.scrollLeft + left,
-        behavior: reducedMotion.matches ? 'auto' : 'smooth',
+  import { railScrollState, railTargetOffset } from '../viora-service-rail';
+  const cleanups: Array<() => void> = [];
+  const cleanup = () => cleanups.splice(0).forEach((stop) => stop());
+  function initServiceRails() {
+    cleanup();
+    for (const rail of document.querySelectorAll<HTMLElement>('[data-service-rail]')) {
+      if (rail.dataset.railInitialized) continue;
+      rail.dataset.railInitialized = 'true';
+      const viewport = rail.querySelector<HTMLElement>('[data-service-rail-viewport]');
+      const cards = [...rail.querySelectorAll<HTMLElement>('[data-service-rail-card]')];
+      const controls = rail.querySelector<HTMLElement>('[data-service-rail-controls]');
+      const previous = rail.querySelector<HTMLButtonElement>('[data-service-rail-previous]');
+      const next = rail.querySelector<HTMLButtonElement>('[data-service-rail-next]');
+      const status = rail.querySelector<HTMLElement>('[data-service-rail-status]');
+      if (!viewport || !controls || !previous || !next || !cards.length) continue;
+      const desktop = window.matchMedia('(min-width: 961px)');
+      const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
+      const update = () => {
+        const state = railScrollState(
+          viewport.scrollLeft,
+          viewport.clientWidth,
+          viewport.scrollWidth,
+        );
+        controls.hidden = !desktop.matches || !state.overflow;
+        previous.disabled = !state.previous;
+        next.disabled = !state.next;
+        previous.hidden = !state.previous;
+        next.hidden = !state.next;
+        if (status) status.textContent = state.overflow ? 'Más servicios disponibles' : '';
+      };
+      const move = (direction: -1 | 1) => {
+        const offsets = cards.map(
+          (card) =>
+            card.getBoundingClientRect().left -
+            viewport.getBoundingClientRect().left +
+            viewport.scrollLeft,
+        );
+        viewport.scrollTo({
+          left: railTargetOffset(viewport.scrollLeft, viewport.clientWidth, offsets, direction),
+          behavior: reducedMotion.matches ? 'auto' : 'smooth',
+        });
+      };
+      const onPrevious = () => move(-1);
+      const onNext = () => move(1);
+      previous.addEventListener('click', onPrevious);
+      next.addEventListener('click', onNext);
+      viewport.addEventListener('scroll', update, { passive: true });
+      desktop.addEventListener('change', update);
+      const resize = typeof ResizeObserver === 'function' ? new ResizeObserver(update) : undefined;
+      if (resize) resize.observe(viewport);
+      else window.addEventListener('resize', update, { passive: true });
+      cleanups.push(() => {
+        resize?.disconnect();
+        previous.removeEventListener('click', onPrevious);
+        next.removeEventListener('click', onNext);
+        viewport.removeEventListener('scroll', update);
+        desktop.removeEventListener('change', update);
+        window.removeEventListener('resize', update);
+        delete rail.dataset.railInitialized;
       });
-    };
-
-    previous.addEventListener('click', () => goToPage(activePage - 1));
-    next.addEventListener('click', () => goToPage(activePage + 1));
-    viewport.addEventListener('scroll', update, { passive: true });
-    desktop.addEventListener('change', update);
-    update();
+      update();
+    }
   }
+  initServiceRails();
+  document.addEventListener('astro:page-load', initServiceRails);
+  document.addEventListener('astro:before-swap', cleanup);
 </script>

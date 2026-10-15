@@ -52,3 +52,25 @@ test('invalid HTML reports its real file path and preserves a failing exit code'
     await rm(root, { recursive: true, force: true });
   }
 });
+
+test('Astro native static redirects retain semantic validation with their compiler-owned doctype', async () => {
+  const root = await mkdtemp(join(tmpdir(), 'littzite-redirect-'));
+  const alias = join(root, 'index.html');
+  const html =
+    '<!doctype html>\n<title>Redirecting to: /servicios/</title>\n<meta http-equiv="refresh" content="0;url=/servicios/">\n<meta name="robots" content="noindex">\n<body><a href="/servicios/">Servicios</a></body>';
+  try {
+    await writeFile(alias, html);
+    assert.equal((await validateHtmlFiles([alias])).valid, true);
+    await writeFile(alias, html.replace('</body>', '<img src="missing.jpg"></body>'));
+    const invalid = await validateHtmlFiles([alias]);
+    assert.equal(invalid.valid, false);
+    assert.match(invalid.diagnostics.join('\n'), /alt/);
+    await writeFile(
+      alias,
+      '<!doctype html><html lang="es-AR"><head><title>Normal</title></head><body></body></html>',
+    );
+    assert.match((await validateHtmlFiles([alias])).diagnostics.join('\n'), /doctype-style/);
+  } finally {
+    await rm(root, { recursive: true, force: true });
+  }
+});

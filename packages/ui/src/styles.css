@@ -375,3 +375,27 @@ button:focus-visible {
 .site-footer__copyright p {
   margin: 0;
 }
+
+.site-footer__bottom > div {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.25rem 1rem;
+  padding-block: 0.35rem 0.65rem;
+  font-size: 0.67rem;
+  line-height: 1.5;
+}
+.site-footer__bottom p {
+  margin: 0;
+}
+.site-footer__bottom nav {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.15rem 0.65rem;
+}
+.site-footer__bottom nav a {
+  min-height: 2rem;
+  font-size: inherit;
+}

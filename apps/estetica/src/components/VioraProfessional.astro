@@ -1,0 +1,34 @@
+---
+import { victoriaMedia, victoriaIntroduction } from '../viora-commercial-content';
+---
+
+<section
+  class="viora-professional viora-commercial-section"
+  aria-labelledby="victoria-title"
+  data-viora-reveal
+>
+  <div class="container viora-professional-profile">
+    <h2 id="victoria-title">Hola, soy Victoria.</h2>
+    <div class="viora-professional-profile__portrait">
+      {victoriaMedia.src ? (
+        <img
+          src={victoriaMedia.src}
+          alt={victoriaMedia.alt}
+          style={{ objectPosition: victoriaMedia.focalPosition }}
+          width="900"
+          height="1100"
+          loading="lazy"
+        />
+      ) : (
+        <div
+          class="viora-professional-profile__placeholder"
+          role="img"
+          aria-label="Espacio reservado para la futura fotografía real de Victoria"
+        >
+          <img src="/brand/viora-simbolo.png" alt="" width="915" height="1080" loading="lazy" />
+        </div>
+      )}
+    </div>
+    <p>{victoriaIntroduction}</p>
+  </div>
+</section>

@@ -1,77 +1,116 @@
 ---
-import LandingHero from '@littzite/sections/LandingHero.astro';
 import ButtonLink from '@littzite/ui/ButtonLink.astro';
 import VioraServiceRail from '../components/VioraServiceRail.astro';
 import VioraSiteLayout from '../layouts/VioraSiteLayout.astro';
+import VioraBotanical from '../components/VioraBotanical.astro';
+import VioraProfessional from '../components/VioraProfessional.astro';
 import { siteContent } from '../site.config';
 import { serviceVisuals } from '../service-visuals';
-import heroImage from '../assets/viora-hero.jpg';
-import heroImageSmall from '../assets/viora-hero-small.jpg';
-
-const { pages } = siteContent;
-const home = pages.find((page) => page.slug === '');
+import { victoriaMedia, vioraSpaceMedia } from '../viora-commercial-content';
+import { vioraCommercial } from '../viora-release.ts';
+import { vioraLocation } from '../viora-location';
+const home = siteContent.pages.find((page) => page.slug === '');
 const intro = home?.sections.find((section) => section.type === 'intro');
-if (!home || !intro) throw new Error('Incomplete VIORA preview content');
+if (!home || !intro) throw new Error('Incomplete VIORA home');
 ---
 
 <VioraSiteLayout seo={home.seo}>
-  <LandingHero
-    section={intro}
-    variant="serene"
-    ctaLabel="Conocé nuestras experiencias"
-    ctaHref="/servicios/"
-    artLabel="UN RESPIRO PARA VOS"
-  >
-    <picture slot="artwork" class="viora-hero-photo-frame">
-      <img
-        class="viora-hero-photo"
-        src={heroImage.src}
-        srcset={`${heroImageSmall.src} ${heroImageSmall.width}w, ${heroImage.src} ${heroImage.width}w`}
-        sizes="(min-width: 1180px) 48vw, (min-width: 741px) 45vw, calc(100vw - 2rem)"
-        width={heroImage.width}
-        height={heroImage.height}
-        alt=""
-        decoding="async"
-        fetchpriority="high"
-      />
-    </picture>
-  </LandingHero>
-
-  <VioraServiceRail
-    id="alcance"
-    eyebrow="Nuestro universo"
-    title="Cada cuidado tiene su momento."
-    description="Conocé las líneas de VIORA y explorá cada experiencia."
-    services={siteContent.services}
-    visuals={serviceVisuals}
-  />
-
-  <section
-    class="viora-home-teaser viora-home-teaser--story"
-    aria-labelledby="viora-home-story-title"
-  >
-    <div class="container viora-home-teaser__inner">
-      <div>
-        <p class="viora-home-teaser__eyebrow">Una forma de cuidar</p>
-        <h2 id="viora-home-story-title">Una identidad para cuidar.</h2>
-        <p>Una propuesta cercana, atenta y honesta para acompañar tus momentos de bienestar.</p>
+  <section class="viora-commercial-hero" aria-labelledby="titulo-principal">
+    <div class="container viora-commercial-hero__inner">
+      <div class="viora-commercial-hero__copy">
+        <img
+          class="viora-commercial-hero__symbol"
+          src="/brand/viora-simbolo.png"
+          alt="VIORA"
+          width="915"
+          height="1080"
+        />
+        <h1 id="titulo-principal">{intro.heading}</h1>
       </div>
-      <ButtonLink href="/viora/" variant="secondary">
-        Conocé VIORA
-      </ButtonLink>
+      <div class="viora-commercial-hero__visual">
+        <div class="viora-portrait-frame">
+          {victoriaMedia.src ? (
+            <img
+              src={victoriaMedia.src}
+              alt={victoriaMedia.alt}
+              style={{ objectPosition: victoriaMedia.focalPosition }}
+              width="900"
+              height="1100"
+              fetchpriority="high"
+            />
+          ) : (
+            <div
+              class="viora-photo-placeholder viora-photo-placeholder--hero"
+              role="img"
+              aria-label="Composición de marca VIORA"
+            >
+              <img src="/brand/viora-simbolo.png" alt="" width="915" height="1080" />
+            </div>
+          )}
+          <span class="viora-commercial-hero__location">{vioraCommercial.publicLocation}</span>
+        </div>
+        <VioraBotanical />
+      </div>
     </div>
   </section>
-
-  <section class="viora-contact-teaser" aria-labelledby="viora-contact-teaser-title">
-    <div class="container viora-contact-teaser__inner">
-      <div>
-        <p class="viora-home-teaser__eyebrow">Encontranos</p>
-        <h2 id="viora-contact-teaser-title">Un espacio para tu bienestar.</h2>
-        <p>Rivadavia, San Juan, Argentina. Encontrá las indicaciones y el Instagram oficial.</p>
+  <VioraServiceRail
+    id="servicios"
+    title="¿Qué servicio estás buscando?"
+    description="Conocé las opciones. Elegí tu momento."
+    services={siteContent.services}
+    visuals={serviceVisuals}
+    compact
+    reveal
+  />
+  <VioraProfessional />
+  <section
+    class="viora-space viora-commercial-section"
+    data-viora-reveal
+    aria-labelledby="viora-space-title"
+  >
+    <div class="container">
+      <div class="viora-space__heading">
+        <div>
+          <h2 id="viora-space-title">Nuestro espacio</h2>
+          <p>{vioraCommercial.publicLocation}</p>
+        </div>
+        <div class="viora-commercial-actions">
+          <ButtonLink
+            href={vioraLocation.directionsHref}
+            variant="secondary"
+            newTab
+            icon="external"
+          >
+            Cómo llegar
+          </ButtonLink>
+          <ButtonLink href="/contacto/" variant="quiet">
+            Ver contacto
+          </ButtonLink>
+        </div>
       </div>
-      <ButtonLink href="/contacto/" variant="secondary">
-        Ver contacto
-      </ButtonLink>
+      <div class="viora-space__gallery">
+        {vioraSpaceMedia.map((media) =>
+          media.src ? (
+            <img
+              src={media.src}
+              alt={media.alt}
+              style={{ objectPosition: media.focalPosition }}
+              width="900"
+              height="650"
+              loading="lazy"
+            />
+          ) : (
+            <div
+              class="viora-space__placeholder"
+              role="img"
+              aria-label="Espacio reservado para una futura fotografía real"
+            >
+              <img src="/brand/viora-simbolo.png" alt="" width="915" height="1080" loading="lazy" />
+              <span>Pronto, una mirada a nuestro espacio.</span>
+            </div>
+          ),
+        )}
+      </div>
     </div>
   </section>
 </VioraSiteLayout>

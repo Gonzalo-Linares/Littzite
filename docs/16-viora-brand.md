@@ -50,3 +50,7 @@ Las cuatro líneas tienen fichas editoriales en el catálogo local de VIORA y p�
 ## Layout de aplicacion VIORA (PR-07)
 
 `apps/estetica/src/layouts/VioraSiteLayout.astro` centraliza el marco visual con los componentes públicos de `packages/ui`: cabecera, navegación, logos oficiales y pie. También aplica `viora.css`, el locale configurado `es-AR` y `noindex`. La portada conserva hero, catálogo y esencia; las páginas de servicio conservan el detalle y el enlace de retorno. Las cuatro fichas mantienen `actions: []` y no tienen targets de reserva.
+
+## Experiencia comercial actual
+
+La home comercial y sus fichas se describen en [docs/22](22-viora-commercial-experience.md). El símbolo original VIORA_simbolo_ciruela.png se usa ahora como favicon y composición neutra, por pedido explícito del titular. DejaVu Sans se publica sin modificar junto a su licencia completa; Nimbus Roman conserva resolución local y Times New Roman como fallback permitido por el manual. Esta sección actualiza las restricciones tipográficas y el hero históricos de arriba. No se publican retratos ni interiores simulados.

@@ -141,7 +141,7 @@ test('SiteConfig accepts an optional root-relative local browser icon only', () 
     false,
   );
   assert.equal(siteConfigSchema.safeParse({ ...base, iconHref: '/../icon.png' }).success, false);
-  assert.equal(estetica.site.iconHref, '/brand/favicon.svg');
+  assert.equal(estetica.site.iconHref, '/brand/viora-favicon.svg');
   assert.equal(tattoo.site.iconHref, '/brand/favicon.svg');
 });
 
@@ -338,7 +338,7 @@ test('VIORA theme, voice and four named services match its brand manual', () => 
 
   const home = estetica.pages.find((page) => page.slug === '');
   const intro = home.sections.find((section) => section.type === 'intro');
-  assert.equal(intro.heading, 'Regalate una pausa.');
+  assert.equal(intro.heading, 'Un momento para vos.');
   assert.equal(
     home.sections.some((section) => section.type === 'service-list'),
     false,

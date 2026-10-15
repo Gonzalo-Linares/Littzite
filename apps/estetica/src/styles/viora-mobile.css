@@ -1,0 +1,198 @@
+/* Native details is also the no-JS mobile menu; its panel never contributes header height. */
+.viora-mobile-menu {
+  display: none;
+}
+@media (max-width: 640px) {
+  .viora-site .site-header {
+    height: 64px;
+    position: sticky;
+    top: 0;
+    z-index: 50;
+  }
+  .viora-site .site-header__inner {
+    position: relative;
+    display: flex;
+    height: 63px;
+    min-height: 63px;
+    width: calc(100% - 2rem);
+    padding-block: 0;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.5rem;
+  }
+  .viora-site .site-mark {
+    width: min(39vw, 9rem);
+    flex: 0 1 auto;
+  }
+  .viora-header-logo {
+    display: block;
+    width: 100%;
+    height: auto;
+    max-height: 44px;
+    object-fit: contain;
+  }
+  .viora-site .site-nav,
+  .viora-header-actions .viora-header-instagram {
+    display: none;
+  }
+  .viora-header-actions {
+    display: flex;
+    align-items: center;
+    gap: 0.45rem;
+    margin-left: auto;
+  }
+  .viora-site .site-header .site-header__badge {
+    min-height: 36px;
+    padding: 0.4rem 0.65rem;
+    font-size: 0.68rem;
+  }
+  .viora-mobile-menu {
+    display: block;
+  }
+  .viora-mobile-menu summary {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.3rem;
+    min-height: 36px;
+    padding: 0.3rem 0.2rem;
+    color: var(--viora-plum);
+    font-size: 0.65rem;
+    cursor: pointer;
+    list-style: none;
+  }
+  .viora-mobile-menu summary::-webkit-details-marker {
+    display: none;
+  }
+  .viora-mobile-menu summary svg {
+    width: 19px;
+    height: 19px;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 1.5;
+  }
+  .viora-mobile-menu summary:focus-visible,
+  .viora-mobile-menu a:focus-visible {
+    outline: 2px solid var(--color-focus);
+    outline-offset: 2px;
+    border-radius: 0.25rem;
+  }
+  .viora-mobile-menu nav {
+    position: absolute;
+    top: calc(100% + 0.3rem);
+    right: 0;
+    width: min(18rem, calc(100vw - 2rem));
+    padding: 0.5rem;
+    border: 1px solid var(--color-border);
+    border-radius: 0.65rem;
+    background: var(--viora-ivory);
+    box-shadow: 0 0.5rem 1.5rem rgb(57 37 45 / 8%);
+  }
+  .viora-mobile-menu nav a {
+    display: flex;
+    align-items: center;
+    min-height: 40px;
+    padding: 0.5rem 0.75rem;
+    color: var(--viora-plum);
+    text-decoration: none;
+    font-size: 0.8rem;
+  }
+  .viora-mobile-menu nav a:hover {
+    background: var(--viora-soft-rose);
+    border-radius: 0.3rem;
+  }
+  .viora-site #contenido {
+    scroll-margin-top: 64px;
+  }
+  .viora-site .site-footer {
+    padding-block: 0.8rem;
+    text-align: center;
+  }
+  .viora-site .site-footer__inner {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 0.4rem;
+    padding-block: 0;
+  }
+  .viora-footer-logo {
+    width: 5.75rem;
+    margin: 0 auto 0.15rem;
+  }
+  .viora-site .site-footer__note {
+    margin: 0;
+    font-size: 0.62rem;
+    line-height: 1.4;
+  }
+  .viora-site .site-footer__inner > .button-link {
+    display: none;
+  }
+  .viora-site .viora-footer-attribution .site-attribution__identity {
+    flex-direction: row;
+    align-items: center;
+    gap: 0.35rem;
+    min-height: 24px;
+  }
+  .viora-site .viora-footer-attribution .site-attribution__label {
+    font-size: 0.5rem;
+  }
+  .viora-site .viora-footer-attribution .site-attribution__logo {
+    width: 4.5rem;
+    max-height: 1.25rem;
+  }
+  .viora-site .site-footer__secondary {
+    padding: 0;
+    margin-top: 0.3rem;
+  }
+  .viora-footer-links {
+    justify-content: center;
+    gap: 0 0.5rem;
+  }
+  .viora-footer-links .viora-footer-link {
+    min-height: 24px;
+    font-size: 0.62rem;
+  }
+  .viora-site .viora-footer-bottom {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0;
+    padding-block: 0.3rem 0;
+    font-size: 0.59rem;
+    line-height: 1.5;
+  }
+  .viora-footer-bottom .viora-footer-legal {
+    order: 1;
+    justify-content: center;
+    gap: 0 0.3rem;
+  }
+  .viora-site .viora-footer-bottom .viora-footer-link {
+    min-height: 24px;
+    font-size: 0.58rem;
+  }
+  .viora-footer-bottom > p {
+    order: 2;
+    margin: 0;
+    line-height: 1.5;
+  }
+  .viora-footer-bottom .viora-footer-location {
+    order: 3;
+    text-align: center;
+    align-self: center;
+    font-size: 0.55rem;
+    line-height: 1.5;
+  }
+  .viora-footer-bottom .viora-footer-preview {
+    order: 4;
+    margin-top: 0.2rem;
+    font-size: 0.52rem;
+    line-height: 1.4;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .viora-mobile-menu nav {
+    animation: none;
+    transition: none;
+  }
+}

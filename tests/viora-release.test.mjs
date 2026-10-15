@@ -1,3 +1,4 @@
+import { approvedCommercialFixture } from './viora-commercial-fixtures.mjs';
 import assert from 'node:assert/strict';
 import { execFileSync } from 'node:child_process';
 import { readFileSync } from 'node:fs';
@@ -15,6 +16,7 @@ import {
 const root = fileURLToPath(new URL('../', import.meta.url));
 const esteticaAstroBin = path.join(root, 'apps/estetica/node_modules/astro/bin/astro.mjs');
 const validFixture = {
+  commercial: approvedCommercialFixture(),
   enabled: true,
   publicSiteUrl: 'https://viora.example',
   legal: {
@@ -199,32 +201,27 @@ test('configured booking URLs and WhatsApp render on VIORA pages; contact uses a
     path.join(root, 'apps/estetica/dist/reservar/index.html'),
     'utf8',
   );
-  const bookingCards = [
-    ...bookingHtml.matchAll(/<article class="viora-booking-card">(.*?)<\/article>/gs),
-  ];
-  assert.equal(bookingCards.length, 4);
-  for (const [service, expectedUrl] of [
-    ['Limpieza facial', generalUrl],
-    ['Masajes', generalUrl],
-    ['Depilación definitiva', depilacionUrl],
+  assert.match(bookingHtml, /http-equiv="refresh" content="0;url=\/servicios\/"/);
+  for (const [slug, expectedUrl] of [
+    ['limpieza-facial', generalUrl],
+    ['masajes', generalUrl],
+    ['depilacion-definitiva', depilacionUrl],
   ]) {
-    const card = bookingCards.find(([, html]) => html.includes(`<h2>${service}</h2>`))?.[1];
-    assert.ok(card, `${service} booking card exists`);
-    assert.ok(card.includes(`href="${expectedUrl}"`), `${service} resolves to ${expectedUrl}`);
-    assert.ok(
-      !card.includes('booking-general-pending') && !card.includes('booking-depilacion-pending'),
+    const detail = readFileSync(
+      path.join(root, 'apps/estetica/dist/servicios', slug, 'index.html'),
+      'utf8',
     );
+    assert.ok(detail.includes('href="' + expectedUrl + '"'), slug + ' keeps its canonical target');
+    assert.doesNotMatch(detail, /booking-general-pending|booking-depilacion-pending/);
   }
   const whatsappHref =
     'https://wa.me/5492641234567?text=Hola%2C%20vi%20VIORA%20en%20la%20web%20y%20quer%C3%ADa%20consultar%20el%20precio%20de%20un%20servicio%20antes%20de%20reservar.';
-  assert.ok(
-    bookingHtml.includes(`href="${whatsappHref}" target="_blank" rel="noopener noreferrer"`),
-  );
-  assert.match(bookingHtml, />\s*Consultar por WhatsApp\s*</);
-
   const contactHtml = readFileSync(
     path.join(root, 'apps/estetica/dist/contacto/index.html'),
     'utf8',
+  );
+  assert.ok(
+    contactHtml.includes('href="' + whatsappHref + '" target="_blank" rel="noopener noreferrer"'),
   );
   assert.match(
     contactHtml,
@@ -309,7 +306,7 @@ test('env example keeps VIORA personal and booking values blank and release flag
   assert.doesNotMatch(envExample, /VIORA_LEGAL_CUIT|VIORA_BOOKING_URL/);
 });
 
-test('release fixture emits canonical metadata only with synthetic environment values', () => {
+test('actual public release stays blocked despite complete legal and booking environment', () => {
   const env = {
     ...process.env,
     ASTRO_TELEMETRY_DISABLED: '1',
@@ -330,56 +327,24 @@ test('release fixture emits canonical metadata only with synthetic environment v
     VIORA_WITHDRAWAL_APPROVED: 'true',
     VIORA_WITHDRAWAL_PLACEMENT_APPROVED: 'true',
   };
-  execFileSync(
-    process.execPath,
-    [
-      path.join(root, 'apps/estetica/node_modules/astro/bin/astro.mjs'),
-      'build',
-      '--root',
-      path.join(root, 'apps/estetica/tests/viora-release-fixture'),
-    ],
-    { cwd: root, env, stdio: 'pipe' },
+  assert.throws(
+    () =>
+      execFileSync(
+        process.execPath,
+        [
+          esteticaAstroBin,
+          'build',
+          '--root',
+          path.join(root, 'apps/estetica/tests/viora-release-fixture'),
+        ],
+        { cwd: root, env, stdio: 'pipe' },
+      ),
+    (error) => {
+      const output = String(error.stdout) + String(error.stderr);
+      assert.match(output, /VIORA public release blocked/);
+      assert.match(output, /commercial.professional-image/);
+      assert.match(output, /commercial.pricing.limpieza-facial/);
+      return true;
+    },
   );
-  const html = readFileSync(
-    path.join(root, 'apps/estetica/tests/viora-release-fixture/dist/index.html'),
-    'utf8',
-  );
-  assert.match(html, /<meta name="robots" content="index, follow">/);
-  assert.match(html, /<link rel="canonical" href="https:\/\/viora\.fixture\.test\/">/);
-  assert.doesNotMatch(html, /legacy-generic\.fixture\.test/);
-  assert.match(html, /<meta property="og:url" content="https:\/\/viora\.fixture\.test\/">/);
-  assert.match(html, /<meta property="og:title" content="VIORA fixture">/);
-  assert.match(html, /<meta property="og:locale" content="es_AR">/);
-  assert.match(html, /<meta name="twitter:card" content="summary">/);
-  assert.match(html, /<script type="application\/ld\+json">.*?"@type":"BeautySalon"/);
-  assert.doesNotMatch(html, /MedicalBusiness|Physician|medicalSpecialty|fixture\.test.*PENDIENTE/);
-  assert.doesNotMatch(html, /\[PENDIENTE/);
-  assert.doesNotMatch(html, /<meta name="robots" content="noindex/);
-  const regret = readFileSync(
-    path.join(root, 'apps/estetica/tests/viora-release-fixture/dist/arrepentimiento/index.html'),
-    'utf8',
-  );
-  assert.match(regret, /<meta name="robots" content="index, follow">/);
-  assert.match(
-    regret,
-    /<link rel="canonical" href="https:\/\/viora\.fixture\.test\/arrepentimiento\/">/,
-  );
-  assert.match(
-    regret,
-    /href="mailto:legal@viora\.fixture\.test\?subject=Solicitud%20de%20arrepentimiento"/,
-  );
-  assert.match(regret, /BOTÓN DE ARREPENTIMIENTO/);
-  assert.doesNotMatch(regret, /\[PENDIENTE/);
-  const robots = readFileSync(
-    path.join(root, 'apps/estetica/tests/viora-release-fixture/dist/robots.txt'),
-    'utf8',
-  );
-  assert.match(robots, /User-agent: \*\nAllow: \//);
-  assert.match(robots, /Sitemap: https:\/\/viora\.fixture\.test\/sitemap\.xml/);
-  const sitemap = readFileSync(
-    path.join(root, 'apps/estetica/tests/viora-release-fixture/dist/sitemap.xml'),
-    'utf8',
-  );
-  assert.match(sitemap, /<loc>https:\/\/viora\.fixture\.test\/servicios\/depilacion-definitiva\//);
-  assert.doesNotMatch(sitemap, /localhost|pages\.dev|preview|404/);
 });

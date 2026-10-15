@@ -1,0 +1,40 @@
+---
+import VioraServicePricing from '../../../../src/components/VioraServicePricing.astro';
+import { siteContent } from '../../../../src/site.config';
+import type { VioraPricing } from '../../../../src/viora-commercial-content';
+const pricing: VioraPricing = {
+  status: 'confirmed',
+  required: true,
+  priceGroups: [
+    {
+      id: 'opciones',
+      title: 'Opciones fixture',
+      items: [
+        { id: 'unico', label: 'Precio único fixture', amountArs: 12345 },
+        { id: 'desde', label: 'Desde fixture', prefix: 'Desde', amountArs: 23456 },
+      ],
+    },
+    {
+      id: 'zonas',
+      title: 'Zonas fixture',
+      items: [{ id: 'zona', label: 'Zona fixture', amountArs: 34567 }],
+    },
+    {
+      id: 'combos',
+      title: 'Combos fixture',
+      items: [{ id: 'combo', label: 'Combo fixture', amountArs: 45678 }],
+    },
+  ],
+};
+const service = siteContent.services[0];
+---
+
+<html lang="es-AR">
+  <head>
+    <meta charset="utf-8" />
+    <title>Pricing fixture only</title>
+  </head>
+  <body>
+    <VioraServicePricing service={service} pricing={pricing} />
+  </body>
+</html>

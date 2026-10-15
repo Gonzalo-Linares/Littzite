@@ -1,3 +1,8 @@
+import {
+  commercialReleaseBlockers,
+  vioraCommercialReadiness,
+  type VioraCommercialReadiness,
+} from './viora-commercial-content.ts';
 import { validateBookingTargets } from '@littzite/booking';
 
 export const vioraCommercial = {
@@ -56,6 +61,7 @@ export interface ReleaseReadiness {
   publicSiteUrl?: string;
   legal: Record<string, string>;
   booking: BookingReadiness;
+  commercial?: VioraCommercialReadiness;
 }
 
 const legalFields = ['providerName', 'cuil', 'contactEmail', 'phone', 'legalDomicile'] as const;
@@ -115,7 +121,9 @@ function releaseBookingUrlBlockers(
 
 export function releaseBlockers(readiness: ReleaseReadiness): string[] {
   if (!readiness.enabled) return [];
-  const blockers: string[] = [];
+  const blockers: string[] = commercialReleaseBlockers(
+    readiness.commercial ?? vioraCommercialReadiness,
+  );
   for (const field of legalFields) {
     const value = readiness.legal[field] ?? '';
     if (isPlaceholder(value)) blockers.push(`legal.${field}`);

@@ -1,0 +1,711 @@
+/* VIORA commercial composition. Brand palette remains owned by viora.css. */
+@font-face {
+  font-family: 'DejaVu Sans';
+  src: url('/fonts/DejaVuSans.ttf') format('truetype');
+  font-weight: 400;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Nimbus Roman';
+  src: local('Nimbus Roman'), local('NimbusRoman-Regular');
+  font-weight: 400;
+}
+.viora-commercial-hero {
+  overflow: clip;
+  background: var(--viora-ivory);
+}
+.viora-commercial-hero__inner {
+  display: grid;
+  grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
+  align-items: center;
+  gap: clamp(2rem, 5vw, 6rem);
+  padding-block: clamp(2rem, 4vw, 4rem);
+}
+.viora-commercial-hero__wordmark {
+  width: clamp(10rem, 18vw, 17rem);
+  height: auto;
+  margin-bottom: 2rem;
+}
+.viora-commercial-hero h1 {
+  max-width: 13ch;
+  margin: 0 0 1.4rem;
+  color: var(--viora-plum);
+  font-family: 'Nimbus Roman', 'Times New Roman', serif;
+  font-size: clamp(2.65rem, 4.5vw, 5.6rem);
+  font-weight: 400;
+  line-height: 1.04;
+  letter-spacing: -0.035em;
+}
+.viora-commercial-hero__copy > p {
+  max-width: 34rem;
+  margin-bottom: 1.6rem;
+  line-height: 1.75;
+}
+.viora-commercial-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.65rem;
+  align-items: center;
+}
+.viora-commercial-actions .button-link {
+  min-height: 2.75rem;
+}
+.viora-commercial-hero__location {
+  display: block;
+  margin-top: 1.5rem;
+  font-size: 0.75rem;
+}
+.viora-commercial-hero__visual {
+  min-width: 0;
+  border-radius: 50% 50% 1.2rem 1.2rem;
+  overflow: hidden;
+  background: var(--viora-soft-rose);
+}
+.viora-commercial-hero__visual > img {
+  display: block;
+  width: 100%;
+  height: auto;
+  aspect-ratio: 1.2;
+  object-fit: cover;
+}
+.viora-photo-placeholder {
+  min-height: 22rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+  gap: 1.5rem;
+  background:
+    radial-gradient(ellipse at 30% 25%, var(--viora-ivory), transparent 65%), var(--viora-soft-rose);
+  color: var(--viora-plum);
+}
+.viora-photo-placeholder img {
+  width: 35%;
+  height: auto;
+  opacity: 0.8;
+}
+.viora-photo-placeholder span {
+  font-family: 'Nimbus Roman', 'Times New Roman', serif;
+  font-size: clamp(1.4rem, 2.3vw, 2rem);
+  text-align: center;
+}
+.viora-photo-placeholder--hero {
+  aspect-ratio: 1 / 1.08;
+}
+.viora-commercial-section {
+  padding-block: clamp(3rem, 7vw, 6rem);
+}
+.viora-commercial-section h2,
+.viora-pricing h2,
+.viora-commercial-detail h2 {
+  font-family: 'Nimbus Roman', 'Times New Roman', serif;
+  font-size: clamp(2.15rem, 3.6vw, 3.5rem);
+  font-weight: 400;
+  line-height: 1.1;
+  letter-spacing: -0.025em;
+  color: var(--viora-plum);
+  margin: 0 0 1rem;
+}
+.viora-commercial-section p {
+  line-height: 1.8;
+  max-width: 39rem;
+}
+.viora-professional {
+  background: color-mix(in srgb, var(--viora-soft-rose) 35%, var(--viora-ivory));
+}
+.viora-professional__inner {
+  display: grid;
+  grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
+  gap: clamp(2rem, 7vw, 7rem);
+  align-items: center;
+}
+.viora-professional__visual {
+  max-width: 29rem;
+  width: 100%;
+  justify-self: center;
+  border-radius: 1rem;
+  overflow: hidden;
+}
+.viora-professional__visual > img {
+  width: 100%;
+  height: auto;
+  object-fit: cover;
+  aspect-ratio: 4 / 5;
+}
+.viora-professional--compact .viora-professional__inner {
+  display: block;
+}
+.viora-professional--compact {
+  padding-block: 2.5rem;
+}
+.viora-how__steps {
+  list-style: none;
+  margin: 2.5rem 0 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 2rem;
+}
+.viora-how__steps li {
+  border-top: 1px solid var(--color-border);
+  padding-top: 1rem;
+}
+.viora-how__steps span {
+  color: var(--viora-plum);
+  font-size: 0.75rem;
+}
+.viora-how__steps h3 {
+  font-family: 'Nimbus Roman', 'Times New Roman', serif;
+  font-size: 1.8rem;
+  font-weight: 400;
+  margin: 1rem 0 0.65rem;
+}
+.viora-space {
+  border-top: 1px solid var(--color-border);
+}
+.viora-space__heading {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 2rem;
+}
+.viora-space__gallery {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1.25rem;
+}
+.viora-space__gallery > img {
+  width: 100%;
+  height: auto;
+  aspect-ratio: 3 / 2;
+  object-fit: cover;
+  border-radius: 0.8rem;
+}
+.viora-space__placeholder {
+  min-width: 0;
+  min-height: 15rem;
+  border-radius: 0.8rem;
+  padding: 1.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  gap: 1rem;
+  background: color-mix(in srgb, var(--viora-soft-rose) 38%, var(--viora-ivory));
+  color: var(--viora-plum);
+}
+.viora-space__placeholder:nth-child(even) {
+  background: color-mix(in srgb, var(--viora-sage) 25%, var(--viora-ivory));
+}
+.viora-space__placeholder img {
+  width: 4rem;
+  height: auto;
+  opacity: 0.5;
+}
+.viora-space__placeholder span {
+  font-size: 0.8rem;
+  text-align: center;
+}
+.viora-inquiry {
+  background: var(--viora-plum);
+  color: var(--viora-ivory);
+}
+.viora-inquiry h2 {
+  color: inherit;
+  max-width: 21ch;
+}
+.viora-inquiry__inner {
+  display: grid;
+  grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr);
+  gap: 2rem;
+  align-items: center;
+}
+.viora-inquiry .button-link--primary {
+  color: var(--viora-plum);
+  background: var(--viora-ivory);
+  border-color: var(--viora-ivory);
+}
+.viora-inquiry .button-link--secondary {
+  color: var(--viora-ivory);
+  background: transparent;
+  border-color: var(--viora-ivory);
+}
+.viora-inquiry .button-link:focus-visible {
+  outline-color: var(--viora-ivory);
+}
+.viora-site .viora-catalog__intro h1 {
+  font-family: 'Nimbus Roman', 'Times New Roman', serif;
+  font-weight: 400;
+}
+.viora-commercial-detail .viora-service-detail__hero {
+  display: grid;
+  grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
+  gap: clamp(2rem, 5vw, 5rem);
+  align-items: center;
+}
+.viora-commercial-detail .viora-service-detail__media figure {
+  aspect-ratio: 4 / 3;
+  max-height: 32rem;
+}
+.viora-commercial-detail {
+  padding-block: 2rem 4rem;
+}
+.viora-commercial-detail__intro h1 {
+  font-family: 'Nimbus Roman', 'Times New Roman', serif;
+  font-size: clamp(2.7rem, 5vw, 5.5rem);
+  font-weight: 400;
+  color: var(--viora-plum);
+  line-height: 1.04;
+  margin-block: 1.5rem;
+}
+.viora-commercial-detail__intro p {
+  line-height: 1.8;
+  max-width: 35rem;
+  margin-bottom: 1.5rem;
+}
+.viora-commercial-detail__body {
+  display: grid;
+  grid-template-columns: minmax(0, 1.1fr) minmax(0, 0.9fr);
+  gap: clamp(2rem, 5vw, 5rem);
+  align-items: start;
+  padding-top: 3rem;
+}
+.viora-commercial-detail__information {
+  min-width: 0;
+  line-height: 1.8;
+}
+.viora-commercial-detail__information section {
+  margin-bottom: 2rem;
+}
+.viora-commercial-detail .viora-service-detail__secondary-scene {
+  margin: 1.5rem 0 0;
+}
+.viora-commercial-detail .viora-service-detail__secondary-scene figure {
+  aspect-ratio: 16 / 9;
+}
+.viora-pricing {
+  padding: clamp(1.25rem, 3vw, 2.5rem);
+  border: 1px solid var(--color-border);
+  background: color-mix(in srgb, var(--viora-soft-rose) 28%, var(--viora-ivory));
+  border-radius: 0.9rem;
+  scroll-margin-top: 2rem;
+}
+.viora-pricing h2 {
+  font-size: clamp(2rem, 3vw, 2.7rem);
+}
+.viora-pricing__pending {
+  font-size: 0.85rem;
+}
+.viora-pricing .viora-service-actions {
+  margin-top: 1.5rem;
+  width: auto;
+}
+.viora-pricing .viora-service-actions p {
+  font-size: 0.78rem;
+  line-height: 1.7;
+  margin-bottom: 0;
+}
+.viora-pricing__group h3 {
+  margin-top: 1.5rem;
+}
+.viora-pricing__item {
+  display: flex;
+  gap: 1rem;
+  justify-content: space-between;
+  padding-block: 1rem;
+  border-bottom: 1px solid var(--color-border);
+}
+.viora-pricing__item dd {
+  margin: 0;
+  white-space: nowrap;
+}
+.viora-pricing__item small {
+  display: block;
+}
+.viora-service-faq details {
+  border-bottom: 1px solid var(--color-border);
+  padding: 1rem 0;
+}
+.viora-service-faq summary {
+  cursor: pointer;
+  min-height: 2.75rem;
+}
+.viora-site .viora-footer-bottom {
+  border-top: 1px solid var(--color-border);
+}
+.viora-site .viora-footer-bottom .viora-footer-link {
+  min-height: 2rem;
+  font-size: inherit;
+}
+@media (max-width: 740px) {
+  .viora-commercial-detail .viora-service-detail__hero {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .viora-commercial-hero__inner,
+  .viora-professional__inner,
+  .viora-inquiry__inner,
+  .viora-commercial-detail__body {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .viora-commercial-hero h1 {
+    max-width: 16ch;
+  }
+  .viora-commercial-hero__wordmark {
+    margin-bottom: 1.5rem;
+  }
+  .viora-photo-placeholder--hero {
+    min-height: 18rem;
+    aspect-ratio: 4 / 3;
+  }
+  .viora-how__steps {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 1rem;
+  }
+  .viora-space__gallery {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .viora-commercial-hero__visual {
+    border-radius: 48% 48% 0.8rem 0.8rem;
+  }
+  .viora-professional__copy {
+    grid-row: 1;
+  }
+}
+
+@media (min-width: 741px) and (max-width: 1000px) {
+  .viora-booking-inquiry__inner {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .viora-booking-inquiry__actions {
+    justify-self: start;
+  }
+}
+
+/* Compact editorial composition: app-local, with original brand assets. */
+.viora-commercial-hero__inner {
+  grid-template-columns: minmax(0, 0.85fr) minmax(0, 1.15fr);
+  padding-block: 1.5rem 2rem;
+  gap: clamp(1.5rem, 5vw, 5rem);
+}
+.viora-commercial-hero__wordmark {
+  margin-bottom: 1.2rem;
+  width: clamp(10rem, 17vw, 15rem);
+}
+.viora-commercial-hero h1 {
+  font-size: clamp(2.7rem, 5vw, 5rem);
+  max-width: 10ch;
+  margin: 0;
+}
+.viora-commercial-hero__visual {
+  position: relative;
+  border: 1px solid color-mix(in srgb, var(--viora-plum) 25%, transparent);
+  border-radius: 46% 46% 1rem 1rem;
+  padding: 0.65rem;
+}
+.viora-commercial-hero__visual > img,
+.viora-photo-placeholder--hero {
+  aspect-ratio: 1.35;
+  min-height: 0;
+  height: clamp(18rem, 31vw, 29rem);
+  border-radius: inherit;
+}
+.viora-photo-placeholder--hero img {
+  width: 23%;
+}
+.viora-commercial-hero__location {
+  position: absolute;
+  inset: auto 1.5rem 1.5rem;
+  margin: 0;
+  padding: 0.6rem 0.75rem;
+  background: color-mix(in srgb, var(--viora-ivory) 92%, transparent);
+  color: var(--viora-plum);
+  font-size: 0.65rem;
+  text-align: center;
+  border-block: 1px solid color-mix(in srgb, var(--viora-plum) 25%, transparent);
+  letter-spacing: 0.04em;
+}
+.viora-service-rail {
+  padding-block: 2rem 2.25rem;
+}
+.viora-service-rail__heading {
+  justify-content: center;
+  position: relative;
+  margin-bottom: 1.2rem;
+}
+.viora-service-rail__intro {
+  max-width: none;
+  text-align: center;
+}
+.viora-service-rail__intro h2 {
+  max-width: none;
+  margin: 0 0 0.55rem;
+  font-size: clamp(1.75rem, 2.7vw, 2.65rem);
+  letter-spacing: -0.035em;
+}
+.viora-service-rail__intro > p:last-child {
+  max-width: none;
+  font-size: 0.75rem;
+}
+.viora-service-rail__controls {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+}
+.viora-service-rail__copy {
+  padding: 0.85rem 1rem 0.65rem;
+  gap: 0.45rem;
+}
+.viora-service-rail__copy h3 {
+  font-size: clamp(1.3rem, 1.8vw, 1.65rem);
+}
+.viora-service-rail__affordance {
+  font-size: 0.63rem;
+}
+.viora-professional--compact {
+  padding-block: 1.65rem;
+}
+.viora-professional--compact .viora-professional__inner {
+  display: block;
+}
+.viora-professional--compact .viora-professional__copy {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.65rem 2rem;
+}
+.viora-professional--compact h2 {
+  margin: 0;
+  font-size: 2rem;
+}
+.viora-professional--compact p {
+  margin: 0;
+  max-width: 34rem;
+  font-size: 0.82rem;
+  line-height: 1.7;
+}
+.viora-space {
+  padding-block: 2rem;
+}
+.viora-space h2 {
+  font-size: 2rem;
+  margin-bottom: 0.4rem;
+}
+.viora-space__heading {
+  margin-bottom: 1rem;
+}
+.viora-space__heading p {
+  margin: 0;
+  font-size: 0.75rem;
+}
+.viora-space__placeholder {
+  min-height: 9rem;
+  gap: 0.6rem;
+  padding: 1rem;
+}
+.viora-space__placeholder img {
+  width: 2.5rem;
+}
+.viora-space__placeholder span {
+  font-size: 0.68rem;
+}
+.viora-space__gallery > img {
+  max-height: 15rem;
+}
+.viora-commercial-detail__columns {
+  display: grid;
+  grid-template-columns: minmax(0, 1.25fr) minmax(18rem, 0.75fr);
+  gap: clamp(2rem, 5vw, 5rem);
+  align-items: start;
+}
+.viora-commercial-detail__main {
+  min-width: 0;
+}
+.viora-commercial-detail__intro h1 {
+  font-size: clamp(2.5rem, 4.5vw, 4.2rem);
+  margin-block: 0.8rem;
+}
+.viora-commercial-detail__intro p {
+  font-size: 0.9rem;
+  line-height: 1.7;
+  margin: 0 0 1.25rem;
+}
+.viora-commercial-detail .viora-service-detail__media figure {
+  aspect-ratio: 16 / 9;
+  max-height: 25rem;
+  margin: 0;
+}
+.viora-commercial-detail__information {
+  padding-top: 1rem;
+  font-size: 0.85rem;
+}
+.viora-commercial-detail__information h2 {
+  font-size: 1.8rem;
+}
+.viora-commercial-detail__pending {
+  margin: 0;
+  font-size: 0.75rem;
+  opacity: 0.8;
+}
+.viora-commercial-detail__columns > .viora-pricing {
+  position: sticky;
+  top: 1.5rem;
+  margin-top: 3.5rem;
+}
+.viora-pricing h2 {
+  font-size: clamp(1.8rem, 2.6vw, 2.4rem);
+}
+.viora-site .viora-footer-bottom {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+  gap: 0.15rem 1rem;
+  align-items: center;
+}
+.viora-footer-bottom .viora-footer-legal {
+  grid-column: 2;
+  justify-content: center;
+}
+.viora-footer-bottom .viora-footer-location {
+  justify-self: end;
+  text-align: right;
+}
+.viora-footer-bottom .viora-footer-preview {
+  grid-column: 1 / -1;
+  grid-row: 1;
+  text-align: center;
+  font-size: 0.6rem;
+  opacity: 0.7;
+}
+@media (max-width: 1000px) {
+  .viora-site .viora-footer-bottom {
+    grid-template-columns: minmax(0, 1fr);
+    justify-items: center;
+  }
+  .viora-footer-bottom .viora-footer-legal {
+    grid-column: 1;
+  }
+  .viora-footer-bottom .viora-footer-location {
+    justify-self: center;
+    text-align: center;
+  }
+}
+@media (max-width: 740px) {
+  .viora-commercial-hero__inner {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 1.1rem;
+    padding-block: 1rem 1.5rem;
+  }
+  .viora-commercial-hero__copy {
+    text-align: center;
+  }
+  .viora-commercial-hero__wordmark {
+    width: 10rem;
+    margin: 0 auto 0.6rem;
+  }
+  .viora-commercial-hero h1 {
+    max-width: none;
+    font-size: clamp(2.1rem, 8vw, 3rem);
+  }
+  .viora-commercial-hero__visual {
+    width: min(100%, 29rem);
+    justify-self: center;
+  }
+  .viora-commercial-hero__visual > img,
+  .viora-photo-placeholder--hero {
+    height: clamp(12rem, 50vw, 20rem);
+    aspect-ratio: auto;
+  }
+  .viora-commercial-hero__location {
+    inset: auto 1rem 1rem;
+    font-size: 0.6rem;
+    padding: 0.45rem;
+  }
+  .viora-service-rail {
+    padding-block: 1.5rem;
+  }
+  .viora-service-rail__intro h2 {
+    max-width: 20ch;
+    font-size: 1.8rem;
+  }
+  .viora-service-rail__intro > p:last-child {
+    font-size: 0.7rem;
+  }
+  .viora-service-rail__card {
+    flex-basis: 75%;
+  }
+  .viora-service-rail__media {
+    aspect-ratio: 1.65;
+  }
+  .viora-service-rail__copy {
+    padding: 0.75rem 0.85rem 0.5rem;
+  }
+  .viora-professional--compact .viora-professional__copy {
+    display: block;
+  }
+  .viora-professional--compact h2 {
+    font-size: 1.8rem;
+    margin-bottom: 0.5rem;
+  }
+  .viora-space__gallery {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0.65rem;
+  }
+  .viora-space__placeholder {
+    min-height: 8rem;
+    padding: 0.65rem;
+  }
+  .viora-commercial-detail {
+    padding-block: 1rem 2rem;
+  }
+  .viora-commercial-detail__columns {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 1.25rem;
+  }
+  .viora-commercial-detail__intro h1 {
+    font-size: clamp(2.1rem, 8vw, 3rem);
+  }
+  .viora-commercial-detail__intro p {
+    font-size: 0.8rem;
+    margin-bottom: 1rem;
+  }
+  .viora-commercial-detail .viora-service-detail__media figure {
+    aspect-ratio: 2;
+  }
+  .viora-detail-desktop-image {
+    display: none;
+  }
+  .viora-commercial-detail__columns > .viora-pricing {
+    position: static;
+    margin: 0;
+  }
+  .viora-pricing {
+    padding: 1.2rem;
+  }
+  .viora-footer-bottom .viora-footer-legal {
+    column-gap: 0.5rem;
+    row-gap: 0;
+  }
+}
+
+.viora-commercial-detail__information {
+  grid-column: 1;
+  grid-row: 2;
+}
+.viora-commercial-detail__columns > .viora-pricing {
+  grid-column: 2;
+  grid-row: 1 / span 2;
+}
+@media (max-width: 740px) {
+  .viora-commercial-detail__information {
+    grid-row: auto;
+    padding-top: 0;
+  }
+  .viora-commercial-detail__columns > .viora-pricing {
+    grid-column: 1;
+    grid-row: auto;
+  }
+}

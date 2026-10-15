@@ -1,0 +1,97 @@
+---
+import SiteHeader from '@littzite/ui/SiteHeader.astro';
+import ButtonLink from '@littzite/ui/ButtonLink.astro';
+import VioraInstagramLink from './VioraInstagramLink.astro';
+import { vioraCommercial } from '../viora-release.ts';
+const navigation = [
+  { label: 'Inicio', href: '/' },
+  { label: 'Servicios', href: '/servicios/' },
+  { label: 'VIORA', href: '/viora/' },
+  { label: 'Contacto', href: '/contacto/' },
+];
+---
+
+<SiteHeader
+  brand={'VIORA, est\u00e9tica integral'}
+  descriptor="Tu momento, tu bienestar"
+  links={navigation}
+>
+  <img
+    slot="brand"
+    class="viora-header-logo"
+    src="/brand/viora-horizontal.png"
+    width="1600"
+    height="480"
+    alt=""
+    decoding="async"
+  />
+  <div slot="actions" class="viora-header-actions">
+    <VioraInstagramLink className="viora-header-instagram" />
+    <ButtonLink href="/servicios/" variant="primary" size="compact" className="site-header__badge">
+      Turnos
+    </ButtonLink>
+    <details class="viora-mobile-menu">
+      <summary aria-controls="viora-mobile-navigation">
+        <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+          <path d="M4 7h16M4 12h16M4 17h16" />
+        </svg>
+        <span>Menú</span>
+      </summary>
+      <nav id="viora-mobile-navigation" aria-label="Navegación móvil">
+        {navigation.map((item) => (
+          <a href={item.href}>{item.label}</a>
+        ))}
+        <a href={vioraCommercial.instagramHref} target="_blank" rel="noopener noreferrer">
+          Instagram
+        </a>
+      </nav>
+    </details>
+  </div>
+</SiteHeader>
+<script>
+  let dispose = () => {};
+  function initVioraMenu() {
+    dispose();
+    const menu = document.querySelector<HTMLDetailsElement>('.viora-mobile-menu');
+    const trigger = menu?.querySelector<HTMLElement>('summary');
+    if (!menu || !trigger) return;
+    const mobile = window.matchMedia('(max-width: 640px)');
+    const sync = () => trigger.setAttribute('aria-expanded', String(menu.open));
+    const close = () => {
+      menu.open = false;
+      sync();
+    };
+    const keydown = (event: KeyboardEvent) => {
+      if (event.key === 'Escape' && menu.open) {
+        close();
+        trigger.focus();
+      }
+    };
+    const outside = (event: PointerEvent) => {
+      if (event.target instanceof Node && !menu.contains(event.target)) close();
+    };
+    const navigate = (event: MouseEvent) => {
+      if (event.target instanceof Element && event.target.closest('a')) close();
+    };
+    const resize = () => {
+      if (!mobile.matches) close();
+    };
+    sync();
+    menu.addEventListener('toggle', sync);
+    menu.addEventListener('click', navigate);
+    document.addEventListener('keydown', keydown);
+    document.addEventListener('pointerdown', outside);
+    mobile.addEventListener('change', resize);
+    dispose = () => {
+      close();
+      menu.removeEventListener('toggle', sync);
+      menu.removeEventListener('click', navigate);
+      document.removeEventListener('keydown', keydown);
+      document.removeEventListener('pointerdown', outside);
+      mobile.removeEventListener('change', resize);
+    };
+  }
+  initVioraMenu();
+  document.addEventListener('astro:page-load', initVioraMenu);
+  document.addEventListener('astro:before-swap', () => dispose());
+</script>

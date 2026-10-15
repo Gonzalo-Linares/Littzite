@@ -2984,3 +2984,12 @@
     transition: none;
   }
 }
+
+.juanjo-site .tattoo-footer-bottom {
+  border-top: 1px solid rgb(201 169 107 / 30%);
+  color: var(--tattoo-muted);
+}
+.juanjo-site .tattoo-footer-bottom .tattoo-footer-legal {
+  border: 0;
+  padding: 0;
+}

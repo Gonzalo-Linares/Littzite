@@ -1,3 +1,4 @@
+import { validateCommercialContent, vioraServiceDetails } from './viora-commercial-content.ts';
 import { siteContentSchema } from '@littzite/content-schema';
 import { validateBookingTargets } from '@littzite/booking';
 import { vioraBookingTargetUrls, vioraCommercial } from './viora-release.ts';
@@ -9,7 +10,7 @@ import { vioraBookingTargetUrls, vioraCommercial } from './viora-release.ts';
 const parsedContent = siteContentSchema.parse({
   site: {
     defaultLocale: 'es-AR',
-    iconHref: '/brand/favicon.svg',
+    iconHref: '/brand/viora-favicon.svg',
     locations: [{ id: 'viora-public-location', city: vioraCommercial.publicLocation }],
     theme: {
       surface: '#FAF5F0', // Marfil
@@ -92,16 +93,16 @@ const parsedContent = siteContentSchema.parse({
     {
       slug: '',
       seo: {
-        title: 'VIORA · Estética integral',
+        title: 'VIORA · Estética y bienestar en Rivadavia, San Juan',
         description:
-          'Tu momento, tu bienestar. Conocé la propuesta de estética integral y cuidado personal de VIORA.',
+          'Conocé los servicios de estética y bienestar de VIORA en Rivadavia, San Juan. Consultá sus opciones y elegí tu turno.',
       },
       sections: [
         {
           id: 'intro',
           type: 'intro',
-          heading: 'Regalate una pausa.',
-          body: 'Tu momento, tu bienestar. Un espacio donde el cuidado personal se encuentra con una atención cercana, serena y profesional.',
+          heading: 'Un momento para vos.',
+          body: 'Estética y bienestar con el cuidado de VIORA.',
           visualCaption: 'Tu momento, tu bienestar.',
         },
       ],
@@ -110,4 +111,5 @@ const parsedContent = siteContentSchema.parse({
 });
 
 validateBookingTargets(parsedContent.bookingTargets);
+validateCommercialContent(parsedContent.services, vioraServiceDetails);
 export const siteContent = parsedContent;
