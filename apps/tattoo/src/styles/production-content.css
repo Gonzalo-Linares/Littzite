@@ -393,9 +393,21 @@
 .juanjo-site .tattoo-gallery__heading {
   margin-bottom: 1.5rem;
 }
-.juanjo-site .tattoo-gallery__heading h1 {
+/* Inner page titles follow the approved Tatuajes scale and container. */
+.juanjo-site .tattoo-gallery__heading h1,
+.juanjo-site .tattoo-contact-hero h1,
+.juanjo-site .tattoo-guide-hero h1 {
   font-size: clamp(2rem, 4vw, 3.5rem);
   margin: 0;
+  line-height: inherit;
+  max-width: 48rem;
+}
+.juanjo-site .tattoo-contact-hero,
+.juanjo-site .tattoo-guide-hero {
+  padding-block: 2rem 1.5rem;
+}
+.tattoo-guide-hero + .tattoo-guide-section {
+  padding-top: 0;
 }
 .juanjo-site .tattoo-gallery__all {
   margin-top: 0;

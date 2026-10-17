@@ -56,22 +56,53 @@ test('home contains only the definitive Oni hero and real featured portfolio', a
 
 test('guide retains preparation, aftercare and FAQ while removing the two retired visuals', async () => {
   const guide = await read('apps/tattoo/src/pages/guia.astro');
-  for (const heading of [
-    '01 / ANTES DE LA SESIÓN',
-    '02 / DESPUÉS DE LA SESIÓN',
-    '03 / PREGUNTAS FRECUENTES',
-  ])
-    assert.ok(guide.toLocaleLowerCase('es-AR').includes(heading.toLocaleLowerCase('es-AR')));
-  for (const text of [
-    'Descansá',
-    'Hidratate y comé',
-    'referencias',
-    'ropa cómoda',
-    'indicaciones particulares',
-  ])
-    assert.ok(guide.toLocaleLowerCase('es-AR').includes(text.toLocaleLowerCase('es-AR')));
-  for (const care of ['Manos limpias', 'Secado y cuidado', 'Menos fricción', 'Sol y piel'])
-    assert.ok(guide.includes(care));
+  assert.match(guide, /<h1>Guía<\/h1>/);
+  assert.equal((guide.match(/<h1\b/g) ?? []).length, 1);
+  assert.doesNotMatch(
+    guide,
+    /ANTES Y DESPUÉS DE TATUARTE|01 \/ ANTES DE LA SESIÓN|02 \/ DESPUÉS DE LA SESIÓN|03 \/ PREGUNTAS FRECUENTES|Recorrer la guía|tattoo-guide-hero__(?:monogram|jump|inner)|Una guía para llegar preparado/,
+  );
+  for (const title of ['Antes de la sesión.', 'Cuidá el tatuaje.', 'Preguntas frecuentes.'])
+    assert.ok(guide.includes(title));
+  const lists = [
+    [
+      'tattoo-preparation-grid',
+      [
+        'Descansá',
+        'Comé e hidratate',
+        'Evitá el alcohol',
+        'Traé referencias',
+        'Elegí ropa cómoda',
+        'Contá lo importante',
+      ],
+    ],
+    [
+      'tattoo-aftercare__grid',
+      [
+        'Manos limpias',
+        'Lavá y secá suave',
+        'Hidratá la piel',
+        'Evitá los roces',
+        'Evitá el sol',
+        'No lo sumerjas',
+      ],
+    ],
+  ];
+  for (const [className, titles] of lists) {
+    const list = guide.match(new RegExp('<ol class="' + className + '">([\\s\\S]*?)<\\/ol>'))?.[1];
+    assert.ok(list);
+    assert.equal((list.match(/<li>/g) ?? []).length, 6);
+    assert.deepEqual(
+      [...list.matchAll(/<h3>([^<]+)<\/h3>/g)].map((match) => match[1]),
+      titles,
+    );
+    assert.doesNotMatch(list, /<(?:li|div|h3|p)[^>]*aria-hidden/);
+  }
+  assert.match(guide, /No suspendas medicación indicada por tu cuenta/);
+  assert.match(guide, /24 horas previas/);
+  assert.match(guide, /cuándo retirar el film o vendaje/);
+  assert.match(guide, /Una vez cicatrizado, usar protector solar/);
+  assert.doesNotMatch(guide, /Sol y piel|antibiótico/);
   assert.match(guide, /Usá el botón Sacar turno para abrir la agenda y elegir un horario/);
   assert.match(guide, /href="\/trabajos\/"/);
   assert.match(guide, /tienen prioridad/);
@@ -286,7 +317,71 @@ test('aftercare headings and copy are not hidden from assistive technology', asy
   );
   const care = guide.match(/<ol class="tattoo-aftercare__grid">([\s\S]*?)<\/ol>/)?.[1];
   assert.ok(care);
-  assert.doesNotMatch(care, /aria-hidden="true"/);
-  for (const title of ['Manos limpias', 'Secado y cuidado', 'Menos fricción', 'Sol y piel'])
+  assert.doesNotMatch(care, /<(?:li|div|h3|p)[^>]*aria-hidden/);
+  for (const title of [
+    'Manos limpias',
+    'Lavá y secá suave',
+    'Hidratá la piel',
+    'Evitá los roces',
+    'Evitá el sol',
+    'No lo sumerjas',
+  ])
     assert.ok(care.includes(title));
+});
+
+test('inner page headings share the canonical gallery scale, container and starting space', async () => {
+  const styles = await read('apps/tattoo/src/styles/production-content.css');
+  const legacy = await read('apps/tattoo/src/styles/juanjo.css');
+  const contact = await read('apps/tattoo/src/pages/contacto.astro');
+  const guide = await read('apps/tattoo/src/pages/guia.astro');
+  const gallery = await read('apps/tattoo/src/components/TattooGallery.astro');
+  const titleRule = styles.match(
+    /(\.juanjo-site \.tattoo-gallery__heading h1,\s*\.juanjo-site \.tattoo-contact-hero h1,\s*\.juanjo-site \.tattoo-guide-hero h1)\s*\{([^}]+)\}/,
+  );
+  assert.ok(titleRule, 'one app-local rule owns all three H1 styles');
+  assert.match(titleRule[2], /font-size:\s*clamp\(/);
+  assert.match(titleRule[2], /margin:\s*0/);
+  assert.match(titleRule[2], /line-height:\s*inherit/);
+  const canonicalWidth = styles.match(
+    /\.juanjo-site \.tattoo-gallery__heading\s*\{[^}]*max-width:\s*([^;]+)/,
+  )?.[1];
+  assert.ok(canonicalWidth);
+  assert.equal(titleRule[2].match(/max-width:\s*([^;]+)/)?.[1], canonicalWidth);
+  const galleryTop = styles.match(
+    /\.juanjo-site \.tattoo-gallery\s*\{[^}]*padding-block:\s*(\S+)/,
+  )?.[1];
+  const titleTop = styles.match(
+    /\.juanjo-site \.tattoo-contact-hero,\s*\.juanjo-site \.tattoo-guide-hero\s*\{[^}]*padding-block:\s*(\S+)/,
+  )?.[1];
+  assert.ok(galleryTop);
+  assert.equal(titleTop, galleryTop, 'all page titles begin at the approved gallery inset');
+  assert.match(legacy, /\.tattoo-contact-page\s*\{[^}]*padding-block:\s*0 /);
+  assert.doesNotMatch(
+    legacy,
+    /\.tattoo-contact-page h1|tattoo-guide-hero__(?:monogram|jump|inner)|tattoo-aftercare-card__visual|aftercare-contact-sheet-preview/,
+  );
+  assert.match(
+    contact,
+    /<header class="tattoo-contact-hero">\s*<div class="container">\s*<h1>Contacto<\/h1>/,
+  );
+  assert.match(
+    guide,
+    /<header class="tattoo-guide-hero">\s*<div class="container">\s*<h1>Guía<\/h1>/,
+  );
+  assert.match(gallery, /<div class="container">\s*<header class="tattoo-gallery__heading">/);
+  assert.match(gallery, /<h1 id="portfolio-title">Tatuajes<\/h1>/);
+  for (const columns of [
+    'repeat(3, minmax(0, 1fr))',
+    'repeat(2, minmax(0, 1fr))',
+    'minmax(0, 1fr)',
+  ])
+    assert.ok(legacy.includes('grid-template-columns: ' + columns));
+  assert.match(
+    legacy,
+    /@media \(max-width: 900px\)\s*\{\s*\.tattoo-preparation-grid,\s*\.tattoo-aftercare__grid/,
+  );
+  assert.match(
+    legacy,
+    /@media \(max-width: 600px\)\s*\{\s*\.tattoo-preparation-grid,\s*\.tattoo-aftercare__grid/,
+  );
 });

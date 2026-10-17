@@ -815,7 +815,7 @@ if (app === 'estetica') {
     new URL('../apps/tattoo/dist/guia/index.html', import.meta.url),
     'utf8',
   );
-  assert.match(guidePage, /<h1[^>]*>Una guía para llegar preparado\.<\/h1>/);
+  assert.match(guidePage, /<h1>Guía<\/h1>/);
   assert.doesNotMatch(
     guidePage,
     /Sensibilidad orientativa por zona|¿Qué tamaño puede tener tu tatuaje\?/i,
@@ -827,9 +827,27 @@ if (app === 'estetica') {
     guidePage,
     /tattoo-size|tattoo-body-map|body-(?:front|back)\.webp|id="(?:sensibilidad|tamano)"/i,
   );
-  assert.match(guidePage, /01 \/ ANTES DE LA SESIÓN/);
-  assert.match(guidePage, /02 \/ DESPUÉS DE LA SESIÓN/);
-  assert.match(guidePage, /03 \/ PREGUNTAS FRECUENTES/);
+  assert.doesNotMatch(
+    guidePage,
+    /ANTES Y DESPUÉS DE TATUARTE|01 \/ ANTES DE LA SESIÓN|02 \/ DESPUÉS DE LA SESIÓN|03 \/ PREGUNTAS FRECUENTES|Recorrer la guía|tattoo-guide-hero__monogram/,
+  );
+  assert.match(guidePage, /Antes de la sesión\./);
+  assert.match(guidePage, /Preguntas frecuentes\./);
+  for (const className of ['tattoo-preparation-grid', 'tattoo-aftercare__grid']) {
+    const list = guidePage.match(
+      new RegExp('<ol class="' + className + '">([\\s\\S]*?)<\\/ol>'),
+    )?.[1];
+    assert.ok(list);
+    assert.equal((list.match(/<li>/g) ?? []).length, 6);
+    assert.doesNotMatch(list, /<(?:ol|li|div|h3|p)[^>]*aria-hidden/);
+  }
+  for (const [page, title] of [
+    [workPage, 'Tatuajes'],
+    [guidePage, 'Guía'],
+  ]) {
+    assert.equal((page.match(/<h1\b/g) ?? []).length, 1);
+    assert.ok(page.includes('>' + title + '</h1>'));
+  }
   assert.doesNotMatch(guidePage, /[0-9]\/10|diagnóstico|garantiza|\$|seña|horarios ficticios/i);
   const tattooStyles = await readFile(
     new URL('../apps/tattoo/src/styles/juanjo.css', import.meta.url),
@@ -848,6 +866,8 @@ if (app === 'estetica') {
     new URL('../apps/tattoo/dist/contacto/index.html', import.meta.url),
     'utf8',
   );
+  assert.equal((contact.match(/<h1\b/g) ?? []).length, 1);
+  assert.match(contact, /<h1>Contacto<\/h1>/);
   assert.match(contact, /href="https:\/\/www\.instagram\.com\/juanjo\.tattoos\/"/);
   assert.match(contact, /class="[^"]*\btattoo-instagram-link(?:\s|")/);
   assert.match(contact, /id="turnos"/);

@@ -413,8 +413,7 @@
   margin-bottom: 0;
 }
 
-.tattoo-editorial-page,
-.tattoo-contact-page {
+.tattoo-editorial-page {
   padding-block: clamp(4rem, 8vw, 7.5rem);
 }
 .tattoo-studio-page__grid {
@@ -423,8 +422,7 @@
   align-items: center;
   gap: clamp(3rem, 9vw, 9rem);
 }
-.tattoo-studio-page h1,
-.tattoo-contact-page h1 {
+.tattoo-studio-page h1 {
   margin-bottom: 1.1rem;
   font-size: clamp(3.2rem, 7vw, 6.5rem);
   line-height: 1.18;
@@ -1196,44 +1194,51 @@
   gap: 0.7rem;
 }
 
-.tattoo-guide-hero {
-  position: relative;
-  overflow: hidden;
-  padding-block: clamp(3.5rem, 6vw, 5.5rem);
-  border-bottom: 1px solid rgb(201 169 107 / 32%);
-  background: linear-gradient(110deg, #1a1714, var(--tattoo-ink) 75%);
+/* Guide recommendations share one card structure at all breakpoints. */
+.tattoo-preparation-grid,
+.tattoo-aftercare__grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.8rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
 }
-.tattoo-guide-hero__inner {
-  position: relative;
-  z-index: 1;
+.tattoo-preparation-grid > li,
+.tattoo-aftercare__grid > li {
+  min-width: 0;
+  padding: 1.2rem clamp(0.8rem, 2vw, 1.5rem);
+  border: 1px solid rgb(201 169 107 / 33%);
 }
-.tattoo-guide-hero h1 {
-  max-width: 12ch;
-  margin: 0 0 0.8rem;
-  font-size: clamp(2.6rem, 5.4vw, 5rem);
-  line-height: 1.15;
-}
-.tattoo-guide-hero__inner > p:not(.tattoo-eyebrow) {
-  max-width: 39rem;
-}
-.tattoo-guide-hero__jump {
-  display: inline-flex;
-  min-height: 2.8rem;
-  align-items: center;
-  gap: 1rem;
-  margin-top: 0.6rem;
+.tattoo-preparation-grid li > span,
+.tattoo-aftercare__grid li > span {
   color: var(--tattoo-gold);
-  text-decoration: none;
+  font-size: 0.68rem;
+  letter-spacing: 0.13em;
 }
-.tattoo-guide-hero__monogram {
-  position: absolute;
-  top: 50%;
-  right: max(4vw, calc((100vw - 78rem) / 2));
-  width: clamp(5rem, 11vw, 9rem);
-  height: auto;
-  opacity: 0.4;
-  object-fit: contain;
-  transform: translateY(-50%);
+.tattoo-preparation-grid h3,
+.tattoo-aftercare__grid h3 {
+  margin: 1rem 0 0.5rem;
+  font-family: 'DejaVu Serif', serif;
+  font-size: 1.07rem;
+}
+.tattoo-preparation-grid p,
+.tattoo-aftercare__grid p {
+  margin: 0;
+  font-size: 0.84rem;
+  overflow-wrap: break-word;
+}
+@media (max-width: 900px) {
+  .tattoo-preparation-grid,
+  .tattoo-aftercare__grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+@media (max-width: 600px) {
+  .tattoo-preparation-grid,
+  .tattoo-aftercare__grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
 }
 .tattoo-guide-section {
   padding-block: clamp(3.5rem, 6vw, 5.5rem);
@@ -1253,39 +1258,7 @@
   max-width: 42rem;
   margin: 0;
 }
-.tattoo-preparation-grid {
-  display: grid;
-  grid-template-columns: repeat(5, minmax(0, 1fr));
-  gap: 0;
-  margin: 0;
-  padding: 0;
-  border-block: 1px solid rgb(201 169 107 / 45%);
-  list-style: none;
-}
-.tattoo-preparation-grid li {
-  min-height: 12rem;
-  padding: 1.2rem clamp(0.8rem, 2vw, 1.5rem);
-}
-.tattoo-preparation-grid li + li {
-  border-left: 1px solid rgb(201 169 107 / 33%);
-}
-.tattoo-preparation-grid li > span,
-.tattoo-aftercare__timeline li > span {
-  color: var(--tattoo-gold);
-  font-size: 0.68rem;
-  letter-spacing: 0.13em;
-}
-.tattoo-preparation-grid h3,
-.tattoo-aftercare__timeline h3 {
-  margin: 1.2rem 0 0.5rem;
-  font-family: 'DejaVu Serif', serif;
-  font-size: 1.07rem;
-}
-.tattoo-preparation-grid p,
-.tattoo-aftercare__timeline p {
-  margin: 0;
-  font-size: 0.84rem;
-}
+
 .tattoo-guide-note {
   margin: 1.3rem 0 0;
   padding-left: 0.9rem;
@@ -1295,26 +1268,7 @@
 .tattoo-aftercare {
   background: #151311;
 }
-.tattoo-aftercare__timeline {
-  display: grid;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
-  margin: 0;
-  padding: 0;
-  border-block: 1px solid rgb(201 169 107 / 42%);
-  list-style: none;
-}
-.tattoo-aftercare__timeline li {
-  display: grid;
-  grid-template-columns: 2rem 1fr;
-  gap: 0.6rem;
-  padding: 1.3rem clamp(0.8rem, 2vw, 1.5rem);
-}
-.tattoo-aftercare__timeline li + li {
-  border-left: 1px solid rgb(201 169 107 / 32%);
-}
-.tattoo-aftercare__timeline h3 {
-  margin-top: 0;
-}
+
 .tattoo-guide-alert {
   margin: 1.5rem 0 0;
   padding: 1rem 1.2rem;
@@ -1363,7 +1317,6 @@
 }
 
 .tattoo-contact-hero {
-  padding-block: clamp(3.5rem, 6vw, 5.5rem);
   background: var(--tattoo-ink);
 }
 .juanjo-site .tattoo-contact-page {
@@ -1372,12 +1325,7 @@
   align-items: initial;
   background: transparent;
 }
-.tattoo-contact-hero h1 {
-  max-width: 13ch;
-  margin: 0 0 0.5rem;
-  font-size: clamp(2.8rem, 5.5vw, 5rem);
-  line-height: 1.15;
-}
+
 .tattoo-contact-hero > .container > p:last-child {
   margin: 0;
 }
@@ -1446,16 +1394,6 @@
   }
   .tattoo-home-hero h1 {
     font-size: clamp(2.7rem, 5.3vw, 4.4rem);
-  }
-  .tattoo-preparation-grid {
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-  }
-  .tattoo-preparation-grid li:nth-child(4) {
-    border-left: 0;
-    border-top: 1px solid rgb(201 169 107 / 33%);
-  }
-  .tattoo-preparation-grid li:nth-child(5) {
-    border-top: 1px solid rgb(201 169 107 / 33%);
   }
 }
 @media (max-width: 600px) {
@@ -1610,49 +1548,7 @@
   .tattoo-home-cta__actions > * {
     justify-content: center;
   }
-  .tattoo-guide-hero__monogram {
-    top: auto;
-    right: 1rem;
-    bottom: 1.4rem;
-    width: 3.5rem;
-    transform: none;
-  }
-  .tattoo-guide-hero__inner {
-    padding-bottom: 1.2rem;
-  }
-  .tattoo-guide-hero h1 {
-    max-width: 10ch;
-    font-size: clamp(2.55rem, 10.4vw, 3.5rem);
-  }
-  .tattoo-preparation-grid {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
-  .tattoo-preparation-grid li {
-    min-height: 10rem;
-    padding: 1rem 0.75rem;
-  }
-  .tattoo-preparation-grid li:nth-child(3),
-  .tattoo-preparation-grid li:nth-child(5) {
-    border-top: 1px solid rgb(201 169 107 / 33%);
-    border-left: 0;
-  }
-  .tattoo-preparation-grid li:nth-child(4) {
-    border-left: 1px solid rgb(201 169 107 / 33%);
-  }
-  .tattoo-aftercare__timeline {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
-  .tattoo-aftercare__timeline li {
-    grid-template-columns: 1.5rem 1fr;
-    padding: 1rem 0.6rem;
-  }
-  .tattoo-aftercare__timeline li:nth-child(3) {
-    border-top: 1px solid rgb(201 169 107 / 32%);
-    border-left: 0;
-  }
-  .tattoo-aftercare__timeline li:nth-child(4) {
-    border-top: 1px solid rgb(201 169 107 / 32%);
-  }
+
   .tattoo-contact-paths {
     grid-template-columns: 1fr;
     gap: 0.8rem;
@@ -1955,70 +1851,7 @@
   font-size: 0.62rem;
   letter-spacing: 0.04em;
 }
-.tattoo-aftercare__grid {
-  display: grid;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
-  gap: 0.8rem;
-  margin: 1.5rem 0 0;
-  padding: 0;
-  list-style: none;
-}
-.tattoo-aftercare-card__visual {
-  position: relative;
-  display: flex;
-  min-height: 17rem;
-  flex-direction: column;
-  justify-content: space-between;
-  overflow: hidden;
-  padding: 1rem;
-  border: 1px solid rgb(201 169 107 / 30%);
-  background-image:
-    linear-gradient(180deg, rgb(14 14 14 / 6%) 15%, rgb(14 14 14 / 90%) 100%),
-    url('/preview/aftercare-contact-sheet-preview.webp');
-  background-size:
-    auto,
-    200% 200%;
-  background-repeat: no-repeat;
-}
-.tattoo-aftercare-card__visual--hands {
-  background-position:
-    center,
-    left top;
-}
-.tattoo-aftercare-card__visual--dry {
-  background-position:
-    center,
-    right top;
-}
-.tattoo-aftercare-card__visual--friction {
-  background-position:
-    center,
-    left bottom;
-}
-.tattoo-aftercare-card__visual--sun {
-  background-position:
-    center,
-    right bottom;
-}
-.tattoo-aftercare-card__visual > span {
-  color: var(--tattoo-ivory);
-  font-size: 0.7rem;
-  letter-spacing: 0.12em;
-}
-.tattoo-aftercare-card__visual > div {
-  padding-top: 5rem;
-  text-shadow: 0 1px 8px rgb(0 0 0 / 75%);
-}
-.tattoo-aftercare-card__visual h3 {
-  margin: 0 0 0.35rem;
-  font-family: 'DejaVu Serif', serif;
-  font-size: 1.05rem;
-  font-weight: 400;
-}
-.tattoo-aftercare-card__visual p {
-  margin: 0;
-  font-size: 0.76rem;
-}
+
 .tattoo-contact-layout {
   display: grid;
   grid-template-columns: minmax(0, 1.1fr) minmax(16rem, 0.9fr);
@@ -2071,9 +1904,6 @@
   border-top: 1px solid rgb(201 169 107 / 30%);
 }
 @media (max-width: 900px) {
-  .tattoo-aftercare__grid {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
   .tattoo-footer-legal {
     grid-column: 1 / -1;
   }
@@ -2082,17 +1912,8 @@
   .tattoo-contact-layout {
     grid-template-columns: 1fr;
   }
-  .tattoo-aftercare-card__visual {
-    min-height: 15rem;
-  }
 }
 @media (max-width: 420px) {
-  .tattoo-aftercare__grid {
-    grid-template-columns: 1fr;
-  }
-  .tattoo-aftercare-card__visual {
-    min-height: 13rem;
-  }
   .juanjo-site .site-footer__inner {
     grid-template-columns: 1fr 1fr;
   }
@@ -2274,12 +2095,7 @@
 .juanjo-site .site-footer__secondary {
   padding-bottom: 0.15rem;
 }
-.tattoo-aftercare-card__visual {
-  min-height: 18rem;
-  background-image:
-    linear-gradient(180deg, rgb(14 14 14 / 8%) 8%, rgb(14 14 14 / 92%) 100%),
-    url('/preview/aftercare-contact-sheet-preview.webp');
-}
+
 .tattoo-studio-intro {
   padding-block: clamp(2.8rem, 5vw, 4.5rem);
 }
@@ -2312,16 +2128,10 @@
 .tattoo-contact-page {
   display: block;
   min-height: 0;
-  padding-block: clamp(3rem, 6vw, 5rem);
+  padding-block: 0 clamp(3rem, 6vw, 5rem);
   background: var(--tattoo-ink);
 }
-.tattoo-contact-hero {
-  padding-block: 0 1.5rem;
-}
-.tattoo-contact-hero h1 {
-  margin: 0;
-  font-size: clamp(2.8rem, 5vw, 4.5rem);
-}
+
 .tattoo-contact-layout {
   grid-template-columns: minmax(0, 1fr);
   gap: 2.5rem;
@@ -2485,19 +2295,6 @@
   }
   .tattoo-contact-path {
     min-height: 17rem;
-  }
-  .tattoo-aftercare__grid {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
-  .tattoo-aftercare-card__visual {
-    min-height: 14rem;
-    padding: 0.8rem;
-  }
-  .tattoo-aftercare-card__visual h3 {
-    font-size: 0.95rem;
-  }
-  .tattoo-aftercare-card__visual p {
-    font-size: 0.7rem;
   }
 }
 
