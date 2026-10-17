@@ -97,6 +97,10 @@ if (app === 'estetica') {
   const actionTargets = {
     'limpieza-facial': 'booking-general',
     masajes: 'booking-general',
+    'cejas-pestanas': 'booking-general',
+    'bb-lips': 'booking-general',
+    'microneedling-facial': 'booking-general',
+    'microneedling-capilar': 'booking-general',
     'depilacion-definitiva': 'booking-depilacion-definitiva',
   };
   for (const service of siteContent.services) {
@@ -266,8 +270,8 @@ if (app === 'estetica') {
   }
   assert.equal(
     (html.match(/class="viora-service-rail__card(?:\s[^"]*)?"/g) ?? []).length,
-    4,
-    'Expected four VIORA service cards',
+    siteContent.services.length,
+    'Expected every commercial VIORA service card',
   );
   const homeVisualImages = Array.from(
     html.matchAll(
@@ -277,8 +281,8 @@ if (app === 'estetica') {
   );
   assert.equal(
     homeVisualImages.length,
-    8,
-    'Expected primary and reveal images for each configured VIORA service',
+    6,
+    'Expected the six supplied service images; no capillary photo was supplied',
   );
   const assertResponsiveImage = (tag, label) => {
     const candidates = tag.match(/\bsrcset="([^"]+)"/)?.[1].split(', ') ?? [];
@@ -290,7 +294,7 @@ if (app === 'estetica') {
     );
     assert.match(
       candidates[1],
-      /\/_astro\/[^ ]+\s1400w$/,
+      /\/_astro\/[^ ]+\s(?:1400|1122)w$/,
       `${label}: large candidate must advertise its real width`,
     );
     assert.notEqual(
@@ -306,7 +310,7 @@ if (app === 'estetica') {
       /\bsrc="\/_astro\/[^"]+\.jpg"/,
       `VIORA catalog image ${index + 1}: expected a bundled local source`,
     );
-    if (index % 2 === 0) {
+    if (tag.includes('viora-service-visual__image')) {
       assert.match(tag, /class="viora-service-visual__layer viora-service-visual__image"/);
       assert.match(
         tag,
@@ -339,8 +343,9 @@ if (app === 'estetica') {
       html.includes(`href="/servicios/${service.slug}/"`),
       `${service.slug}: card link missing`,
     );
-    assert.ok(
+    assert.equal(
       html.includes(`viora-service-image-${service.slug}`),
+      service.id !== 'microneedling-capilar',
       `${service.slug}: card image transition name missing`,
     );
     const route = new URL(
@@ -357,8 +362,9 @@ if (app === 'estetica') {
       detail.includes(`view-transition-name: viora-service-${service.slug}`),
       `${service.slug}: shared transition name missing from detail`,
     );
-    assert.ok(
+    assert.equal(
       detail.includes(`viora-service-image-${service.slug}`),
+      service.id !== 'microneedling-capilar',
       `${service.slug}: detail image transition name missing`,
     );
     assert.notEqual(
@@ -373,37 +379,21 @@ if (app === 'estetica') {
       ),
       ([tag]) => tag,
     );
+    const hasPhoto = service.id !== 'microneedling-capilar';
     assert.equal(
       detailVisualImages.length,
-      2,
-      `${service.slug}: expected primary and separate secondary image`,
+      hasPhoto ? 1 : 0,
+      service.slug + ': supplied photos only',
     );
-    assert.match(detail, /<figure[^>]*viora-service-visual--detail-primary/);
-    assert.match(detail, /<figure[^>]*viora-service-visual--detail-secondary/);
-    assert.ok(detailVisualImages.every((tag) => tag.includes('viora-service-visual__image')));
     assert.doesNotMatch(
       detail,
-      /viora-service-visual__reveal/,
-      `${service.slug}: detail must not contain a split/reveal layer`,
+      /viora-service-visual__reveal|viora-service-visual--detail-secondary/,
     );
-    assert.match(
-      detail,
-      /class="viora-service-detail__secondary-scene viora-detail-desktop-image"/,
-      `${service.slug}: second scene must be separate from the primary`,
-    );
-    detailVisualImages.forEach((tag, index) =>
-      assertResponsiveImage(tag, `${service.slug} detail image ${index + 1}`),
-    );
-    assert.match(
-      detailVisualImages[0],
-      /\bloading="eager"/i,
-      `${service.slug}: detail primary image should load eagerly`,
-    );
-    assert.match(
-      detailVisualImages[1],
-      /\bloading="lazy"/i,
-      `${service.slug}: secondary scene image should stay lazy`,
-    );
+    for (const tag of detailVisualImages) {
+      assertResponsiveImage(tag, service.slug);
+      assert.match(tag, /\bloading="eager"/i);
+      assert.match(tag, /\balt="[^"]+"/);
+    }
     assert.match(
       detail,
       new RegExp(`<h1 id="viora-service-title"[^>]*>${service.displayName}</h1>`),
@@ -426,8 +416,7 @@ if (app === 'estetica') {
     assert.ok(detail.includes('href="/servicios/"'), `${service.slug}: return link missing`);
     assert.match(detail, /Opciones y precios/);
     assert.match(detail, /Valores a confirmar/);
-    assert.match(detail, /Muestra de diseño/);
-    assert.ok(detail.includes('$00.000'));
+    assert.doesNotMatch(detail, /Muestra de diseño|\$00\.000/);
     for (const group of serviceDetailFor(service.id).pricing.previewGroups ?? []) {
       assert.ok(detail.includes(group.title));
       for (const item of group.items) assert.ok(detail.includes(item.label));
@@ -473,7 +462,7 @@ if (app === 'estetica') {
   ];
   for (const [, card] of catalogCards) {
     assert.equal((card.match(/<a\b/g) ?? []).length, 1);
-    assert.match(card, /<a class="viora-catalog__surface"[\s\S]*?<figure/);
+    assert.match(card, /<a class="viora-catalog__surface"/);
   }
   assertMetadata(
     catalog,
@@ -484,7 +473,10 @@ if (app === 'estetica') {
     'VIORA services',
   );
   assert.match(catalog, /<h1 id="catalogo-servicios-titulo">Elegí tu momento\.<\/h1>/);
-  assert.equal((catalog.match(/class="viora-catalog__card(?:\s[^"]*)?"/g) ?? []).length, 4);
+  assert.equal(
+    (catalog.match(/class="viora-catalog__card(?:\s[^"]*)?"/g) ?? []).length,
+    siteContent.services.length,
+  );
   assert.doesNotMatch(
     catalog,
     /referencias ilustrativas|Fotografía ilustrativa|viora-catalog__card-number|>0[1-4]</,

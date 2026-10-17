@@ -115,13 +115,13 @@ test('approved hero and portfolio resolve asset blockers while legal release sta
   const gallery = await read('apps/tattoo/src/components/TattooGallery.astro');
   const guide = await read('apps/tattoo/src/pages/guia.astro');
   assert.match(gallery, /loading="lazy"/);
-  assert.equal(tattooReleaseState.temporaryHeroImage, true);
-  assert.equal(tattooReleaseState.temporaryPortfolioImages, true);
-  assert.equal('temporaryAftercareImage' in tattooReleaseState, true);
+  assert.equal(tattooReleaseState.temporaryHeroImage, false);
+  assert.equal(tattooReleaseState.temporaryPortfolioImages, false);
+  assert.equal(tattooReleaseState.temporaryAftercareImage, false);
   assert.doesNotMatch(guide, /assets\/preview|aftercare[^"']*\.(webp|png|jpg)/);
   assert.equal(
     tattooProductionBlockers.filter((blocker) => blocker.startsWith('assets.')).length,
-    3,
+    0,
   );
   assert.ok(tattooProductionBlockers.includes('JUANJO_PUBLIC_SITE_URL.missing'));
   assert.throws(assertTattooProductionReady, /Juanjo production release blocked/);
@@ -277,4 +277,16 @@ test('public tattoo terminology covers desktop, mobile, footer, SEO and accessib
     assert.match(source, /Tatuaje siguiente/);
   }
   assert.match(lightbox, /recorrer los tatuajes/);
+});
+
+test('aftercare headings and copy are not hidden from assistive technology', async () => {
+  const guide = await readFile(
+    new URL('../apps/tattoo/src/pages/guia.astro', import.meta.url),
+    'utf8',
+  );
+  const care = guide.match(/<ol class="tattoo-aftercare__grid">([\s\S]*?)<\/ol>/)?.[1];
+  assert.ok(care);
+  assert.doesNotMatch(care, /aria-hidden="true"/);
+  for (const title of ['Manos limpias', 'Secado y cuidado', 'Menos fricción', 'Sol y piel'])
+    assert.ok(care.includes(title));
 });

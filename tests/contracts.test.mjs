@@ -326,7 +326,7 @@ test('feature-grid rejects empty text, excess cards and duplicate IDs', () => {
   assert.equal(siteContentSchema.safeParse(duplicate).success, false);
 });
 
-test('VIORA theme, voice and four named services match its brand manual', () => {
+test('VIORA theme, voice and seven commercial services preserve the approved brand', () => {
   assert.deepEqual(estetica.site.theme, {
     surface: '#FAF5F0',
     text: '#39252D',
@@ -346,10 +346,13 @@ test('VIORA theme, voice and four named services match its brand manual', () => 
   assert.deepEqual(
     estetica.services.map(({ displayName, slug }) => [displayName, slug]),
     [
-      ['Limpieza facial', 'limpieza-facial'],
       ['Depilación definitiva', 'depilacion-definitiva'],
+      ['Cejas y pestañas', 'cejas-pestanas'],
+      ['Limpieza facial', 'limpieza-facial'],
       ['Masajes', 'masajes'],
-      ['Reiki', 'reiki'],
+      ['BB Lips', 'bb-lips'],
+      ['Microneedling facial', 'microneedling-facial'],
+      ['Microneedling capilar', 'microneedling-capilar'],
     ],
   );
   const actions = Object.fromEntries(estetica.services.map(({ id, actions }) => [id, actions]));
@@ -370,7 +373,9 @@ test('VIORA theme, voice and four named services match its brand manual', () => 
       targetId: 'booking-depilacion-definitiva',
     },
   ]);
-  assert.deepEqual(actions.reiki, []);
+  assert.equal(actions.reiki, undefined);
+  for (const id of ['cejas-pestanas', 'bb-lips', 'microneedling-facial', 'microneedling-capilar'])
+    assert.deepEqual(actions[id], actions.masajes);
   assert.equal(validateBookingTargets(estetica.bookingTargets), undefined);
   const targets = Object.fromEntries(
     estetica.bookingTargets.map(({ id, fallbackUrl }) => [id, fallbackUrl]),
@@ -437,7 +442,7 @@ test('VIORA focal positions stay within supported horizontal and vertical values
 });
 
 test('VIORA service slugs are unique and URL-safe for the app-local rail and catalog', () => {
-  assert.equal(new Set(estetica.services.map((service) => service.slug)).size, 4);
+  assert.equal(new Set(estetica.services.map((service) => service.slug)).size, 7);
   assert.ok(estetica.services.every((service) => /^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(service.slug)));
 
   const duplicateSlug = structuredClone(estetica);

@@ -384,7 +384,7 @@ test('actual public release stays blocked despite complete legal and booking env
     (error) => {
       const output = String(error.stdout) + String(error.stderr);
       assert.match(output, /VIORA public release blocked/);
-      assert.match(output, /commercial.professional-image/);
+      assert.match(output, /commercial.space-image/);
       assert.match(output, /commercial.pricing.limpieza-facial/);
       return true;
     },

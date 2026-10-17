@@ -54,6 +54,22 @@ const detail = serviceDetailFor(service.id);
       </article>
       <VioraServicePricing service={service} pricing={detail.pricing} />
       <div class="viora-commercial-detail__information">
+        {detail.variants?.map((variant) => (
+          <section>
+            <h2>{variant.name}</h2>
+            <p>{variant.description}</p>
+          </section>
+        ))}
+        {Boolean(detail.care?.length) && (
+          <section>
+            <h2>Cuidados</h2>
+            <ul>
+              {detail.care?.map((item) => (
+                <li>{item}</li>
+              ))}
+            </ul>
+          </section>
+        )}
         {detail.purpose && (
           <section>
             <h2>Objetivo</h2>

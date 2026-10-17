@@ -49,7 +49,11 @@ test('preview is non-blocking and has no productive index metadata', async () =>
 });
 
 test('public release fails closed while temporary production assets remain', () => {
-  const blockers = tattooReleaseBlockersFor(validReadiness);
+  const blockers = tattooReleaseBlockersFor(validReadiness, {
+    temporaryHeroImage: true,
+    temporaryPortfolioImages: true,
+    temporaryAftercareImage: true,
+  });
   assert.ok(blockers.includes('assets.temporary-hero'));
   assert.ok(blockers.includes('assets.temporary-portfolio'));
   assert.ok(blockers.includes('assets.temporary-aftercare'));
@@ -191,11 +195,11 @@ test('legal pages share tattooLegal instead of duplicating environment reads', (
   }
 });
 
-test('synthetic fully valid readiness passes without changing production asset blockers', () => {
+test('approved production assets no longer create false blockers', () => {
   assert.deepEqual(tattooReleaseBlockersFor(validReadiness, cleanAssets), []);
   assert.equal(
     tattooReleaseBlockersFor(validReadiness).some((blocker) => blocker.startsWith('assets.')),
-    true,
+    false,
   );
 });
 

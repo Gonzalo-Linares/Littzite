@@ -25,3 +25,7 @@ These font files are bundled with the static Juanjo site. The official Juanjo lo
 ## Juanjo approved Oni hero and favicon
 
 The owner explicitly supplied and approved Máscara oni roja entre humo y tinta.png and Ícono minimalista de máscara oni roja.png in Downloads for this site. Their origins, SHA-256 hashes and non-generative WebP/PNG/ICO processing are recorded in [the Juanjo polish note](docs/24-juanjo-hero-favicon-portfolio-polish.md). Twelve real tattoo photographs from the owner-prepared imagenes juanjo set are incorporated with orientation/metadata cleanup and proportional WebP compression only. No tattoo, portrait or scene was generated in this change. These owner-supplied client assets are not reusable Littzite assets.
+
+## VIORA: material suministrado para PR #44
+
+Retrato de Victoria y seis imágenes de servicios entregadas por el titular en Downloads. Autorización de incorporación en el pedido del 17/10/2026; imagen de labios asignada a BB Lips por instrucción expresa posterior. Sin transferencia de titularidad ni licencia general de reutilización. Procedencia, limitaciones y derivados: `apps/estetica/src/assets/services/SOURCES.md` y `docs/25-viora-photo-manifest.json`. No se acredita que las imágenes de servicios documenten sesiones reales de VIORA.

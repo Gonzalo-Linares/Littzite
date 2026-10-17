@@ -1,0 +1,150 @@
+[
+  {
+    "source": "Depilación láser en ambiente spa.png",
+    "sourceSha256": "f8af4afe27f2b54fb6201784a013ccc18ee4f4a3f9a3cb3f86181a722d88b906",
+    "service": "depilacion-definitiva",
+    "outputs": [
+      {
+        "path": "apps\\estetica\\src\\assets\\services\\depilacion-definitiva-approved.jpg",
+        "dimensions": [
+          1400,
+          933
+        ],
+        "bytes": 165238
+      },
+      {
+        "path": "apps\\estetica\\src\\assets\\services\\depilacion-definitiva-approved-small.jpg",
+        "dimensions": [
+          640,
+          427
+        ],
+        "bytes": 46553
+      }
+    ]
+  },
+  {
+    "source": "Masaje relajante con piedras calientes.png",
+    "sourceSha256": "cd207f9b38aaf004c72b1db7715574ef5b4d4612d1f72e68a0e64c57621a2ec5",
+    "service": "masajes",
+    "outputs": [
+      {
+        "path": "apps\\estetica\\src\\assets\\services\\masajes-approved.jpg",
+        "dimensions": [
+          1400,
+          1050
+        ],
+        "bytes": 214539
+      },
+      {
+        "path": "apps\\estetica\\src\\assets\\services\\masajes-approved-small.jpg",
+        "dimensions": [
+          640,
+          480
+        ],
+        "bytes": 60765
+      }
+    ]
+  },
+  {
+    "source": "Tratamiento facial de arcilla en spa.png",
+    "sourceSha256": "2f36bb9ff57b6f9d756329925a4ca7db9051f3bd91006ae3be1517d357318ea6",
+    "service": "limpieza-facial",
+    "outputs": [
+      {
+        "path": "apps\\estetica\\src\\assets\\services\\limpieza-facial-approved.jpg",
+        "dimensions": [
+          1400,
+          1050
+        ],
+        "bytes": 222262
+      },
+      {
+        "path": "apps\\estetica\\src\\assets\\services\\limpieza-facial-approved-small.jpg",
+        "dimensions": [
+          640,
+          480
+        ],
+        "bytes": 61372
+      }
+    ]
+  },
+  {
+    "source": "Primer plano de ojo con pestañas y ceja perfectas.png",
+    "sourceSha256": "133715eabc919a033c89a91275398724032672bd5a86edc89c0901eff5444ea7",
+    "service": "cejas-pestanas",
+    "outputs": [
+      {
+        "path": "apps\\estetica\\src\\assets\\services\\cejas-pestanas-approved.jpg",
+        "dimensions": [
+          1400,
+          1050
+        ],
+        "bytes": 219344
+      },
+      {
+        "path": "apps\\estetica\\src\\assets\\services\\cejas-pestanas-approved-small.jpg",
+        "dimensions": [
+          640,
+          480
+        ],
+        "bytes": 56467
+      }
+    ]
+  },
+  {
+    "source": "Tratamiento facial microneedling relajante.png",
+    "sourceSha256": "cb85b53effcc1003c7e78f47cce1a9f295d74cea7dc0a9867516054b976b65df",
+    "service": "microneedling-facial",
+    "outputs": [
+      {
+        "path": "apps\\estetica\\src\\assets\\services\\microneedling-facial-approved.jpg",
+        "dimensions": [
+          1122,
+          1402
+        ],
+        "bytes": 206210
+      },
+      {
+        "path": "apps\\estetica\\src\\assets\\services\\microneedling-facial-approved-small.jpg",
+        "dimensions": [
+          640,
+          800
+        ],
+        "bytes": 83396
+      }
+    ]
+  },
+  {
+    "source": "Micropigmentación de labios en clínica estética.png",
+    "sourceSha256": "34b65ab2f526469493095a6017908673c3eb2d5ba195819b6f7e1e7a36d00584",
+    "service": "bb-lips",
+    "outputs": [
+      {
+        "path": "apps\\estetica\\src\\assets\\services\\bb-lips-approved.jpg",
+        "dimensions": [
+          1122,
+          1402
+        ],
+        "bytes": 194825
+      },
+      {
+        "path": "apps\\estetica\\src\\assets\\services\\bb-lips-approved-small.jpg",
+        "dimensions": [
+          640,
+          800
+        ],
+        "bytes": 76506
+      }
+    ]
+  },
+  {
+    "source": "Victoria imagen.jpeg",
+    "sourceSha256": "2b8d290c119559e2162e01fc660e020c2dc0b714dd633841d9ccf268c9ccec34",
+    "output": "apps\\estetica\\public\\images\\victoria-linares.jpg",
+    "dimensions": [
+      435,
+      563
+    ],
+    "bytes": 44468
+  }
+]
