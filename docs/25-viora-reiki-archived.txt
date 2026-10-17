@@ -1,0 +1,22 @@
+# Reiki — referencia retirada del catálogo principal
+No se confirma su baja de la oferta. Se conserva la ficha anterior y los assets sin publicar una ruta comercial.
+
+  {
+    serviceId: 'reiki',
+    summary: 'Explorá una experiencia de bienestar y consultá en qué consiste.',
+    contentStatus: 'pending',
+    contentRequired: true,
+    pricing: {
+      status: 'pending',
+      required: true,
+      priceGroups: [],
+      previewGroups: [
+        {
+          id: 'muestra-grupo-0',
+          title: 'Opción',
+          items: [{ id: 'muestra-0-0', label: 'Sesión', prefix: 'Desde' }],
+        },
+      ],
+    },
+  },
+];

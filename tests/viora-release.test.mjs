@@ -1,5 +1,10 @@
 import { approvedCommercialFixture } from './viora-commercial-fixtures.mjs';
 import assert from 'node:assert/strict';
+import {
+  validateBookingTargets,
+  resolveDirectBookingAction,
+} from '../packages/booking/src/index.ts';
+import { siteContent } from '../apps/estetica/src/site.config.ts';
 import { execFileSync } from 'node:child_process';
 import { readFileSync } from 'node:fs';
 import path from 'node:path';
@@ -10,6 +15,7 @@ import {
   normalizeCuil,
   releaseBlockers,
   vioraBookingReadiness,
+  vioraBookingTargetUrls,
   vioraWhatsAppHref,
 } from '../apps/estetica/src/viora-release.ts';
 
@@ -109,17 +115,53 @@ test('release fails closed for each missing production agenda URL', () => {
   );
 });
 
-test('the preview agenda fallbacks are treated as missing production URLs', () => {
+test('retired preview URLs remain release blockers and are never approved defaults', () => {
   const blockers = releaseBlockers({
     ...validFixture,
     booking: {
       ...validFixture.booking,
-      generalUrl: vioraBookingReadiness.generalUrl,
-      depilacionUrl: vioraBookingReadiness.depilacionUrl,
+      generalUrl: 'https://cal.com/viora/booking-general-pending',
+      depilacionUrl: 'https://cal.com/viora/booking-depilacion-pending',
     },
   });
   assert.ok(blockers.includes('booking.general-url.missing'));
   assert.ok(blockers.includes('booking.depilacion-url.missing'));
+});
+
+test('approved defaults resolve canonical targets exactly and preserve the depilation query', () => {
+  const general = 'https://cal.com/maria-victoria-linares-b6rvoz/lashista';
+  const depilacion =
+    'https://cal.com/maria-victoria-linares-b6rvoz/depilacion?overlayCalendar=true';
+  assert.equal(vioraBookingReadiness.generalUrl, general);
+  assert.equal(vioraBookingReadiness.depilacionUrl, depilacion);
+  assert.deepEqual(vioraBookingTargetUrls, { general, depilacion });
+  assert.doesNotThrow(() => validateBookingTargets(siteContent.bookingTargets));
+  for (const [slug, expected] of [
+    ['limpieza-facial', general],
+    ['masajes', general],
+    ['depilacion-definitiva', depilacion],
+  ]) {
+    const service = siteContent.services.find((item) => item.slug === slug);
+    const action = service.actions.find((item) => item.type === 'direct-booking');
+    assert.equal(resolveDirectBookingAction(action, siteContent.bookingTargets).href, expected);
+  }
+  assert.equal(new URL(depilacion).search, '?overlayCalendar=true');
+});
+
+test('preview without environment overrides renders approved booking destinations', () => {
+  buildEsteticaPreview({ VIORA_BOOKING_GENERAL_URL: '', VIORA_BOOKING_DEPILACION_URL: '' });
+  for (const [slug, url] of [
+    ['limpieza-facial', vioraBookingTargetUrls.general],
+    ['masajes', vioraBookingTargetUrls.general],
+    ['depilacion-definitiva', vioraBookingTargetUrls.depilacion],
+  ]) {
+    const html = readFileSync(
+      path.join(root, 'apps/estetica/dist/servicios', slug, 'index.html'),
+      'utf8',
+    );
+    assert.ok(html.includes('href="' + url + '"'));
+    assert.doesNotMatch(html, /booking-general-pending|booking-depilacion-pending/);
+  }
 });
 
 test('release validates both Cal.com agenda URLs and rejects temporary event URLs', () => {
@@ -342,7 +384,7 @@ test('actual public release stays blocked despite complete legal and booking env
     (error) => {
       const output = String(error.stdout) + String(error.stderr);
       assert.match(output, /VIORA public release blocked/);
-      assert.match(output, /commercial.professional-image/);
+      assert.match(output, /commercial.space-image/);
       assert.match(output, /commercial.pricing.limpieza-facial/);
       return true;
     },

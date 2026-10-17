@@ -78,10 +78,10 @@ test('ARS is formatted once with es-AR and without centavos', () => {
 test('mandatory media, content and pricing fail closed, while preview remains allowed', () => {
   assert.deepEqual(commercialReleaseBlockers(approvedCommercialFixture()), []);
   const blockers = commercialReleaseBlockers(vioraCommercialReadiness);
-  assert.ok(blockers.includes('commercial.professional-image'));
+  assert.ok(!blockers.includes('commercial.professional-image'));
   assert.ok(blockers.includes('commercial.space-image.0'));
   for (const { id } of siteContent.services) {
-    assert.ok(blockers.includes('commercial.content.' + id));
+    assert.equal(blockers.includes('commercial.content.' + id), id === 'bb-lips');
     assert.ok(blockers.includes('commercial.pricing.' + id));
   }
   for (const mutate of [
@@ -107,8 +107,9 @@ test('mandatory media, content and pricing fail closed, while preview remains al
   }
   assert.deepEqual(releaseBlockers({ enabled: false }), []);
 });
-test('Victoria and space stay neutral placeholders with no manufactured photos', () => {
-  assert.equal(vioraCommercialReadiness.professional.src, undefined);
+test('approved Victoria portrait is local while space remains pending', () => {
+  assert.equal(vioraCommercialReadiness.professional.src, '/images/victoria-linares.jpg');
+  assert.equal(vioraCommercialReadiness.professional.temporary, false);
   assert.ok(
     vioraCommercialReadiness.space.every((media) => media.src === undefined && media.temporary),
   );
@@ -157,33 +158,36 @@ test('confirmed synthetic groups render ARS and canonical booking immediately af
   );
 });
 
-test('favicon embeds the original white VIORA symbol unchanged on a brand-plum backdrop', () => {
+test('VIORA favicon uses the approved botanical monogram PNG derivative', () => {
   const icon = readFileSync(
-    new URL('../apps/estetica/public/brand/viora-favicon.svg', import.meta.url),
-    'utf8',
+    new URL('../apps/estetica/public/brand/viora-botanical-icon.png', import.meta.url),
   );
-  assert.match(icon, /fill="#7B4655"/);
-  const embedded = icon.match(/data:image\/png;base64,([^"]+)/)?.[1];
-  assert.ok(embedded);
   assert.equal(
-    createHash('sha256').update(Buffer.from(embedded, 'base64')).digest('hex'),
-    '2c9e8920aa913a8f0d6a4cede272f002d246b34058260298a4537d2c61d633a9',
+    createHash('sha256').update(icon).digest('hex'),
+    '3fac5ae91790c27313d12b68be746eb4a799ac4763af1e014b81776348057e52',
   );
-  assert.doesNotMatch(icon, /<text|<path/);
+  assert.equal(icon.readUInt32BE(16), 64);
+  assert.equal(icon.readUInt32BE(20), 64);
 });
 
 test('preview labels are non-approved structural samples and cannot carry numeric amounts or release', () => {
   for (const detail of vioraServiceDetails) {
-    assert.ok(detail.pricing.previewGroups.length);
-    assert.ok(
-      detail.pricing.previewGroups.every((g) => g.items.every((i) => i.amountArs === undefined)),
-    );
     const invalid = structuredClone(detail);
+    invalid.pricing.previewGroups = [
+      { id: 'sample', title: 'Sample', items: [{ id: 'sample-item', label: 'Sample' }] },
+    ];
     invalid.pricing.previewGroups[0].items[0].amountArs = 12345;
     assert.throws(() => validateCommercialContent([{ id: invalid.serviceId }], [invalid]));
   }
   const readiness = approvedCommercialFixture();
-  readiness.services[0].pricing = structuredClone(vioraServiceDetails[0].pricing);
+  readiness.services[0].pricing = {
+    status: 'pending',
+    required: true,
+    priceGroups: [],
+    previewGroups: [
+      { id: 'sample', title: 'Sample', items: [{ id: 'sample-item', label: 'Sample' }] },
+    ],
+  };
   readiness.services[0].pricing.required = false;
   assert.ok(
     commercialReleaseBlockers(readiness).includes(
@@ -191,6 +195,9 @@ test('preview labels are non-approved structural samples and cannot carry numeri
     ),
   );
   const invalid = structuredClone(vioraServiceDetails[0]);
+  invalid.pricing.previewGroups = [
+    { id: 'sample', title: 'Sample', items: [{ id: 'sample-item', label: 'Sample' }] },
+  ];
   invalid.pricing.status = 'confirmed';
   assert.throws(() => validateCommercialContent([{ id: invalid.serviceId }], [invalid]));
 });
@@ -265,4 +272,45 @@ test('botanical frame is decorative SVG and footer meta remains separate from le
   assert.match(css, /viora-portrait-frame/);
   assert.match(css, /--viora-plum/);
   assert.match(css, /--viora-rose/);
+});
+
+test('seven commercial services have useful copy, variants, care and extensible booking targets', () => {
+  assert.deepEqual(
+    siteContent.services.map((s) => s.slug),
+    [
+      'depilacion-definitiva',
+      'cejas-pestanas',
+      'limpieza-facial',
+      'masajes',
+      'bb-lips',
+      'microneedling-facial',
+      'microneedling-capilar',
+    ],
+  );
+  for (const service of siteContent.services) {
+    const detail = vioraServiceDetails.find((d) => d.serviceId === service.id);
+    assert.ok(
+      detail.intro &&
+        detail.purpose &&
+        detail.includes.length &&
+        detail.session.length &&
+        detail.care.length &&
+        detail.faq.length,
+    );
+    assert.equal(detail.pricing.status, 'pending');
+    assert.equal(detail.pricing.previewGroups, undefined);
+    assert.equal(
+      service.actions[0].targetId,
+      service.id === 'depilacion-definitiva' ? 'booking-depilacion-definitiva' : 'booking-general',
+    );
+  }
+  for (const id of ['masajes', 'cejas-pestanas'])
+    assert.equal(vioraServiceDetails.find((d) => d.serviceId === id).variants.length, 3);
+  assert.equal(vioraServiceDetails.find((d) => d.serviceId === 'bb-lips').contentStatus, 'pending');
+  const invalid = structuredClone(vioraServiceDetails[0]);
+  invalid.variants = [{ name: '', description: 'Incomplete' }];
+  assert.throws(() => validateCommercialContent([{ id: invalid.serviceId }], [invalid]));
+  delete invalid.variants;
+  invalid.care = [''];
+  assert.throws(() => validateCommercialContent([{ id: invalid.serviceId }], [invalid]));
 });

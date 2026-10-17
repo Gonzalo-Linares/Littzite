@@ -1,0 +1,45 @@
+---
+import { tattooActions } from '../brand.config';
+---
+
+<nav class="tattoo-contact-actions" aria-label="Contacto directo">
+  <a
+    href={tattooActions.whatsAppHref}
+    target="_blank"
+    rel="noopener noreferrer"
+    aria-label="Juanjo por WhatsApp"
+    title="WhatsApp"
+  >
+    <svg
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      stroke-width="1.6"
+      aria-hidden="true"
+      focusable="false"
+    >
+      <path d="M20 11.5a8 8 0 0 1-11.7 7.1L4 20l1.3-4.2A8 8 0 1 1 20 11.5Z" />
+      <path d="M9 7.5c-.7 0-1 1-.7 2 1 3 3.2 5.1 5.7 5.5 1 .2 2-.5 2-1.2l-2-1.2-1 1c-1.7-.7-2.8-1.8-3.4-3.3l.8-.8Z" />
+    </svg>
+  </a>
+  <a
+    href={tattooActions.instagramHref}
+    target="_blank"
+    rel="noopener noreferrer"
+    aria-label="Juanjo en Instagram"
+    title="Instagram"
+  >
+    <svg
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      stroke-width="1.6"
+      aria-hidden="true"
+      focusable="false"
+    >
+      <rect x="4" y="4" width="16" height="16" rx="5" />
+      <circle cx="12" cy="12" r="4" />
+      <circle cx="17" cy="7" r=".8" fill="currentColor" stroke="none" />
+    </svg>
+  </a>
+</nav>

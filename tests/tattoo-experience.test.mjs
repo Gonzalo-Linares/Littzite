@@ -20,7 +20,7 @@ const root = new URL('../', import.meta.url);
 const read = (file) => readFile(new URL(file, root), 'utf8');
 
 test('Juanjo uses the approved Cal.com booking link and keeps Instagram available', async () => {
-  const layout = await read('apps/tattoo/src/layouts/TattooSiteLayout.astro');
+  const layout = await read('apps/tattoo/src/components/TattooHeader.astro');
   const social = await read('apps/tattoo/src/components/TattooInstagramLink.astro');
   assert.match(layout, /label: 'Guía', href: '\/guia\//);
   assert.match(layout, /href=\{tattooActions\.turnsHref\}/);
@@ -35,58 +35,74 @@ test('Juanjo uses the approved Cal.com booking link and keeps Instagram availabl
   assert.doesNotMatch(layout, /turnos por Instagram/i);
 });
 
-test('home keeps the approved copy and records temporary assets outside the interface', async () => {
+test('home contains only the definitive Oni hero and real featured portfolio', async () => {
   const home = await read('apps/tattoo/src/pages/index.astro');
   const hero = await read('apps/tattoo/src/components/TattooHeroMedia.astro');
   assert.match(home, /Tu próximo tatuaje empieza acá\./);
-  assert.match(home, /Explorá trabajos, elegí el estilo que más te represente y sacá tu turno\./);
-  assert.match(home, /Explorar trabajos/);
+  assert.match(home, /Ver tatuajes/);
   assert.match(home, /Sacar turno/);
-  assert.doesNotMatch(home, /Contanos tu idea|Antes de la tinta/);
-  assert.equal(tattooBrand.heroMedia.src, undefined);
-  assert.equal(tattooPortfolioRecords.length, 3);
-  assert.deepEqual(
-    tattooPortfolioRecords.filter((work) => work.featured),
-    tattooPortfolioRecords,
-  );
-  assert.match(home, /import \{ featuredTattooWorks \} from '\.\.\/portfolio'/);
-  assert.match(home, /<TattooWorkCarousel items=\{featuredTattooWorks\}/);
+  assert.equal((home.match(/<section\b/g) ?? []).length, 2);
   assert.doesNotMatch(
-    home + hero,
-    /Imagen de preview generada|imagen generada para la preview|no es un trabajo real del estudio/i,
+    home,
+    /Elegí cómo seguir|UNA GUÍA PARA TU SESIÓN|EL PRÓXIMO PASO|Tinta con carácter/,
   );
-  const styles = await read('apps/tattoo/src/styles/juanjo.css');
-  assert.match(styles, /\.juanjo-site \.tattoo-home-hero h1\s*\{[^}]*font-family:\s*'Rye'/);
-  assert.doesNotMatch(styles, /\.tattoo-home-hero h1 span\s*\{[^}]*font-family:\s*'DejaVu Serif'/);
-});
-
-test('home has five focused sections and removes the retired preparation block', async () => {
-  const home = await read('apps/tattoo/src/pages/index.astro');
-  assert.equal((home.match(/<section\b/g) ?? []).length, 5);
-  assert.doesNotMatch(home, /antes-de-la-tinta|Antes de la tinta/);
-  assert.match(home, /id="como-trabajamos"/);
-  assert.match(home, /href="\/guia\/"/);
-  assert.doesNotMatch(home, /Contanos tu idea/);
+  assert.match(hero, /media\.src/);
+  assert.equal(tattooBrand.heroMedia.src, '/brand/oni-hero-approved.webp');
+  assert.doesNotMatch(hero, /assets\/preview|marks\.oni|__photo/);
+  assert.equal(tattooPortfolioRecords.length, 12);
+  assert.equal(tattooPortfolioRecords.filter((work) => work.featured).length, 6);
+  assert.match(home, /<TattooWorkCarousel items=\{featuredTattooWorks\}/);
 });
 
 test('guide retains preparation, aftercare and FAQ while removing the two retired visuals', async () => {
   const guide = await read('apps/tattoo/src/pages/guia.astro');
-  for (const heading of [
-    '01 / ANTES DE LA SESIÓN',
-    '02 / DESPUÉS DE LA SESIÓN',
-    '03 / PREGUNTAS FRECUENTES',
-  ])
-    assert.ok(guide.toLocaleLowerCase('es-AR').includes(heading.toLocaleLowerCase('es-AR')));
-  for (const text of [
-    'Descansá',
-    'Hidratate y comé',
-    'referencias',
-    'ropa cómoda',
-    'indicaciones particulares',
-  ])
-    assert.ok(guide.toLocaleLowerCase('es-AR').includes(text.toLocaleLowerCase('es-AR')));
-  for (const care of ['Manos limpias', 'Secado y cuidado', 'Menos fricción', 'Sol y piel'])
-    assert.ok(guide.includes(care));
+  assert.match(guide, /<h1>Guía<\/h1>/);
+  assert.equal((guide.match(/<h1\b/g) ?? []).length, 1);
+  assert.doesNotMatch(
+    guide,
+    /ANTES Y DESPUÉS DE TATUARTE|01 \/ ANTES DE LA SESIÓN|02 \/ DESPUÉS DE LA SESIÓN|03 \/ PREGUNTAS FRECUENTES|Recorrer la guía|tattoo-guide-hero__(?:monogram|jump|inner)|Una guía para llegar preparado/,
+  );
+  for (const title of ['Antes de la sesión.', 'Cuidá el tatuaje.', 'Preguntas frecuentes.'])
+    assert.ok(guide.includes(title));
+  const lists = [
+    [
+      'tattoo-preparation-grid',
+      [
+        'Descansá',
+        'Comé e hidratate',
+        'Evitá el alcohol',
+        'Traé referencias',
+        'Elegí ropa cómoda',
+        'Contá lo importante',
+      ],
+    ],
+    [
+      'tattoo-aftercare__grid',
+      [
+        'Manos limpias',
+        'Lavá y secá suave',
+        'Hidratá la piel',
+        'Evitá los roces',
+        'Evitá el sol',
+        'No lo sumerjas',
+      ],
+    ],
+  ];
+  for (const [className, titles] of lists) {
+    const list = guide.match(new RegExp('<ol class="' + className + '">([\\s\\S]*?)<\\/ol>'))?.[1];
+    assert.ok(list);
+    assert.equal((list.match(/<li>/g) ?? []).length, 6);
+    assert.deepEqual(
+      [...list.matchAll(/<h3>([^<]+)<\/h3>/g)].map((match) => match[1]),
+      titles,
+    );
+    assert.doesNotMatch(list, /<(?:li|div|h3|p)[^>]*aria-hidden/);
+  }
+  assert.match(guide, /No suspendas medicación indicada por tu cuenta/);
+  assert.match(guide, /24 horas previas/);
+  assert.match(guide, /cuándo retirar el film o vendaje/);
+  assert.match(guide, /Una vez cicatrizado, usar protector solar/);
+  assert.doesNotMatch(guide, /Sol y piel|antibiótico/);
   assert.match(guide, /Usá el botón Sacar turno para abrir la agenda y elegir un horario/);
   assert.match(guide, /href="\/trabajos\/"/);
   assert.match(guide, /tienen prioridad/);
@@ -126,27 +142,24 @@ test('contact leads with the approved Google embed and keeps directions and card
   assert.equal(siteContent.services.length, 0);
 });
 
-test('temporary image portfolio remains marked as release blocked', async () => {
+test('approved hero and portfolio resolve asset blockers while legal release stays closed', async () => {
   const gallery = await read('apps/tattoo/src/components/TattooGallery.astro');
-  const previewFiles = await readdir(new URL('apps/tattoo/src/assets/preview/', root));
-  assert.equal(tattooPortfolioRecords.length, 3);
-  assert.equal(tattooPortfolioRecords.filter((work) => work.featured).length, 3);
-  assert.match(gallery, /items\.map\(\(item, index\)/);
+  const guide = await read('apps/tattoo/src/pages/guia.astro');
   assert.match(gallery, /loading="lazy"/);
-  assert.equal(tattooReleaseState.temporaryHeroImage, true);
-  assert.equal(tattooReleaseState.temporaryPortfolioImages, true);
-  assert.equal(tattooReleaseState.temporaryAftercareImage, true);
-  assert.equal('bookingUrlIsPlaceholder' in tattooReleaseState, false);
-  assert.equal(tattooReleaseBlockers.length, 0);
+  assert.equal(tattooReleaseState.temporaryHeroImage, false);
+  assert.equal(tattooReleaseState.temporaryPortfolioImages, false);
+  assert.equal(tattooReleaseState.temporaryAftercareImage, false);
+  assert.doesNotMatch(guide, /assets\/preview|aftercare[^"']*\.(webp|png|jpg)/);
   assert.equal(
     tattooProductionBlockers.filter((blocker) => blocker.startsWith('assets.')).length,
-    3,
+    0,
   );
   assert.ok(tattooProductionBlockers.includes('JUANJO_PUBLIC_SITE_URL.missing'));
   assert.throws(assertTattooProductionReady, /Juanjo production release blocked/);
-  assert.ok(previewFiles.includes('work-botanical-preview.webp'));
-  assert.ok(previewFiles.includes('work-moth-preview.webp'));
-  assert.ok(previewFiles.includes('work-ornamental-preview.webp'));
+  assert.equal(tattooReleaseBlockers.length, 0);
+  const portfolio = await read('apps/tattoo/src/portfolio.ts');
+  assert.doesNotMatch(portfolio, /preview/);
+  assert.ok(tattooPortfolioRecords.every((work) => /^work-/.test(work.id)));
 });
 
 test('Juanjo keeps booking values app-local and booking stays inactive', async () => {
@@ -189,8 +202,8 @@ test('native gallery lightbox supports circular navigation, close, focus and scr
 test('the work carousel has three accessible physical copies and manual horizontal controls', async () => {
   const carousel = await read('apps/tattoo/src/components/TattooWorkCarousel.astro');
   const css = await read('apps/tattoo/src/styles/juanjo.css');
-  assert.match(carousel, /aria-label="Trabajo anterior"/);
-  assert.match(carousel, /aria-label="Trabajo siguiente"/);
+  assert.match(carousel, /aria-label="Tatuaje anterior"/);
+  assert.match(carousel, /aria-label="Tatuaje siguiente"/);
   assert.match(carousel, /<svg viewBox="0 0 24 24"/);
   assert.match(carousel, /ArrowLeft/);
   assert.match(carousel, /ArrowRight/);
@@ -242,5 +255,133 @@ test('retired guide illustrations and their third-party body-photo assets are re
   assert.doesNotMatch(
     await read('apps/tattoo/src/styles/juanjo.css'),
     /tattoo-sensitivity|tattoo-size-map|tattoo-body-map/,
+  );
+});
+
+test('compact Juanjo keeps full bleed media outside the content container and app-local mobile disclosure', async () => {
+  const home = await read('apps/tattoo/src/pages/index.astro');
+  const header = await read('apps/tattoo/src/components/TattooHeader.astro');
+  const layout = await read('apps/tattoo/src/layouts/TattooSiteLayout.astro');
+  const gallery = await read('apps/tattoo/src/components/TattooGallery.astro');
+  assert.ok(
+    home.indexOf('<TattooHeroMedia />') <
+      home.indexOf('<div class="container tattoo-home-hero__grid">'),
+  );
+  assert.doesNotMatch(
+    home,
+    /Una selección de trabajos|PORTFOLIO DEL ESTUDIO|SELECCIÓN DEL ESTUDIO/,
+  );
+  assert.match(header, /<details class="tattoo-mobile-menu">/);
+  assert.match(header, /aria-controls="tattoo-mobile-navigation"/);
+  assert.match(header, /setAttribute\('aria-expanded'/);
+  assert.match(header, /event.key === 'Escape'/);
+  assert.match(header, /summary.focus\(\)/);
+  assert.match(header, /menu.contains\(event.target\)/);
+  assert.doesNotMatch(layout, /Volver arriba|<SiteFooter/);
+  assert.match(gallery, /<h1 id="portfolio-title">Tatuajes<\/h1>/);
+  assert.doesNotMatch(gallery, /<TattooWorkCarousel|PORTFOLIO DEL ESTUDIO|SELECCIÓN DEL ESTUDIO/);
+});
+
+test('public tattoo terminology covers desktop, mobile, footer, SEO and accessible controls without captions', async () => {
+  const header = await read('apps/tattoo/src/components/TattooHeader.astro');
+  const footer = await read('apps/tattoo/src/layouts/TattooSiteLayout.astro');
+  const home = await read('apps/tattoo/src/pages/index.astro');
+  const page = await read('apps/tattoo/src/pages/trabajos/index.astro');
+  const carousel = await read('apps/tattoo/src/components/TattooWorkCarousel.astro');
+  const gallery = await read('apps/tattoo/src/components/TattooGallery.astro');
+  const lightbox = await read('apps/tattoo/src/components/TattooLightbox.astro');
+  assert.match(header, /label: 'Tatuajes', href: '\/trabajos\//);
+  assert.match(header, /href="\/trabajos\/">Tatuajes/);
+  assert.match(footer, /href="\/trabajos\/">\s*Tatuajes/);
+  assert.match(home, /Tatuajes destacados/);
+  assert.match(home, /Ver tatuajes/);
+  assert.match(home, /Explorá tatuajes/);
+  assert.match(page, /title="Tatuajes \| Juanjo Tattoo Studio"/);
+  assert.match(gallery, /Tatuajes/);
+  assert.match(gallery, /Ampliar tatuaje: \$?\{item.alt\}/);
+  assert.doesNotMatch(carousel, /<figcaption|tattoo-carousel__number|item.title/);
+  assert.doesNotMatch(gallery, /<span>\{item.title\}|data-title=/);
+  assert.doesNotMatch(lightbox, /item.title/);
+  assert.match(lightbox, /data-lightbox-title style="visibility: hidden"/);
+  for (const source of [carousel, lightbox]) {
+    assert.match(source, /Tatuaje anterior/);
+    assert.match(source, /Tatuaje siguiente/);
+  }
+  assert.match(lightbox, /recorrer los tatuajes/);
+});
+
+test('aftercare headings and copy are not hidden from assistive technology', async () => {
+  const guide = await readFile(
+    new URL('../apps/tattoo/src/pages/guia.astro', import.meta.url),
+    'utf8',
+  );
+  const care = guide.match(/<ol class="tattoo-aftercare__grid">([\s\S]*?)<\/ol>/)?.[1];
+  assert.ok(care);
+  assert.doesNotMatch(care, /<(?:li|div|h3|p)[^>]*aria-hidden/);
+  for (const title of [
+    'Manos limpias',
+    'Lavá y secá suave',
+    'Hidratá la piel',
+    'Evitá los roces',
+    'Evitá el sol',
+    'No lo sumerjas',
+  ])
+    assert.ok(care.includes(title));
+});
+
+test('inner page headings share the canonical gallery scale, container and starting space', async () => {
+  const styles = await read('apps/tattoo/src/styles/production-content.css');
+  const legacy = await read('apps/tattoo/src/styles/juanjo.css');
+  const contact = await read('apps/tattoo/src/pages/contacto.astro');
+  const guide = await read('apps/tattoo/src/pages/guia.astro');
+  const gallery = await read('apps/tattoo/src/components/TattooGallery.astro');
+  const titleRule = styles.match(
+    /(\.juanjo-site \.tattoo-gallery__heading h1,\s*\.juanjo-site \.tattoo-contact-hero h1,\s*\.juanjo-site \.tattoo-guide-hero h1)\s*\{([^}]+)\}/,
+  );
+  assert.ok(titleRule, 'one app-local rule owns all three H1 styles');
+  assert.match(titleRule[2], /font-size:\s*clamp\(/);
+  assert.match(titleRule[2], /margin:\s*0/);
+  assert.match(titleRule[2], /line-height:\s*inherit/);
+  const canonicalWidth = styles.match(
+    /\.juanjo-site \.tattoo-gallery__heading\s*\{[^}]*max-width:\s*([^;]+)/,
+  )?.[1];
+  assert.ok(canonicalWidth);
+  assert.equal(titleRule[2].match(/max-width:\s*([^;]+)/)?.[1], canonicalWidth);
+  const galleryTop = styles.match(
+    /\.juanjo-site \.tattoo-gallery\s*\{[^}]*padding-block:\s*(\S+)/,
+  )?.[1];
+  const titleTop = styles.match(
+    /\.juanjo-site \.tattoo-contact-hero,\s*\.juanjo-site \.tattoo-guide-hero\s*\{[^}]*padding-block:\s*(\S+)/,
+  )?.[1];
+  assert.ok(galleryTop);
+  assert.equal(titleTop, galleryTop, 'all page titles begin at the approved gallery inset');
+  assert.match(legacy, /\.tattoo-contact-page\s*\{[^}]*padding-block:\s*0 /);
+  assert.doesNotMatch(
+    legacy,
+    /\.tattoo-contact-page h1|tattoo-guide-hero__(?:monogram|jump|inner)|tattoo-aftercare-card__visual|aftercare-contact-sheet-preview/,
+  );
+  assert.match(
+    contact,
+    /<header class="tattoo-contact-hero">\s*<div class="container">\s*<h1>Contacto<\/h1>/,
+  );
+  assert.match(
+    guide,
+    /<header class="tattoo-guide-hero">\s*<div class="container">\s*<h1>Guía<\/h1>/,
+  );
+  assert.match(gallery, /<div class="container">\s*<header class="tattoo-gallery__heading">/);
+  assert.match(gallery, /<h1 id="portfolio-title">Tatuajes<\/h1>/);
+  for (const columns of [
+    'repeat(3, minmax(0, 1fr))',
+    'repeat(2, minmax(0, 1fr))',
+    'minmax(0, 1fr)',
+  ])
+    assert.ok(legacy.includes('grid-template-columns: ' + columns));
+  assert.match(
+    legacy,
+    /@media \(max-width: 900px\)\s*\{\s*\.tattoo-preparation-grid,\s*\.tattoo-aftercare__grid/,
+  );
+  assert.match(
+    legacy,
+    /@media \(max-width: 600px\)\s*\{\s*\.tattoo-preparation-grid,\s*\.tattoo-aftercare__grid/,
   );
 });

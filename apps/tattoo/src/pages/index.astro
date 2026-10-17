@@ -2,39 +2,29 @@
 import ButtonLink from '@littzite/ui/ButtonLink.astro';
 import TattooSiteLayout from '../layouts/TattooSiteLayout.astro';
 import TattooHeroMedia from '../components/TattooHeroMedia.astro';
-import TattooInstagramLink from '../components/TattooInstagramLink.astro';
 import TattooWorkCarousel from '../components/TattooWorkCarousel.astro';
-import { tattooActions, tattooBrand } from '../brand.config';
+import { tattooActions } from '../brand.config';
 import { featuredTattooWorks } from '../portfolio';
 ---
 
 <TattooSiteLayout
   title="Juanjo Tattoo Studio | Tu próximo tatuaje empieza acá"
-  description="Explorá trabajos, elegí el estilo que te representa y sacá tu turno con Juanjo Tattoo Studio en San Juan."
+  description="Explorá tatuajes, elegí el estilo que te representa y sacá tu turno con Juanjo Tattoo Studio en San Juan."
 >
   <section class="tattoo-home-hero" aria-labelledby="home-hero-title">
+    <TattooHeroMedia />
     <div class="container tattoo-home-hero__grid">
       <div class="tattoo-home-hero__copy">
-        <p class="tattoo-eyebrow">
-          <span aria-hidden="true"></span>Tinta con carácter
-        </p>
         <h1 id="home-hero-title">Tu próximo tatuaje empieza acá.</h1>
-        <p class="tattoo-home-hero__lead">
-          Explorá trabajos, elegí el estilo que más te represente y sacá tu turno.
-        </p>
         <div class="tattoo-home-hero__actions">
           <ButtonLink href={tattooActions.turnsHref} variant="primary" icon="external">
             Sacar turno
           </ButtonLink>
           <ButtonLink href="/trabajos/" variant="secondary">
-            Explorar trabajos
+            Ver tatuajes
           </ButtonLink>
         </div>
-        <p class="tattoo-home-hero__location">
-          {tattooBrand.name} <span aria-hidden="true">·</span> San Juan, Argentina
-        </p>
       </div>
-      <TattooHeroMedia media={tattooBrand.heroMedia} />
     </div>
   </section>
 
@@ -42,101 +32,47 @@ import { featuredTattooWorks } from '../portfolio';
     <div class="container">
       <div class="tattoo-section-heading tattoo-section-heading--split">
         <div>
-          <p class="tattoo-eyebrow">ESTILOS DEL ESTUDIO</p>
-          <h2 id="home-work-title">Trabajos destacados</h2>
-          <p>Una selección de trabajos del estudio.</p>
+          <h2 id="home-work-title">Tatuajes destacados</h2>
         </div>
         <div class="tattoo-work-section__actions">
           <ButtonLink href="/trabajos/" variant="secondary" size="compact">
-            Ver todos los trabajos
+            Ver todos
           </ButtonLink>
-          <TattooInstagramLink showHandle={false} className="tattoo-inline-instagram">
-            Ver Instagram
-          </TattooInstagramLink>
         </div>
       </div>
       <TattooWorkCarousel items={featuredTattooWorks} id="inicio-trabajos-carousel" />
     </div>
   </section>
-
-  <section class="tattoo-process" id="como-trabajamos" aria-labelledby="process-title">
-    <div class="container">
-      <div class="tattoo-section-heading">
-        <p class="tattoo-eyebrow">RESERVA O CONSULTA</p>
-        <h2 id="process-title">Elegí cómo seguir.</h2>
-      </div>
-      <div class="tattoo-process__grid">
-        <article class="tattoo-process-card">
-          <span class="tattoo-process-card__number">01 / TURNOS</span>
-          <h3>Sacá tu turno</h3>
-          <p>Elegí un horario disponible desde la agenda.</p>
-          <ButtonLink
-            href={tattooActions.turnsHref}
-            variant="primary"
-            size="compact"
-            icon="external"
-          >
-            Sacar turno
-          </ButtonLink>
-        </article>
-        <article class="tattoo-process-card tattoo-process-card--large">
-          <span class="tattoo-process-card__number">02 / CONSULTAS</span>
-          <h3>Conversá tu proyecto</h3>
-          <p>
-            Para consultar una idea o un proyecto de mayor escala, escribile a Juanjo por Instagram.
-          </p>
-          <TattooInstagramLink showHandle={false} className="tattoo-inline-instagram">
-            Consultar por Instagram
-          </TattooInstagramLink>
-        </article>
-      </div>
-    </div>
-  </section>
-
-  <section class="tattoo-guide-teaser" aria-labelledby="guide-teaser-title">
-    <div class="container tattoo-guide-teaser__inner">
-      <div class="tattoo-guide-teaser__intro">
-        <p class="tattoo-eyebrow">UNA GUÍA PARA TU SESIÓN</p>
-        <h2 id="guide-teaser-title">Preparación y cuidados.</h2>
-        <p>Información general para pensar el tatuaje y acompañar el proceso.</p>
-        <ButtonLink href="/guia/" variant="secondary">
-          Ver guía
-        </ButtonLink>
-      </div>
-      <div class="tattoo-guide-teaser__cards">
-        <a href="/guia/#preparacion">
-          <span>01</span>
-          <strong>Antes de la sesión</strong>
-          <b aria-hidden="true">↗</b>
-        </a>
-        <a href="/guia/#cuidados">
-          <span>02</span>
-          <strong>Cuidados del tatuaje</strong>
-          <b aria-hidden="true">↗</b>
-        </a>
-        <a href="/guia/#preguntas">
-          <span>03</span>
-          <strong>Preguntas frecuentes</strong>
-          <b aria-hidden="true">↗</b>
-        </a>
-      </div>
-    </div>
-  </section>
-
-  <section class="tattoo-home-cta" aria-labelledby="home-cta-title">
-    <div class="container tattoo-home-cta__inner">
-      <div>
-        <p class="tattoo-eyebrow">EL PRÓXIMO PASO</p>
-        <h2 id="home-cta-title">Empezá por tu turno.</h2>
-      </div>
-      <div class="tattoo-home-cta__actions">
-        <ButtonLink href={tattooActions.turnsHref} variant="primary" icon="external">
-          Sacar turno
-        </ButtonLink>
-        <TattooInstagramLink showHandle={false} className="tattoo-inline-instagram">
-          Consultar por Instagram
-        </TattooInstagramLink>
-      </div>
-    </div>
-  </section>
 </TattooSiteLayout>
+<script>
+  // CSS owns visibility from the first paint; this only freezes completed reveals.
+  const section = document.querySelector<HTMLElement>('.tattoo-work-section');
+  if (section && CSS.supports('animation-timeline: view()')) {
+    let frame = 0;
+    const cleanup = () => {
+      window.removeEventListener('scroll', scheduleCheck);
+      window.removeEventListener('scrollend', scheduleCheck);
+      window.cancelAnimationFrame(frame);
+    };
+    const freezeCompletedReveal = () => {
+      frame = 0;
+      const reveals = section.querySelectorAll<HTMLElement>(
+        '.tattoo-section-heading, .tattoo-carousel, .tattoo-carousel__image-wrap',
+      );
+      if (
+        section.getBoundingClientRect().top < window.innerHeight &&
+        [...reveals].every((reveal) => getComputedStyle(reveal).opacity === '1')
+      ) {
+        section.dataset.revealed = 'true';
+        cleanup();
+      }
+    };
+    const scheduleCheck = () => {
+      if (!frame) frame = window.requestAnimationFrame(freezeCompletedReveal);
+    };
+    window.addEventListener('scroll', scheduleCheck, { passive: true });
+    window.addEventListener('scrollend', scheduleCheck, { passive: true });
+    scheduleCheck();
+    document.addEventListener('astro:before-swap', cleanup, { once: true });
+  }
+</script>

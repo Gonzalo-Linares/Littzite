@@ -1,64 +1,60 @@
 import type { VioraServiceVisual } from './service-visuals.validation';
 import { validateServiceVisuals } from './service-visuals.validation';
 import { siteContent } from './site.config';
-import facialPrimary from './assets/services/limpieza-facial-primary.jpg';
-import facialPrimarySmall from './assets/services/limpieza-facial-primary-small.jpg';
-import facialReveal from './assets/services/limpieza-facial-reveal.jpg';
-import facialRevealSmall from './assets/services/limpieza-facial-reveal-small.jpg';
-import hairRemovalPrimary from './assets/services/depilacion-definitiva-primary.jpg';
-import hairRemovalPrimarySmall from './assets/services/depilacion-definitiva-primary-small.jpg';
-import hairRemovalReveal from './assets/services/depilacion-definitiva-reveal.jpg';
-import hairRemovalRevealSmall from './assets/services/depilacion-definitiva-reveal-small.jpg';
-import massagePrimary from './assets/services/masajes-primary.jpg';
-import massagePrimarySmall from './assets/services/masajes-primary-small.jpg';
-import massageReveal from './assets/services/masajes-reveal.jpg';
-import massageRevealSmall from './assets/services/masajes-reveal-small.jpg';
-import reikiPrimary from './assets/services/reiki-primary.jpg';
-import reikiPrimarySmall from './assets/services/reiki-primary-small.jpg';
-import reikiReveal from './assets/services/reiki-reveal.jpg';
-import reikiRevealSmall from './assets/services/reiki-reveal-small.jpg';
-
+import image0 from './assets/services/depilacion-definitiva-approved.jpg';
+import small0 from './assets/services/depilacion-definitiva-approved-small.jpg';
+import image1 from './assets/services/cejas-pestanas-approved.jpg';
+import small1 from './assets/services/cejas-pestanas-approved-small.jpg';
+import image2 from './assets/services/limpieza-facial-approved.jpg';
+import small2 from './assets/services/limpieza-facial-approved-small.jpg';
+import image3 from './assets/services/masajes-approved.jpg';
+import small3 from './assets/services/masajes-approved-small.jpg';
+import image4 from './assets/services/microneedling-facial-approved.jpg';
+import small4 from './assets/services/microneedling-facial-approved-small.jpg';
+import image5 from './assets/services/bb-lips-approved.jpg';
+import small5 from './assets/services/bb-lips-approved-small.jpg';
 export const serviceVisuals = [
   {
-    serviceId: 'limpieza-facial',
-    primary: facialPrimary,
-    primarySmall: facialPrimarySmall,
-    primaryAlt: 'Una especialista aplica una mascarilla facial con una brocha.',
-    reveal: facialReveal,
-    revealSmall: facialRevealSmall,
-    revealAlt: 'Manos realizan un masaje facial en primer plano.',
-    focalPosition: '50% 52%',
+    serviceId: 'depilacion-definitiva',
+    primary: image0,
+    primarySmall: small0,
+    primaryAlt: 'Un dispositivo de depilación se aplica sobre una pierna.',
+    focalPosition: '50% 50%',
   },
   {
-    serviceId: 'depilacion-definitiva',
-    primary: hairRemovalPrimary,
-    primarySmall: hairRemovalPrimarySmall,
-    primaryAlt: 'Un dispositivo de depilación trabaja sobre la pierna de una persona.',
-    reveal: hairRemovalReveal,
-    revealSmall: hairRemovalRevealSmall,
-    revealAlt: 'Una profesional acerca un dispositivo a una persona con protección ocular.',
-    focalPosition: '50% 58%',
+    serviceId: 'cejas-pestanas',
+    primary: image1,
+    primarySmall: small1,
+    primaryAlt: 'Primer plano de un ojo, las pestañas y una ceja.',
+    focalPosition: '50% 50%',
+  },
+  {
+    serviceId: 'limpieza-facial',
+    primary: image2,
+    primarySmall: small2,
+    primaryAlt: 'Aplicación de una máscara facial con una brocha.',
+    focalPosition: '50% 50%',
   },
   {
     serviceId: 'masajes',
-    primary: massagePrimary,
-    primarySmall: massagePrimarySmall,
-    primaryAlt: 'Manos aplican una compresa de tela durante un masaje corporal.',
-    reveal: massageReveal,
-    revealSmall: massageRevealSmall,
-    revealAlt: 'Una profesional sostiene la mano de una persona durante un masaje.',
-    focalPosition: '50% 54%',
+    primary: image3,
+    primarySmall: small3,
+    primaryAlt: 'Manos y piedras calientes sobre la espalda de una persona.',
+    focalPosition: '50% 50%',
   },
   {
-    serviceId: 'reiki',
-    primary: reikiPrimary,
-    primarySmall: reikiPrimarySmall,
-    primaryAlt: 'Una persona recibe una sesión de Reiki con las manos sobre el cuerpo.',
-    reveal: reikiReveal,
-    revealSmall: reikiRevealSmall,
-    revealAlt: 'Primer plano de manos en una sesión de bienestar con velas al fondo.',
-    focalPosition: '50% 56%',
+    serviceId: 'microneedling-facial',
+    primary: image4,
+    primarySmall: small4,
+    primaryAlt: 'Un dispositivo de microneedling se aplica sobre una mejilla.',
+    focalPosition: '50% 50%',
+  },
+  {
+    serviceId: 'bb-lips',
+    primary: image5,
+    primarySmall: small5,
+    primaryAlt: 'Un dispositivo de mano se acerca a los labios de una persona.',
+    focalPosition: '50% 50%',
   },
 ] satisfies VioraServiceVisual[];
-
 validateServiceVisuals(siteContent.services, serviceVisuals);

@@ -15,3 +15,21 @@ Consulta de páginas y licencia: 2026-09-30. Los JPEG base se descargaron de la 
 | `../viora-hero.jpg` / `../viora-hero-small.jpg` | Andrea Piacquadio | [Pexels photo 3855607](https://www.pexels.com/photo/cheerful-young-woman-resting-in-spa-3855607/) | [Pexels License](https://www.pexels.com/license/) |
 
 Pexels attribution is not required by its license; this ledger is voluntary provenance documentation for Littzite's third-party asset policy. The source photos and their generated derivatives must not be reused as endorsements or offered as standalone stock content.
+
+## Material entregado en Downloads — PR #44, 17/10/2026
+
+El titular solicita incorporar los archivos locales a VIORA y autoriza expresamente usar la imagen rotulada como micropigmentación para BB Lips. La imagen no confirma su protocolo ni se presenta el servicio como micropigmentación. No se generaron imágenes ni se hicieron retoques estéticos. Los archivos suministrados no acreditan por sí solos que sean sesiones reales de VIORA: no atribuirles esa procedencia. Victoria imagen.jpeg es el retrato identificado y aprobado por el titular.
+
+Mapeo, hashes, dimensiones y tamaños exactos: docs/25-viora-photo-manifest.json. JPEG calidad 88, variantes de hasta 1400px y 640px, sin ampliar originales, con orientación EXIF aplicada y metadata descartada. Retrato 435×563, JPEG calidad 92, sin ampliación. No hay foto capilar identificada; no se reasigna una foto facial al cuero cabelludo. Los archivos genéricos IMG/WhatsApp/HEIC sin identificación no se incorporaron.
+
+| Fuente en Downloads | Destino / servicio |
+| --- | --- |
+| Victoria imagen.jpeg | public/images/victoria-linares.jpg — hero y presentación |
+| Depilación láser en ambiente spa.png | depilacion-definitiva-approved{,-small}.jpg |
+| Masaje relajante con piedras calientes.png | masajes-approved{,-small}.jpg |
+| Tratamiento facial de arcilla en spa.png | limpieza-facial-approved{,-small}.jpg |
+| Primer plano de ojo con pestañas y ceja perfectas.png | cejas-pestanas-approved{,-small}.jpg |
+| Tratamiento facial microneedling relajante.png | microneedling-facial-approved{,-small}.jpg |
+| Micropigmentación de labios en clínica estética.png | bb-lips-approved{,-small}.jpg — elección explícita del titular |
+
+Las fotos Pexels anteriores permanecen en disco con sus avisos, fuera del catálogo de servicios principal. La imagen editorial de la página de marca /viora/ mantiene su procedencia Pexels registrada arriba.

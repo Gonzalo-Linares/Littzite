@@ -21,8 +21,19 @@ const { siteContent } = await import(`../apps/${app}/src/site.config.ts`);
 const html = await readFile(new URL(`../apps/${app}/dist/index.html`, import.meta.url), 'utf8');
 const assertBrowserIcon = (markup, href, label) => {
   const icons = markup.match(/<link\b(?=[^>]*\brel="icon")[^>]*>/g) ?? [];
-  assert.equal(icons.length, href ? 1 : 0, `${label}: unexpected browser icon count`);
-  if (href) assert.ok(icons[0].includes(`href="${href}"`), `${label}: wrong browser icon`);
+  const expected =
+    href === '/brand/oni-icon-64.png'
+      ? ['/brand/oni-icon-16.png', '/brand/oni-icon-32.png', href]
+      : href
+        ? [href]
+        : [];
+  assert.equal(icons.length, expected.length, `${label}: unexpected browser icon count`);
+  for (const icon of expected)
+    assert.equal(
+      icons.filter((tag) => tag.includes(`href="${icon}"`)).length,
+      1,
+      `${label}: missing or duplicate browser icon ${icon}`,
+    );
 };
 assert.equal(
   (html.match(/<header class="site-header">/g) ?? []).length,
@@ -86,6 +97,10 @@ if (app === 'estetica') {
   const actionTargets = {
     'limpieza-facial': 'booking-general',
     masajes: 'booking-general',
+    'cejas-pestanas': 'booking-general',
+    'bb-lips': 'booking-general',
+    'microneedling-facial': 'booking-general',
+    'microneedling-capilar': 'booking-general',
     'depilacion-definitiva': 'booking-depilacion-definitiva',
   };
   for (const service of siteContent.services) {
@@ -255,8 +270,8 @@ if (app === 'estetica') {
   }
   assert.equal(
     (html.match(/class="viora-service-rail__card(?:\s[^"]*)?"/g) ?? []).length,
-    4,
-    'Expected four VIORA service cards',
+    siteContent.services.length,
+    'Expected every commercial VIORA service card',
   );
   const homeVisualImages = Array.from(
     html.matchAll(
@@ -266,8 +281,8 @@ if (app === 'estetica') {
   );
   assert.equal(
     homeVisualImages.length,
-    8,
-    'Expected primary and reveal images for each configured VIORA service',
+    6,
+    'Expected the six supplied service images; no capillary photo was supplied',
   );
   const assertResponsiveImage = (tag, label) => {
     const candidates = tag.match(/\bsrcset="([^"]+)"/)?.[1].split(', ') ?? [];
@@ -279,7 +294,7 @@ if (app === 'estetica') {
     );
     assert.match(
       candidates[1],
-      /\/_astro\/[^ ]+\s1400w$/,
+      /\/_astro\/[^ ]+\s(?:1400|1122)w$/,
       `${label}: large candidate must advertise its real width`,
     );
     assert.notEqual(
@@ -295,7 +310,7 @@ if (app === 'estetica') {
       /\bsrc="\/_astro\/[^"]+\.jpg"/,
       `VIORA catalog image ${index + 1}: expected a bundled local source`,
     );
-    if (index % 2 === 0) {
+    if (tag.includes('viora-service-visual__image')) {
       assert.match(tag, /class="viora-service-visual__layer viora-service-visual__image"/);
       assert.match(
         tag,
@@ -328,8 +343,9 @@ if (app === 'estetica') {
       html.includes(`href="/servicios/${service.slug}/"`),
       `${service.slug}: card link missing`,
     );
-    assert.ok(
+    assert.equal(
       html.includes(`viora-service-image-${service.slug}`),
+      service.id !== 'microneedling-capilar',
       `${service.slug}: card image transition name missing`,
     );
     const route = new URL(
@@ -346,8 +362,9 @@ if (app === 'estetica') {
       detail.includes(`view-transition-name: viora-service-${service.slug}`),
       `${service.slug}: shared transition name missing from detail`,
     );
-    assert.ok(
+    assert.equal(
       detail.includes(`viora-service-image-${service.slug}`),
+      service.id !== 'microneedling-capilar',
       `${service.slug}: detail image transition name missing`,
     );
     assert.notEqual(
@@ -362,37 +379,21 @@ if (app === 'estetica') {
       ),
       ([tag]) => tag,
     );
+    const hasPhoto = service.id !== 'microneedling-capilar';
     assert.equal(
       detailVisualImages.length,
-      2,
-      `${service.slug}: expected primary and separate secondary image`,
+      hasPhoto ? 1 : 0,
+      service.slug + ': supplied photos only',
     );
-    assert.match(detail, /<figure[^>]*viora-service-visual--detail-primary/);
-    assert.match(detail, /<figure[^>]*viora-service-visual--detail-secondary/);
-    assert.ok(detailVisualImages.every((tag) => tag.includes('viora-service-visual__image')));
     assert.doesNotMatch(
       detail,
-      /viora-service-visual__reveal/,
-      `${service.slug}: detail must not contain a split/reveal layer`,
+      /viora-service-visual__reveal|viora-service-visual--detail-secondary/,
     );
-    assert.match(
-      detail,
-      /class="viora-service-detail__secondary-scene viora-detail-desktop-image"/,
-      `${service.slug}: second scene must be separate from the primary`,
-    );
-    detailVisualImages.forEach((tag, index) =>
-      assertResponsiveImage(tag, `${service.slug} detail image ${index + 1}`),
-    );
-    assert.match(
-      detailVisualImages[0],
-      /\bloading="eager"/i,
-      `${service.slug}: detail primary image should load eagerly`,
-    );
-    assert.match(
-      detailVisualImages[1],
-      /\bloading="lazy"/i,
-      `${service.slug}: secondary scene image should stay lazy`,
-    );
+    for (const tag of detailVisualImages) {
+      assertResponsiveImage(tag, service.slug);
+      assert.match(tag, /\bloading="eager"/i);
+      assert.match(tag, /\balt="[^"]+"/);
+    }
     assert.match(
       detail,
       new RegExp(`<h1 id="viora-service-title"[^>]*>${service.displayName}</h1>`),
@@ -415,8 +416,7 @@ if (app === 'estetica') {
     assert.ok(detail.includes('href="/servicios/"'), `${service.slug}: return link missing`);
     assert.match(detail, /Opciones y precios/);
     assert.match(detail, /Valores a confirmar/);
-    assert.match(detail, /Muestra de diseño/);
-    assert.ok(detail.includes('$00.000'));
+    assert.doesNotMatch(detail, /Muestra de diseño|\$00\.000/);
     for (const group of serviceDetailFor(service.id).pricing.previewGroups ?? []) {
       assert.ok(detail.includes(group.title));
       for (const item of group.items) assert.ok(detail.includes(item.label));
@@ -462,7 +462,7 @@ if (app === 'estetica') {
   ];
   for (const [, card] of catalogCards) {
     assert.equal((card.match(/<a\b/g) ?? []).length, 1);
-    assert.match(card, /<a class="viora-catalog__surface"[\s\S]*?<figure/);
+    assert.match(card, /<a class="viora-catalog__surface"/);
   }
   assertMetadata(
     catalog,
@@ -473,7 +473,10 @@ if (app === 'estetica') {
     'VIORA services',
   );
   assert.match(catalog, /<h1 id="catalogo-servicios-titulo">Elegí tu momento\.<\/h1>/);
-  assert.equal((catalog.match(/class="viora-catalog__card(?:\s[^"]*)?"/g) ?? []).length, 4);
+  assert.equal(
+    (catalog.match(/class="viora-catalog__card(?:\s[^"]*)?"/g) ?? []).length,
+    siteContent.services.length,
+  );
   assert.doesNotMatch(
     catalog,
     /referencias ilustrativas|Fotografía ilustrativa|viora-catalog__card-number|>0[1-4]</,
@@ -691,7 +694,7 @@ if (app === 'estetica') {
   assert.ok(html.includes('Tu próximo tatuaje empieza acá.'), 'Approved Juanjo H1 missing');
   assert.ok(html.includes(`href="${tattooBookingUrl}"`), 'Test booking URL missing');
   assert.ok(!html.includes('agenda de prueba'), 'UAT wording must not appear in public copy');
-  assert.ok(html.includes('Explorar trabajos'), 'Work CTA missing');
+  assert.ok(html.includes('Ver tatuajes'), 'Work CTA missing');
   assert.ok(html.includes('href="/guia/"'), 'Guide route missing');
   assert.ok(
     html.includes('aria-label="Juanjo Tattoo Studio en Instagram"'),
@@ -699,7 +702,7 @@ if (app === 'estetica') {
   );
   assert.ok(!html.includes('>Contanos tu idea.<'), 'Legacy hero CTA must be removed');
   assert.ok(!html.includes('Una marca que deja huella'), 'Legacy brand-copy hero must be removed');
-  assert.ok(html.includes('id="como-trabajamos"'), 'Conceptual service paths missing');
+  assert.ok(!html.includes('id="como-trabajamos"'), 'Retired home section remains');
   assert.ok(
     html.includes('Powered by') && html.includes('alt="Littzite"'),
     'Powered by logo attribution missing',
@@ -726,7 +729,7 @@ if (app === 'estetica') {
     'Juanjo routes incorrect or retired Estudio route remains',
   );
   assert.ok(
-    !html.includes('wa.me/') && !html.includes('api.whatsapp.com/'),
+    html.includes('https://wa.me/5492645019502') && !html.includes('api.whatsapp.com/'),
     'Unapproved WhatsApp CTA was published',
   );
   assert.ok(
@@ -735,12 +738,12 @@ if (app === 'estetica') {
   );
   assert.equal(
     (html.match(/class="tattoo-carousel__item/g) ?? []).length,
-    9,
-    'Juanjo preview carousel must render three physical copies of each item',
+    18,
+    'Juanjo real carousel must render three physical copies of each item',
   );
   assert.ok(!html.includes('href="/servicios/"'), 'VIORA navigation must not leak into Juanjo');
   assert.ok(html.includes('aria-label="Navegación del pie de página"'));
-  assert.ok(html.includes('href="/brand/favicon.svg"'), 'High-contrast JT favicon missing');
+  assert.ok(html.includes('href="/brand/oni-icon-64.png"'), 'High-contrast JT favicon missing');
   assert.ok(
     html.includes('class="tattoo-brand-mark__image"'),
     'Official signature header mark missing',
@@ -781,17 +784,29 @@ if (app === 'estetica') {
   assert.ok(workPage.includes('class="tattoo-gallery"'), 'Juanjo portfolio route missing');
   assert.equal(
     (workPage.match(/class="tattoo-carousel__item/g) ?? []).length,
-    9,
+    0,
     'Work fixture must render three physical copies of each preview item',
   );
-  assert.equal((workPage.match(/<figure[^>]*aria-hidden="true"/g) ?? []).length, 6);
-  assert.equal((workPage.match(/class="tattoo-gallery__item"/g) ?? []).length, 3);
+  assert.equal((workPage.match(/<figure[^>]*aria-hidden="true"/g) ?? []).length, 0);
+  assert.equal((workPage.match(/class="tattoo-gallery__item"/g) ?? []).length, 12);
   assert.equal((workPage.match(/loading="lazy"/g) ?? []).length >= 3, true);
-  assert.match(workPage, /Trabajos destacados/);
-  assert.match(workPage, /Todos los trabajos/);
+  assert.doesNotMatch(workPage, /PORTFOLIO DEL ESTUDIO|SELECCIÓN DEL ESTUDIO/);
+  assert.match(workPage, /Tatuajes/);
+  assert.match(html, /Tatuajes destacados/);
+  assert.match(workPage, /<title>Tatuajes \| Juanjo Tattoo Studio<\/title>/);
+  for (const markup of [html, workPage]) {
+    const publicText = markup
+      .replace(/<script\b[\s\S]*?<\/script>/gi, '')
+      .replace(/<style\b[\s\S]*?<\/style>/gi, '')
+      .replace(/<[^>]*>/g, ' ');
+    assert.doesNotMatch(publicText, /\btrabajos?\b/i);
+    assert.doesNotMatch(markup, /Trabajo \d{2}|<figcaption|tattoo-carousel__number/);
+    for (const [, label] of markup.matchAll(/aria-label="([^"]+)"/g))
+      assert.doesNotMatch(label, /\btrabajos?\b/i);
+  }
   assert.match(workPage, /<dialog[^>]*aria-labelledby="lightbox-title"/);
   assert.equal((workPage.match(/<button[^>]*data-lightbox-(?:previous|next)/g) ?? []).length, 2);
-  assert.equal((workPage.match(/data-image="[^"]+"/g) ?? []).length, 3);
+  assert.equal((workPage.match(/data-image="[^"]+"/g) ?? []).length, 12);
   assert.doesNotMatch(
     workPage.replace(/<script\b[\s\S]*?<\/script>/gi, ''),
     /referencia generada|imágenes generadas|no es un trabajo real/i,
@@ -800,7 +815,7 @@ if (app === 'estetica') {
     new URL('../apps/tattoo/dist/guia/index.html', import.meta.url),
     'utf8',
   );
-  assert.match(guidePage, /<h1[^>]*>Una guía para llegar preparado\.<\/h1>/);
+  assert.match(guidePage, /<h1>Guía<\/h1>/);
   assert.doesNotMatch(
     guidePage,
     /Sensibilidad orientativa por zona|¿Qué tamaño puede tener tu tatuaje\?/i,
@@ -812,9 +827,27 @@ if (app === 'estetica') {
     guidePage,
     /tattoo-size|tattoo-body-map|body-(?:front|back)\.webp|id="(?:sensibilidad|tamano)"/i,
   );
-  assert.match(guidePage, /01 \/ ANTES DE LA SESIÓN/);
-  assert.match(guidePage, /02 \/ DESPUÉS DE LA SESIÓN/);
-  assert.match(guidePage, /03 \/ PREGUNTAS FRECUENTES/);
+  assert.doesNotMatch(
+    guidePage,
+    /ANTES Y DESPUÉS DE TATUARTE|01 \/ ANTES DE LA SESIÓN|02 \/ DESPUÉS DE LA SESIÓN|03 \/ PREGUNTAS FRECUENTES|Recorrer la guía|tattoo-guide-hero__monogram/,
+  );
+  assert.match(guidePage, /Antes de la sesión\./);
+  assert.match(guidePage, /Preguntas frecuentes\./);
+  for (const className of ['tattoo-preparation-grid', 'tattoo-aftercare__grid']) {
+    const list = guidePage.match(
+      new RegExp('<ol class="' + className + '">([\\s\\S]*?)<\\/ol>'),
+    )?.[1];
+    assert.ok(list);
+    assert.equal((list.match(/<li>/g) ?? []).length, 6);
+    assert.doesNotMatch(list, /<(?:ol|li|div|h3|p)[^>]*aria-hidden/);
+  }
+  for (const [page, title] of [
+    [workPage, 'Tatuajes'],
+    [guidePage, 'Guía'],
+  ]) {
+    assert.equal((page.match(/<h1\b/g) ?? []).length, 1);
+    assert.ok(page.includes('>' + title + '</h1>'));
+  }
   assert.doesNotMatch(guidePage, /[0-9]\/10|diagnóstico|garantiza|\$|seña|horarios ficticios/i);
   const tattooStyles = await readFile(
     new URL('../apps/tattoo/src/styles/juanjo.css', import.meta.url),
@@ -833,6 +866,8 @@ if (app === 'estetica') {
     new URL('../apps/tattoo/dist/contacto/index.html', import.meta.url),
     'utf8',
   );
+  assert.equal((contact.match(/<h1\b/g) ?? []).length, 1);
+  assert.match(contact, /<h1>Contacto<\/h1>/);
   assert.match(contact, /href="https:\/\/www\.instagram\.com\/juanjo\.tattoos\/"/);
   assert.match(contact, /class="[^"]*\btattoo-instagram-link(?:\s|")/);
   assert.match(contact, /id="turnos"/);
@@ -856,7 +891,9 @@ if (app === 'estetica') {
   assert.equal((contact.match(/class="tattoo-contact-path"/g) ?? []).length, 2);
   assert.ok(contact.includes(`href="${tattooBookingUrl}"`));
   assert.match(contact, /href="https:\/\/www\.instagram\.com\/juanjo\.tattoos\/"/);
-  assert.doesNotMatch(html + contact, /wa\.me|api\.whatsapp|Reserva tu turno|Agendá ahora/i);
+  assert.doesNotMatch(html + contact, /api\.whatsapp|Reserva tu turno|Agendá ahora/i);
+  for (const match of (html + contact).matchAll(/href="(https:\/\/wa\.me\/[^"]+)"/g))
+    assert.equal(match[1], 'https://wa.me/5492645019502');
   for (const route of ['privacidad', 'terminos-y-condiciones', 'arrepentimiento']) {
     const legal = await readFile(
       new URL(`../apps/tattoo/dist/${route}/index.html`, import.meta.url),

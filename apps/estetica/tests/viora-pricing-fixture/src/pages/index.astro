@@ -26,7 +26,8 @@ const pricing: VioraPricing = {
     },
   ],
 };
-const service = siteContent.services[0];
+const service = siteContent.services.find((service) => service.id === 'limpieza-facial');
+if (!service) throw new Error('Missing pricing fixture service');
 ---
 
 <html lang="es-AR">

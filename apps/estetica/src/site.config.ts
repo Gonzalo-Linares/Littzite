@@ -10,7 +10,7 @@ import { vioraBookingTargetUrls, vioraCommercial } from './viora-release.ts';
 const parsedContent = siteContentSchema.parse({
   site: {
     defaultLocale: 'es-AR',
-    iconHref: '/brand/viora-favicon.svg',
+    iconHref: '/brand/viora-botanical-icon.png',
     locations: [{ id: 'viora-public-location', city: vioraCommercial.publicLocation }],
     theme: {
       surface: '#FAF5F0', // Marfil
@@ -23,26 +23,10 @@ const parsedContent = siteContentSchema.parse({
   },
   services: [
     {
-      id: 'limpieza-facial',
-      slug: 'limpieza-facial',
-      displayName: 'Limpieza facial',
-      description:
-        'Una l\u00ednea de cuidado facial de VIORA. La t\u00e9cnica y el alcance de la propuesta se confirmar\u00e1n antes de ofrecer turnos.',
-      actions: [
-        {
-          id: 'reservar',
-          type: 'direct-booking',
-          label: 'Solicitar turno',
-          targetId: 'booking-general',
-        },
-      ],
-    },
-    {
       id: 'depilacion-definitiva',
       slug: 'depilacion-definitiva',
-      displayName: 'Depilaci\u00f3n definitiva',
-      description:
-        'Una l\u00ednea de cuidado personal de VIORA. El equipo, el procedimiento y su alcance se confirmar\u00e1n antes de ofrecer turnos.',
+      displayName: 'Depilación definitiva',
+      description: 'LÁSER DIODO para una reducción progresiva del crecimiento del vello.',
       actions: [
         {
           id: 'reservar',
@@ -53,11 +37,11 @@ const parsedContent = siteContentSchema.parse({
       ],
     },
     {
-      id: 'masajes',
-      slug: 'masajes',
-      displayName: 'Masajes',
+      id: 'cejas-pestanas',
+      slug: 'cejas-pestanas',
+      displayName: 'Cejas y pestañas',
       description:
-        'Una l\u00ednea de bienestar de VIORA. Las modalidades y el alcance de la propuesta se confirmar\u00e1n antes de ofrecer turnos.',
+        'Lifting, extensiones de pestañas y laminado de cejas: elegí cómo realzar tu mirada.',
       actions: [
         {
           id: 'reservar',
@@ -68,12 +52,76 @@ const parsedContent = siteContentSchema.parse({
       ],
     },
     {
-      id: 'reiki',
-      slug: 'reiki',
-      displayName: 'Reiki',
+      id: 'limpieza-facial',
+      slug: 'limpieza-facial',
+      displayName: 'Limpieza facial',
+      description: 'Higiene, máscaras e hidratación para acompañar el cuidado de tu piel.',
+      actions: [
+        {
+          id: 'reservar',
+          type: 'direct-booking',
+          label: 'Solicitar turno',
+          targetId: 'booking-general',
+        },
+      ],
+    },
+    {
+      id: 'masajes',
+      slug: 'masajes',
+      displayName: 'Masajes',
       description:
-        'Una experiencia de bienestar de VIORA. Se comunica como una pr\u00e1ctica de bienestar y no como tratamiento de enfermedades.',
-      actions: [],
+        'Relajantes, reductores y con piedras calientes: una experiencia corporal a tu medida.',
+      actions: [
+        {
+          id: 'reservar',
+          type: 'direct-booking',
+          label: 'Solicitar turno',
+          targetId: 'booking-general',
+        },
+      ],
+    },
+    {
+      id: 'bb-lips',
+      slug: 'bb-lips',
+      displayName: 'BB Lips',
+      description:
+        'Conocé la propuesta de cuidado estético de labios y consultá el protocolo con Victoria.',
+      actions: [
+        {
+          id: 'reservar',
+          type: 'direct-booking',
+          label: 'Solicitar turno',
+          targetId: 'booking-general',
+        },
+      ],
+    },
+    {
+      id: 'microneedling-facial',
+      slug: 'microneedling-facial',
+      displayName: 'Microneedling facial',
+      description: 'Cuidado cosmético facial personalizado mediante microneedling con Dermapen.',
+      actions: [
+        {
+          id: 'reservar',
+          type: 'direct-booking',
+          label: 'Solicitar turno',
+          targetId: 'booking-general',
+        },
+      ],
+    },
+    {
+      id: 'microneedling-capilar',
+      slug: 'microneedling-capilar',
+      displayName: 'Microneedling capilar',
+      description: 'Protocolo estético con Dermapen para el cuidado del cuero cabelludo.',
+      actions: [
+        {
+          id: 'reservar',
+          type: 'direct-booking',
+          label: 'Solicitar turno',
+          targetId: 'booking-general',
+        },
+      ],
     },
   ],
   bookingTargets: [

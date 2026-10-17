@@ -50,23 +50,22 @@ test('carousel handles 0, 1, 2 and 5 authorized metadata items and a configured 
       assert.doesNotMatch(section, /data-carousel-(?:prev|next)/);
     }
   }
-  assert.match(
-    html,
-    /class="tattoo-hero-media__photo" src="\/tests\/work-one\.svg" alt="Foto fixture de prueba, no real"/,
-  );
-  assert.match(html, /class="tattoo-hero-media__oni"[^>]*alt=""/);
+  assert.match(html, /class="tattoo-hero-media__background" src="\/tests\/work-one\.svg"/);
+  assert.match(html, /class="tattoo-hero-media__background"[^>]*alt=""/);
 
-  for (const [route, count, featuredCount] of [
+  for (const [route, count] of [
     ['gallery-empty', 0, 0],
     ['gallery-one', 1, 1],
     ['gallery-five', 5, 3],
   ]) {
     const gallery = readFileSync(path.join(fixtureRoot, `dist/${route}/index.html`), 'utf8');
     assert.equal((gallery.match(/class="tattoo-gallery__item"/g) ?? []).length, count);
-    assert.equal((gallery.match(/class="tattoo-carousel__item/g) ?? []).length, featuredCount * 3);
+    assert.equal((gallery.match(/class="tattoo-carousel__item/g) ?? []).length, 0);
     assert.equal((gallery.match(/data-image="[^"]+"/g) ?? []).length, count);
+    assert.doesNotMatch(gallery, /<figcaption|<span>Obra fixture|data-title=/);
+    assert.doesNotMatch(gallery, /\bTrabajo \d/);
     if (count === 0) {
-      assert.match(gallery, /Todavía no hay trabajos publicados\./);
+      assert.match(gallery, /Todavía no hay tatuajes publicados\./);
       assert.doesNotMatch(gallery, /<dialog/);
     } else {
       const gridStart = gallery.indexOf('data-gallery-grid');
@@ -79,8 +78,11 @@ test('carousel handles 0, 1, 2 and 5 authorized metadata items and a configured 
         count > 1 ? 2 : 0,
       );
       assert.deepEqual(
-        [...grid.matchAll(/data-title="([^"]+)"/g)].map((match) => match[1]),
-        Array.from({ length: count }, (_, index) => `Obra fixture ${index + 1}`),
+        [...grid.matchAll(/data-alt="([^"]+)"/g)].map((match) => match[1]),
+        Array.from(
+          { length: count },
+          (_, index) => `Descripción accesible de la imagen fixture ${index + 1}`,
+        ),
       );
       for (let index = 1; index <= count; index++) {
         assert.match(grid, new RegExp(`alt="Descripción accesible de la imagen fixture ${index}"`));
@@ -88,12 +90,13 @@ test('carousel handles 0, 1, 2 and 5 authorized metadata items and a configured 
     }
   }
 
+  assert.doesNotMatch(html, /<figcaption|tattoo-carousel__number/);
   const carousel = readFileSync(
     path.join(root, 'apps/tattoo/src/components/TattooWorkCarousel.astro'),
     'utf8',
   );
-  assert.match(carousel, /aria-label="Trabajo anterior"/);
-  assert.match(carousel, /aria-label="Trabajo siguiente"/);
+  assert.match(carousel, /aria-label="Tatuaje anterior"/);
+  assert.match(carousel, /aria-label="Tatuaje siguiente"/);
   assert.match(carousel, /<svg viewBox="0 0 24 24"/);
   assert.match(carousel, /ArrowLeft/);
   assert.match(carousel, /ArrowRight/);

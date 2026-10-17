@@ -9,9 +9,13 @@ interface Props {
 
 const { visual, context, transitionName } = Astro.props;
 const secondary = context === 'detail-secondary';
-const image = secondary ? visual.reveal : visual.primary;
-const small = secondary ? visual.revealSmall : visual.primarySmall;
-const alt = secondary ? (visual.revealAlt ?? '') : visual.primaryAlt;
+const image = secondary ? (visual.reveal ?? visual.primary) : visual.primary;
+const small = secondary
+  ? visual.reveal
+    ? visual.revealSmall
+    : visual.primarySmall
+  : visual.primarySmall;
+const alt = secondary ? (visual.revealAlt ?? visual.primaryAlt) : visual.primaryAlt;
 if (!image) throw new Error(`Missing ${context} image for VIORA service ${visual.serviceId}`);
 const sizes =
   context === 'card'

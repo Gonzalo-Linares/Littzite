@@ -91,7 +91,7 @@ test('Juanjo footer and navigation retain the owner logo and omit Estudio and In
     new URL('apps/tattoo/src/layouts/TattooSiteLayout.astro', root),
     'utf8',
   );
-  const footer = layout.slice(layout.indexOf('<SiteFooter'));
+  const footer = layout.slice(layout.indexOf('<footer'));
   assert.match(layout, /tattoo-footer-brand/);
   assert.match(layout, /tattooBrand\.marks\.signature\.src/);
   assert.doesNotMatch(layout, /href="\/estudio\//);
@@ -101,4 +101,38 @@ test('Juanjo footer and navigation retain the owner logo and omit Estudio and In
   assert.match(css, /inline-size:\s*44px/);
   assert.match(css, /block-size:\s*44px/);
   assert.match(css, /place-items:\s*center/);
+});
+
+test('approved Oni favicon and panoramic hero are local and contact actions use approved destinations', async () => {
+  assert.equal(siteContent.site.iconHref, '/brand/oni-icon-64.png');
+  const favicon = await readFile(new URL('apps/tattoo/public/brand/oni-icon-64.png', root));
+  assert.equal(
+    createHash('sha256').update(favicon).digest('hex'),
+    'b95beec70abe7720f2a6c3adad892f1e1cb32cf3c10603edd94f3ece3f823ca2',
+  );
+  assert.equal(favicon.readUInt32BE(16), 64);
+  for (const size of [16, 32, 180]) {
+    const icon = await readFile(new URL(`apps/tattoo/public/brand/oni-icon-${size}.png`, root));
+    assert.equal(icon.readUInt32BE(16), size);
+    assert.equal(icon.readUInt32BE(20), size);
+  }
+  await readFile(new URL('apps/tattoo/public/favicon.ico', root));
+  await assert.rejects(readFile(new URL('apps/tattoo/public/brand/favicon.svg', root)));
+  const background = await readFile(
+    new URL('apps/tattoo/public/brand/oni-hero-approved.webp', root),
+  );
+  assert.equal(
+    createHash('sha256').update(background).digest('hex'),
+    'a730af5799061d3b736171ccd28e9d08083806df0b2568d5ddd3a66d895d9b5a',
+  );
+  const actions = await readFile(
+    new URL('apps/tattoo/src/components/TattooContactActions.astro', root),
+    'utf8',
+  );
+  const config = await readFile(new URL('apps/tattoo/src/brand.config.ts', root), 'utf8');
+  assert.match(config, /https:\/\/wa.me\/5492645019502/);
+  assert.match(actions, /tattooActions.whatsAppHref/);
+  assert.match(actions, /tattooActions.instagramHref/);
+  assert.match(actions, /aria-label="Contacto directo"/);
+  assert.match(actions, /rel="noopener noreferrer"/);
 });

@@ -14,15 +14,15 @@ const item = () => ({
 
 test('featured works are a projection of the canonical portfolio in source order', () => {
   const featuredTattooWorkRecords = tattooPortfolioRecords.filter((work) => work.featured);
-  assert.equal(tattooPortfolioRecords.length, 3);
-  assert.equal(featuredTattooWorkRecords.length, 3);
+  assert.equal(tattooPortfolioRecords.length, 12);
+  assert.equal(featuredTattooWorkRecords.length, 6);
   assert.deepEqual(
     featuredTattooWorkRecords,
     tattooPortfolioRecords.filter((work) => work.featured),
   );
   assert.deepEqual(
     tattooPortfolioRecords.map((work) => work.featured),
-    [true, true, true],
+    [true, true, true, true, true, true, false, false, false, false, false, false],
   );
   assert.notEqual(featuredTattooWorkRecords, tattooPortfolioRecords);
   assert.ok(
@@ -77,4 +77,38 @@ test('gallery navigation wraps in both directions and rejects empty collections'
   assert.equal(stepGalleryIndex(4, 1, 5), 0);
   assert.equal(stepGalleryIndex(2, 1, 5), 3);
   assert.equal(stepGalleryIndex(0, 1, 0), -1);
+});
+
+test('curated previews reject invalid focal points without changing full lightbox images', () => {
+  for (const work of tattooPortfolioRecords) {
+    assert.ok(work.preview);
+    assert.ok(work.preview.focalPoint.x >= 0 && work.preview.focalPoint.x <= 100);
+    assert.ok(work.preview.focalPoint.y >= 0 && work.preview.focalPoint.y <= 100);
+  }
+  const work = {
+    ...item(),
+    preview: { focalPoint: { x: 101, y: 50 }, fit: 'cover', orientation: 'portrait' },
+  };
+  assert.throws(() => validatePortfolio([work]), /Invalid portfolio preview/);
+  for (const bad of [NaN, Infinity, -1])
+    assert.throws(
+      () =>
+        validatePortfolio([
+          { ...work, preview: { ...work.preview, focalPoint: { x: 50, y: bad } } },
+        ]),
+      /Invalid portfolio preview/,
+    );
+  const gallery = readFileSync(
+    new URL('../apps/tattoo/src/components/TattooGallery.astro', import.meta.url),
+    'utf8',
+  );
+  const carousel = readFileSync(
+    new URL('../apps/tattoo/src/components/TattooWorkCarousel.astro', import.meta.url),
+    'utf8',
+  );
+  assert.match(gallery, /data-image=\{item.image.src\}/);
+  for (const component of [gallery, carousel]) {
+    assert.match(component, /item.preview\?\.focalPoint/);
+    assert.match(component, /item.preview\?\.fit/);
+  }
 });

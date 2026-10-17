@@ -1,0 +1,89 @@
+---
+import SiteHeader from '@littzite/ui/SiteHeader.astro';
+import ButtonLink from '@littzite/ui/ButtonLink.astro';
+import TattooInstagramLink from './TattooInstagramLink.astro';
+import { tattooActions, tattooBrand } from '../brand.config';
+---
+
+<SiteHeader
+  brand={tattooBrand.name}
+  descriptor=""
+  links={[
+    { label: 'Inicio', href: '/' },
+    { label: 'Tatuajes', href: '/trabajos/' },
+    { label: 'Guía', href: '/guia/' },
+    { label: 'Contacto', href: '/contacto/' },
+  ]}
+>
+  <picture slot="brand" class="tattoo-brand-mark" aria-hidden="true">
+    <source media="(max-width: 700px)" srcset={tattooBrand.marks.jt.src} type="image/png" />
+    <img
+      class="tattoo-brand-mark__image"
+      src={tattooBrand.marks.signature.src}
+      width="1774"
+      height="887"
+      alt=""
+      loading="eager"
+      decoding="async"
+    />
+  </picture>
+  <div slot="actions" class="tattoo-header-actions">
+    <TattooInstagramLink className="tattoo-header-instagram" />
+    <ButtonLink
+      href={tattooActions.turnsHref}
+      variant="primary"
+      size="compact"
+      icon="external"
+      className="tattoo-header-turns"
+    >
+      Turnos
+    </ButtonLink>
+    <details class="tattoo-mobile-menu">
+      <summary aria-controls="tattoo-mobile-navigation">Menú</summary>
+      <nav id="tattoo-mobile-navigation" aria-label="Navegación móvil">
+        <a href="/">Inicio</a>
+        <a href="/trabajos/">Tatuajes</a>
+        <a href="/guia/">Guía</a>
+        <a href="/contacto/">Contacto</a>
+        <a href={tattooActions.instagramHref} target="_blank" rel="noopener noreferrer">
+          Instagram
+        </a>
+      </nav>
+    </details>
+  </div>
+</SiteHeader>
+<script>
+  const menu = document.querySelector<HTMLDetailsElement>('.tattoo-mobile-menu');
+  const summary = menu?.querySelector('summary');
+  if (menu && summary) {
+    const sync = () => summary.setAttribute('aria-expanded', String(menu.open));
+    const close = () => {
+      menu.open = false;
+      sync();
+    };
+    const escape = (event: KeyboardEvent) => {
+      if (event.key === 'Escape' && menu.open) {
+        close();
+        summary.focus();
+      }
+    };
+    const outside = (event: PointerEvent) => {
+      if (event.target instanceof Node && !menu.contains(event.target)) close();
+    };
+    menu.addEventListener('toggle', sync);
+    menu.addEventListener('click', (event) => {
+      if (event.target instanceof Element && event.target.closest('a')) close();
+    });
+    document.addEventListener('keydown', escape);
+    document.addEventListener('pointerdown', outside);
+    sync();
+    document.addEventListener(
+      'astro:before-swap',
+      () => {
+        document.removeEventListener('keydown', escape);
+        document.removeEventListener('pointerdown', outside);
+      },
+      { once: true },
+    );
+  }
+</script>
